@@ -7,3 +7,6 @@ Members:
   * Matthew Bustamente
   * Isaac Boodt
   * Chandler Garrett
+
+**************BEFORE ADDING A NEW FEATURE/EDITING CODE FROM MAIN BRANCH************
+Please check out a new branch in order to develop your feature, and the push to that branch rather than master. When your feature is complete you can open a pull request to merge your code into the main branch
