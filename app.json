@@ -28,8 +28,18 @@
       "bundler": "metro"
     },
     "plugins" : [
-      "expo-router"
-    ]
- },
+      ["expo-font",
+      {
+      "fonts": ["./assets/fonts/Domine-Regular.ttf",
+        "./assets/fonts/Domine-Bold.ttf",
+        "./assets/fonts/Domine-Medium.ttf",
+        "./assets/fonts/Domine-SemiBold.ttf",
+        "./assets/fonts/Domine-VariableFont_wght.ttf"
+      ]
+      }
+    ],
+    "expo-router"
+    ],
  "scheme" : "CropAlly-scheme"
+}
 }
