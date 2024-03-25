@@ -1,5 +1,5 @@
 import { useCallBack } from 'react';
-import { StyleSheet, View, Text, Scrollable } from 'react-native'
+import { StyleSheet, View, Text, Scrollable, StatusBar } from 'react-native'
 import { useFonts } from 'expo-font'
 import Colors from '../assets/Color.js'
 
@@ -15,6 +15,7 @@ const Profile = () =>{
 		
 	return(
 	<View style = {styles.container}>
+		<StatusBar backgroundColor={'#f5f5f5'} />
 		<Text style = {styles.oval}>Oval</Text>
 		<Text style = {{fontFamily: 'WorkSans-Semibold', fontSize: 30, color: 'black'}}>This is where the profile page will go</Text>
 	</View>
