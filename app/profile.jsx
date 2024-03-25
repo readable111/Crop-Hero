@@ -6,10 +6,8 @@ import {
 	Scrollable, 
 	StatusBar, 
 	Image, 
-	Button, 
 	Alert,
-	TouchableOpacity,
-	FlatList
+	TouchableOpacity
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import Colors from '../assets/Color.js'
@@ -35,19 +33,22 @@ const Profile = () =>{
 		<Text style = {styles.profileName}>Daniel Moreno</Text>
 		<Image
 			style={styles.avatarImg}
-			source = {require('../assets/ProfilePageImages/Avatar.png')}
+			source = {require('../assets/ProfilePageImages/AvatarPlaceholder.png')}
 		/>
-		<AppButton title="Edit Profile" specifiedStyle={styles.editProfileBtn} onPress={() => Alert.alert('Simple Button pressed')}/>
+		<AppButton title="Edit Profile" specifiedStyle={styles.editProfileBtn} backgroundColor={Colors.SCOTCH_MIST_TAN} onPress={() => Alert.alert('Simple Button pressed')}/>
 		<View style={styles.btnGridContainer}>
-			<Row>
-				<Col relativeColsCovered={2}>
-					<Text>First column</Text>
+			<Row height={40}>
+				<Col relativeColsCovered={2} alignItems='flex-end'>
+					<AppButton title="" specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+				</Col>
+				<Col relativeColsCovered={8}>
+					<Text>    Settings</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<Text>Second column</Text>
+					<AppButton title="" specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 			</Row>
-			<Row>
+			<Row height={33}>
 				<Col relativeColsCovered={1}>
 					<Text>First column</Text>
 				</Col>
@@ -58,7 +59,7 @@ const Profile = () =>{
 					<Text>Third Column</Text>
 				</Col>
 			</Row>
-			<Row>
+			<Row height={40}>
 				<Col relativeColsCovered={4}>
 				<Text>Whole Column</Text>
 				</Col>
@@ -70,20 +71,30 @@ const Profile = () =>{
 
 
 {/*creates a custom button that changes opacity when touched, allows user to specify text style & background color*/}
-const AppButton = ({ onPress, title, specifiedStyle, backgroundColor=Colors.SCOTCH_MIST_TAN }) => (
-	<TouchableOpacity activeOpacity={0.5} onPress={onPress} style={[styles.appButtonContainer, backgroundColor && {backgroundColor}]}>
-	  <Text style={specifiedStyle}>{title}</Text>
-	</TouchableOpacity>
-);
+const AppButton = ({ onPress, title, specifiedStyle, backgroundColor='' }) => {
+	if (!backgroundColor) {
+		return  (
+			<TouchableOpacity activeOpacity={0.5} onPress={onPress}>
+				  <Text style={specifiedStyle}>{title}</Text>
+			</TouchableOpacity>
+		)
+	} else {
+		return  (
+			<TouchableOpacity activeOpacity={0.5} onPress={onPress} style={[styles.appButtonContainer, backgroundColor && {backgroundColor}]}>
+				<Text style={specifiedStyle}>{title}</Text>
+			</TouchableOpacity>
+		)
+	}
+}
 
 {/*define special tags for my grid layout*/}
-const Col = ({ relativeColsCovered, children }) => {
+const Col = ({ relativeColsCovered, children, alignItems='flex-start'}) => {
 	return  (
-	  <View style={[styles[`${relativeColsCovered}col`], styles.baseCol]}>{children}</View>
+		<View style={[styles[`${relativeColsCovered}col`], styles.baseCol, alignItems && {alignItems}]}>{children}</View>
 	)
 }
-const Row = ({ children }) => (
-	<View style={styles.row}>{children}</View>
+const Row = ({ children, height }) => (
+	<View style={[styles.row, height && {height}]}>{children}</View>
 )
 
 {/*define all of the custom styles for this page*/}
@@ -98,9 +109,17 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.IRISH_GREEN,
 		width: 300,
 		height: 420,
-		borderRadius: 800,
+		borderRadius: 300 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
 		transform: [{ scaleX: 2 }],
 		marginTop: -250,
+	},
+	circle: {
+		width: 40,
+    	height: 40,
+    	borderRadius: 40 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
+		backgroundColor: Colors.PERIWINKLE_GRAY,
+		textAlign: 'center',
+		textAlignVertical: 'center',
 	},
 	profileName: {
 		color: 'white',
@@ -133,68 +152,57 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 		fontFamily: 'Domine-Regular',
 	},
+	//set of styles for the grid layout with the 1-12col styles being for specific widths
 	btnGridContainer: {
 		flex: 12, // # of columns
     	marginHorizontal: "auto",
     	width: 400,
     	backgroundColor: "red",
 		marginTop: 12,
+		
 	},
 	row: {
-		flexDirection: "row"
+		flexDirection: "row",
 	},
 	baseCol: {
-		borderColor:  "#fff",
-		borderWidth:  1,
 		paddingLeft: 5,
+		justifyContent: 'center',
 	},
 	"1col":  {
-		backgroundColor:  "lightblue",
 		flex:  1
 	},
 	"2col":  {
-		backgroundColor:  "green",
 		flex:  2
 	},
 	"3col":  {
-		backgroundColor:  "orange",
 		flex:  3
 	},
 	"4col":  {
 		flex:  4,
-		backgroundColor:  "purple",
 	},
 	"5col":  {
 		flex:  5,
-		backgroundColor:  "blue",
 	},
 	"6col":  {
 		flex:  6,
-		backgroundColor:  "fuchsia",
 	},
 	"7col":  {
 		flex:  7,
-		backgroundColor:  "teal",
 	},
 	"8col":  {
 		flex:  8,
-		backgroundColor:  "blanchedalmond",
 	},
 	"9col":  {
 		flex:  9,
-		backgroundColor:  "coral",
 	},
 	"10col":  {
 		flex:  10,
-		backgroundColor:  "crimson",
 	},
 	"11col":  {
 		flex:  11,
-		backgroundColor:  "darkslateblue",
 	},
 	"12col":  {
 		flex:  12,
-		backgroundColor:  "thistle",
 	},
 })
 
