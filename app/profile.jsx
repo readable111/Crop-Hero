@@ -4,7 +4,7 @@ import { useFonts } from 'expo-font'
 import Colors from '../assets/Color.js'
 
 
-const Home = () =>{ 
+const Profile = () =>{ 
 	const [fontsLoaded, fontError] = useFonts({
 	'WorkSans-Semibold': require('../assets/fonts/WorkSans/WorkSans-SemiBold.ttf'),
 	});
@@ -15,15 +15,27 @@ const Home = () =>{
 		
 	return(
 	<View style = {styles.container}>
-		<Text style = {{fontFamily: 'WorkSans-Semibold', fontSize: 30, color: Colors.CHARCOAL}}>This is where the profile page will go</Text>
-	</View>)
+		<Text style = {styles.oval}>Oval</Text>
+		<Text style = {{fontFamily: 'WorkSans-Semibold', fontSize: 30, color: 'black'}}>This is where the profile page will go</Text>
+	</View>
+	)
 };
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: Colors.ALMOND_TAN,
+		backgroundColor: Colors.SANTA_GRAY,
 		height: '100%',
-	}
+		flex: 1,
+		alignItems: 'center',
+	},
+	oval: {
+		backgroundColor: Colors.IRISH_GREEN,
+		width: 300,
+		height: 420,
+		borderRadius: 300,
+		transform: [{ scaleX: 2 }],
+		marginTop: -280,
+	},
 })
 
-export default Home;
+export default Profile;
