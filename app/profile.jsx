@@ -54,6 +54,7 @@ const Profile = () =>{
 					<AppButton title="" icon={Icons.arrow_right} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 			</Row>
+			{/*spacer row*/}
 			<Row height={33}>
 				<Col relativeColsCovered={4}>
 					<Text></Text>
@@ -72,6 +73,78 @@ const Profile = () =>{
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Billing Details</Text>
+				</Col>
+				<Col relativeColsCovered={2}>
+					<AppButton title="" icon={Icons.arrow_right} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+				</Col>
+			</Row>
+			{/*spacer row*/}
+			<Row height={33}>
+				<Col relativeColsCovered={4}>
+					<Text></Text>
+				</Col>
+				<Col relativeColsCovered={4}>
+					<Text></Text>
+				</Col>
+				<Col relativeColsCovered={4}>
+					<Text></Text>
+				</Col>
+			</Row>
+			{/*row for farmer management*/}
+			<Row height={40}>
+			<Col relativeColsCovered={2} alignItems='flex-end'>
+					<AppButton title="" icon={Icons.farmer_icon} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+				</Col>
+				<Col relativeColsCovered={8}>
+					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Farmer Management</Text>
+				</Col>
+				<Col relativeColsCovered={2}>
+					<AppButton title="" icon={Icons.arrow_right} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+				</Col>
+			</Row>
+			{/*spacer row*/}
+			<Row height={33}>
+				<Col relativeColsCovered={4}>
+					<Text></Text>
+				</Col>
+				<Col relativeColsCovered={4}>
+					<Text></Text>
+				</Col>
+				<Col relativeColsCovered={4}>
+					<Text></Text>
+				</Col>
+			</Row>
+			{/*row for visibility settings*/}
+			<Row height={40}>
+			<Col relativeColsCovered={2} alignItems='flex-end'>
+					<AppButton title="" icon={Icons.visibility_eye} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+				</Col>
+				<Col relativeColsCovered={8}>
+					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Visibility Settings</Text>
+				</Col>
+				<Col relativeColsCovered={2}>
+					<AppButton title="" icon={Icons.arrow_right} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+				</Col>
+			</Row>
+			{/*spacer row*/}
+			<Row height={33}>
+				<Col relativeColsCovered={4}>
+					<Text></Text>
+				</Col>
+				<Col relativeColsCovered={4}>
+					<Text></Text>
+				</Col>
+				<Col relativeColsCovered={4}>
+					<Text></Text>
+				</Col>
+			</Row>
+			{/*row for log out*/}
+			<Row height={40}>
+			<Col relativeColsCovered={2} alignItems='flex-end'>
+					<AppButton title="" icon={Icons.logout_icon} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+				</Col>
+				<Col relativeColsCovered={8}>
+					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Log Out</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
 					<AppButton title="" icon={Icons.arrow_right} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
