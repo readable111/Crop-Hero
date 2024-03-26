@@ -6,12 +6,12 @@ import {
 	Scrollable, 
 	StatusBar, 
 	Image, 
-	Alert,
-	TouchableOpacity
+	Alert
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
+import AppButton from '../assets/AppButton.jsx'
 
 
 const Profile = () =>{ 
@@ -45,13 +45,13 @@ const Profile = () =>{
 			{/*row for profile settings*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.gear_big_empty} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.gear_big_empty_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Settings</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 			</Row>
 			{/*spacer row*/}
@@ -69,13 +69,13 @@ const Profile = () =>{
 			{/*row for billing details*/}
 			<Row height={40}>
 			<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.credit_card} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.credit_card_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Billing Details</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 			</Row>
 			{/*spacer row*/}
@@ -93,13 +93,13 @@ const Profile = () =>{
 			{/*row for farmer management*/}
 			<Row height={40}>
 			<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.farmer_icon} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.farmer_icon_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Farmer Management</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 			</Row>
 			{/*spacer row*/}
@@ -117,13 +117,13 @@ const Profile = () =>{
 			{/*row for visibility settings*/}
 			<Row height={40}>
 			<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.visibility_eye} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.visibility_eye_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Visibility Settings</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 			</Row>
 			{/*spacer row*/}
@@ -141,13 +141,13 @@ const Profile = () =>{
 			{/*row for log out*/}
 			<Row height={40}>
 			<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.logout_icon} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.logout_icon_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Log Out</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 			</Row>
 		</View>
@@ -157,40 +157,7 @@ const Profile = () =>{
 
 
 {/*creates a custom button that changes opacity when touched, allows user to specify text style & background color*/}
-const AppButton = ({ onPress, title='Press me', icon, specifiedStyle, backgroundColor='' }) => {
-	{/*containerless button with/without title and without icon*/}
-	if (!backgroundColor && !icon) {
-		return  (
-			<TouchableOpacity activeOpacity={0.5} onPress={onPress}>
-				  <Text style={specifiedStyle}>{title}</Text>
-			</TouchableOpacity>
-		)
-	} 
-	else if (backgroundColor && title && !icon) { {/*container button with title and without icon*/}
-		return  (
-			<TouchableOpacity activeOpacity={0.5} onPress={onPress} style={[styles.appButtonContainer, backgroundColor && {backgroundColor}]}>
-				<Text style={specifiedStyle}>{title}</Text>
-			</TouchableOpacity>
-		)
-	}
-	else if (icon && !title) { {/*button without title and with icon*/}
-		return  (
-			<TouchableOpacity activeOpacity={0.5} onPress={onPress}>
-					<Image 
-						style={specifiedStyle}
-						source={icon}
-					/>
-			</TouchableOpacity>
-		)
-	}
-	else { {/*default to containerless, no icon*/}
-		return  (
-			<TouchableOpacity activeOpacity={0.5} onPress={onPress}>
-				  <Text style={specifiedStyle}>{title}</Text>
-			</TouchableOpacity>
-		)
-	}
-}
+
 
 {/*define special tags for my grid layout*/}
 const Col = ({ relativeColsCovered, children, alignItems='flex-start'}) => {
@@ -236,25 +203,6 @@ const styles = StyleSheet.create({
 		borderWidth: 2,
 		borderRadius: 75,
 		marginTop: 25,
-	},
-	appButtonContainer: {
-		elevation: 8,
-		borderColor: "black",
-		borderWidth: 2,
-		borderRadius: 50,
-		paddingHorizontal: 12,
-		marginTop: 12,
-		width: 172,
-		height: 35,
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	iconAppButtonContainer: {
-		paddingVertical: 10,
-		paddingHorizontal: 12,
-	},
-	iconAppButton: {
-		padding: 12,
 	},
 	editProfileBtn: {
 		fontSize: 16,
