@@ -1,4 +1,4 @@
-import { useCallBack } from 'react';
+import { useCallBack, React} from 'react';
 import { 
 	StyleSheet, 
 	View, 
@@ -9,10 +9,10 @@ import {
 	Alert
 } from 'react-native'
 import { useFonts } from 'expo-font'
+import { Link, router } from 'expo-router'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
-
 
 const Profile = () =>{ 
 	{/*load in all fonts used for this page*/}
@@ -25,7 +25,7 @@ const Profile = () =>{
 	if (!fontsLoaded && !fontError) {
 		return null;
 	}
-		
+
 	{/*return the page view with all of tits contents*/}
 	return(
 	<View style = {styles.topContainer}>
@@ -38,8 +38,8 @@ const Profile = () =>{
 			style={styles.avatarImg}
 			source = {require('../assets/ProfilePageImages/AvatarPlaceholder.png')}
 		/>
-		{/*add edit profule button*/}
-		<AppButton title="Edit Profile" specifiedStyle={styles.editProfileBtn} backgroundColor={Colors.SCOTCH_MIST_TAN} onPress={() => Alert.alert('Simple Button pressed')}/>
+		{/*add edit profile button*/}
+		<AppButton title="Edit Profile" specifiedStyle={styles.editProfileBtn} backgroundColor={Colors.SCOTCH_MIST_TAN} onPress={() => router.push('/profile-editprofile')}/>
 		{/*add grid of profile options*/}
 		<View style={styles.btnGridContainer}>
 			{/*row for profile settings*/}
