@@ -6,6 +6,12 @@ const icons = {
     farmer_icon_black: require('./farmer-icon-black.png'),
     logout_icon_black: require('./logout-icon-black.png'),
     visibility_eye_black: require('./visibility-eye-black.png'),
+    gear_big_empty_white: require('./gear-big-empty-white.png'),
+    arrow_right_white: require('./arrow-right-white.png'),
+    credit_card_white: require('./credit-card-white.png'),
+    farmer_icon_white: require('./farmer-icon-white.png'),
+    logout_icon_white: require('./logout-icon-white.png'),
+    visibility_eye_white: require('./visibility-eye-white.png'),
 };
 
 export default icons;
