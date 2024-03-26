@@ -11,19 +11,22 @@ import {
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import Colors from '../assets/Color.js'
+import Icons from '../assets/icons/Icons.js'
 
 
 const Profile = () =>{ 
+	{/*load in all fonts used for this page*/}
 	const [fontsLoaded, fontError] = useFonts({
 	'WorkSans-Semibold': require('../assets/fonts/WorkSans/WorkSans-SemiBold.ttf'),
 	'Domine-Medium': require('../assets/fonts/Domine/Domine-Medium.ttf'),
 	'Domine-Regular': require('../assets/fonts/Domine/Domine-Regular.ttf'),
 	});
-
+	{/*return an error if the fonts fail to load*/}
 	if (!fontsLoaded && !fontError) {
 		return null;
 	}
 		
+	{/*return the page view with all of tits contents*/}
 	return(
 	<View style = {styles.topContainer}>
 		{/*create the default phone status bar at the top of the screen*/}
@@ -35,33 +38,43 @@ const Profile = () =>{
 			style={styles.avatarImg}
 			source = {require('../assets/ProfilePageImages/AvatarPlaceholder.png')}
 		/>
+		{/*add edit profule button*/}
 		<AppButton title="Edit Profile" specifiedStyle={styles.editProfileBtn} backgroundColor={Colors.SCOTCH_MIST_TAN} onPress={() => Alert.alert('Simple Button pressed')}/>
+		{/*add grid of profile options*/}
 		<View style={styles.btnGridContainer}>
+			{/*row for profile settings*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.gear_big_empty} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
-					<Text>    Settings</Text>
+					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Settings</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.arrow_right} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 			</Row>
 			<Row height={33}>
-				<Col relativeColsCovered={1}>
-					<Text>First column</Text>
+				<Col relativeColsCovered={4}>
+					<Text></Text>
 				</Col>
-				<Col relativeColsCovered={3}>
-					<Text>Second Column</Text>
+				<Col relativeColsCovered={4}>
+					<Text></Text>
 				</Col>
-				<Col relativeColsCovered={8}>
-					<Text>Third Column</Text>
+				<Col relativeColsCovered={4}>
+					<Text></Text>
 				</Col>
 			</Row>
+			{/*row for billing details*/}
 			<Row height={40}>
-				<Col relativeColsCovered={4}>
-				<Text>Whole Column</Text>
+			<Col relativeColsCovered={2} alignItems='flex-end'>
+					<AppButton title="" icon={Icons.credit_card} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+				</Col>
+				<Col relativeColsCovered={8}>
+					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Billing Details</Text>
+				</Col>
+				<Col relativeColsCovered={2}>
+					<AppButton title="" icon={Icons.arrow_right} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 			</Row>
 		</View>
@@ -71,17 +84,36 @@ const Profile = () =>{
 
 
 {/*creates a custom button that changes opacity when touched, allows user to specify text style & background color*/}
-const AppButton = ({ onPress, title, specifiedStyle, backgroundColor='' }) => {
-	if (!backgroundColor) {
+const AppButton = ({ onPress, title='Press me', icon, specifiedStyle, backgroundColor='' }) => {
+	{/*containerless button with/without title and without icon*/}
+	if (!backgroundColor && !icon) {
 		return  (
 			<TouchableOpacity activeOpacity={0.5} onPress={onPress}>
 				  <Text style={specifiedStyle}>{title}</Text>
 			</TouchableOpacity>
 		)
-	} else {
+	} 
+	else if (backgroundColor && title && !icon) { {/*container button with title and without icon*/}
 		return  (
 			<TouchableOpacity activeOpacity={0.5} onPress={onPress} style={[styles.appButtonContainer, backgroundColor && {backgroundColor}]}>
 				<Text style={specifiedStyle}>{title}</Text>
+			</TouchableOpacity>
+		)
+	}
+	else if (icon && !title) { {/*button without title and with icon*/}
+		return  (
+			<TouchableOpacity activeOpacity={0.5} onPress={onPress}>
+					<Image 
+						style={specifiedStyle}
+						source={icon}
+					/>
+			</TouchableOpacity>
+		)
+	}
+	else { {/*default to containerless, no icon*/}
+		return  (
+			<TouchableOpacity activeOpacity={0.5} onPress={onPress}>
+				  <Text style={specifiedStyle}>{title}</Text>
 			</TouchableOpacity>
 		)
 	}
@@ -118,8 +150,6 @@ const styles = StyleSheet.create({
     	height: 40,
     	borderRadius: 40 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
 		backgroundColor: Colors.PERIWINKLE_GRAY,
-		textAlign: 'center',
-		textAlignVertical: 'center',
 	},
 	profileName: {
 		color: 'white',
@@ -146,6 +176,13 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
+	iconAppButtonContainer: {
+		paddingVertical: 10,
+		paddingHorizontal: 12,
+	},
+	iconAppButton: {
+		padding: 12,
+	},
 	editProfileBtn: {
 		fontSize: 16,
 		color: "black",
@@ -157,9 +194,7 @@ const styles = StyleSheet.create({
 		flex: 12, // # of columns
     	marginHorizontal: "auto",
     	width: 400,
-    	backgroundColor: "red",
 		marginTop: 12,
-		
 	},
 	row: {
 		flexDirection: "row",
