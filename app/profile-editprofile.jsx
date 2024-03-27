@@ -30,8 +30,18 @@ const EditProfile = () =>{
 		<StatusBar backgroundColor={Colors.WHITE_SMOKE} />
         {/*create the arrow to unwind the stack and go back one page*/}
         <AppButton title="" icon={Icons.arrow_tail_left_black} specifiedStyle={styles.backArrow} onPress={() => router.back()}/>
+		{/*create container for the purple section*/}
         <View style = {styles.innerContainer}>
-		    <Text style = {{fontFamily: 'Domine-Regular', fontSize: 30}}>This is where the Edit Profile page will go</Text>
+			{/*create the oval*/}
+			<View style = {styles.oval}></View>
+			{/*create container for the rectangular area*/}
+			<View style = {styles.rect}>
+				<Image
+					style={styles.avatarImg}
+					source = {require('../assets/ProfilePageImages/AvatarPlaceholder.png')}
+				/>
+				<AppButton title="" icon={Icons.pencil_edit} specifiedStyle={styles.editBtn} onPress={() => Alert.alert('Icon Button pressed')}/>
+			</View>
         </View>
 	</View>
     )
@@ -44,11 +54,43 @@ const styles = StyleSheet.create({
 	},
     innerContainer: {
         alignItems: 'center',
+		overflow: 'hidden',
     },
     backArrow: {
         marginLeft: 12,
         marginTop: 7,
     },
+	oval: {
+		backgroundColor: Colors.SANTA_GRAY,
+		width: 300,
+		height: 420,
+		borderRadius: 300 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
+		transform: [{ scaleX: 2 }],
+		marginTop: 60,
+		alignItems: 'center',
+	},
+	rect: {
+		backgroundColor: Colors.SANTA_GRAY,
+		width: '100%',
+		height: 300,
+		marginTop: -300,
+		alignItems: 'center',
+	},
+	avatarImg: {
+		width: 130,
+		height: 130,
+		borderWidth: 2,
+		borderRadius: 75,
+		marginTop: -100,
+	},
+	editBtn: {
+		width: 50,
+    	height: 50,
+    	borderRadius: 50 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
+		backgroundColor: Colors.IRISH_GREEN,
+		marginTop: -50,
+		marginLeft: 130,
+	},
 })
 
 export default EditProfile;
