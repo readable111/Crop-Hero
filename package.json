@@ -1,11 +1,7 @@
 {
   "name": "cropally",
   "version": "1.0.0",
-<<<<<<< HEAD
   "main": "expo-router/entry",
-=======
-  "main": "node_modules/expo/AppEntry.js",
->>>>>>> e71000cf20ddfeaa3d7aeafac2763158211a52d3
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
@@ -13,7 +9,6 @@
     "web": "expo start --web"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@react-native-async-storage/async-storage": "^1.23.1",
     "edit-json-file": "^1.8.0",
     "expo": "^50.0.14",
@@ -34,16 +29,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "react-native-svg-transformer": "^1.3.0"
-=======
     "expo": "~50.0.7",
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
-    "react-native": "0.73.4"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.20.0"
->>>>>>> e71000cf20ddfeaa3d7aeafac2763158211a52d3
+    "react-native": "0.73.4",
+    "react-native-svg-transformer": "^1.3.0"
   },
   "private": true
 }

@@ -27,7 +27,7 @@ const Profile = () =>{
 		return null;
 	}
 
-	{/*return the page view with all of tits contents*/}
+	{/*return the page view with all of its contents*/}
 	return(
 	<View style = {styles.topContainer}>
 		{/*create the default phone status bar at the top of the screen*/}
@@ -155,12 +155,6 @@ const Profile = () =>{
 	</View>
 	)
 };
-
-
-{/*creates a custom button that changes opacity when touched, allows user to specify text style & background color*/}
-
-
-
 
 {/*define all of the custom styles for this page*/}
 const styles = StyleSheet.create({
