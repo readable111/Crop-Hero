@@ -1,7 +1,6 @@
 # Crop-Hero
 CSCE 4901/4905 Capstone course Group 7's Github
 ## Group Members 
-=======
 Members: 
   * McKenna Beard
   * Daniel Moreno
