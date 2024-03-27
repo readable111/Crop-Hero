@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "CropAlly",
+    "slug": "CropAlly",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.anonymous.CropAlly"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Domine-Regular.ttf",
+            "./assets/fonts/Domine-Bold.ttf",
+            "./assets/fonts/Domine-Medium.ttf",
+            "./assets/fonts/Domine-SemiBold.ttf",
+            "./assets/fonts/Domine-VariableFont_wght.ttf"
+          ]
+        }
+      ],
+      "expo-router"
+    ],
+    "scheme": "CropAlly-scheme"
+  }
+}
