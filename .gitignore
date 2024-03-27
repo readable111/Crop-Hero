@@ -33,9 +33,6 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
-<<<<<<< HEAD
 
 # personal files
 plans for search algorithm.txt
-=======
->>>>>>> e71000cf20ddfeaa3d7aeafac2763158211a52d3
