@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import { Link, router } from 'expo-router'
+import { Col, Row} from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
@@ -159,15 +160,7 @@ const Profile = () =>{
 {/*creates a custom button that changes opacity when touched, allows user to specify text style & background color*/}
 
 
-{/*define special tags for my grid layout*/}
-const Col = ({ relativeColsCovered, children, alignItems='flex-start'}) => {
-	return  (
-		<View style={[styles[`${relativeColsCovered}col`], styles.baseCol, alignItems && {alignItems}]}>{children}</View>
-	)
-}
-const Row = ({ children, height }) => (
-	<View style={[styles.row, height && {height}]}>{children}</View>
-)
+
 
 {/*define all of the custom styles for this page*/}
 const styles = StyleSheet.create({
@@ -210,56 +203,13 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 		fontFamily: 'Domine-Regular',
 	},
-	//set of styles for the grid layout with the 1-12col styles being for specific widths
+	//style for the grid layout
 	btnGridContainer: {
 		flex: 12, // # of columns
     	marginHorizontal: "auto",
-    	width: 400,
+    	width: '100%',
 		marginTop: 12,
-	},
-	row: {
-		flexDirection: "row",
-	},
-	baseCol: {
-		paddingLeft: 5,
-		justifyContent: 'center',
-	},
-	"1col":  {
-		flex:  1
-	},
-	"2col":  {
-		flex:  2
-	},
-	"3col":  {
-		flex:  3
-	},
-	"4col":  {
-		flex:  4,
-	},
-	"5col":  {
-		flex:  5,
-	},
-	"6col":  {
-		flex:  6,
-	},
-	"7col":  {
-		flex:  7,
-	},
-	"8col":  {
-		flex:  8,
-	},
-	"9col":  {
-		flex:  9,
-	},
-	"10col":  {
-		flex:  10,
-	},
-	"11col":  {
-		flex:  11,
-	},
-	"12col":  {
-		flex:  12,
-	},
+	}
 })
 
 export default Profile;
