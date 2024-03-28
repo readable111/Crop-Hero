@@ -27,6 +27,7 @@ const Profile = () =>{
 		return null;
 	}
 
+	{/*TODO: add dark mode*/}
 	{/*return the page view with all of its contents*/}
 	return(
 	<View style = {styles.topContainer}>
@@ -35,6 +36,7 @@ const Profile = () =>{
 		{/*green oval at the top to denote profile picture and name*/}
 		<Text style = {styles.oval}></Text>
 		<Text style = {styles.profileName}>Daniel Moreno</Text>
+		{/*TODO: set image to display profile picture*/}
 		<Image
 			style={styles.avatarImg}
 			source = {require('../assets/ProfilePageImages/AvatarPlaceholder.png')}
@@ -94,37 +96,13 @@ const Profile = () =>{
 			{/*row for farmer management*/}
 			<Row height={40}>
 			<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.farmer_icon_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.farmer_icon_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-farmermgmt')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Farmer Management</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
-				</Col>
-			</Row>
-			{/*spacer row*/}
-			<Row height={33}>
-				<Col relativeColsCovered={4}>
-					<Text></Text>
-				</Col>
-				<Col relativeColsCovered={4}>
-					<Text></Text>
-				</Col>
-				<Col relativeColsCovered={4}>
-					<Text></Text>
-				</Col>
-			</Row>
-			{/*row for visibility settings*/}
-			<Row height={40}>
-			<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.visibility_eye_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
-				</Col>
-				<Col relativeColsCovered={8}>
-					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Visibility Settings</Text>
-				</Col>
-				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-farmermgmt')}/>
 				</Col>
 			</Row>
 			{/*spacer row*/}

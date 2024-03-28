@@ -29,25 +29,29 @@ const EditProfile = () =>{
 		return null;
 	}
 		
+	{/*TODO: retrieve data from local storage or database*/}
 	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
 	initialFullName = "Daniel Moreno"
 	initialEmail = "test@example.com"
 	initialPhoneNum = "+1 (012) 345-6789"
 
+	{/*TODO: add dark mode*/}
 	return(
 	<ScrollView style = {styles.container}>
         {/*create the default phone status bar at the top of the screen*/}
 		<StatusBar backgroundColor={Colors.WHITE_SMOKE} />
         {/*top row of buttons*/}
-		{/*create the arrow to unwind the stack and go back one page*/}
 		<View style={styles.btnGridContainer}>
 			{/*row for profile settings*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
+					{/*create the arrow to unwind the stack and go back one page*/}
 					<AppButton title="" icon={Icons.arrow_tail_left_black} onPress={() => router.back()}/>
 				</Col>
 				<Col relativeColsCovered={8}></Col>
 				<Col relativeColsCovered={2}>
+					{/*TODO: link save button to get input field contents and save them to the database*/}
+					{/*TODO: when picture is saved, it is compressed via react-native-compressor library & https://stackoverflow.com/questions/37639360/how-to-optimise-an-image-in-react-native before being put into proper field*/}
 					<AppButton title="" icon={Icons.save_icon_white} onPress={() => Alert.alert('Icon Button pressed')}/>
 				</Col>
 			</Row>
@@ -63,6 +67,7 @@ const EditProfile = () =>{
 					style={styles.avatarImg}
 					source = {require('../assets/ProfilePageImages/AvatarPlaceholder.png')}
 				/>
+				{/*TODO: set button to let user pick local picture as profile picture*/}
 				<AppButton title="" icon={Icons.pencil_edit} specifiedStyle={styles.editBtn} onPress={() => Alert.alert('Icon Button pressed')}/>
 				{/*full name input box*/}
 				<Text style={styles.inputLabel}>First & Last Name</Text>
