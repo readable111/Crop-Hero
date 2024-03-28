@@ -48,13 +48,13 @@ const Profile = () =>{
 			{/*row for profile settings*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.gear_big_empty_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.gear_big_empty_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-settings')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Settings</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-settings')}/>
 				</Col>
 			</Row>
 			{/*spacer row*/}
@@ -93,40 +93,17 @@ const Profile = () =>{
 					<Text></Text>
 				</Col>
 			</Row>
-			{/*row for farmer management*/}
-			<Row height={40}>
-			<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.farmer_icon_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-farmermgmt')}/>
-				</Col>
-				<Col relativeColsCovered={8}>
-					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Farmer Management</Text>
-				</Col>
-				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-farmermgmt')}/>
-				</Col>
-			</Row>
-			{/*spacer row*/}
-			<Row height={33}>
-				<Col relativeColsCovered={4}>
-					<Text></Text>
-				</Col>
-				<Col relativeColsCovered={4}>
-					<Text></Text>
-				</Col>
-				<Col relativeColsCovered={4}>
-					<Text></Text>
-				</Col>
-			</Row>
 			{/*row for log out*/}
+			{/*TODO: add logout functionality once accounts are added*/}
 			<Row height={40}>
 			<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.logout_icon_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.logout_icon_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Log Out</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
 				</Col>
 			</Row>
 		</View>

@@ -12,8 +12,8 @@ const Column = ({ relativeColsCovered, children, alignItems='flex-start'}) => {
 		<View style={[styles[`${relativeColsCovered}col`], styles.baseCol, alignItems && {alignItems}]}>{children}</View>
 	)
 }
-const RowTag = ({ children, height }) => (
-	<View style={[styles.row, height && {height}]}>{children}</View>
+const RowTag = ({ children, height, specifiedStyle }) => (
+	<View style={[styles.row, specifiedStyle, height && {height}]}>{children}</View>
 )
 
 
