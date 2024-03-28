@@ -13,6 +13,7 @@ import { useFonts } from 'expo-font'
 import { Link, router } from 'expo-router'
 import { Input } from 'react-native-elements'
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
+import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
@@ -37,8 +38,20 @@ const EditProfile = () =>{
 	<ScrollView style = {styles.container}>
         {/*create the default phone status bar at the top of the screen*/}
 		<StatusBar backgroundColor={Colors.WHITE_SMOKE} />
-        {/*create the arrow to unwind the stack and go back one page*/}
-        <AppButton title="" icon={Icons.arrow_tail_left_black} specifiedStyle={styles.backArrow} onPress={() => router.back()}/>
+        {/*top row of buttons*/}
+		{/*create the arrow to unwind the stack and go back one page*/}
+		<View style={styles.btnGridContainer}>
+			{/*row for profile settings*/}
+			<Row height={40}>
+				<Col relativeColsCovered={2} alignItems='flex-end'>
+					<AppButton title="" icon={Icons.arrow_tail_left_black} onPress={() => router.back()}/>
+				</Col>
+				<Col relativeColsCovered={8}></Col>
+				<Col relativeColsCovered={2}>
+					<AppButton title="" icon={Icons.save_icon_white} onPress={() => Alert.alert('Icon Button pressed')}/>
+				</Col>
+			</Row>
+		</View>
 		{/*create container for the purple section*/}
         <View style = {styles.innerContainer}>
 			{/*create the oval*/}
@@ -52,13 +65,16 @@ const EditProfile = () =>{
 				/>
 				<AppButton title="" icon={Icons.pencil_edit} specifiedStyle={styles.editBtn} onPress={() => Alert.alert('Icon Button pressed')}/>
 				{/*full name input box*/}
-				<Text style={styles.inputLabel}>Full Name</Text>
+				<Text style={styles.inputLabel}>First & Last Name</Text>
 				<Input
 					leftIcon={<AntDesign name="user" size={24} color={Colors.SOFT_GREEN}/>}
 					inputContainerStyle={styles.inputBox}
 					inputStyle={styles.inputBoxStyle}
+					selectionColor={Colors.SANTA_GRAY}
 					placeholder='John Doe'
 					defaultValue={initialFullName}
+					autoComplete='name'
+					maxLength={512}
 				/>
 				{/*email input box*/}
 				<Text style={styles.inputLabel}>Email</Text>
@@ -66,8 +82,12 @@ const EditProfile = () =>{
 					leftIcon={<AntDesign name="mail" size={24} color={Colors.SOFT_GREEN}/>}
 					inputContainerStyle={styles.inputBox}
 					inputStyle={styles.inputBoxStyle}
+					selectionColor={Colors.SANTA_GRAY}
 					placeholder='test@example.com'
 					defaultValue={initialEmail}
+					autoComplete='email'
+					keyboardType='email-address'
+					maxLength={384}
 				/>
 				{/*phone number input box*/}
 				<Text style={styles.inputLabel}>Phone No.</Text>
@@ -75,8 +95,40 @@ const EditProfile = () =>{
 					leftIcon={<AntDesign name="phone" size={24} color={Colors.SOFT_GREEN} style={{transform: [{rotateY: '180deg'}]}}/>}
 					inputContainerStyle={styles.inputBox}
 					inputStyle={styles.inputBoxStyle}
+					selectionColor={Colors.SANTA_GRAY}
 					placeholder='+1 (012) 345-6789'
 					defaultValue={initialPhoneNum}
+					autoComplete='tel'
+					keyboardType='phone-pad'
+					maxLength={32}
+				/>
+				{/*new password input box*/}
+				<Text style={styles.inputLabel}>Change Password</Text>
+				<Input
+					leftIcon={<AntDesign name="lock" size={24} color={Colors.SOFT_GREEN} />}
+					rightIcon={<AntDesign name="eyeo" size={24} color={Colors.SOFT_GREEN} />}
+					inputContainerStyle={styles.inputBox}
+					inputStyle={styles.inputBoxStyle}
+					selectionColor={Colors.SANTA_GRAY}
+					secureTextEntry={true}
+					placeholder='•••••••••••• - disabled till Phase 2'
+					contextMenuHidden={true}
+					editable={false}
+					readOnly={true}
+				/>
+				{/*confirm password input box*/}
+				<Text style={styles.inputLabel}>Confirm Password</Text>
+				<Input
+					leftIcon={<AntDesign name="lock" size={24} color={Colors.SOFT_GREEN} />}
+					rightIcon={<AntDesign name="eyeo" size={24} color={Colors.SOFT_GREEN} />}
+					inputContainerStyle={styles.inputBox}
+					inputStyle={styles.inputBoxStyle}
+					selectionColor={Colors.SANTA_GRAY}
+					secureTextEntry={true}
+					placeholder='•••••••••••• - disabled till Phase 2'
+					contextMenuHidden={true}
+					editable={false}
+					readOnly={true}
 				/>
 			</View>
         </View>
@@ -92,10 +144,6 @@ const styles = StyleSheet.create({
     innerContainer: {
         alignItems: 'center',
 		overflow: 'hidden',
-    },
-    backArrow: {
-        marginLeft: 12,
-        marginTop: 7,
     },
 	oval: {
 		backgroundColor: Colors.SANTA_GRAY,
@@ -161,6 +209,12 @@ const styles = StyleSheet.create({
 		borderColor: 'white',
 		textAlign: 'center',
 		textAlignVertical: 'top',
+	}, 
+	btnGridContainer: {
+		flex: 12, // # of columns
+    	marginHorizontal: "auto",
+    	width: '100',
+		marginTop: 7,
 	}
 })
 

@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import { Link, router } from 'expo-router'
-import { Col, Row} from '../assets/Grid.jsx'
+import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
