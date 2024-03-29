@@ -15,8 +15,8 @@ const icons = {
     farmer_icon_white: require('./farmer-icon-white.png'),
     logout_icon_white: require('./logout-icon-white.png'),
     visibility_eye_white: require('./visibility-eye-white.png'),
-
-    pencil_edit: require('./pencil-edit.png'),
+    save_icon_white: require('./save-icon-white.png'),
+    pencil_edit: require('./pencil-edit-white.png'),
 };
 
 export default icons;

@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from "react-native"
 import Home from './home.jsx'
 
 export default function Page() {

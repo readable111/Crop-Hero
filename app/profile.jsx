@@ -1,16 +1,15 @@
-import { useCallBack, React} from 'react';
+import { React} from 'react';
 import { 
 	StyleSheet, 
 	View, 
 	Text, 
-	Scrollable, 
 	StatusBar, 
 	Image, 
 	Alert
 } from 'react-native'
 import { useFonts } from 'expo-font'
-import { Link, router } from 'expo-router'
-import { Col, Row} from '../assets/Grid.jsx'
+import { router } from 'expo-router'
+import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
@@ -18,15 +17,16 @@ import AppButton from '../assets/AppButton.jsx'
 const Profile = () =>{ 
 	{/*load in all fonts used for this page*/}
 	const [fontsLoaded, fontError] = useFonts({
-	'WorkSans-Semibold': require('../assets/fonts/WorkSans/WorkSans-SemiBold.ttf'),
-	'Domine-Medium': require('../assets/fonts/Domine/Domine-Medium.ttf'),
-	'Domine-Regular': require('../assets/fonts/Domine/Domine-Regular.ttf'),
+	'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
+	'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
+	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
 	});
 	{/*return an error if the fonts fail to load*/}
 	if (!fontsLoaded && !fontError) {
 		return null;
 	}
 
+	{/*TODO: add dark mode*/}
 	{/*return the page view with all of its contents*/}
 	return(
 	<View style = {styles.topContainer}>
@@ -35,6 +35,7 @@ const Profile = () =>{
 		{/*green oval at the top to denote profile picture and name*/}
 		<Text style = {styles.oval}></Text>
 		<Text style = {styles.profileName}>Daniel Moreno</Text>
+		{/*TODO: set image to display profile picture*/}
 		<Image
 			style={styles.avatarImg}
 			source = {require('../assets/ProfilePageImages/AvatarPlaceholder.png')}
@@ -46,13 +47,13 @@ const Profile = () =>{
 			{/*row for profile settings*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.gear_big_empty_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.gear_big_empty_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-settings')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Settings</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-settings')}/>
 				</Col>
 			</Row>
 			{/*spacer row*/}
@@ -68,63 +69,16 @@ const Profile = () =>{
 				</Col>
 			</Row>
 			{/*row for billing details*/}
+			{/*info needed for billing: merchant stuff (email, business addr., company name, logo), customer name, customer email, invoice date, due date, payment terms like late fees, itemized list of goods/services, subtotal, taxes/fees/discounts, total due*/}
 			<Row height={40}>
 			<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.credit_card_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.credit_card_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-billingdetails')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Billing Details</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
-				</Col>
-			</Row>
-			{/*spacer row*/}
-			<Row height={33}>
-				<Col relativeColsCovered={4}>
-					<Text></Text>
-				</Col>
-				<Col relativeColsCovered={4}>
-					<Text></Text>
-				</Col>
-				<Col relativeColsCovered={4}>
-					<Text></Text>
-				</Col>
-			</Row>
-			{/*row for farmer management*/}
-			<Row height={40}>
-			<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.farmer_icon_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
-				</Col>
-				<Col relativeColsCovered={8}>
-					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Farmer Management</Text>
-				</Col>
-				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
-				</Col>
-			</Row>
-			{/*spacer row*/}
-			<Row height={33}>
-				<Col relativeColsCovered={4}>
-					<Text></Text>
-				</Col>
-				<Col relativeColsCovered={4}>
-					<Text></Text>
-				</Col>
-				<Col relativeColsCovered={4}>
-					<Text></Text>
-				</Col>
-			</Row>
-			{/*row for visibility settings*/}
-			<Row height={40}>
-			<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.visibility_eye_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
-				</Col>
-				<Col relativeColsCovered={8}>
-					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Visibility Settings</Text>
-				</Col>
-				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-billingdetails')}/>
 				</Col>
 			</Row>
 			{/*spacer row*/}
@@ -140,15 +94,16 @@ const Profile = () =>{
 				</Col>
 			</Row>
 			{/*row for log out*/}
+			{/*TODO: add logout functionality once accounts are added*/}
 			<Row height={40}>
 			<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.logout_icon_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.logout_icon_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Log Out</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
 				</Col>
 			</Row>
 		</View>

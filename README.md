@@ -1,4 +1,5 @@
 # Crop-Hero
+### Version 0.0.0
 CSCE 4901/4905 Capstone course Group 7's Github
 ## Group Members 
 Members: 
@@ -8,6 +9,10 @@ Members:
   * Matthew Bustamente
   * Isaac Boodt
   * Chandler Garrett
+
+## Tracking the App Version
+When a new version of the app is released, please update the value stored in package.json and the value stored in this README file. The code will retrieve the value from package.json using the following code, separated by each language used.
+ * **React Native:** `var pkg = require('../package.json')` followed by `const softwareVersion = pkg.version`
 
 ## IMPORTANT: Branch Management
 IMPORTANT: After pulling from the main branch for the first time, run npm install in order to install dependencies
@@ -21,7 +26,7 @@ Please check out a new branch in order to develop your feature, and the push to 
 
 ## Troubleshooting
 Assumes that you are using a Windows operating system
-#### Expo-CLI is deprecated
+#### Expo-CLI is Deprecated
  1. Open a terminal with admin privileges
  2. Enter `npm install -g yarn`
  3. Change the working directory to the base Crop-Hero directory (use `cd` or `pushd`)
@@ -48,3 +53,7 @@ Assumes that you are using a Windows operating system
      * Set Boot Option to Cold Boot
  8. Go to the Memory and Storage section
      * Increase the available RAM
+#### Error due to Different Number of Hooks Between Renders
+ 1. Find all return statements within an if-else block or a loop (called conditional returns)
+ 2. Find all instances of the useState() and useEffect() functions
+ 3. Move all instances of the useState() and useEffect() functions before any conditional returns

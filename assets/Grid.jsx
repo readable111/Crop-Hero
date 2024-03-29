@@ -1,4 +1,7 @@
-import { useCallBack, React} from 'react';
+{/*can be used to establish a grid on a page*/}
+{/*design inspired by Bootstrap's 12 column grid with similar purpose of ensuring responsive design*/}
+
+import { React } from 'react';
 import { 
 	StyleSheet, 
 	View
@@ -12,8 +15,8 @@ const Column = ({ relativeColsCovered, children, alignItems='flex-start'}) => {
 		<View style={[styles[`${relativeColsCovered}col`], styles.baseCol, alignItems && {alignItems}]}>{children}</View>
 	)
 }
-const RowTag = ({ children, height }) => (
-	<View style={[styles.row, height && {height}]}>{children}</View>
+const RowTag = ({ children, height, specifiedStyle }) => (
+	<View style={[styles.row, specifiedStyle, height && {height}]}>{children}</View>
 )
 
 
