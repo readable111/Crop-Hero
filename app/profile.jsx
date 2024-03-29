@@ -1,15 +1,14 @@
-import { useCallBack, React} from 'react';
+import { React} from 'react';
 import { 
 	StyleSheet, 
 	View, 
 	Text, 
-	Scrollable, 
 	StatusBar, 
 	Image, 
 	Alert
 } from 'react-native'
 import { useFonts } from 'expo-font'
-import { Link, router } from 'expo-router'
+import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
@@ -18,9 +17,9 @@ import AppButton from '../assets/AppButton.jsx'
 const Profile = () =>{ 
 	{/*load in all fonts used for this page*/}
 	const [fontsLoaded, fontError] = useFonts({
-	'WorkSans-Semibold': require('../assets/fonts/WorkSans/WorkSans-SemiBold.ttf'),
-	'Domine-Medium': require('../assets/fonts/Domine/Domine-Medium.ttf'),
-	'Domine-Regular': require('../assets/fonts/Domine/Domine-Regular.ttf'),
+	'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
+	'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
+	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
 	});
 	{/*return an error if the fonts fail to load*/}
 	if (!fontsLoaded && !fontError) {

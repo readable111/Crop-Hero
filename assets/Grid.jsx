@@ -1,4 +1,7 @@
-import { useCallBack, React} from 'react';
+{/*can be used to establish a grid on a page*/}
+{/*design inspired by Bootstrap's 12 column grid with similar purpose of ensuring responsive design*/}
+
+import { React } from 'react';
 import { 
 	StyleSheet, 
 	View

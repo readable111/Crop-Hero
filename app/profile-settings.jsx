@@ -3,16 +3,13 @@ import {
 	StyleSheet, 
 	View, 
 	Text, 
-	Scrollable, 
 	StatusBar, 
-	Image, 
 	Alert,
 	ScrollView
 } from 'react-native'
 import { useFonts } from 'expo-font'
-import { Link, router } from 'expo-router'
-import { Input, Switch } from 'react-native-elements'
-import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
+import { router } from 'expo-router'
+import { Switch } from 'react-native-elements'
 import { CheckBox } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Col, Row } from '../assets/Grid.jsx'
@@ -42,14 +39,14 @@ const EditProfile = () =>{
 	const [open, setOpen] = useState(false);
   	const [value, setValue] = useState(null);
   	const [items, setItems] = useState([
-    	{label: 'Farmer Joe', value: 'farmer-joe'},
-    	{label: 'Farmer Benjamin FolgerFranklin', value: 'farmer-benjamin-folgerfranklin'}
+    	{label: 'Farmer Joe', value: 'farmer joe'},
+    	{label: 'Farmer Benjamin Folger-Franklin', value: 'farmer benjamin folger-franklin'}
   	]);
 
 	
 	const [fontsLoaded, fontError] = useFonts({
-	'Domine-Regular': require('../assets/fonts/Domine/Domine-Regular.ttf'),
-	'WorkSans-Regular': require('../assets/fonts/WorkSans/WorkSans-Regular.ttf'),
+	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+	'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
 	});
 
 	if (!fontsLoaded && !fontError) {
@@ -58,6 +55,8 @@ const EditProfile = () =>{
 
 	return(
 	<ScrollView style = {styles.container}>
+		{/*create the default phone status bar at the top of the screen*/}
+		<StatusBar backgroundColor={Colors.WHITE_SMOKE} />
         {/*top row of buttons*/}
 		<View style={styles.btnGridContainer}>
 			{/*row for profile settings*/}
@@ -234,7 +233,7 @@ const EditProfile = () =>{
 							modalAnimationType='fade'
 							searchable={true}
 							searchTextInputProps={{
-								maxLength: 30
+								maxLength: 32
 							}}
 							labelProps={{
 								numberOfLines: 3
@@ -285,7 +284,7 @@ const EditProfile = () =>{
 					</Col>
 					<Col relativeColsCovered={3} alignItems='center'>
 						{/*TODO: generate code to sync account via QR code, 60s code, etc.*/}
-						<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('ToS button pressed')}/>
+						<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => router.push('/termsofservice')}/>
 					</Col>
 				</Row>
 				<Row height={45} >
@@ -295,7 +294,7 @@ const EditProfile = () =>{
 					</Col>
 					<Col relativeColsCovered={3} alignItems='center'>
 						{/*TODO: generate code to sync account via QR code, 60s code, etc.*/}
-						<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Privacy Policy button pressed')}/>
+						<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => router.push('/privacypolicy')}/>
 					</Col>
 				</Row>
 				{/*divider line*/}
@@ -316,7 +315,6 @@ const EditProfile = () =>{
 				</Row>
 			</View>
 		</View>
-		{/*display current version*/}
 	</ScrollView>
     )
 };

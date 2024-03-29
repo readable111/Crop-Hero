@@ -1,18 +1,16 @@
-import { useCallBack } from 'react';
 import { 
 	StyleSheet, 
 	View, 
 	Text, 
-	Scrollable, 
 	StatusBar, 
 	Image, 
 	Alert,
 	ScrollView
 } from 'react-native'
 import { useFonts } from 'expo-font'
-import { Link, router } from 'expo-router'
+import { router } from 'expo-router'
 import { Input } from 'react-native-elements'
-import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
@@ -21,8 +19,8 @@ import AppButton from '../assets/AppButton.jsx'
 
 const EditProfile = () =>{ 
 	const [fontsLoaded, fontError] = useFonts({
-	'Domine-Regular': require('../assets/fonts/Domine/Domine-Regular.ttf'),
-	'WorkSans-Regular': require('../assets/fonts/WorkSans/WorkSans-Regular.ttf'),
+	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+	'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
 	});
 
 	if (!fontsLoaded && !fontError) {

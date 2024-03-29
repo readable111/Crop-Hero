@@ -6,7 +6,7 @@ import { Link } from 'expo-router';
 
 const Home = () =>{ 
 	const [fontsLoaded, fontError] = useFonts({
-	'Domine-Regular': require('../assets/fonts/Domine/Domine-Regular.ttf'),
+	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
 	});
 
 	if (!fontsLoaded && !fontError) {
