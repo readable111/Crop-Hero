@@ -1,12 +1,11 @@
-import { useCallBack, useState } from 'react';
+import { useState } from 'react';
 import { 
 	StyleSheet, 
 	View, 
 	Text, 
 	StatusBar, 
 	Image, 
-	Alert,
-	ScrollView
+	Alert
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
