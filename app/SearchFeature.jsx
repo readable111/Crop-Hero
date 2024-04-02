@@ -18,6 +18,62 @@ import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js';
 import AppButton from '../assets/AppButton.jsx';
 
+{/*Function that implements the Damerau-Levenshtein Distance algorithm which considers insertions, deletions, substitutions, and transpositions*/}
+{/*Stored using this[] to improve size compression during compilation without it getting shrunk down to nothingness*/}
+{/*Takes two strings as parameters to compare*/}
+this["damerauLevenshteinDistance"] = function(s, t) {
+    var d = []; //2d matrix
+
+    // Step 1: store string lengths
+    var n = s.length;
+    var m = t.length;
+	//ensure that both strings contain characters based on principles of short-circuit evaluation
+    if (n == 0) return m;
+    if (m == 0) return n;
+
+    //Create an array of arrays in javascript with note that d is zero-indexed while n is one-indexed
+	//A descending loop is quicker
+    for (var i = n; i >= 0; i--) d[i] = [];
+
+    // Step 2: initialize the table
+    for (var i = n; i >= 0; i--) d[i][0] = i;
+    for (var j = m; j >= 0; j--) d[0][j] = j;
+
+    // Step 3: populate the 2d table
+	//remember that n and m are one-indexed as lengths
+    for (var i = 1; i <= n; i++) {
+        var s_i = s.charAt(i - 1);
+
+        // Step 4
+        for (var j = 1; j <= m; j++) {
+
+            //Check the jagged ld total so far
+            if (i == j && d[i][j] > 4) return n;
+
+            var t_j = t.charAt(j - 1);
+            var cost = (s_i == t_j) ? 0 : 1; // Step 5
+
+            //Calculate the values for Levenshtein distance
+            var mi = d[i - 1][j] + 1; //deletion
+            var b = d[i][j - 1] + 1; //insertion
+            var c = d[i - 1][j - 1] + cost; //substitution
+			//find the minimum
+            if (b < mi) mi = b;
+            if (c < mi) mi = c;
+
+            d[i][j] = mi; // Step 6
+
+            //Damerau transposition check based on optimal string alignment distance (triangle inequality doesn't hold)
+            if (i > 1 && j > 1 && s_i == t.charAt(j - 2) && s.charAt(i - 2) == t_j) {
+                d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + cost);
+            }
+        }
+    }
+
+    // Step 7
+    return d[n][m];
+}
+
 const DATA = [ 
 	{ 
 	  id: "1", 
@@ -181,7 +237,7 @@ const styles = StyleSheet.create({
 	filledSearch: {
 		opacity: 1,
 	}
-  });
+});
 
 
 export default SearchInput;
