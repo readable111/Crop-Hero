@@ -186,15 +186,24 @@ class SearchInput extends Component {
 	} 
 	
 	searchFunction = (text) => { 
+		//clean up the text based on whether or not it is a number
+		var cleanedTxt = ""
+		if (isNumeric(text)) {
+			cleanedTxt = text.cleanNumForSearch();
+		} else {
+			cleanedTxt = text.cleanTextForSearch();
+		}
+		//TODO: make FULLTEXT search of database using cleaned text and store results in arrayholder
+
+		//sort array in descending order based on DLED
 		const updatedData = this.arrayholder.sort(function(a,b){ 
+			//if number, check against HRFNumber, otherwise look at name
 			if (isNumeric(text)) {
-				var modifiedText = text.cleanNumForSearch();
 				//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's HRFNumber
-				return damerauLevenshteinDistance(a.hrfNum,modifiedText) - damerauLevenshteinDistance(b.hrfNum,modifiedText); 
+				return damerauLevenshteinDistance(a.hrfNum,cleanedTxt) - damerauLevenshteinDistance(b.hrfNum,cleanedTxt); 
 			} else {
-				var modifiedText = text.cleanTextForSearch();
 				//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's name
-				return damerauLevenshteinDistance(a.title.toUpperCase(),modifiedText) - damerauLevenshteinDistance(b.title.toUpperCase(),modifiedText); 
+				return damerauLevenshteinDistance(a.title.toUpperCase(),cleanedTxt) - damerauLevenshteinDistance(b.title.toUpperCase(),cleanedTxt); 
 			}
 		});
 		this.setState({ data: updatedData, searchValue: text }); 
