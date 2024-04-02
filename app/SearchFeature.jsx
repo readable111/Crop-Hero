@@ -12,7 +12,6 @@ import { SearchBar, ListItem } from '@rneui/themed';
 import { useFonts } from 'expo-font';
 import { router } from 'expo-router';
 import { doubleMetaphone } from 'double-metaphone';
-
 import unidecode from 'unidecode';
 import { Col, Row } from '../assets/Grid.jsx';
 import filter from "lodash.filter";
@@ -20,9 +19,62 @@ import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js';
 import AppButton from '../assets/AppButton.jsx';
 
-{/*Function that implements the Damerau-Levenshtein Edit Distance (DLED) algorithm which considers insertions, deletions, substitutions, and transpositions*/}
-{/*Stored using this[] to improve size compression during compilation without it getting shrunk down to nothingness*/}
-{/*Takes two strings as parameters to compare*/}
+//Function that takes two strings and outputs value reflecting similarity
+//Uses Dice Coefficient as faster and does a better job with substrings; If match found, returns 1
+//Uses Damerau-Levenshtein Edit Distance as more resilient to both typos and overlapping patterns; Returns DLED + 0.1
+this["compareStrings"] = function(s, t) {
+	//get the SDC value
+	sdc = sorensenDiceCoefficient(s.toUpperCase(),t.toUpperCase())
+	//if the SDC is high enough, just return that and skip DLED
+	if (sdc >= 0.45) { //TODO: tune this with proper database
+		console.log("SDC: " + s + t + sdc)
+		return 1
+	}
+	//get the DLED value
+	dled = damerauLevenshteinDistance(s.toUpperCase(),t.toUpperCase(), 10) + 0.1 //add 0.1 to ensure that it is always going to be bigger than the SDC
+	console.log("DLED: " + s + t + dled + " and SDC was " + sdc)
+	return dled
+}
+
+//Function that Ka-Weihe Fast Sorensen-Dice Coefficient (SDC) algorithm to quickly calculate value in nearly O(N) time complexity
+//Returns value in range of [0, 1] with 1 being a perfect match
+//This function was copied in rather than being imported from the library due to issues with outdated npm; comments are mine; original at www.npmjs.com/package/fast-dice-coefficient
+this["sorensenDiceCoefficient"] = function(fst, snd) {
+	//define variables
+	var i, j, k, map, match, ref, ref1, sub;
+	//if either string is too short, just return 0
+	if (fst.length < 2 || snd.length < 2) {
+		return 0;
+	}
+	//define map if previous if wasn't triggered, saving space
+	map = new Map;
+	//create a map of bigrams
+	for (i = j = 0, ref = fst.length - 2; (0 <= ref ? j <= ref : j >= ref); i = 0 <= ref ? ++j : --j) {
+		sub = fst.substr(i, 2);
+		if (map.has(sub)) {
+			map.set(sub, map.get(sub) + 1);
+		} else {
+			map.set(sub, 1);
+		}
+	}
+	//find the number of bigrams in common between the two strings based on set theory
+	match = 0;
+	for (i = k = 0, ref1 = snd.length - 2; (0 <= ref1 ? k <= ref1 : k >= ref1); i = 0 <= ref1 ? ++k : --k) {
+		sub = snd.substr(i, 2);
+		if (map.get(sub) > 0) {
+			match++;
+			map.set(sub, map.get(sub) - 1);
+		}
+	}
+	//divide the number of elements in common by the average size of sets (mostly)
+	//multiple by two because otherwise you're only getting a half
+	//simplified version of 2 * true positives / (2 * true positives + false positives + false negatives)
+	return 2.0 * match / (fst.length + snd.length - 2);
+};
+
+//Function that implements the Damerau-Levenshtein Edit Distance (DLED) algorithm which considers insertions, deletions, substitutions, and transpositions in O(len(s)*maxDistance) time complexity
+//Stored using this[] to improve size compression during compilation without it getting shrunk down to nothingness
+//Returns distance in range of [0, maxDistance]
 this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
     var d = []; //2d matrix
 
@@ -75,7 +127,7 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
 
     // Step 7: return the value in the final cell of the table
     return d[n][m];
-}
+};
 
 const DATA = [ 
 	{ 
@@ -200,10 +252,10 @@ class SearchInput extends Component {
 			//if number, check against HRFNumber, otherwise look at name
 			if (isNumeric(text)) {
 				//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's HRFNumber
-				return damerauLevenshteinDistance(a.hrfNum,cleanedTxt) - damerauLevenshteinDistance(b.hrfNum,cleanedTxt); 
+				return compareStrings(a.hrfNum,cleanedTxt) - compareStrings(b.hrfNum,cleanedTxt); 
 			} else {
 				//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's name
-				return damerauLevenshteinDistance(a.title.toUpperCase(),cleanedTxt) - damerauLevenshteinDistance(b.title.toUpperCase(),cleanedTxt); 
+				return compareStrings(a.title,cleanedTxt) - compareStrings(b.title,cleanedTxt); 
 			}
 		});
 		this.setState({ data: updatedData, searchValue: text }); 
