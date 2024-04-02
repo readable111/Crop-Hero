@@ -9,10 +9,12 @@ import {
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
+import {doubleMetaphone} from 'double-metaphone'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
+import SearchInput from './SearchFeature.jsx';
 
 const Profile = () =>{ 
 	{/*load in all fonts used for this page*/}
@@ -25,6 +27,9 @@ const Profile = () =>{
 	if (!fontsLoaded && !fontError) {
 		return null;
 	}
+
+	{/*tested and works properly to create double metaphone codes*/}
+	{/*console.log(doubleMetaphone('michael'))*/}
 
 	{/*TODO: add dark mode*/}
 	{/*return the page view with all of its contents*/}
@@ -104,6 +109,16 @@ const Profile = () =>{
 				</Col>
 				<Col relativeColsCovered={2}>
 					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
+				</Col>
+			</Row>
+
+			<Row height={220}>
+				<Col relativeColsCovered={1} alignItems='flex-end'>
+				</Col>
+				<Col relativeColsCovered={10} alignItems='center'>
+					<SearchInput placeholderText='Test...'></SearchInput>
+				</Col>
+				<Col relativeColsCovered={1}>
 				</Col>
 			</Row>
 		</View>
