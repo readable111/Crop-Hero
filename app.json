@@ -21,25 +21,28 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.CropAlly"
     },
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-    "plugins" : [
-      ["expo-font",
-      {
-      "fonts": ["./assets/fonts/Domine-Regular.ttf",
-        "./assets/fonts/Domine-Bold.ttf",
-        "./assets/fonts/Domine-Medium.ttf",
-        "./assets/fonts/Domine-SemiBold.ttf",
-        "./assets/fonts/Domine-VariableFont_wght.ttf"
-      ]
-      }
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Domine-Regular.ttf",
+            "./assets/fonts/Domine-Bold.ttf",
+            "./assets/fonts/Domine-Medium.ttf",
+            "./assets/fonts/Domine-SemiBold.ttf",
+            "./assets/fonts/Domine-VariableFont_wght.ttf"
+          ]
+        }
+      ],
+      "expo-router"
     ],
-    "expo-router"
-    ],
- "scheme" : "CropAlly-scheme"
-}
+    "scheme": "CropAlly-scheme"
+  }
 }

@@ -28,5 +28,7 @@ const Colors = {
     MEDIUM_TAUPE: '#5D4C45',
     //dark brown; darker color in soil of logo
     TAUPE: '#463731',
+    //light gray; color for status bar
+    WHITE_SMOKE: '#F5F5F5',
 }
 export default Colors;
