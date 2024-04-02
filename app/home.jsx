@@ -1,28 +1,40 @@
 import { useCallBack } from 'react';
-import { StyleSheet, View, Text, Scrollable, TextInput, FlatList } from 'react-native'
+import { StyleSheet, View, Text, Scrollable, TextInput, FlatList, Image } from 'react-native'
 import { useFonts } from 'expo-font'
-import { Link } from 'expo-router';
+import { Link } from 'expo-router'
 import Colors from '../assets/Color.js'
-import HomeCarousel from '../src/components/carousel.jsx'
+import HomeCarousel from '../src/components/carousel.jsx';
+
+
+
+
 const Home = () =>{ 
 	const [fontsLoaded, fontError] = useFonts({
-	'Domine-Regular': require('../assets/fonts/Domine/Domine-Regular.ttf'),
-	'Domine-Bold': require('../assets/fonts/Domine/Domine-Bold.ttf')
+	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+	'Domine-Bold': require('../assets/fonts/Domine-Bold.ttf')
 	});
 
 	if (!fontsLoaded && !fontError) {
 		return null;
 	}
 		
+	const weather = [{id:1, day: "Mo", weather: "rainy"},{id:2,day: "Tu", weather: "rainy"},{id:3,day: "We", weather: "rainy"},{id:4,day: "Th", weather: "rainy"},{id:5,day: "Fr", weather: "rainy"},{id:6,day: "Sat", weather: "rainy"},{id:7,day: "Sun", weather: "rainy"}]
+
+
+
 	return(
 	<View style = {styles.container}>	
-		<View style ={styles.homeTitle}>
-			<Text style = {{fontFamily: 'Domine-Bold', fontSize:50, textAlign:'center'}}>Home</Text>
-		</View>
 		<View style = {styles.weatherContainer}>
-			<View style = {styles.weatherItem}>
-				<Text style= {{fontFamily: 'Domine-Regular', fontSize:10, textAlign: 'center'}}>Mon</Text>
-			</View>
+			<FlatList
+					data = {weather}
+					horizontal
+					renderItem = {({item}) =>(	
+						<View style ={styles.weatherItem}>
+							<Image source = {require('../assets/icons/icon _day sunny_.png')} style = {styles.image}/>
+							<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
+						</View>
+					)}
+					keyExtractor={(item) => item.id}/>
 		</View>			
 		<View style= {styles.searchWrapper}>
 			<View style={styles.searchContainer}>
@@ -31,7 +43,6 @@ const Home = () =>{
 			</View>
 		</View>
 		<HomeCarousel/>
-	
 		<Link href="/profile">Link to Profile page</Link>
 	</View>)
 };
@@ -50,21 +61,18 @@ const styles = StyleSheet.create({
 	},
 	weatherContainer: {
 		backgroundColor: Colors.SCOTCH_MIST_TAN,
-		flexDirection: 'row',
-		alignContent:'flex-start',
 		height: 55,
 		width: '100%',
 		borderRadius: 5,
 		marginTop: 8,
-		marginBottom: 20
+		marginBottom: 20,
+		alignContent: 'center',
+		justifyContent: 'center'
 	},
-	weatherItem: {
-		flexDirection: 'column',
-		alignItems: 'flex-end',
+	weatherItem:{
+		alignContent: 'center',
 		height: 'auto',
-		width: '16.7%',
-		paddingHorizontal: 10
-		
+		marginHorizontal: 10
 	},
 	searchWrapper: {
 		alignItems:'center'
@@ -77,6 +85,10 @@ const styles = StyleSheet.create({
 		borderRadius: 50,
 		flexDirection: 'row',	
 		alignItems: 'flex-start'
+	},
+	image:{
+		justifyContent: 'center',
+		alignItems: 'center'
 	}
 
 
