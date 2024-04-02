@@ -71,7 +71,7 @@ const Profile = () =>{
 			{/*row for billing details*/}
 			{/*info needed for billing: merchant stuff (email, business addr., company name, logo), customer name, customer email, invoice date, due date, payment terms like late fees, itemized list of goods/services, subtotal, taxes/fees/discounts, total due*/}
 			<Row height={40}>
-			<Col relativeColsCovered={2} alignItems='flex-end'>
+				<Col relativeColsCovered={2} alignItems='flex-end'>
 					<AppButton title="" icon={Icons.credit_card_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-billingdetails')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
@@ -96,7 +96,7 @@ const Profile = () =>{
 			{/*row for log out*/}
 			{/*TODO: add logout functionality once accounts are added*/}
 			<Row height={40}>
-			<Col relativeColsCovered={2} alignItems='flex-end'>
+				<Col relativeColsCovered={2} alignItems='flex-end'>
 					<AppButton title="" icon={Icons.logout_icon_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
