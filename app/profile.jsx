@@ -9,7 +9,6 @@ import {
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
-import {doubleMetaphone} from 'double-metaphone'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
@@ -27,14 +26,6 @@ const Profile = () =>{
 	if (!fontsLoaded && !fontError) {
 		return null;
 	}
-
-	{/*tested and works properly to create double metaphone codes*/}
-	{/*console.log(doubleMetaphone('michael'))*/}
-	console.log("Start of test")
-	console.log(doubleMetaphone('carrot'))
-	console.log(doubleMetaphone('a carrot'))
-	console.log(doubleMetaphone('carrots'))
-	console.log(doubleMetaphone('\'carrot\'===+-\"carrot'))
 
 	{/*TODO: add dark mode*/}
 	{/*return the page view with all of its contents*/}

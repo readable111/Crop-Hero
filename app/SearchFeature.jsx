@@ -12,6 +12,8 @@ import { SearchBar, ListItem } from '@rneui/themed';
 import { useFonts } from 'expo-font';
 import { router } from 'expo-router';
 import { doubleMetaphone } from 'double-metaphone';
+
+import unidecode from 'unidecode';
 import { Col, Row } from '../assets/Grid.jsx';
 import filter from "lodash.filter";
 import Colors from '../assets/Color.js'
@@ -21,7 +23,7 @@ import AppButton from '../assets/AppButton.jsx';
 {/*Function that implements the Damerau-Levenshtein Edit Distance (DLED) algorithm which considers insertions, deletions, substitutions, and transpositions*/}
 {/*Stored using this[] to improve size compression during compilation without it getting shrunk down to nothingness*/}
 {/*Takes two strings as parameters to compare*/}
-this["damerauLevenshteinDistance"] = function(s, t) {
+this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
     var d = []; //2d matrix
 
     // Step 1: store string lengths
@@ -34,7 +36,7 @@ this["damerauLevenshteinDistance"] = function(s, t) {
     //Create an array of arrays in javascript with note that d is zero-indexed while n is one-indexed
 	//A descending loop is quicker
     for (var i = n; i >= 0; i--) d[i] = [];
-
+	
     // Step 2: initialize the table
     for (var i = n; i >= 0; i--) d[i][0] = i;
     for (var j = m; j >= 0; j--) d[0][j] = j;
@@ -44,7 +46,8 @@ this["damerauLevenshteinDistance"] = function(s, t) {
     for (var i = 1; i <= n; i++) {
         var s_i = s.charAt(i - 1);
         // Step 4: populate the columns of the 2d table
-        for (var j = 1; j <= m; j++) {
+		//optimize algorithm by ignoring all cells in original matrix where |i-j| > max_distance
+		for (var j = Math.max(0, i-maxDistance); j <= Math.min(m, i+maxDistance); j++) {
             //Check the jagged levenshtein distance total so far to see if the length of n can be returned as the edit distance early
             if (i == j && d[i][j] > 4) return n;
 
@@ -77,7 +80,7 @@ this["damerauLevenshteinDistance"] = function(s, t) {
 const DATA = [ 
 	{ 
 	  id: "1", 
-	  hrfNum: "1",
+	  hrfNum: "01",
 	  title: "Artichoke", 
 	}, 
 	{ 
@@ -135,8 +138,14 @@ const DATA = [
 	  hrfNum: "84",
 	  title: "Peach", 
 	}, 
+	{ 
+		id: "13", 
+		hrfNum: "08",
+		title: "Carrots", 
+	}, 
 ]; 
 
+//create the Item tag and prep it for rendering in the FlatList below the search bar
 const Item = ({ title, hrfNum }) => { 
 	return ( 
 	  <View style={styles.item}> 
@@ -144,8 +153,25 @@ const Item = ({ title, hrfNum }) => {
 	  </View> 
 	); 
 }; 
-
 const renderItem = ({ item }) => <Item title={item.title} hrfNum={item.hrfNum}/>; 
+
+//check if input is numeric
+const isNumeric = (num) => (typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num);
+
+//clean up input specifically for search function
+//list of stopwords for InnoDB with space following it to ensure it only hits words
+const StopWords = ['a ', 'about ', 'an ', 'are ', 'as ', 'at ', 'be ', 'by ', 'com ', 'de ', 'en ', 'for ', 'from ', 'how ', 'i ', 'in ', 'is ', 'it ', 'la ', 'of ', 'on ', 'or ', 'that ', 'the ', 'this ', 'to ', 'was ', 'what ', 'when ', 'where ', 'who ', 'will ', 'with ', 'und ', 'the ', 'www ']
+String.prototype.cleanTextForSearch = function(){
+	newVal = unidecode(this) //handle most Unicode characters by romanizing them
+	newVal = newVal.toUpperCase() //make all characters uppercase
+	newVal = newVal.replace(/[^A-Z ]/g, ""); //remove all characters that aren't a letter or space
+	let regex = new RegExp("\\b"+StopWords.join('|')+"\\b","gi") //remove all stopwords
+	return newVal.replace(regex, '');
+}
+String.prototype.cleanNumForSearch = function(){
+	newVal = this.replace(/[^0-9]/g, ""); //remove all characters that aren't a letter or space
+	return newVal;
+}
 
 class SearchInput extends Component { 
 	constructor(props) { 
@@ -161,7 +187,15 @@ class SearchInput extends Component {
 	
 	searchFunction = (text) => { 
 		const updatedData = this.arrayholder.sort(function(a,b){ 
-			return damerauLevenshteinDistance(a.title.toUpperCase(),text.toUpperCase()) - damerauLevenshteinDistance(b.title.toUpperCase(),text.toUpperCase()); 
+			if (isNumeric(text)) {
+				var modifiedText = text.cleanNumForSearch();
+				//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's HRFNumber
+				return damerauLevenshteinDistance(a.hrfNum,modifiedText) - damerauLevenshteinDistance(b.hrfNum,modifiedText); 
+			} else {
+				var modifiedText = text.cleanTextForSearch();
+				//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's name
+				return damerauLevenshteinDistance(a.title.toUpperCase(),modifiedText) - damerauLevenshteinDistance(b.title.toUpperCase(),modifiedText); 
+			}
 		});
 		this.setState({ data: updatedData, searchValue: text }); 
 	}; 
