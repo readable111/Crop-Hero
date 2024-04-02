@@ -1,9 +1,9 @@
 import { useCallBack } from 'react';
-import { StyleSheet, View, Text, Scrollable, TextInput } from 'react-native'
+import { StyleSheet, View, Text, Scrollable, TextInput, FlatList } from 'react-native'
 import { useFonts } from 'expo-font'
 import { Link } from 'expo-router';
 import Colors from '../assets/Color.js'
-
+import HomeCarousel from '../src/components/carousel.jsx'
 const Home = () =>{ 
 	const [fontsLoaded, fontError] = useFonts({
 	'Domine-Regular': require('../assets/fonts/Domine/Domine-Regular.ttf'),
@@ -30,6 +30,8 @@ const Home = () =>{
 				<TextInput style = {{display: 'flex', fontFamily: 'Domine-Regular', fontSize:20, alignSelf: 'center'}}>Tap to edit text</TextInput>
 			</View>
 		</View>
+		<HomeCarousel/>
+	
 		<Link href="/profile">Link to Profile page</Link>
 	</View>)
 };
