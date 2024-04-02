@@ -30,6 +30,11 @@ const Profile = () =>{
 
 	{/*tested and works properly to create double metaphone codes*/}
 	{/*console.log(doubleMetaphone('michael'))*/}
+	console.log("Start of test")
+	console.log(doubleMetaphone('carrot'))
+	console.log(doubleMetaphone('a carrot'))
+	console.log(doubleMetaphone('carrots'))
+	console.log(doubleMetaphone('\'carrot\'===+-\"carrot'))
 
 	{/*TODO: add dark mode*/}
 	{/*return the page view with all of its contents*/}

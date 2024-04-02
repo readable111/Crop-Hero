@@ -18,7 +18,7 @@ import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js';
 import AppButton from '../assets/AppButton.jsx';
 
-{/*Function that implements the Damerau-Levenshtein Distance algorithm which considers insertions, deletions, substitutions, and transpositions*/}
+{/*Function that implements the Damerau-Levenshtein Edit Distance (DLED) algorithm which considers insertions, deletions, substitutions, and transpositions*/}
 {/*Stored using this[] to improve size compression during compilation without it getting shrunk down to nothingness*/}
 {/*Takes two strings as parameters to compare*/}
 this["damerauLevenshteinDistance"] = function(s, t) {
@@ -39,19 +39,18 @@ this["damerauLevenshteinDistance"] = function(s, t) {
     for (var i = n; i >= 0; i--) d[i][0] = i;
     for (var j = m; j >= 0; j--) d[0][j] = j;
 
-    // Step 3: populate the 2d table
+    // Step 3: populate the rows of the 2d table (row-major order)
 	//remember that n and m are one-indexed as lengths
     for (var i = 1; i <= n; i++) {
         var s_i = s.charAt(i - 1);
-
-        // Step 4
+        // Step 4: populate the columns of the 2d table
         for (var j = 1; j <= m; j++) {
-
-            //Check the jagged ld total so far
+            //Check the jagged levenshtein distance total so far to see if the length of n can be returned as the edit distance early
             if (i == j && d[i][j] > 4) return n;
 
+			// Step 5: store the cost for substitution
             var t_j = t.charAt(j - 1);
-            var cost = (s_i == t_j) ? 0 : 1; // Step 5
+            var cost = (s_i == t_j) ? 0 : 1; 
 
             //Calculate the values for Levenshtein distance
             var mi = d[i - 1][j] + 1; //deletion
@@ -61,7 +60,8 @@ this["damerauLevenshteinDistance"] = function(s, t) {
             if (b < mi) mi = b;
             if (c < mi) mi = c;
 
-            d[i][j] = mi; // Step 6
+			// Step 6: store the minimum
+            d[i][j] = mi; 
 
             //Damerau transposition check based on optimal string alignment distance (triangle inequality doesn't hold)
             if (i > 1 && j > 1 && s_i == t.charAt(j - 2) && s.charAt(i - 2) == t_j) {
@@ -70,7 +70,7 @@ this["damerauLevenshteinDistance"] = function(s, t) {
         }
     }
 
-    // Step 7
+    // Step 7: return the value in the final cell of the table
     return d[n][m];
 }
 
@@ -160,11 +160,9 @@ class SearchInput extends Component {
 	} 
 	
 	searchFunction = (text) => { 
-		const updatedData = this.arrayholder.filter((item) => { 
-			const item_data = `${item.title.toUpperCase()})`; 
-			const text_data = text.toUpperCase(); 
-			return item_data.indexOf(text_data) > -1; 
-		}); 
+		const updatedData = this.arrayholder.sort(function(a,b){ 
+			return damerauLevenshteinDistance(a.title.toUpperCase(),text.toUpperCase()) - damerauLevenshteinDistance(b.title.toUpperCase(),text.toUpperCase()); 
+		});
 		this.setState({ data: updatedData, searchValue: text }); 
 	}; 
 
