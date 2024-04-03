@@ -1,23 +1,13 @@
-import { React, useState, Component } from 'react';
+import { React, Component } from 'react';
 import { 
 	StyleSheet, 
 	View, 
 	Text, 
-	StatusBar, 
-	Image, 
-	Alert,
 	FlatList
 } from 'react-native';
 import { SearchBar, ListItem } from '@rneui/themed';
-import { useFonts } from 'expo-font';
-import { router } from 'expo-router';
-import { doubleMetaphone } from 'double-metaphone';
 import unidecode from 'unidecode';
-import { Col, Row } from '../assets/Grid.jsx';
-import filter from "lodash.filter";
-import Colors from '../assets/Color.js'
-import Icons from '../assets/icons/Icons.js';
-import AppButton from '../assets/AppButton.jsx';
+import Colors from './Color.js'
 
 //Function that takes two strings and outputs value reflecting similarity
 //Uses Dice Coefficient as faster and does a better job with substrings; If match found, returns 1
@@ -27,12 +17,10 @@ this["compareStrings"] = function(s, t) {
 	sdc = sorensenDiceCoefficient(s.toUpperCase(),t.toUpperCase())
 	//if the SDC is high enough, just return that and skip DLED
 	if (sdc >= 0.45) { //TODO: tune this with proper database
-		console.log("SDC: " + s + t + sdc)
 		return 1
 	}
 	//get the DLED value
 	dled = damerauLevenshteinDistance(s.toUpperCase(),t.toUpperCase(), 10) + 0.1 //add 0.1 to ensure that it is always going to be bigger than the SDC
-	console.log("DLED: " + s + t + dled + " and SDC was " + sdc)
 	return dled
 }
 
@@ -245,7 +233,7 @@ class SearchInput extends Component {
 		} else {
 			cleanedTxt = text.cleanTextForSearch();
 		}
-		//TODO: make FULLTEXT search of database using cleaned text and store results in arrayholder
+		//TODO: make FULLTEXT SELECT search of database using cleaned text and store results in arrayholder
 
 		//sort array in descending order based on DLED
 		const updatedData = this.arrayholder.sort(function(a,b){ 
@@ -265,7 +253,7 @@ class SearchInput extends Component {
 		return ( 
 			<View style={styles.container}> 
 				<SearchBar 
-					placeholder="Search Here..."
+					placeholder="Search Crops..."
 					showCancel
 					round 
 					value={this.state.searchValue} 
@@ -329,6 +317,7 @@ const styles = StyleSheet.create({
 	},
 	filledSearch: {
 		opacity: 1,
+		zIndex: 100,
 	}
 });
 

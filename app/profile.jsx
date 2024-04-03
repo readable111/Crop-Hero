@@ -13,7 +13,7 @@ import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
-import SearchInput from './SearchFeature.jsx';
+import SearchInput from '../assets/SearchFeature.jsx';
 
 const Profile = () =>{ 
 	{/*load in all fonts used for this page*/}
@@ -107,12 +107,12 @@ const Profile = () =>{
 					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
 				</Col>
 			</Row>
-
+			{/*TODO: remove this example code of how to use SearchInput*/}
 			<Row height={220}>
 				<Col relativeColsCovered={1} alignItems='flex-end'>
 				</Col>
 				<Col relativeColsCovered={10} alignItems='center'>
-					<SearchInput placeholderText='Test...'></SearchInput>
+					<SearchInput></SearchInput>
 				</Col>
 				<Col relativeColsCovered={1}>
 				</Col>
