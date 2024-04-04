@@ -8,7 +8,6 @@ const icons = {
     visibility_eye_black: require('./visibility-eye-black.png'),
     arrow_tail_left_black: require('./arrow-tail-left-black.png'),
 
-
     gear_big_empty_white: require('./gear-big-empty-white.png'),
     arrow_right_white: require('./arrow-right-white.png'),
     credit_card_white: require('./credit-card-white.png'),
@@ -17,6 +16,9 @@ const icons = {
     visibility_eye_white: require('./visibility-eye-white.png'),
     save_icon_white: require('./save-icon-white.png'),
     pencil_edit: require('./pencil-edit-white.png'),
+
+    zip_mail_green: require('./zip-mail-green.png'),
+    flag_country_green: require('./flag-country-green.png'),
 };
 
 export default icons;
