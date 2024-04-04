@@ -5,12 +5,13 @@ import {
 	Text, 
 	StatusBar, 
 	Image, 
-	Alert
+	Alert,
+	ScrollView
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Input } from 'react-native-elements'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, BankFilled } from '@expo/vector-icons'
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
@@ -23,6 +24,8 @@ const EditProfile = () =>{
 	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
 	initialEmail = "test@example.com"
 	initialPhoneNum = "+1 (012) 345-6789"
+	initialZipCode = "02914"
+	initialState = "Rhode Island"
 
 	{/*TODO: retrieve current model*/}
 	{/*create the subscription model list*/}
@@ -78,6 +81,51 @@ const EditProfile = () =>{
 					style={styles.avatarImg}
 					source = {require('../assets/ProfilePageImages/AvatarPlaceholder.png')}
 				/>
+				{/*subscription model dropdown box*/}
+				<Text style={[styles.dropdownInputLabel]}>Subscription Model</Text>
+				<DropDownPicker
+					open={open}
+					value={value}
+					items={items}
+					setOpen={setOpen}
+					setValue={setValue}
+					setItems={setItems}
+					disableBorderRadius={true}
+					listMode='SCROLLVIEW'
+					dropDownDirection='BOTTOM'
+					props={{
+						activeOpacity: 1,
+					}}
+					scrollViewProps={{
+						nestedScrollEnabled: true
+					}}
+					labelStyle={{
+						fontFamily: 'WorkSans-Regular',
+						fontSize: 16,
+					}}
+					listItemLabelStyle={{
+						fontFamily: 'WorkSans-Regular',
+						fontSize: 16,
+					}}
+					containerStyle={{
+						width: '94%',
+						marginTop: -18,
+						zIndex: 500,
+						marginBottom: 26
+					}}
+					dropDownContainerStyle={{
+						borderWidth: 2,
+						borderColor: 'black',
+						borderRadius: 12,
+						zIndex: 500,
+					}}
+					style={{
+						borderColor: 'black',
+						borderWidth: 2,
+						borderRadius: 12,
+						height: 52,
+					}}
+				/>
 				{/*email input box*/}
 				<Text style={styles.inputLabel}>Email</Text>
 				<Input
@@ -104,44 +152,31 @@ const EditProfile = () =>{
 					keyboardType='phone-pad'
 					maxLength={32}
 				/>
-				{/*subscription model dropdown box*/}
-				<Text style={styles.inputLabel}>Subscription Model</Text>
-				<DropDownPicker
-					open={open}
-					value={value}
-					items={items}
-					setOpen={setOpen}
-					setValue={setValue}
-					setItems={setItems}
-					disableBorderRadius={true}
-					listMode='FLATLIST'
-					props={{
-						activeOpacity: 1,
-					}}
-					labelStyle={{
-						fontFamily: 'WorkSans-Regular',
-						fontSize: 16,
-					}}
-					listItemLabelStyle={{
-						fontFamily: 'WorkSans-Regular',
-						fontSize: 16,
-					}}
-					containerStyle={{
-						width: '94%',
-						marginTop: -18,
-						zIndex: 1,
-					}}
-					dropDownContainerStyle={{
-						borderWidth: 2,
-						borderColor: 'black',
-						borderRadius: 12,
-					}}
-					style={{
-						borderColor: 'black',
-						borderWidth: 2,
-						borderRadius: 12,
-						height: 52,
-					}}
+				{/*zip code input box*/}
+				<Text style={styles.inputLabel}>Zip Code</Text>
+				<Input
+					leftIcon={<Image source={Icons.zip_mail_green} style={{width: 25, height: 25}}/>}
+					inputContainerStyle={styles.inputBox}
+					inputStyle={styles.inputBoxStyle}
+					selectionColor={Colors.SANTA_GRAY}
+					placeholder='01234'
+					defaultValue={initialZipCode}
+					autoComplete='postal-code'
+					keyboardType='numeric'
+					maxLength={16}
+				/>
+				{/*state input box*/}
+				<Text style={styles.inputLabel}>State</Text>
+				<Input
+					leftIcon={<Image source={Icons.flag_country_green} style={{width: 25, height: 25}}/>}
+					inputContainerStyle={styles.inputBox}
+					inputStyle={styles.inputBoxStyle}
+					selectionColor={Colors.SANTA_GRAY}
+					placeholder='Texas'
+					defaultValue={initialState}
+					autoComplete='address-line1'
+					keyboardType='default'
+					maxLength={64}
 				/>
 			</View>
         </View>
@@ -182,15 +217,6 @@ const styles = StyleSheet.create({
 		marginTop: -100,
 		marginBottom: 20,
 	},
-	editBtn: {
-		width: 50,
-    	height: 50,
-    	borderRadius: 50 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
-		backgroundColor: Colors.IRISH_GREEN,
-		marginTop: -50,
-		marginLeft: 130,
-		marginBottom: 40,
-	},
 	inputBox: {
 		backgroundColor: "white",
 		borderWidth: 2,
@@ -215,7 +241,6 @@ const styles = StyleSheet.create({
 		marginLeft: 47,
 		alignSelf: 'flex-start',
 		backgroundColor: "white",
-		zIndex: 100,
 		fontSize: 16,
 		fontFamily: 'WorkSans-Regular',
 		borderWidth: 3,
@@ -223,7 +248,22 @@ const styles = StyleSheet.create({
 		borderColor: 'white',
 		textAlign: 'center',
 		textAlignVertical: 'top',
-		zIndex: 10,
+		zIndex: 5,
+	}, 
+	dropdownInputLabel: {
+		marginBottom: 0,
+		marginTop: -6,
+		marginLeft: 47,
+		alignSelf: 'flex-start',
+		backgroundColor: "white",
+		fontSize: 16,
+		fontFamily: 'WorkSans-Regular',
+		borderWidth: 3,
+		borderRadius: 7,
+		borderColor: 'white',
+		textAlign: 'center',
+		textAlignVertical: 'top',
+		zIndex: 501,
 	}, 
 	btnGridContainer: {
 		flex: 12, // # of columns
