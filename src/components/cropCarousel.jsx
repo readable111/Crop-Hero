@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, FlatList, Dimensions, Text, StyleSheet } from 'react-native'
+import { View, FlatList, Dimensions, Text, StyleSheet, Image } from 'react-native'
 import Colors from '../../assets/Color.js'
 const { width } = Dimensions.get('window')
 
@@ -14,10 +14,13 @@ const Carousel = ({data}) => {
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
           <View style={styles.item}>
-            <Text> {item.text}</Text> 
+            <Image source = {require("../../assets/icons/cropDefaultImage.png")}/>
+            <Text> Name: {item.cropName}</Text> 
+            <Text> Medium: {item.medium}</Text>
+            <Text> Loction: {item.location}</Text>
+            <Text> Day #: {item.day}</Text>
           </View>
         )}
-        snapToInterval={width*0.8}
       />
     </View>
 
@@ -31,20 +34,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   item: {
-    width: width * .8,
-    height: 90,
+    width: 151,
+    height: 232,
     backgroundColor: Colors.ALMOND_TAN,
     borderRadius: 10,
-    marginTop: 20,
-    marginHorizontal: 30,
+    marginLeft: 10,
+    marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
 });
 
-const HomeCarousel = () =>{
-      HomeData = [{id:1, text: "slide 1"}, {id:2, text:"slide 2"}]
-    return(<Carousel data={HomeData}/>)
+const CropCarousel = ({crops}) =>{
+    return(<Carousel data={crops}/>)
 
 }
-export default HomeCarousel
+export default CropCarousel

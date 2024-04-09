@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font'
 import { Link } from 'expo-router'
 import Colors from '../assets/Color.js'
 import HomeCarousel from '../src/components/carousel.jsx';
+import CropCarousel from '../src/components/cropCarousel.jsx';
 
 
 
@@ -19,7 +20,8 @@ const Home = () =>{
 	}
 		
 	const weather = [{id:1, day: "Mo", weather: "rainy"},{id:2,day: "Tu", weather: "rainy"},{id:3,day: "We", weather: "rainy"},{id:4,day: "Th", weather: "rainy"},{id:5,day: "Fr", weather: "rainy"},{id:6,day: "Sat", weather: "rainy"},{id:7,day: "Sun", weather: "rainy"}]
-
+	
+	const crops = [{cropName: "Carrots", medium: "Hugel Mound", location: "8", day: "7"},{cropName: "Carrots", medium: "Hugel Mound", location: "8", day: "7"},{cropName: "Carrots", medium: "Hugel Mound", location: "8", day: "7"}]
 
 
 	return(
@@ -38,11 +40,12 @@ const Home = () =>{
 		</View>			
 		<View style= {styles.searchWrapper}>
 			<View style={styles.searchContainer}>
-				<Text style = {{display: 'flex', fontFamily: 'Domine-Regular', fontSize:20, alignSelf: 'center', marginRight: 5}}>Icon</Text>
+				<Image source = {require('../assets/icons/icon _search_.png')} style={styles.searchImage}/>
 				<TextInput style = {{display: 'flex', fontFamily: 'Domine-Regular', fontSize:20, alignSelf: 'center'}}>Tap to edit text</TextInput>
 			</View>
 		</View>
 		<HomeCarousel/>
+		<CropCarousel crops = {crops}/>	
 		<Link href="/profile">Link to Profile page</Link>
 	</View>)
 };
@@ -84,9 +87,14 @@ const styles = StyleSheet.create({
 		width: '80%',
 		borderRadius: 50,
 		flexDirection: 'row',	
-		alignItems: 'flex-start'
+		alignItems: 'center',
 	},
 	image:{
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	searchImage:{
+		marginHorizontal: 5,
 		justifyContent: 'center',
 		alignItems: 'center'
 	}
