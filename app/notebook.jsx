@@ -13,6 +13,7 @@ import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
+import { Tabs } from 'antd'
 
 const Notebook = () =>{ 
 	{/*load in all fonts used for this page*/}
@@ -33,7 +34,19 @@ const Notebook = () =>{
 		{/*create the default phone status bar at the top of the screen*/}
 		<StatusBar backgroundColor={Colors.WHITE_SMOKE} />
 		{/*green oval at the top to denote profile picture and name*/}
-		
+		{/* START of ANT Code*/}
+		<Tabs
+    			defaultActiveKey="1"
+    			centered
+    			items={new Array(3).fill(null).map((_, i) => {
+      			const id = String(i + 1);
+     			return {
+        			label: `Tab ${id}`,
+        			key: id,
+        			children: `Content of Tab Pane ${id}`,
+     			};
+    			})}
+  		/>
 		
 	</View>
 	)
