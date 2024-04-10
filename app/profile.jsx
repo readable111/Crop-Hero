@@ -107,16 +107,6 @@ const Profile = () =>{
 					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
 				</Col>
 			</Row>
-			{/*TODO: remove this example code of how to use SearchInput*/}
-			<Row height={220}>
-				<Col relativeColsCovered={1} alignItems='flex-end'>
-				</Col>
-				<Col relativeColsCovered={10} alignItems='center'>
-					<SearchInput></SearchInput>
-				</Col>
-				<Col relativeColsCovered={1}>
-				</Col>
-			</Row>
 		</View>
 	</View>
 	)
