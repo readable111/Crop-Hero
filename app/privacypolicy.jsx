@@ -60,7 +60,8 @@ const styles = StyleSheet.create({
 	},
     textBlock: {
         marginLeft: 20,
-        marginTop: 20,
+        marginTop: 0,
+        paddingRight: 15,
     }
 })
 
