@@ -18,6 +18,7 @@ const Home = () =>{
 		<Text style = {{fontFamily: 'Domine-Regular', fontSize: 30}}>This is where the home page will go</Text>
 
 		<Link href="/profile">Link to Profile page</Link>
+		<Link href="/notebook">Link to Notebook page</Link>
 	</View>)
 };
 
