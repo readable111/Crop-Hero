@@ -19,7 +19,7 @@ import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
 
 
-const EditProfile = () =>{ 
+const BillingDetailsProfile = () =>{ 
 	{/*TODO: retrieve data from local storage or database*/}
 	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
 	initialEmail = "test@example.com"
@@ -273,4 +273,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default EditProfile;
+export default BillingDetailsProfile;
