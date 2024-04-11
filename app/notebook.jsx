@@ -1,4 +1,4 @@
-import { React} from 'react';
+import { React, useState } from 'react';
 import { 
 	StyleSheet, 
 	View, 
@@ -13,15 +13,18 @@ import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
-import { Tabs } from 'antd'
+import { Tab, TabView,ListItem } from '@rneui/themed';
 
-const Notebook = () =>{ 
+const Notebook = () => { 
+	const [index, setIndex] = useState(0); //constant for tabs
+	const [checked, setChecked] = useState([false, false]); // constant for checked to-do list under ListItems from RNE
 	{/*load in all fonts used for this page*/}
 	const [fontsLoaded, fontError] = useFonts({
 	'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
 	'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
 	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
 	});
+	
 	{/*return an error if the fonts fail to load*/}
 	if (!fontsLoaded && !fontError) {
 		return null;
@@ -31,23 +34,78 @@ const Notebook = () =>{
 	{/*return the page view with all of its contents*/}
 	return(
 	<View style = {styles.topContainer}>
-		{/*create the default phone status bar at the top of the screen*/}
+			{ /*Create the default phone status bar at the top of the screen*/}
 		<StatusBar backgroundColor={Colors.WHITE_SMOKE} />
-		{/*green oval at the top to denote profile picture and name*/}
-		{/* START of ANT Code*/}
-		<Tabs
-    			defaultActiveKey="1"
-    			centered
-    			items={new Array(3).fill(null).map((_, i) => {
-      			const id = String(i + 1);
-     			return {
-        			label: `Tab ${id}`,
-        			key: id,
-        			children: `Content of Tab Pane ${id}`,
-     			};
-    			})}
-  		/>
-		
+		{ /*green oval at the top to denote profile picture and name*/}
+		<Text>text</Text>
+	
+			<Tab
+				value={index}
+				onChange={(e) => setIndex(e)}
+				indicatorStyle={{
+					backgroundColor: 'white',
+					height: 3,
+				}}
+				variant="primary"
+			>
+				<Tab.Item
+					title="To-Do"
+					titleStyle={{ fontSize: 12 }}
+					//icon={{ name: 'timer', type: 'ionicon', color: 'white' }}
+					//Start of To-Do code using ReactNativeElements List Item
+				/>	
+
+				<Tab.Item
+					title="NoteBook"
+					titleStyle={{ fontSize: 12 }}
+					//icon={{ name: 'heart', type: 'ionicon', color: 'white' }}
+				/>
+
+				
+			</Tab>
+			<TabView value={index} onChange={setIndex} animationType="spring" style={{ width: '100%',height: '100%'} }>
+				<TabView.Item style={{ backgroundColor: 'red', width: '100%', height:'100%' }}>
+					<Text>To-Do</Text>
+					{/*
+					<ListItem bottomDivider>
+						<ListItem.CheckBox
+							// Use ThemeProvider to change the defaults of the checkbox
+							iconType="material-community"
+							checkedIcon="checkbox-marked"
+							uncheckedIcon="checkbox-blank-outline"
+							checked={checked[1]}
+							onPress={() => setChecked([checked[0], !checked[1]])}
+						/>
+						<ListItem.Content>
+							<ListItem.Title>User 2</ListItem.Title>
+							<ListItem.Subtitle>HR, India</ListItem.Subtitle>
+						</ListItem.Content>
+						<ListItem.Chevron />
+					</ListItem>
+					<ListItem bottomDivider>
+						<ListItem.CheckBox
+							// Use ThemeProvider to change the defaults of the checkbox
+							iconType="material-community"
+							checkedIcon="checkbox-marked"
+							uncheckedIcon="checkbox-blank-outline"
+							checked={checked[1]}
+							onPress={() => setChecked([checked[0], !checked[1]])}
+						/>
+						<ListItem.Content>
+							<ListItem.Title>User 2</ListItem.Title>
+							<ListItem.Subtitle>HR, India</ListItem.Subtitle>
+						</ListItem.Content>
+						<ListItem.Chevron />
+					</ListItem>
+					{/*End of check box code*}
+					*/}
+				</TabView.Item>
+				<TabView.Item style={{ backgroundColor: 'blue', width: '100%' }}>
+					<Text h1>Favorite</Text>
+				</TabView.Item>
+				
+			</TabView>
+			<Text>text</Text>
 	</View>
 	)
 };
