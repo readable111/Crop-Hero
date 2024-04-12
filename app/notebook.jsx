@@ -44,21 +44,22 @@ const Notebook = () => {
 				value={index}
 				onChange={(e) => setIndex(e)}
 				indicatorStyle={{
-					backgroundColor: 'white',
-					height: 3,
+					backgroundColor: 'green',
+					height: 3
 				}}
-				backgroundColor={Colors.ALMOND_TAN }
+				containerStyle={{ backgroundColor: Colors.ALMOND_TAN }}
 				variant="primary"
 			>
 				<Tab.Item
 					title="todo"
-					titleStyle={{ fontSize: 12 }}
+					titleStyle={{ fontSize: 18, color:'black' }}
 					//icon={{ name: 'timer', type: 'ionicon', color: 'white' }}
 				/>
 				<Tab.Item
 					title="notebook"
-					titleStyle={{ fontSize: 12 }}
-					backgroundColor={Colors.ALMOND_TAN }
+					titleStyle={{ fontSize: 18, color: 'black'}}
+					//backgroundColor={Colors.ALMOND_TAN}
+					//containerStyle={{ backgroundColor: Colors.ALMOND_TAN}}
 					//icon={{ name: 'heart', type: 'ionicon', color: 'white' }}
 				/>
 			</Tab>
