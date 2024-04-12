@@ -1,10 +1,10 @@
 import { React, useState } from 'react';
-import { 
-	StyleSheet, 
-	View, 
-	StatusBar, 
+import {
+	StyleSheet,
+	View,
+	StatusBar,
 	Text,
-	Image, 
+	Image,
 	Alert
 } from 'react-native'
 import { useFonts } from 'expo-font'
@@ -13,65 +13,124 @@ import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
-import { Tab, TabView,ListItem } from '@rneui/themed';
+import { Tab, TabView, ListItem } from '@rneui/themed';
+import { Input } from 'react-native-elements'
+import { AntDesign } from '@expo/vector-icons'
 
-const Notebook = () => { 
+const Notebook = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
 	const [checked, setChecked] = useState([false, false]); // constant for checked to-do list under ListItems from RNE
-	{/*load in all fonts used for this page*/}
+	{/*load in all fonts used for this page*/ }
 	const [fontsLoaded, fontError] = useFonts({
-	'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
-	'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
-	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+		'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
+		'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
+		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
 	});
-	
-	{/*return an error if the fonts fail to load*/}
+
+	{/*return an error if the fonts fail to load*/ }
 	if (!fontsLoaded && !fontError) {
 		return null;
 	}
+	//place holder variables for todo tasks when testing
+	initialFirstName = "Daniel"
+	initialLastName = "Moreno"
+	{/*TODO: add dark mode*/ }
+	{/*return the page view with all of its contents*/ }
+	return (
+		<>
+			<StatusBar backgroundColor={Colors.WHITE_SMOKE} />
+			<Text>pre text</Text>
+			<Tab
+				value={index}
+				onChange={(e) => setIndex(e)}
+				indicatorStyle={{
+					backgroundColor: 'white',
+					height: 3,
+				}}
+				backgroundColor={Colors.ALMOND_TAN }
+				variant="primary"
+			>
+				<Tab.Item
+					title="todo"
+					titleStyle={{ fontSize: 12 }}
+					//icon={{ name: 'timer', type: 'ionicon', color: 'white' }}
+				/>
+				<Tab.Item
+					title="notebook"
+					titleStyle={{ fontSize: 12 }}
+					backgroundColor={Colors.ALMOND_TAN }
+					//icon={{ name: 'heart', type: 'ionicon', color: 'white' }}
+				/>
+			</Tab>
 
-	{/*TODO: add dark mode*/}
-	{/*return the page view with all of its contents*/}
-	return(
-	<>
-		<StatusBar backgroundColor={Colors.WHITE_SMOKE} />
-		<Text>pre text</Text>
-		<Tab
-			value={index}
-			onChange={(e) => setIndex(e)}
-			indicatorStyle={{
-				backgroundColor: 'white',
-				height: 3,
-			}}
-			variant="primary"
-    	>
-		<Tab.Item
-			title="todo"
-			titleStyle={{ fontSize: 12 }}
-			icon={{ name: 'timer', type: 'ionicon', color: 'white' }}
-		/>
-		<Tab.Item
-			title="notebook"
-			titleStyle={{ fontSize: 12 }}
-			icon={{ name: 'heart', type: 'ionicon', color: 'white' }}
-		/>
-		</Tab>
+			<TabView value={index} onChange={setIndex} animationType="spring">
+				<TabView.Item style={{ backgroundColor: Colors.SANTA_GRAY, width: '100%' }}>
+					<Text>
+					
+						<ListItem bottomDivider
+							//style={{ backgroundColor :Colors.ALMOND_TAN }}
+						>
+							<ListItem.CheckBox
+								// Use ThemeProvider to change the defaults of the checkbox
+								iconType="material-community"
+								checkedIcon="checkbox-marked"
+								uncheckedIcon="checkbox-blank-outline"
+								checked={checked[0]}
+								onPress={() => setChecked([!checked[0], checked[1]])}
+								//backgroundColor={Colors.MEDIUM_TAUPE}
+							/>
+							<ListItem.Content
+								//backgroundColor={Colors.MEDIUM_TAUPE}
+							>
+								<ListItem.Title>
+									<Input
+										//change leftIcon to right icon for our use
+										//leftIcon={<AntDesign name="user" size={24} color={Colors.SOFT_GREEN} />}
+										inputContainerStyle={styles.inputBox}
+										inputStyle={styles.inputBoxStyle}
+										selectionColor={Colors.SANTA_GRAY}
+										placeholder='Enter Task'
+										//defaultValue={initialLastName}
+										autoComplete='name'
+										maxLength={256}
+									/>
 
-		<TabView value={index} onChange={setIndex} animationType="spring">
-			<TabView.Item style={{ backgroundColor: Colors.SANTA_GRAY, width: '100%' }}>
-				<Text>To-Do</Text>
-			</TabView.Item>
-			<TabView.Item style={{ backgroundColor: Colors.SANTA_GRAY, width: '100%' }}>
-				<Text>Notebook</Text>
-			</TabView.Item>
-		</TabView>
+								</ListItem.Title>
+								<ListItem.Subtitle>CA, US</ListItem.Subtitle>
+							</ListItem.Content>
+							<ListItem.Chevron />
+						</ListItem>
+						<ListItem bottomDivider>
+							<ListItem.CheckBox
+								// Use ThemeProvider to change the defaults of the checkbox
+								iconType="material-community"
+								checkedIcon="checkbox-marked"
+								uncheckedIcon="checkbox-blank-outline"
+								checked={checked[1]}
+								onPress={() => setChecked([checked[0], !checked[1]])}
+							/>
+							
+							<ListItem.Content>
+								<ListItem.Title>User 2</ListItem.Title>
+								<ListItem.Subtitle>HR, India</ListItem.Subtitle>
+							</ListItem.Content>
+							<ListItem.Chevron />
+						</ListItem>
+					</Text>
+					{/*End of check box code*/}
+					
+				</TabView.Item>
+				<TabView.Item style={{ backgroundColor: Colors.SANTA_GRAY, width: '100%' }}>
+					<Text>Notebook</Text>
+				</TabView.Item>
+			</TabView>
 
-		<Text>post text</Text>
-	</>
+			<Text>post text</Text>
+		</>
 	)
 };
 
-{/*define all of the custom styles for this page*/}
+{/*define all of the custom styles for this page*/ }
 const styles = StyleSheet.create({
 	topContainer: {
 		backgroundColor: Colors.SANTA_GRAY,
@@ -90,8 +149,8 @@ const styles = StyleSheet.create({
 	},
 	circle: {
 		width: 40,
-    	height: 40,
-    	borderRadius: 40 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
+		height: 40,
+		borderRadius: 40 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
 		backgroundColor: Colors.PERIWINKLE_GRAY,
 	},
 	profileName: {
@@ -116,10 +175,14 @@ const styles = StyleSheet.create({
 	//style for the grid layout
 	btnGridContainer: {
 		flex: 12, // # of columns
-    	marginHorizontal: "auto",
-    	width: '100%',
+		marginHorizontal: "auto",
+		width: '100%',
 		marginTop: 12,
 	}
 })
 
 export default Notebook;
+
+
+
+				
