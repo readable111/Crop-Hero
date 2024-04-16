@@ -19,28 +19,65 @@ const Home = () =>{
 		return null;
 	}
 		
-	const weather = [{id:1, day: "Mo", weather: "rainy"},{id:2,day: "Tu", weather: "rainy"},{id:3,day: "We", weather: "rainy"},{id:4,day: "Th", weather: "rainy"},{id:5,day: "Fr", weather: "rainy"},{id:6,day: "Sat", weather: "rainy"},{id:7,day: "Sun", weather: "rainy"}]
+	const weather = [{id:1, day: "Mo", weather: "rainy"},{id:2,day: "Tu", weather: "pcloudy"},{id:3,day: "We", weather: "cloudy"},{id:4,day: "Th", weather: "sunny"},{id:5,day: "Fr", weather: "sunny"},{id:6,day: "Sat", weather: "rainy"},{id:7,day: "Sun", weather: "snow"}]
 	
 	const crops = [{cropName: "Carrots", medium: "Hugel Mound", location: "8", day: "7"},{cropName: "Carrots", medium: "Hugel Mound", location: "8", day: "7"},{cropName: "Carrots", medium: "Hugel Mound", location: "8", day: "7"}]
 
 
+	const temp = [{temp: 70, perc: 80},{temp: 68, perc:68}, {temp: 70, perc: 72}]
+	
 	return(
 	<View style = {styles.container}>	
 		<View style = {styles.weatherContainer}>
 			<FlatList
 					data = {weather}
 					horizontal
-					renderItem = {({item}) =>(	
-						<View style ={styles.weatherItem}>
-							<Image source = {require('../assets/icons/icon _day sunny_.png')} style = {styles.image}/>
-							<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
-						</View>
-					)}
+					renderItem = {({item}) =>{
+						switch(item.weather){
+							case "rainy":
+							return(
+								<View style ={styles.weatherItem}>
+									<Image source = {require('../assets/icons/icon _rain_.png')} style = {styles.image}/>
+									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
+								</View>
+								)	
+							case "sunny":
+							return(
+								<View style ={styles.weatherItem}>
+									<Image source = {require('../assets/icons/icon _day sunny_.png')} style = {styles.image}/>
+									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
+								</View>
+								)
+								
+							case "cloudy":
+							return(
+								<View style ={styles.weatherItem}>
+									<Image source = {require('../assets/icons/icon_cloudy.png')} style = {styles.image}/>
+									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
+								</View>
+								)
+							case "pcloudy":
+							return(
+								<View style ={styles.weatherItem}>
+									<Image source = {require('../assets/icons/icon _day sunny overcast_.png')} style = {styles.image}/>
+									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
+								</View>
+								)
+							case "snow":
+							return(
+								<View style ={styles.weatherItem}>
+									<Image source = {require('../assets/icons/interface-weather-snow-flake--winter-freeze-snow-freezing-ice-cold-weather-snowflake.png')} style = {styles.image}/>
+									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
+								</View>
+								)
+							}
+						}
+					}
 					keyExtractor={(item) => item.id}/>
-		</View>			
-		<SearchInput/>
-		<HomeCarousel/>
-		<CropCarousel crops = {crops}/>
+		</View>		
+		<HomeCarousel data={temp} style = {styles.component}/>
+		<SearchInput style = {styles.component}/>
+		<CropCarousel crops = {crops} style = {styles.component}/>
 		<Link href="/profile">Link to Profile page</Link>
 	</View>)
 };
@@ -65,18 +102,18 @@ const styles = StyleSheet.create({
 		height: 55,
 		width: '100%',
 		borderRadius: 5,
+		flexDirection: 'row',
 		marginTop: 8,
 		marginBottom: 20,
-		alignContent: 'center',
+		alignContent: 'flex-start',
 		justifyContent: 'center'
 	},
 	weatherItem:{
+		justifyContent:'center',
 		alignContent: 'center',
+		flex: 1,
 		height: 'auto',
 		marginHorizontal: 10
-	},
-	searchWrapper: {
-		alignItems:'center'
 	},
 	searchContainer:{
 		backgroundColor: 0xFFFFFFFF,
@@ -89,15 +126,20 @@ const styles = StyleSheet.create({
 	},
 	image:{
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
+		width: 35,
+		height: 25,
+		marginBottom: 3
 	},
 	searchImage:{
 		marginHorizontal: 5,
 		justifyContent: 'center',
 		alignItems: 'center'
+	},
+	component:{
+		flex:1,
+		alignSelf: 'flex-start'
 	}
-
-
 
 })
 

@@ -1,11 +1,10 @@
 import React from 'react'
-import { View, FlatList, Dimensions, Text, StyleSheet } from 'react-native'
+import { View, FlatList, Dimensions, Text, StyleSheet, Image} from 'react-native'
 import Colors from '../../assets/Color.js'
 const { width } = Dimensions.get('window')
 
 const Carousel = ({data}) => {
   return(
-        <View style = {styles.container}>
           <FlatList
             data={data}
             horizontal
@@ -14,22 +13,20 @@ const Carousel = ({data}) => {
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
           <View style={styles.item}>
-            <Text> {item.text}</Text> 
+          <View syle = {styles.image}>
+            <Image source = {require("../../assets/icons/Thermometer.png")} />
+          </View>
+          <View style = {styles.text}>
+            <Text>Temperature: {item.temp}F</Text> 
+            <Text>Feels Like: {item.perc}F</Text> 
+          </View>
           </View>
         )}
-        snapToInterval={width*0.8}
       />
-    </View>
-
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   item: {
     width: width * .8,
     height: 90,
@@ -39,12 +36,25 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row',
+    paddingLeft: 40
   },
+  text:{
+    flex: 1,
+    alignContent: 'center',
+    justifyContent:'center',
+    marginHorizontal: 30
+  },
+  image: {
+    flex:1,
+    height: 67,
+    width: 31,
+    margin: 20,
+  }
 });
 
-const HomeCarousel = () =>{
-      HomeData = [{id:1, text: "slide 1"}, {id:2, text:"slide 2"}]
-    return(<Carousel data={HomeData}/>)
+const HomeCarousel = ({data}) =>{
+    return(<Carousel data={data}/>)
 
 }
 export default HomeCarousel
