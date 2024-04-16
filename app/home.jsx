@@ -5,7 +5,7 @@ import { Link } from 'expo-router'
 import Colors from '../assets/Color.js'
 import HomeCarousel from '../src/components/carousel.jsx';
 import CropCarousel from '../src/components/cropCarousel.jsx';
-
+import SearchInput from '../assets/SearchFeature.jsx'
 
 
 
@@ -38,14 +38,9 @@ const Home = () =>{
 					)}
 					keyExtractor={(item) => item.id}/>
 		</View>			
-		<View style= {styles.searchWrapper}>
-			<View style={styles.searchContainer}>
-				<Image source = {require('../assets/icons/icon _search_.png')} style={styles.searchImage}/>
-				<TextInput style = {{display: 'flex', fontFamily: 'Domine-Regular', fontSize:20, alignSelf: 'center'}}>Tap to edit text</TextInput>
-			</View>
-		</View>
+		<SearchInput/>
 		<HomeCarousel/>
-		<CropCarousel crops = {crops}/>	
+		<CropCarousel crops = {crops}/>
 		<Link href="/profile">Link to Profile page</Link>
 	</View>)
 };
@@ -54,6 +49,9 @@ const styles = StyleSheet.create({
 	container: {
 		backgroundColor: 0x97A5BF,
 		height: '100%',
+		flex: 1,
+		flexDirection: 'column',
+		justifyContent: 'flex-start',
 	},
 	homeTitle: {
 		backgroundColor: Colors.ALMOND_TAN,
