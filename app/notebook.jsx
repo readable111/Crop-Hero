@@ -5,7 +5,8 @@ import {
 	StatusBar,
 	Text,
 	Image,
-	Alert
+	Alert,
+	ScrollView
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
@@ -16,6 +17,7 @@ import AppButton from '../assets/AppButton.jsx'
 import { Tab, TabView, ListItem } from '@rneui/themed';
 import { Input } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons'
+import { Switch } from 'react-native-elements'
 
 const Notebook = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
@@ -37,97 +39,27 @@ const Notebook = () => {
 	{/*TODO: add dark mode*/ }
 	{/*return the page view with all of its contents*/ }
 	return (
-		<>
+		<ScrollView style={styles.container}>
+			{/*create the default phone status bar at the top of the screen*/}
 			<StatusBar backgroundColor={Colors.WHITE_SMOKE} />
-			<Text>pre text</Text>
-			<Tab
-				value={index}
-				onChange={(e) => setIndex(e)}
-				indicatorStyle={{
-					backgroundColor: 'green',
-					height: 3
-				}}
-				containerStyle={{ backgroundColor: Colors.ALMOND_TAN }}
-				variant="primary"
-			>
-				<Tab.Item
-					title="todo"
-					titleStyle={{ fontSize: 18, color:'black' }}
-					//icon={{ name: 'timer', type: 'ionicon', color: 'white' }}
-				/>
-				<Tab.Item
-					title="notebook"
-					titleStyle={{ fontSize: 18, color: 'black'}}
-					//backgroundColor={Colors.ALMOND_TAN}
-					//containerStyle={{ backgroundColor: Colors.ALMOND_TAN}}
-					//icon={{ name: 'heart', type: 'ionicon', color: 'white' }}
-				/>
-			</Tab>
-
-			<TabView value={index} onChange={setIndex} animationType="spring">
-				<TabView.Item style={{ backgroundColor: Colors.SANTA_GRAY, width: '100%' }}>
-					<Text>
+			{/*top row of buttons*/}
+			<View style={styles.btnGridContainer}>
+				{/*row for profile settings*/}
+				<Row height={80}>
 					
-						<ListItem bottomDivider
-							//style={{ backgroundColor :Colors.ALMOND_TAN }}
-						>
-							<ListItem.CheckBox
-								// Use ThemeProvider to change the defaults of the checkbox
-								iconType="material-community"
-								checkedIcon="checkbox-marked"
-								uncheckedIcon="checkbox-blank-outline"
-								checked={checked[0]}
-								onPress={() => setChecked([!checked[0], checked[1]])}
-								//backgroundColor={Colors.MEDIUM_TAUPE}
-							/>
-							<ListItem.Content
-								//backgroundColor={Colors.MEDIUM_TAUPE}
-							>
-								<ListItem.Title>
-									<Input
-										//change leftIcon to right icon for our use
-										//leftIcon={<AntDesign name="user" size={24} color={Colors.SOFT_GREEN} />}
-										inputContainerStyle={styles.inputBox}
-										inputStyle={styles.inputBoxStyle}
-										selectionColor={Colors.SANTA_GRAY}
-										placeholder='Enter Task'
-										//defaultValue={initialLastName}
-										autoComplete='name'
-										maxLength={256}
-									/>
-
-								</ListItem.Title>
-								<ListItem.Subtitle>CA, US</ListItem.Subtitle>
-							</ListItem.Content>
-							<ListItem.Chevron />
-						</ListItem>
-						<ListItem bottomDivider>
-							<ListItem.CheckBox
-								// Use ThemeProvider to change the defaults of the checkbox
-								iconType="material-community"
-								checkedIcon="checkbox-marked"
-								uncheckedIcon="checkbox-blank-outline"
-								checked={checked[1]}
-								onPress={() => setChecked([checked[0], !checked[1]])}
-							/>
-							
-							<ListItem.Content>
-								<ListItem.Title>User 2</ListItem.Title>
-								<ListItem.Subtitle>HR, India</ListItem.Subtitle>
-							</ListItem.Content>
-							<ListItem.Chevron />
-						</ListItem>
-					</Text>
-					{/*End of check box code*/}
-					
-				</TabView.Item>
-				<TabView.Item style={{ backgroundColor: Colors.SANTA_GRAY, width: '100%' }}>
-					<Text>Notebook</Text>
-				</TabView.Item>
-			</TabView>
-
-			<Text>post text</Text>
-		</>
+					<Col relativeColsCovered={2} alignItems='center'>
+						{/* <Text style={styles.pageTitle}>Settings</Text>*/}
+						<AppButton title="To-Do"  specifiedStyle={styles.oval} onPress={() => router.push('/privacypolicy')} />
+						
+					</Col>
+					<Col relativeColsCovered={2} alignItems='center'>
+						<AppButton title="Notebook" specifiedStyle={styles.oval} onPress={() => router.push('/privacypolicy')} />
+					</Col>
+				</Row>
+				
+			
+			</View>
+		</ScrollView>
 	)
 };
 
@@ -142,11 +74,18 @@ const styles = StyleSheet.create({
 	},
 	oval: {
 		backgroundColor: Colors.IRISH_GREEN,
-		width: 300,
-		height: 420,
-		borderRadius: 300 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
-		transform: [{ scaleX: 2 }],
-		marginTop: -250,
+		width: 180,
+		height: 180,
+		borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
+		//transform: [{ scaleX: 2 }],
+		//marginTop: -250,
+		paddingTop: 120,
+		marginTop: -90,
+		fontSize: 18,
+		textAlign: 'center',
+		fontFamily: 'Domine-Regular',
+		marginBottom: 20
+		
 	},
 	circle: {
 		width: 40,
@@ -175,10 +114,14 @@ const styles = StyleSheet.create({
 	},
 	//style for the grid layout
 	btnGridContainer: {
-		flex: 12, // # of columns
+		flex: 4, // # of columns
 		marginHorizontal: "auto",
 		width: '100%',
-		marginTop: 12,
+		//marginTop: 12,
+		backgroundColor: Colors.ALMOND_TAN,
+		borderRadius: 5,
+		borderColor: 'black',
+		borderWidth: 1
 	}
 })
 
