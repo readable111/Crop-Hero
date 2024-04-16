@@ -5,7 +5,6 @@ const { width } = Dimensions.get('window')
 
 const Carousel = ({data}) => {
   return(
-        <View style = {styles.container}>
           <FlatList
             data={data}
             horizontal
@@ -21,18 +20,11 @@ const Carousel = ({data}) => {
             <Text> Day #: {item.day}</Text>
           </View>
         )}
-      />
-    </View>
-
+    />
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   item: {
     width: 151,
     height: 232,
