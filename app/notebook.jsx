@@ -14,7 +14,7 @@ import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
-import { Tab, TabView, ListItem } from '@rneui/themed';
+import { Tab, TabView, ListItem, Card,Button, Icon } from '@rneui/themed';
 import { Input } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons'
 import { Switch } from 'react-native-elements'
@@ -49,7 +49,7 @@ const Notebook = () => {
 					
 					<Col relativeColsCovered={2} alignItems='center'>
 						{/* <Text style={styles.pageTitle}>Settings</Text>*/}
-						<AppButton title="To-Do"  specifiedStyle={styles.oval} onPress={() => router.push('/privacypolicy')} />
+						<AppButton title="To-Do" specifiedStyle={styles.ovals} onPress={() => { router.push('/privacypolicy') }} />
 						
 					</Col>
 					<Col relativeColsCovered={2} alignItems='center'>
@@ -59,12 +59,22 @@ const Notebook = () => {
 				
 			
 			</View>
+			<View style={styles.cardView}>
+			<Card>
+				<Card.Title>CARD WITH DIVIDER</Card.Title>
+				<Card.Divider />
+				
+				</Card>
+			</View>
 		</ScrollView>
 	)
 };
 
 {/*define all of the custom styles for this page*/ }
 const styles = StyleSheet.create({
+	container: {
+		backgroundColor: Colors.PERIWINKLE_GRAY
+    },
 	topContainer: {
 		backgroundColor: Colors.SANTA_GRAY,
 		height: '100%',
@@ -87,6 +97,30 @@ const styles = StyleSheet.create({
 		marginBottom: 20
 		
 	},
+	ovals: {
+		backgroundColor: Colors.ALMOND_TAN,
+		width: 180,
+		height: 180,
+		borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
+		//transform: [{ scaleX: 2 }],
+		//marginTop: -250,
+		paddingTop: 120,
+		marginTop: -90,
+		fontSize: 18,
+		textAlign: 'center',
+		fontFamily: 'Domine-Regular',
+		marginBottom: 20
+
+	},
+	cardView: {
+		backgroundColor: Colors.ALMOND_TAN,
+		justifyContent: 'center',
+		marginTop: 10,
+		border: 1,
+		borderColor: 'black',
+		borderRadius: 5
+    },
+
 	circle: {
 		width: 40,
 		height: 40,
@@ -129,4 +163,5 @@ export default Notebook;
 
 
 
+				
 				
