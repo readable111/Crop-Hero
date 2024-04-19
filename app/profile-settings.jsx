@@ -18,7 +18,7 @@ import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
 
 
-const EditProfile = () =>{ 
+const SettingsProfile = () =>{ 
 	{/*retrieve software version from package.json*/}
 	var pkg = require('../package.json')
 	const softwareVersion = pkg.version
@@ -370,4 +370,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default EditProfile;
+export default SettingsProfile;

@@ -3,7 +3,6 @@ import {
 	View, 
 	Text, 
 	StatusBar, 
-	Image, 
 	Alert,
 	ScrollView
 } from 'react-native'
@@ -15,6 +14,7 @@ import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
+import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
 
 
 const EditProfile = () =>{ 
@@ -49,7 +49,7 @@ const EditProfile = () =>{
 				<Col relativeColsCovered={2}>
 					{/*TODO: link save button to get input field contents and save them to the database*/}
 					{/*TODO: when picture is saved, it is compressed via react-native-compressor library & https://stackoverflow.com/questions/37639360/how-to-optimise-an-image-in-react-native before being put into proper field*/}
-					<AppButton title="" icon={Icons.save_icon_white} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={() => Alert.alert('Save icon button pressed')}/>
 				</Col>
 			</Row>
 		</View>
@@ -59,14 +59,9 @@ const EditProfile = () =>{
 			<View style = {styles.oval}></View>
 			{/*create container for the rectangular area*/}
 			<View style = {styles.rect}>
-				{/*avatar image and edit button*/}
-				{/*TODO: retrieve current picture in database*/}
-				<Image
-					style={styles.avatarImg}
-					source = {require('../assets/ProfilePageImages/AvatarPlaceholder.png')}
-				/>
-				{/*TODO: set button to let user pick local picture as profile picture*/}
-				<AppButton title="" icon={Icons.pencil_edit} specifiedStyle={styles.editBtn} onPress={() => Alert.alert('Icon Button pressed')}/>
+				{/*display an editable version of the avatar image*/}
+				<UploadImage style={styles.avatarImage} isEditable={true} />
+
 				{/*first name input box*/}
 				<Text style={styles.inputLabel}>First Name</Text>
 				<Input
@@ -150,21 +145,9 @@ const styles = StyleSheet.create({
 		marginTop: -300,
 		alignItems: 'center',
 	},
-	avatarImg: {
-		width: 130,
-		height: 130,
-		borderWidth: 2,
-		borderRadius: 75,
+	avatarImage: {
 		marginTop: -100,
-	},
-	editBtn: {
-		width: 50,
-    	height: 50,
-    	borderRadius: 50 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
-		backgroundColor: Colors.IRISH_GREEN,
-		marginTop: -50,
-		marginLeft: 130,
-		marginBottom: 40,
+        marginBottom: 40,
 	},
 	inputBox: {
 		backgroundColor: "white",
@@ -204,7 +187,7 @@ const styles = StyleSheet.create({
     	marginHorizontal: "auto",
     	width: '100',
 		marginTop: 7,
-	}
+	},
 })
 
 export default EditProfile;
