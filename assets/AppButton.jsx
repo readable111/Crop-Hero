@@ -1,15 +1,15 @@
-import { useCallBack } from 'react';
 import { 
 	StyleSheet, 
 	Text, 
 	Image, 
 	TouchableOpacity
 } from 'react-native'
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 {/*creates a custom button that changes opacity when touched, allows user to specify text style & background color*/}
-const AppButton = ({ onPress, title='Press me', icon, specifiedStyle, backgroundColor='' }) => {
+const AppButton = ({ onPress, title='Press me', icon, specifiedStyle, backgroundColor='', mci, mciSize, mciColor, ad, adSize, adColor }) => {
 	{/*containerless button with/without title and without icon*/}
-	if (!backgroundColor && !icon) {
+	if (!backgroundColor && !icon && title) {
 		return  (
 			<TouchableOpacity activeOpacity={0.5} onPress={onPress}>
 				  <Text style={specifiedStyle}>{title}</Text>
@@ -26,10 +26,32 @@ const AppButton = ({ onPress, title='Press me', icon, specifiedStyle, background
 	else if (icon && !title) { {/*button without title and with icon*/}
 		return  (
 			<TouchableOpacity activeOpacity={0.5} onPress={onPress}>
-					<Image 
-						style={specifiedStyle}
-						source={icon}
-					/>
+				<Image 
+					style={specifiedStyle}
+					source={icon}
+				/>
+			</TouchableOpacity>
+		)
+	}
+	else if (mci && !icon && !title) { {/*button without title and with material community icon*/}
+		return  (
+			<TouchableOpacity activeOpacity={0.5} onPress={onPress} style={[specifiedStyle, backgroundColor && {backgroundColor}]}>
+				<MaterialCommunityIcons 
+					name={mci}
+					size={mciSize}
+					color={mciColor}
+				/>
+			</TouchableOpacity>
+		)
+	}
+	else if (ad && !icon && !title) { {/*button without title and with ant design icon*/}
+		return  (
+			<TouchableOpacity activeOpacity={0.5} onPress={onPress} style={[specifiedStyle, backgroundColor && {backgroundColor}]}>
+				<AntDesign 
+					name={ad}
+					size={adSize} 
+					color={adColor} 
+				/>
 			</TouchableOpacity>
 		)
 	}
