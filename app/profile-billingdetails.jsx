@@ -5,18 +5,18 @@ import {
 	Text, 
 	StatusBar, 
 	Image, 
-	Alert,
-	ScrollView
+	Alert
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Input } from 'react-native-elements'
-import { AntDesign, BankFilled } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
+import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
 
 
 const BillingDetailsProfile = () =>{ 
@@ -66,7 +66,7 @@ const BillingDetailsProfile = () =>{
 				<Col relativeColsCovered={2}>
 					{/*TODO: link save button to get input field contents and save them to the database*/}
 					{/*TODO: when picture is saved, it is compressed via react-native-compressor library & https://stackoverflow.com/questions/37639360/how-to-optimise-an-image-in-react-native before being put into proper field*/}
-					<AppButton title="" icon={Icons.save_icon_white} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={() => Alert.alert('Save icon button pressed')}/>
 				</Col>
 			</Row>
 		</View>
@@ -77,10 +77,7 @@ const BillingDetailsProfile = () =>{
 			{/*create container for the rectangular area*/}
 			<View style = {styles.rect}>
 				{/*avatar image and edit button*/}
-				<Image
-					style={styles.avatarImg}
-					source = {require('../assets/ProfilePageImages/AvatarPlaceholder.png')}
-				/>
+				<UploadImage style={styles.avatarImg} isEditable={false} />
 				{/*subscription model dropdown box*/}
 				<Text style={[styles.dropdownInputLabel]}>Subscription Model</Text>
 				<DropDownPicker
@@ -210,10 +207,6 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	avatarImg: {
-		width: 130,
-		height: 130,
-		borderWidth: 2,
-		borderRadius: 75,
 		marginTop: -100,
 		marginBottom: 20,
 	},

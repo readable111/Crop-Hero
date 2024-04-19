@@ -7,6 +7,7 @@ import {
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 {/*creates a custom button that changes opacity when touched, allows user to specify text style & background color*/}
+{/*refer to https://icons.expo.fyi/Index with filters at AntDesign and MaterialCommunityIcons*/}
 const AppButton = ({ onPress, title='Press me', icon, specifiedStyle, backgroundColor='', mci, mciSize, mciColor, ad, adSize, adColor }) => {
 	{/*containerless button with/without title and without icon*/}
 	if (!backgroundColor && !icon && title) {
@@ -51,6 +52,7 @@ const AppButton = ({ onPress, title='Press me', icon, specifiedStyle, background
 					name={ad}
 					size={adSize} 
 					color={adColor} 
+					
 				/>
 			</TouchableOpacity>
 		)

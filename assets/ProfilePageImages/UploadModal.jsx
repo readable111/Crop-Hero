@@ -2,24 +2,16 @@ import {
 	StyleSheet, 
 	View, 
 	Text, 
-	StatusBar, 
-	Image, 
-	Alert,
-	ScrollView,
     Modal,
     Pressable,
     ActivityIndicator,
     TouchableOpacity
 } from 'react-native'
 import { useFonts } from 'expo-font'
-import { router } from 'expo-router'
-import { Input } from 'react-native-elements'
-import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
-import { Col, Row } from './Grid.jsx'
-import { DOMStyles } from './DOMStyles.jsx'
-import Colors from './Color.js'
-import Icons from './icons/Icons.js'
-import AppButton from './AppButton.jsx'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { Col, Row } from '../Grid.jsx'
+import { DOMStyles } from '../DOMStyles.jsx'
+import Colors from '../Color.js'
 
 const UploadModal = ({
     modalVisible,
@@ -31,8 +23,8 @@ const UploadModal = ({
 }) => {
 
     const [fontsLoaded, fontError] = useFonts({
-        'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
-        'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
+        'Domine-Regular': require('../fonts/Domine-Regular.ttf'),
+        'WorkSans-Regular': require('../fonts/WorkSans-Regular.ttf'),
     });
     
     if (!fontsLoaded && !fontError) {
