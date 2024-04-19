@@ -11,7 +11,6 @@ import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
-import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
 import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
 
@@ -70,7 +69,6 @@ const Profile = () =>{
 			{/*info needed for billing: merchant stuff (email, business addr., company name, logo), customer name, customer email, invoice date, due date, payment terms like late fees, itemized list of goods/services, subtotal, taxes/fees/discounts, total due*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
-					{/*<AppButton title="" icon={Icons.credit_card_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-billingdetails')}/>*/}
 					<AppButton title="" ad="creditcard" adSize={30} adColor={Colors.CHARCOAL} specifiedStyle={styles.circle} onPress={() => router.push('/profile-billingdetails')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
