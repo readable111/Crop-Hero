@@ -1,9 +1,11 @@
-import { React, Component } from 'react';
+import { React, Component, useState } from 'react';
 import { 
 	StyleSheet, 
 	View, 
 	Text, 
-	FlatList
+	FlatList,
+	Modal,
+	Platform
 } from 'react-native';
 import { SearchBar, ListItem } from '@rneui/themed';
 import unidecode from 'unidecode';
@@ -189,7 +191,7 @@ const DATA = [
 const Item = ({ title, hrfNum }) => { 
 	return ( 
 	  <View style={styles.item}> 
-		<Text>{title} : {hrfNum}</Text> 
+		<Text>Name: {title} | Crop Number: {hrfNum}</Text> 
 	  </View> 
 	); 
 }; 
@@ -224,7 +226,7 @@ class SearchInput extends Component {
 		}; 
 		this.arrayholder = DATA; 
 	} 
-	
+
 	searchFunction = (text) => { 
 		//clean up the text based on whether or not it is a number
 		var cleanedTxt = ""
@@ -277,15 +279,23 @@ class SearchInput extends Component {
 					}}
 					placeholderTextColor={Colors.CHARCOAL}
 				/> 
-				<FlatList 
+				{/* this.state.searchValue && <FlatList 
 					data={this.state.data.slice(0,3)} 
 					renderItem={renderItem} 
 					keyExtractor={(item) => item.id} 
 					style={[
 						styles.listStyle,
-						this.state.searchValue ? styles.filledSearch : styles.emptySearch
 					]}
-				/> 
+				/> */}		
+				{/*I use a slice and map function instead of a FlatList so that it will work on pages with ScrollView*/}
+				{/*Only possible because I only ever want the top 3 options*/}
+				<View style={styles.listStyle}>
+					{this.state.searchValue && this.state.data.slice(0,3).map((item, key) => (
+						<View key={key} style={styles.item}>
+							<Text>Name: {item.title} | Crop Number: {item.hrfNum}</Text> 
+						</View>
+					))}
+				</View>
 			</View> 
 		); 
 	} 
@@ -293,14 +303,15 @@ class SearchInput extends Component {
 
 const styles = StyleSheet.create({ 
 	container: { 
-		marginTop: 30, 
 		padding: 2, 
 		width: '100%',
 		backgroundColor: 'none',
 		alignContent: 'flex-start',
 		verticalAlign: 'bottom',
 		justifyContent: 'flex-start',
-		alignSelf: 'flex-start'
+		alignSelf: 'flex-start',
+		zIndex: 9999,
+		elevation: (Platform.OS === 'android') ? 9999 : 0,
 	}, 
 	item: { 
 		backgroundColor: Colors.SCOTCH_MIST_TAN, 
@@ -311,13 +322,10 @@ const styles = StyleSheet.create({
 	listStyle: {
 		backgroundColor: Colors.ALMOND_TAN,
 		marginTop: 0,
-	},
-	emptySearch: {
-		opacity: 0,
-	},
-	filledSearch: {
-		opacity: 1,
-		zIndex: 100,
+		position: 'absolute',
+		top: 65,
+		alignSelf: 'center',
+		width: '86%',
 	}
 });
 
