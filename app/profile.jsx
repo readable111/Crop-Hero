@@ -13,6 +13,7 @@ import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import AppButton from '../assets/AppButton.jsx'
 import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
+import NavBar from '../assets/NavBar.jsx';
 
 const Profile = () =>{ 
 	{/*load in all fonts used for this page*/}
@@ -104,6 +105,7 @@ const Profile = () =>{
 				</Col>
 			</Row>
 		</View>
+		<NavBar profileSelected/>
 	</View>
 	)
 };
