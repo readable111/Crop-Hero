@@ -3,9 +3,10 @@ import { StyleSheet, View, Text, Scrollable, TextInput, FlatList, Image } from '
 import { useFonts } from 'expo-font'
 import { Link } from 'expo-router'
 import Colors from '../assets/Color.js'
-import HomeCarousel from '../src/components/carousel.jsx';
-import CropCarousel from '../src/components/cropCarousel.jsx';
+import HomeCarousel from '../src/components/carousel.jsx'
+import CropCarousel from '../src/components/cropCarousel.jsx'
 import SearchInput from '../assets/SearchFeature.jsx'
+import NavBar from '../assets/NavBar.jsx'
 
 
 
@@ -78,7 +79,7 @@ const Home = () =>{
 		<HomeCarousel data={temp} style = {styles.component}/>
 		<SearchInput style = {styles.component}/>
 		<CropCarousel crops = {crops} style = {styles.component}/>
-		<Link href="/profile">Link to Profile page</Link>
+		<NavBar homeSelected/>
 	</View>)
 };
 

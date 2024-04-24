@@ -81,12 +81,12 @@ const styles = StyleSheet.create({
 	},
     selectedText: {
         color: Colors.MALACHITE,
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: 'Domine-Regular',
     },
     unselectedText: {
         color: Colors.SOFT_GREEN,
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: 'Domine-Regular',
     },
     navbarCircle: {
