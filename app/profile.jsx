@@ -11,9 +11,9 @@ import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
-import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
-import SearchInput from '../assets/SearchFeature.jsx';
+import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
+import NavBar from '../assets/NavBar.jsx';
 
 const Profile = () =>{ 
 	{/*load in all fonts used for this page*/}
@@ -36,11 +36,8 @@ const Profile = () =>{
 		{/*green oval at the top to denote profile picture and name*/}
 		<Text style = {styles.oval}></Text>
 		<Text style = {styles.profileName}>Daniel Moreno</Text>
-		{/*TODO: set image to display profile picture*/}
-		<Image
-			style={styles.avatarImg}
-			source = {require('../assets/ProfilePageImages/AvatarPlaceholder.png')}
-		/>
+		{/*TODO: set image to display profile picture after retrieving it*/}
+		<UploadImage style={styles.avatarImg} isEditable={false} />
 		{/*add edit profile button*/}
 		<AppButton title="Edit Profile" specifiedStyle={styles.editProfileBtn} backgroundColor={Colors.SCOTCH_MIST_TAN} onPress={() => router.push('/profile-editprofile')}/>
 		{/*add grid of profile options*/}
@@ -48,13 +45,13 @@ const Profile = () =>{
 			{/*row for profile settings*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.gear_big_empty_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-settings')}/>
+					<AppButton title="" ad="setting" adSize={30} adColor={Colors.CHARCOAL} specifiedStyle={styles.circle} onPress={() => router.push('/profile-settings')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Settings</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-settings')}/>
+					<AppButton title="" ad="right" adSize={30} adColor={Colors.CHARCOAL} specifiedStyle={styles.circle} onPress={() => router.push('/profile-settings')}/>
 				</Col>
 			</Row>
 			{/*spacer row*/}
@@ -73,13 +70,13 @@ const Profile = () =>{
 			{/*info needed for billing: merchant stuff (email, business addr., company name, logo), customer name, customer email, invoice date, due date, payment terms like late fees, itemized list of goods/services, subtotal, taxes/fees/discounts, total due*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.credit_card_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-billingdetails')}/>
+					<AppButton title="" ad="creditcard" adSize={30} adColor={Colors.CHARCOAL} specifiedStyle={styles.circle} onPress={() => router.push('/profile-billingdetails')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Billing Details</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => router.push('/profile-billingdetails')}/>
+					<AppButton title="" ad="right" adSize={30} adColor={Colors.CHARCOAL} specifiedStyle={styles.circle} onPress={() => router.push('/profile-billingdetails')}/>
 				</Col>
 			</Row>
 			{/*spacer row*/}
@@ -98,16 +95,17 @@ const Profile = () =>{
 			{/*TODO: add logout functionality once accounts are added*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" icon={Icons.logout_icon_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
+					<AppButton title="" ad="logout" adSize={30} adColor={Colors.CHARCOAL} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={{fontFamily: 'WorkSans-Semibold', fontSize: 16}}>    Log Out</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
+					<AppButton title="" ad="right" adSize={30} adColor={Colors.CHARCOAL} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
 				</Col>
 			</Row>
 		</View>
+		<NavBar profileSelected/>
 	</View>
 	)
 };
@@ -133,6 +131,8 @@ const styles = StyleSheet.create({
     	height: 40,
     	borderRadius: 40 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
 		backgroundColor: Colors.PERIWINKLE_GRAY,
+		alignItems: 'center',
+        justifyContent: 'center',
 	},
 	profileName: {
 		color: 'white',
@@ -141,10 +141,6 @@ const styles = StyleSheet.create({
 		marginTop: -130,
 	},
 	avatarImg: {
-		width: 130,
-		height: 130,
-		borderWidth: 2,
-		borderRadius: 75,
 		marginTop: 25,
 	},
 	editProfileBtn: {
