@@ -56,10 +56,12 @@ const styles = StyleSheet.create({
 		marginTop: 0,
 		marginBottom: 10,
         backgroundColor: Colors.ALMOND_TAN,
+        height: 140,
 	},
     textBlock: {
         marginLeft: 20,
-        marginTop: 20,
+        marginTop: 0,
+        paddingRight: 15,
     }
 })
 

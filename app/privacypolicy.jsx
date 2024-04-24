@@ -12,7 +12,7 @@ import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
 import { DOMStyles, Strong } from '../assets/DOMStyles.jsx'
 
-const ToS = () =>{ 
+const PrivacyPolicy = () =>{ 
 	{/*TODO: add dark mode*/}
 	{/*return the page view with all of its contents*/}
 	return(
@@ -60,8 +60,9 @@ const styles = StyleSheet.create({
 	},
     textBlock: {
         marginLeft: 20,
-        marginTop: 20,
+        marginTop: 0,
+        paddingRight: 15,
     }
 })
 
-export default ToS;
+export default PrivacyPolicy;

@@ -18,6 +18,7 @@ import { Tab, TabView, ListItem, Card,Button, Icon } from '@rneui/themed';
 import { Input } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons'
 import { Switch } from 'react-native-elements'
+import NavBar from '../assets/NavBar.jsx'
 
 const Notebook = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
@@ -66,6 +67,9 @@ const Notebook = () => {
 				
 				</Card>
 			</View>
+			<View style={{justifyContent: 'flex-end', flex: 1}}>
+				<NavBar notebookSelected/>
+			</View>
 		</ScrollView>
 	)
 };
@@ -73,7 +77,7 @@ const Notebook = () => {
 {/*define all of the custom styles for this page*/ }
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: Colors.PERIWINKLE_GRAY
+		backgroundColor: Colors.SANTA_GRAY
     },
 	topContainer: {
 		backgroundColor: Colors.SANTA_GRAY,
