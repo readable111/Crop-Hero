@@ -29,7 +29,7 @@ const Notebook = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
 	const [checked, setChecked] = useState([false, false]); // constant for checked to-do list under ListItems from RNE
 	{/*constants for date input*/ }
-	const mask = '[00]{-}[00]{-}[0000]'
+	//const mask = '[00]{-}[00]{-}[0000]'
 	{/*load in all fonts used for this page*/ }
 	const [fontsLoaded, fontError] = useFonts({
 		'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
