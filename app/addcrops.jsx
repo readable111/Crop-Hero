@@ -26,12 +26,19 @@ const addcrops = () => {
                         [fieldName]: input,
                 })
         }
+        const printStatement = () =>
+        {
+                Alert.alert('Save pressed');
+                console.log(cropData);
+        }
 
         return (
                 <ScrollView style={styles.container}> 
-                        <Text style={styles.title}>Add Crop</Text>
+                        <Text style={styles.title}>Add Crop
+                        <View></View>
+                        </Text>
                         <View style={styles.save}>
-                                <AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={() => Alert.alert('Save pressed')}/>
+                                <AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={printStatement}/>
                         </View>
 
                         <StatusBar style={{backgroundColor: 'white'}}/>
@@ -42,54 +49,66 @@ const addcrops = () => {
                                 inputContainerStyle = {styles.textBox}
                                 placeholder = 'Name'
                                 maxLength = {128}
+                                onChangeText={(text) => handleChange('name', text)}
                         />
                         <Text style={styles.label}>Variety</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
                                 placeholder = 'Variety'
                                 maxLength={128}
+                                onChangeText={(text) => handleChange('variety', text)}
                         />
                         <Text style={styles.label}>Source</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
                                 placeholder = 'Source'
                                 maxLength={128}
+                                onChangeText={(text) => handleChange('source', text)}
                         />
                         <Text style={styles.label}>Date Planted</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
                                 placeholder = 'Date Planted'
                                 maxLength={10}
+                                onChangeText={(text) => handleChange('date', text)}
                         />
                         <Text style={styles.label}>Location</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
                                 placeholder = 'Location'
                                 maxLength={128}
+                                onChangeText={(text) => handleChange('location', text)}
                         />
                         <Text style={styles.label}>Comments</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
                                 placeholder = 'Comments'
                                 maxLength={1024}
+                                onChangeText={(text) => handleChange('comments', text)}
                         />
                         <Text style={styles.label}>Started Indoors?</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
                                 placeholder = 'Indoors? (Y/N)'
                                 maxLength={3}
+                                onChangeText={(text) => handleChange('indoors', text)}
+
                         />
                         <Text style={styles.label}>Active</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
                                 placeholder = 'Active'
                                 maxLength={3}
+                                onChangeText={(text) => handleChange('active', text)}
+
                         />
                         <Text style={styles.label}>Type</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
                                 placeholder = 'Type'
                                 maxLength={64}
+                                onChangeText={(text) => handleChange('type', text)}
+
                         />         
                 </ScrollView>
         )
