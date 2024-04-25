@@ -33,7 +33,7 @@ const NavBar = ({ homeSelected=false, cropsSelected=false, notebookSelected=fals
             <View style={styles.btnGridContainer}>
                 <Row height={35}>
                         <Col relativeColsCovered={4} alignItems='center'>
-                            <AppButton title="" mci="grass" mciSize={35} mciColor={cropsSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => Alert.alert('Test')}/>
+                            <AppButton title="" mci="grass" mciSize={35} mciColor={cropsSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/crops')}/>
                         </Col>
                         <Col relativeColsCovered={4} alignItems='center'>
                             <AppButton title="" mci={notebookSelected ? "notebook-edit" : "notebook-edit-outline"} mciSize={30} mciColor={notebookSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/notebook')}/>
@@ -50,7 +50,7 @@ const NavBar = ({ homeSelected=false, cropsSelected=false, notebookSelected=fals
                 </Row>
                 <Row height={25}>
                     <Col relativeColsCovered={4} alignItems='center'>
-                        <AppButton title="Crops" specifiedStyle={cropsSelected ? styles.selectedText : styles.unselectedText} onPress={() => Alert.alert('Test')}/>
+                        <AppButton title="Crops" specifiedStyle={cropsSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/crops')}/>
                     </Col>
                     <Col relativeColsCovered={4} alignItems='center'>
                         <AppButton title="Notebook" specifiedStyle={notebookSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/notebook')}/>
