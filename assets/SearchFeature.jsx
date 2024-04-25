@@ -10,6 +10,9 @@ import {
 	Alert,
     Pressable,
     ActivityIndicator,
+	TouchableWithoutFeedback,
+	ScrollView,
+	Dimensions
 } from 'react-native';
 import { useFonts } from 'expo-font'
 import { SearchBar, ListItem } from '@rneui/themed';
@@ -44,13 +47,13 @@ const SearchModal = ({
 	global.dataArray = JSON.parse(JSON.stringify(originalData))
 
     return (
-        <Modal animationType='fade' visible={modalVisible} transparent={true}>
+        <Modal animationType='fade' visible={modalVisible} transparent={true} onRequestClose={onBackPress}>
 			{/*create the dark grey box around it and ability to close modal by clicking*/}
             <Pressable style={styles.modalContainer} onPress={onBackPress}>
                 {isLoading && <ActivityIndicator size={70} color={Colors.MEDIUM_TAUPE} />}
 
                 { !isLoading && (
-                    <View style={[styles.modalView, {backgroundColor: Colors.SANTA_GRAY}]}> 
+				<View style={[styles.modalView, {backgroundColor: Colors.SANTA_GRAY}]} > 
 						{/*Display the search bar which looks identical to the dropdown search bar but works slightly differents*/}
 						<SearchBar 
 							placeholder="Search Crops..."
@@ -86,7 +89,7 @@ const SearchModal = ({
 								</View>
 							))}
 						</View>
-                    </View>
+				</View>
                 )}
             </Pressable>
         </Modal>
@@ -473,11 +476,12 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
+		alignContent: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.7)',
 	},
 	modalView: {
-        height: '90%',
-        width: '86%',
+        height: Dimensions.get('window').height * 0.9,
+        width: Dimensions.get('window').width * 0.86,
         alignItems: 'center',
         borderRadius: 25,
     },
