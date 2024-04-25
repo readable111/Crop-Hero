@@ -11,10 +11,108 @@ import {
     Pressable,
     ActivityIndicator,
 } from 'react-native';
+import { useFonts } from 'expo-font'
 import { SearchBar, ListItem } from '@rneui/themed';
 import unidecode from 'unidecode';
 import Colors from './Color.js'
-import SearchModal from './SearchModal.jsx';
+
+const SearchModal = ({
+    modalVisible,
+    onBackPress,
+    onCameraPress,
+    onGalleryPress,
+    onRemovePress,
+    isLoading = false,
+	searchValue,
+	originalData
+}) => {
+
+    const [fontsLoaded, fontError] = useFonts({
+        'Domine-Regular': require('./fonts/Domine-Regular.ttf'),
+        'WorkSans-Regular': require('./fonts/WorkSans-Regular.ttf'),
+    });
+    
+    if (!fontsLoaded && !fontError) {
+        return null;
+    }
+
+	dataArray = originalData
+
+    return (
+        <Modal animationType='fade' visible={modalVisible} transparent={true}>
+            <Pressable style={styles.modalContainer} onPress={onBackPress}>
+                {isLoading && <ActivityIndicator size={70} color={Colors.MEDIUM_TAUPE} />}
+
+                { !isLoading && (
+                    <View style={[styles.modalView, {backgroundColor: Colors.SANTA_GRAY}]}>
+                        <Text>Search Modal</Text>
+
+						<SearchBar 
+							placeholder="Search Crops..."
+							showCancel
+							round 
+							value={searchValue} 
+							onChangeText={(text) => searchFunction(text, originalData)} 
+							autoCorrect={false} 
+							keyboardType='default'
+							style={{
+								color: 'black',
+								fontSize: 16,
+							}}
+							containerStyle={{
+								backgroundColor: 'none',
+								borderColor: 'rgba(0, 0, 0, 0)',
+								borderRadius: 50,
+								marginBottom: 0,
+								width: '90%'
+							}}
+							inputContainerStyle={{
+								backgroundColor: 'white',
+								borderRadius: 50,
+								marginBottom: 0,
+							}}
+							placeholderTextColor={Colors.CHARCOAL}
+						/> 
+
+						<View style={styles.listStyle}>
+							{searchValue && dataArray.slice(0,3).map((item, key) => (
+								<View key={key} style={styles.item}>
+									<Text>Name: {item.title} | Crop Number: {item.hrfNum} | {this.props.resultDisplayMode}</Text> 
+								</View>
+							))}
+						</View>
+                    </View>
+                )}
+            </Pressable>
+        </Modal>
+    );
+};
+
+dataArray = [ { temp: "hello world" } ]
+
+searchFunction = (text, arr) => { 
+	//clean up the text based on whether or not it is a number
+	var cleanedTxt = ""
+	if (isNumeric(text)) {
+		cleanedTxt = text.cleanNumForSearch();
+	} else {
+		cleanedTxt = text.cleanTextForSearch();
+	}
+	//TODO: make FULLTEXT SELECT search of database using cleaned text and store results in arrayholder
+
+	//sort array in descending order based on DLED
+	const updatedData = arr.sort(function(a,b){ 
+		//if number, check against HRFNumber, otherwise look at name
+		if (isNumeric(text)) {
+			//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's HRFNumber
+			return compareStrings(a.hrfNum,cleanedTxt) - compareStrings(b.hrfNum,cleanedTxt); 
+		} else {
+			//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's name
+			return compareStrings(a.title,cleanedTxt) - compareStrings(b.title,cleanedTxt); 
+		}
+	});
+	dataArray = updatedData
+}; 
 
 //Function that takes two strings and outputs value reflecting similarity
 //Uses Dice Coefficient as faster and does a better job with substrings; If match found, returns 1
@@ -281,6 +379,8 @@ class SearchInput extends Component {
 					</TouchableOpacity>
 					<SearchModal modalVisible={sampleState} 
                     	onBackPress={() => setSampleState(false)} //disappear if it is clicked outside of the modal
+						searchValue={this.state.searchValue}
+						searchFunction={(text) => this.searchFunction(text)}
                 	/>
 				</View> 
 			); 
@@ -363,7 +463,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.7)',
 	},
 	modalView: {
-        height: 130,
+        height: '90%',
         width: '80%',
         alignItems: 'center',
         borderRadius: 25,

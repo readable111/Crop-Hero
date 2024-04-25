@@ -16,6 +16,7 @@ import { SearchBar, ListItem } from '@rneui/themed';
 import unidecode from 'unidecode';
 import Colors from './Color.js'
 
+
 const SearchModal = ({
     modalVisible,
     onBackPress,
@@ -23,6 +24,7 @@ const SearchModal = ({
     onGalleryPress,
     onRemovePress,
     isLoading = false,
+	searchFunction,
 }) => {
 
     const [fontsLoaded, fontError] = useFonts({
@@ -40,7 +42,7 @@ const SearchModal = ({
                 {isLoading && <ActivityIndicator size={70} color={Colors.MEDIUM_TAUPE} />}
 
                 { !isLoading && (
-                    <View style={[styles.modalView, {backgroundColor: Colors.ALMOND_TAN}]}>
+                    <View style={[styles.modalView, {backgroundColor: Colors.SANTA_GRAY}]}>
                         <Text>Search Modal</Text>
                     </View>
                 )}
@@ -83,7 +85,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.7)',
 	},
 	modalView: {
-        height: 130,
+        height: '90%',
         width: '80%',
         alignItems: 'center',
         borderRadius: 25,
