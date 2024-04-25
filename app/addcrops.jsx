@@ -1,17 +1,39 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View, ScrollView, Image, TextInput, Alert } from 'react-native';
 import { useRouter } from 'expo-router'
 import { Input } from 'react-native-elements'
+import AppButton from '../assets/AppButton.jsx'
+
 
 const addcrops = () => {
         {/* */}
+        const [cropData, setCropData] = useState({
+                name: '',
+                variety: '',
+                source:'',
+                date:'',
+                location:'',
+                comments:'',
+                indoors:'',
+                active:'',
+                type:'',
+        })
+
+        const handleChange = (fieldName, input) => {
+                setCropData({
+                        ...cropData,
+                        [fieldName]: input,
+                })
+        }
+
         return (
                 <ScrollView style={styles.container}> 
                         <Text style={styles.title}>Add Crop</Text>
-                        <Pressable onPress={() => Alert.alert('Save Button Pressed')}>
-                                <View style={styles.save}></View>
-                        </Pressable>
+                        <View style={styles.save}>
+                                <AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={() => Alert.alert('Save pressed')}/>
+                        </View>
+
                         <StatusBar style={{backgroundColor: 'white'}}/>
                         
                         <View style={{marginTop: 70}}></View>
@@ -89,13 +111,15 @@ const styles = StyleSheet.create({
                 fontSize: 42,
         },
         save:{
-                position: 'absolute',
                 marginTop: 10,
                 marginLeft: 340,
-                width: 50,
-                height: 50,
-                borderRadius: 50 / 2,
+                width: 40,
+                height: 40,
+                borderRadius: 40/2,
                 backgroundColor: "lime",
+                marginBottom: -50,
+                justifyContent: "center",
+                alignItems: "center",
         },
         textBox:{
                 marginTop: -10,
@@ -124,6 +148,9 @@ const styles = StyleSheet.create({
         },
         inputText:{
                 fontSize: 16,
+        },
+        icon:{
+
         }
 
 
