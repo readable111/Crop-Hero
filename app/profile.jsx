@@ -108,7 +108,6 @@ const Profile = () =>{
 				</Col>
 			</Row>
 			<SearchInput resultDisplayMode="modal"/>
-			<Text>test text Lorem Ipsum random stuff</Text>
 		</View>
 	</View>
 	)

@@ -16,6 +16,8 @@ import { SearchBar, ListItem } from '@rneui/themed';
 import unidecode from 'unidecode';
 import Colors from './Color.js'
 
+global.dataArray = [ { id: "1", hrfNum: "01", title: "Artichoke" } ]
+
 const SearchModal = ({
     modalVisible,
     onBackPress,
@@ -27,6 +29,8 @@ const SearchModal = ({
 	originalData
 }) => {
 
+	const [searchBarTxt, setSearchBarTxt] = useState(searchValue);
+
     const [fontsLoaded, fontError] = useFonts({
         'Domine-Regular': require('./fonts/Domine-Regular.ttf'),
         'WorkSans-Regular': require('./fonts/WorkSans-Regular.ttf'),
@@ -36,23 +40,24 @@ const SearchModal = ({
         return null;
     }
 
-	dataArray = originalData
+	//create a copy of the array
+	global.dataArray = JSON.parse(JSON.stringify(originalData))
 
     return (
         <Modal animationType='fade' visible={modalVisible} transparent={true}>
+			{/*create the dark grey box around it and ability to close modal by clicking*/}
             <Pressable style={styles.modalContainer} onPress={onBackPress}>
                 {isLoading && <ActivityIndicator size={70} color={Colors.MEDIUM_TAUPE} />}
 
                 { !isLoading && (
-                    <View style={[styles.modalView, {backgroundColor: Colors.SANTA_GRAY}]}>
-                        <Text>Search Modal</Text>
-
+                    <View style={[styles.modalView, {backgroundColor: Colors.SANTA_GRAY}]}> 
+						{/*Display the search bar which looks identical to the dropdown search bar but works slightly differents*/}
 						<SearchBar 
 							placeholder="Search Crops..."
 							showCancel
 							round 
-							value={searchValue} 
-							onChangeText={(text) => searchFunction(text, originalData)} 
+							value={searchBarTxt} 
+							onChangeText={(text) => {searchFunction(text, originalData); setSearchBarTxt(text)}}  //call the search function and set searchBarTxt to whatever has been entered
 							autoCorrect={false} 
 							keyboardType='default'
 							style={{
@@ -73,11 +78,11 @@ const SearchModal = ({
 							}}
 							placeholderTextColor={Colors.CHARCOAL}
 						/> 
-
-						<View style={styles.listStyle}>
-							{searchValue && dataArray.slice(0,3).map((item, key) => (
+						{/*Display a list of the 10 best matches*/}
+						<View style={styles.modalListStyle}>
+							{searchBarTxt && dataArray.slice(0,10).map((item, key) => (
 								<View key={key} style={styles.item}>
-									<Text>Name: {item.title} | Crop Number: {item.hrfNum} | {this.props.resultDisplayMode}</Text> 
+									<Text>Name: {item.title} | Crop Number: {item.hrfNum}</Text> 
 								</View>
 							))}
 						</View>
@@ -88,8 +93,7 @@ const SearchModal = ({
     );
 };
 
-dataArray = [ { temp: "hello world" } ]
-
+//the search function specifically for the modal version of the search bar
 searchFunction = (text, arr) => { 
 	//clean up the text based on whether or not it is a number
 	var cleanedTxt = ""
@@ -381,6 +385,7 @@ class SearchInput extends Component {
                     	onBackPress={() => setSampleState(false)} //disappear if it is clicked outside of the modal
 						searchValue={this.state.searchValue}
 						searchFunction={(text) => this.searchFunction(text)}
+						originalData={this.state.data}
                 	/>
 				</View> 
 			); 
@@ -455,6 +460,14 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 		width: '86%',
 	},
+	modalListStyle: {
+		backgroundColor: Colors.ALMOND_TAN,
+		marginTop: 0,
+		position: 'absolute',
+		top: 90,
+		alignSelf: 'center',
+		width: '86%',
+	},
 	modalContainer: {
 		height: '100%',
         width: '100%',
@@ -464,7 +477,7 @@ const styles = StyleSheet.create({
 	},
 	modalView: {
         height: '90%',
-        width: '80%',
+        width: '86%',
         alignItems: 'center',
         borderRadius: 25,
     },
