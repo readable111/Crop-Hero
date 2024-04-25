@@ -107,7 +107,6 @@ const Profile = () =>{
 					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
 				</Col>
 			</Row>
-			<SearchInput resultDisplayMode="modal"/>
 		</View>
 	</View>
 	)
