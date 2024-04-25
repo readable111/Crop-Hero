@@ -6,23 +6,30 @@ import {
 	Text,
 	Image,
 	Alert,
-	ScrollView
+	ScrollView,
+	TouchableOpacity,
+	TextInput,
+	
 } from 'react-native'
+import moment from 'moment'
+import date from 'moment'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
-import { Tab, TabView, ListItem, Card,Button, Icon } from '@rneui/themed';
+import { Tab, TabView, ListItem, Card,Button, Icon} from '@rneui/themed';
 import { Input } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons'
 import { Switch } from 'react-native-elements'
-import NavBar from '../assets/NavBar.jsx'
+
 
 const Notebook = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
 	const [checked, setChecked] = useState([false, false]); // constant for checked to-do list under ListItems from RNE
+	{/*constants for date input*/ }
+	const mask = '[00]{-}[00]{-}[0000]'
 	{/*load in all fonts used for this page*/ }
 	const [fontsLoaded, fontError] = useFonts({
 		'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
@@ -35,12 +42,13 @@ const Notebook = () => {
 		return null;
 	}
 	//place holder variables for todo tasks when testing
-	initialFirstName = "Daniel"
-	initialLastName = "Moreno"
+	initialFirstName = ""
+	givenDate = ''
+	//givenDate=""
 	{/*TODO: add dark mode*/ }
 	{/*return the page view with all of its contents*/ }
 	return (
-		<ScrollView style={styles.container}>
+		<View style={styles.topContainer }>
 			{/*create the default phone status bar at the top of the screen*/}
 			<StatusBar backgroundColor={Colors.WHITE_SMOKE} />
 			{/*top row of buttons*/}
@@ -50,42 +58,177 @@ const Notebook = () => {
 					
 					<Col relativeColsCovered={2} alignItems='center'>
 						{/* <Text style={styles.pageTitle}>Settings</Text>*/}
-						<AppButton title="To-Do" specifiedStyle={styles.ovals} onPress={() => { router.push('/privacypolicy') }} />
+						<AppButton title="To-Do" specifiedStyle={styles.ovals} onPress={() =>  router.push('/todo') } />
 						
 					</Col>
 					<Col relativeColsCovered={2} alignItems='center'>
-						<AppButton title="Notebook" specifiedStyle={styles.oval} onPress={() => router.push('/privacypolicy')} />
+						<AppButton title="Notebook" specifiedStyle={styles.oval} onPress={() => router.push('/notebook')} />
 					</Col>
 				</Row>
 				
-			
-			</View>
-			<View style={styles.cardView}>
-			<Card>
-				<Card.Title>CARD WITH DIVIDER</Card.Title>
-				<Card.Divider />
 				
-				</Card>
 			</View>
-			<View style={{justifyContent: 'flex-end', flex: 1}}>
-				<NavBar notebookSelected/>
+			<ScrollView style={styles.scroll}>
+				<View style={styles.fstContainer}>
+					{/**trying this*/}
+					
+					<Input
+						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
+						inputContainerStyle={styles.inputBox}
+						inputStyle={styles.inputBoxStyle}
+						selectionColor={Colors.SANTA_GRAY}
+						placeholder='What happened today?'
+						defaultValue={initialFirstName}
+						autoComplete='name'
+						maxLength={256}
+						multiline={true}
+						textAlign="flex-start"
+						
+					/>
+					<AppButton specifiedStyle={{marginTop: 0, zIndex:5, alignItems: "flex-end"}} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
+				</View>
+				<View style={styles.fstContainer}>
+					<Input
+						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
+						inputContainerStyle={styles.inputBox}
+						inputStyle={styles.inputBoxStyle}
+						selectionColor={Colors.SANTA_GRAY}
+						placeholder='What happened today?'
+						defaultValue={initialFirstName}
+						autoComplete='name'
+						maxLength={256}
+						multiline={true}
+						textAlign="flex-start"
+					/>
+					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
+				</View>
+				<View style={styles.fstContainer}>
+					<Input
+						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
+						inputContainerStyle={styles.inputBox}
+						inputStyle={styles.inputBoxStyle}
+						selectionColor={Colors.SANTA_GRAY}
+						placeholder='What happened today?'
+						defaultValue={initialFirstName}
+						autoComplete='name'
+						maxLength={256}
+						multiline={true}
+						textAlign="flex-start"
+					/>
+					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
+				</View>
+				<View style={styles.fstContainer}>
+					<Input
+						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
+						inputContainerStyle={styles.inputBox}
+						inputStyle={styles.inputBoxStyle}
+						selectionColor={Colors.SANTA_GRAY}
+						placeholder='What happened today?'
+						defaultValue={initialFirstName}
+						autoComplete='name'
+						maxLength={256}
+						multiline={true}
+						textAlign="flex-start"
+					/>
+					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
+				</View>
+				<View style={styles.fstContainer}>
+					<Input
+						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
+						inputContainerStyle={styles.inputBox}
+						inputStyle={styles.inputBoxStyle}
+						selectionColor={Colors.SANTA_GRAY}
+						placeholder='What happened today?'
+						defaultValue={initialFirstName}
+						autoComplete='name'
+						maxLength={256}
+						multiline={true}
+						textAlign="flex-start"
+					/>
+					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
+				</View>
+				<View style={styles.fstContainer}>
+					<Input
+						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
+						inputContainerStyle={styles.inputBox}
+						inputStyle={styles.inputBoxStyle}
+						selectionColor={Colors.SANTA_GRAY}
+						placeholder='What happened today?'
+						defaultValue={initialFirstName}
+						autoComplete='Things I did today...'
+						maxLength={256}
+						multiline={true}
+						textAlign="flex-start"
+					/>
+					<AppButton specifiedStyle={{ marginTop: -5, zIndex: 1, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
+				</View>
+			</ScrollView>
 			</View>
-		</ScrollView>
 	)
 };
 
 {/*define all of the custom styles for this page*/ }
 const styles = StyleSheet.create({
-	container: {
-		backgroundColor: Colors.SANTA_GRAY
+	fstContainer: {
+		width: '90%',
+		backgroundColor: Colors.SCOTCH_MIST_TAN,
+		//alignItems: "center",
+		padding: 5,
+		//paddingVertial: 50,
+		marginBottom: 27,
+		marginTop: 20,
+		//paddingTop:40
+		border: 'black',
+		borderWidth: 1,
+		borderRadius: 5,
+		alignSelf:'center'
     },
-	topContainer: {
-		backgroundColor: Colors.SANTA_GRAY,
-		height: '100%',
-		flex: 1,
-		alignItems: 'center',
-		zIndex: 1,
+	scroll: {
+		//flex: 1,
+		//marginTop: 20,
+		width: '100%'
 	},
+
+	topContainer: {
+		backgroundColor: Colors.PERIWINKLE_GRAY,
+		//height: '100%',
+		flex: 1,
+		alignItems: 'flex-start',
+		flexDirection: 'column',
+		//marginBottom: '145%',
+		zIndex: -1,
+		height:20
+	},
+	inputBox: {
+		backgroundColor: "white",
+		borderWidth: 2,
+		borderRadius: 5,
+		borderColor: 'black',
+		overflow: 'hidden',
+		borderBottomWidth: 2,
+		//marginTop: -18,
+		fontFamily: 'WorkSans-Regular',
+		fontSize: 16,
+		//paddingLeft: 10,
+		//marginBottom: 0,
+		zIndex: 5,
+		flex: 3,
+		marginTop: 35,
+		marginBottom: -15
+	},
+	inputDateStyle: {
+		paddingBottom: 20,
+		
+    },
+	inputBoxStyle: {
+		fontFamily: 'WorkSans-Regular',
+		fontSize: 16,
+		color: 'black',
+		paddingLeft: 1,
+		//height: 20
+		padding:2
+	},
+	
 	oval: {
 		backgroundColor: Colors.IRISH_GREEN,
 		width: 180,
@@ -98,7 +241,7 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		textAlign: 'center',
 		fontFamily: 'Domine-Regular',
-		marginBottom: 20
+		//marginBottom: 20
 		
 	},
 	ovals: {
@@ -113,37 +256,19 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		textAlign: 'center',
 		fontFamily: 'Domine-Regular',
-		marginBottom: 20
+		//marginBottom: 20
 
 	},
-	cardView: {
-		backgroundColor: Colors.ALMOND_TAN,
-		justifyContent: 'center',
-		marginTop: 10,
-		border: 1,
-		borderColor: 'black',
-		borderRadius: 5
-    },
 
-	circle: {
-		width: 40,
-		height: 40,
-		borderRadius: 40 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
-		backgroundColor: Colors.PERIWINKLE_GRAY,
-	},
+
+	
 	profileName: {
 		color: 'white',
 		fontSize: 36,
 		fontFamily: 'Domine-Medium',
-		marginTop: -130,
+		//marginTop: -130,
 	},
-	avatarImg: {
-		width: 130,
-		height: 130,
-		borderWidth: 2,
-		borderRadius: 75,
-		marginTop: 25,
-	},
+	
 	editProfileBtn: {
 		fontSize: 16,
 		color: "black",
@@ -152,14 +277,20 @@ const styles = StyleSheet.create({
 	},
 	//style for the grid layout
 	btnGridContainer: {
-		flex: 4, // # of columns
+		//flex: -1, // # of columns
 		marginHorizontal: "auto",
 		width: '100%',
 		//marginTop: 12,
 		backgroundColor: Colors.ALMOND_TAN,
 		borderRadius: 5,
 		borderColor: 'black',
-		borderWidth: 1
+		borderWidth: 1,
+		//marginBottom: -20,
+		height:'13%'
+		//height: 20,
+		
+		
+
 	}
 })
 
