@@ -18,7 +18,7 @@ import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
 
 
-const EditProfile = () =>{ 
+const SettingsProfile = () =>{ 
 	{/*retrieve software version from package.json*/}
 	var pkg = require('../package.json')
 	const softwareVersion = pkg.version
@@ -77,7 +77,7 @@ const EditProfile = () =>{
 		<View style={{alignItems:'center'}}>
 			<View style={styles.settingsCategory}>
 				{/*light/dark mode toggle*/}
-				<Row height={70} >
+				<Row height={80} >
 					<Col relativeColsCovered={9} alignItems='flex-start' >
 						<Text style={styles.settingsTitle}>Light/Dark Mode</Text>
 						<Text style={styles.settingsDesc}>Toggle between light mode (left) and dark mode (right)</Text>
@@ -93,14 +93,9 @@ const EditProfile = () =>{
 					</Col>
 				</Row>
 				{/*divider line*/}
-				<View
-					style={{
-						borderBottomColor: 'black',
-						borderBottomWidth: StyleSheet.hairlineWidth,
-					}}
-				/>
+				<View style={styles.dividerLine} />
 				{/*toggle between default crop visibility */}
-				<Row height={70} >
+				<Row height={90} >
 					<Col relativeColsCovered={9} alignItems='flex-start' >
 						<Text style={styles.settingsTitle}>Default Visibility</Text>
 						<Text style={styles.settingsDesc}>Toggle between private (left) and public (right) for the default visibility</Text>
@@ -116,14 +111,9 @@ const EditProfile = () =>{
 					</Col>
 				</Row>
 				{/*divider line*/}
-				<View
-					style={{
-						borderBottomColor: 'black',
-						borderBottomWidth: StyleSheet.hairlineWidth,
-					}}
-				/>
+				<View style={styles.dividerLine} />
 				{/*enable push notifications toggle*/}
-				<Row height={70} >
+				<Row height={90} >
 					<Col relativeColsCovered={9} alignItems='flex-start' >
 						<Text style={styles.settingsTitle}>Push Notifications</Text>
 						<Text style={styles.settingsDesc}>Toggle between disabled (left) and enabled (right) push notifications</Text>
@@ -138,17 +128,17 @@ const EditProfile = () =>{
 						></Switch>
 					</Col>
 				</Row>
-				<Row height={50} specifiedStyle={{marginTop: -20,}}>
+				<Row height={53} specifiedStyle={{marginTop: -20,}}>
 					<Col relativeColsCovered={9} alignItems='center' >
 					<Text style={(hasNotificationsEnabled) ? {
 							fontFamily: 'WorkSans-Regular',
-							fontSize: 12,
-							marginTop: 0,
+							fontSize: 14,
+							marginTop: 10,
 							paddingTop: 0,
 							color: Colors.IRISH_GREEN,
 						} : {
 							fontFamily: 'WorkSans-Regular',
-							fontSize: 12,
+							fontSize: 14,
 							fontStyle: 'italic',
 							marginTop: 0,
 							paddingTop: 0,
@@ -166,24 +156,24 @@ const EditProfile = () =>{
 							disabledStyle={{backgroundColor: 'yellow', opacity: 0}}
 							checked={hasTaskNotificationsEnabled}
 							onIconPress={hasNotificationsEnabled ? () => setHasTaskNotificationsEnabled(!hasTaskNotificationsEnabled) : handleDisabledEvent}
-							size={15}
+							size={25}
 							uncheckedColor={Colors.SANTA_GRAY}
 							checkedColor={Colors.IRISH_GREEN}
 							containerStyle={{backgroundColor: Colors.SCOTCH_MIST_TAN}}
 						/>
 					</Col>
 				</Row>
-				<Row height={50} specifiedStyle={{marginTop: -20,}}>
+				<Row height={53} specifiedStyle={{marginTop: -20,}}>
 					<Col relativeColsCovered={9} alignItems='center' >
 						<Text style={(hasNotificationsEnabled) ? {
 							fontFamily: 'WorkSans-Regular',
-							fontSize: 12,
+							fontSize: 14,
 							marginTop: 0,
 							paddingTop: 0,
 							color: Colors.IRISH_GREEN,
 						} : {
 							fontFamily: 'WorkSans-Regular',
-							fontSize: 12,
+							fontSize: 14,
 							fontStyle: 'italic',
 							marginTop: 0,
 							paddingTop: 0,
@@ -201,7 +191,7 @@ const EditProfile = () =>{
 							disabledStyle={{backgroundColor: 'yellow', opacity: 0}}
 							checked={hasPaymentNotificationsEnabled}
 							onIconPress={hasNotificationsEnabled ? () => setHasPaymentNotificationsEnabled(!hasPaymentNotificationsEnabled) : handleDisabledEvent}
-							size={15}
+							size={25}
 							uncheckedColor={Colors.SANTA_GRAY}
 							checkedColor={Colors.IRISH_GREEN}
 							containerStyle={{backgroundColor: Colors.SCOTCH_MIST_TAN}}
@@ -213,9 +203,9 @@ const EditProfile = () =>{
 		{/*user preferences section*/}
 		<Text style={styles.categoryTitle}>Account Details</Text>
 		<View style={{alignItems:'center'}}>
-			<View style={styles.settingsCategory}>
+			<View style={[styles.settingsCategory2]}>
 				{/*select current former*/}
-				<Row height={70} >
+				<Row height={110} >
 					<Col relativeColsCovered={7} alignItems='flex-start' >
 						<Text style={styles.settingsTitle}>Current Farmer</Text>
 						<Text style={styles.settingsDesc}>Select current farmer from the list or type in new name and select italic version</Text>
@@ -252,14 +242,9 @@ const EditProfile = () =>{
 					</Col>
 				</Row>
 				{/*divider line*/}
-				<View
-					style={{
-						borderBottomColor: 'black',
-						borderBottomWidth: StyleSheet.hairlineWidth,
-					}}
-				/>
+				<View style={styles.dividerLine} />
 				{/*allow account sync across multiple devices*/}
-				<Row height={65} >
+				<Row height={90} >
 					<Col relativeColsCovered={9} alignItems='flex-start' >
 						<Text style={styles.settingsTitle}>Account Sync</Text>
 						<Text style={styles.settingsDesc}>Generate a code that can be entered into another device to sync account</Text>
@@ -270,14 +255,9 @@ const EditProfile = () =>{
 					</Col>
 				</Row>
 				{/*divider line*/}
-				<View
-					style={{
-						borderBottomColor: 'black',
-						borderBottomWidth: StyleSheet.hairlineWidth,
-					}}
-				/>
+				<View style={styles.dividerLine} />
 				{/*display policies that user has agreed to*/}
-				<Row height={40} >
+				<Row height={60} >
 					<Col relativeColsCovered={9} alignItems='flex-start' >
 						<Text style={styles.settingsTitle}>Terms of Service</Text>
 						<Text style={styles.settingsDesc}>Read Terms of Service</Text>
@@ -287,7 +267,7 @@ const EditProfile = () =>{
 						<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => router.push('/termsofservice')}/>
 					</Col>
 				</Row>
-				<Row height={45} >
+				<Row height={60} >
 					<Col relativeColsCovered={9} alignItems='flex-start' >
 						<Text style={styles.settingsTitle}>Privacy Policy</Text>
 						<Text style={styles.settingsDesc}>Read Privacy Policy</Text>
@@ -298,14 +278,9 @@ const EditProfile = () =>{
 					</Col>
 				</Row>
 				{/*divider line*/}
-				<View
-					style={{
-						borderBottomColor: 'black',
-						borderBottomWidth: StyleSheet.hairlineWidth,
-					}}
-				/>
+				<View style={styles.dividerLine} />
 				{/*display app version as specified in package.json*/}
-				<Row height={30} >
+				<Row height={40} >
 					<Col relativeColsCovered={9} alignItems='flex-start' >
 						<Text style={styles.settingsTitle}>App Version</Text>
 					</Col>
@@ -341,29 +316,42 @@ const styles = StyleSheet.create({
 	},
 	categoryTitle: {
 		fontFamily: 'WorkSans-Regular',
-		fontSize: 20,
+		fontSize: 22,
 		marginTop: 10,
 		marginLeft: 39,
 	},
 	settingsCategory: {
 		backgroundColor: Colors.SCOTCH_MIST_TAN,
 		width: '90%',
-		height: 270,
+		height: 380,
 		borderRadius: 12,
 		flex: 12, // # of columns
 		paddingLeft: 15,
 		paddingRight: 5,
+		paddingTop: 10,
+	},
+	settingsCategory2: {
+		backgroundColor: Colors.SCOTCH_MIST_TAN,
+		width: '90%',
+		height: 440,
+		borderRadius: 12,
+		flex: 12, // # of columns
+		paddingLeft: 15,
+		paddingRight: 5,
+		paddingTop: 10,
 	},
 	settingsTitle: {
 		fontFamily: 'WorkSans-Regular',
-		fontSize: 16,
+		fontSize: 18,
+		marginTop: 0,
 		marginBottom: 0,
 		paddingBottom: 0,
 	},
 	settingsDesc: {
 		fontFamily: 'WorkSans-Regular',
-		fontSize: 12,
+		fontSize: 16,
 		marginTop: 0,
+		marginBottom: 0,
 		paddingTop: 0,
 	},
 	settingsDescDisabled: {
@@ -373,6 +361,13 @@ const styles = StyleSheet.create({
 		paddingTop: 0,
 		color: 'red',
 	},
+	dividerLine: {
+		borderBottomColor: 'black',
+		borderBottomWidth: StyleSheet.hairlineWidth,
+		height: 0,
+		marginTop: 10,
+		marginBottom: 10,
+	}
 })
 
-export default EditProfile;
+export default SettingsProfile;
