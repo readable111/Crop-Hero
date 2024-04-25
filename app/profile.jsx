@@ -13,7 +13,7 @@ import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
-import SearchInput from '../assets/SearchFeature.jsx';
+import SearchInput from '../assets/SearchFeature.jsx'
 
 const Profile = () =>{ 
 	{/*load in all fonts used for this page*/}
@@ -107,6 +107,8 @@ const Profile = () =>{
 					<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
 				</Col>
 			</Row>
+			<SearchInput resultDisplayMode="modal"/>
+			<Text>test text Lorem Ipsum random stuff</Text>
 		</View>
 	</View>
 	)

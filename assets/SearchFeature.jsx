@@ -1,15 +1,20 @@
-import { React, Component, useState } from 'react';
+import { React, Component, useState, setState } from 'react';
 import { 
 	StyleSheet, 
 	View, 
 	Text, 
 	FlatList,
 	Modal,
-	Platform
+	Platform,
+	TouchableOpacity,
+	Alert,
+    Pressable,
+    ActivityIndicator,
 } from 'react-native';
 import { SearchBar, ListItem } from '@rneui/themed';
 import unidecode from 'unidecode';
 import Colors from './Color.js'
+import SearchModal from './SearchModal.jsx';
 
 //Function that takes two strings and outputs value reflecting similarity
 //Uses Dice Coefficient as faster and does a better job with substrings; If match found, returns 1
@@ -187,16 +192,6 @@ const DATA = [
 	}, 
 ]; 
 
-//create the Item tag and prep it for rendering in the FlatList below the search bar
-const Item = ({ title, hrfNum }) => { 
-	return ( 
-	  <View style={styles.item}> 
-		<Text>Name: {title} | Crop Number: {hrfNum}</Text> 
-	  </View> 
-	); 
-}; 
-const renderItem = ({ item }) => <Item title={item.title} hrfNum={item.hrfNum}/>; 
-
 //check if input is numeric
 const isNumeric = (num) => (typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num);
 
@@ -223,8 +218,10 @@ class SearchInput extends Component {
 			data: DATA, 
 			error: null, 
 			searchValue: "", 
+			sampleState: false,
 		}; 
 		this.arrayholder = DATA; 
+		this.props.resultDisplayMode = "dropdown";
 	} 
 
 	searchFunction = (text) => { 
@@ -251,53 +248,84 @@ class SearchInput extends Component {
 		this.setState({ data: updatedData, searchValue: text }); 
 	}; 
 
-	render() { 
-		return ( 
-			<View style={styles.container}> 
-				<SearchBar 
-					placeholder="Search Crops..."
-					showCancel
-					round 
-					value={this.state.searchValue} 
-					onChangeText={(text) => this.searchFunction(text)} 
-					autoCorrect={false} 
-					keyboardType='default'
-					style={{
-						color: 'black',
-						fontSize: 16,
-					}}
-					containerStyle={{
-						backgroundColor: 'none',
-						borderColor: 'rgba(0, 0, 0, 0)',
-						borderRadius: 50,
-						marginBottom: 0,
-					}}
-					inputContainerStyle={{
-						backgroundColor: 'white',
-						borderRadius: 50,
-						marginBottom: 0,
-					}}
-					placeholderTextColor={Colors.CHARCOAL}
-				/> 
-				{/* this.state.searchValue && <FlatList 
-					data={this.state.data.slice(0,3)} 
-					renderItem={renderItem} 
-					keyExtractor={(item) => item.id} 
-					style={[
-						styles.listStyle,
-					]}
-				/> */}		
-				{/*I use a slice and map function instead of a FlatList so that it will work on pages with ScrollView*/}
-				{/*Only possible because I only ever want the top 3 options*/}
-				<View style={styles.listStyle}>
-					{this.state.searchValue && this.state.data.slice(0,3).map((item, key) => (
-						<View key={key} style={styles.item}>
-							<Text>Name: {item.title} | Crop Number: {item.hrfNum}</Text> 
-						</View>
-					))}
-				</View>
-			</View> 
-		); 
+	render() {
+		if  (this.props.resultDisplayMode === "modal") {
+			const { sampleState } = this.state;
+			const setSampleState = sampleState => this.setState({ sampleState });
+			return ( 
+				<View style={styles.container}> 
+					<TouchableOpacity activeOpacity={0.8} onPress={() => setSampleState(true)}>
+						<SearchBar 
+							placeholder="Search Crops..."
+							round 
+							editable={false}
+							readOnly
+							keyboardType='default'
+							style={{
+								color: 'black',
+								fontSize: 16,
+							}}
+							containerStyle={{
+								backgroundColor: 'none',
+								borderColor: 'rgba(0, 0, 0, 0)',
+								borderRadius: 50,
+								marginBottom: 0,
+							}}
+							inputContainerStyle={{
+								backgroundColor: 'white',
+								borderRadius: 50,
+								marginBottom: 0,
+							}}
+							placeholderTextColor={Colors.CHARCOAL}
+						/>
+					</TouchableOpacity>
+					<SearchModal modalVisible={sampleState} 
+                    	onBackPress={() => setSampleState(false)} //disappear if it is clicked outside of the modal
+                	/>
+				</View> 
+			); 
+		}
+		//if it isn't a modal, assume that the user wants the dropdown format
+		else { 
+			return ( 
+				<View style={styles.container}> 
+					<SearchBar 
+						placeholder="Search Crops..."
+						showCancel
+						round 
+						value={this.state.searchValue} 
+						onChangeText={(text) => this.searchFunction(text)} 
+						autoCorrect={false} 
+						keyboardType='default'
+						style={{
+							color: 'black',
+							fontSize: 16,
+						}}
+						containerStyle={{
+							backgroundColor: 'none',
+							borderColor: 'rgba(0, 0, 0, 0)',
+							borderRadius: 50,
+							marginBottom: 0,
+						}}
+						inputContainerStyle={{
+							backgroundColor: 'white',
+							borderRadius: 50,
+							marginBottom: 0,
+						}}
+						placeholderTextColor={Colors.CHARCOAL}
+					/> 
+					{/*I use a slice and map function instead of a FlatList so that it will work on pages with ScrollView*/}
+					{/*Only possible because I only ever want the top 3 options*/}
+					<View style={styles.listStyle}>
+						{this.state.searchValue && this.state.data.slice(0,3).map((item, key) => (
+							<View key={key} style={styles.item}>
+								<Text>Name: {item.title} | Crop Number: {item.hrfNum} | {this.props.resultDisplayMode}</Text> 
+							</View>
+						))}
+					</View>
+				</View> 
+			); 
+		}
 	} 
 } 
 
@@ -326,7 +354,20 @@ const styles = StyleSheet.create({
 		top: 65,
 		alignSelf: 'center',
 		width: '86%',
-	}
+	},
+	modalContainer: {
+		height: '100%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+	},
+	modalView: {
+        height: 130,
+        width: '80%',
+        alignItems: 'center',
+        borderRadius: 25,
+    },
 });
 
 
