@@ -3,16 +3,12 @@ import {
 	StyleSheet, 
 	View, 
 	Text, 
-	FlatList,
 	Modal,
 	Platform,
 	TouchableOpacity,
-	Alert,
     Pressable,
     ActivityIndicator,
-	TouchableWithoutFeedback,
-	ScrollView,
-	Dimensions
+	Dimensions,
 } from 'react-native';
 import { useFonts } from 'expo-font'
 import { SearchBar, ListItem } from '@rneui/themed';
