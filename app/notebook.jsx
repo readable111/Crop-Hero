@@ -23,13 +23,32 @@ import { Tab, TabView, ListItem, Card,Button, Icon} from '@rneui/themed';
 import { Input } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons'
 import { Switch } from 'react-native-elements'
-
+import DropDownPicker from 'react-native-dropdown-picker'
 
 const Notebook = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
 	const [checked, setChecked] = useState([false, false]); // constant for checked to-do list under ListItems from RNE
 	{/*constants for date input*/ }
 	//const mask = '[00]{-}[00]{-}[0000]'
+	// date constants --months
+	const [month, setMonth] = useState([ 
+		{ label: 'Jan', value: 'january' },  // watering task
+		{ label: 'Feb', value: 'feburary' }, // planning task tag
+		{ label: 'March', value: 'march' },  // rake task tag icon
+		{ label: 'April', value: 'april' },  // shovel for digging task icon
+		{ label: 'May', value: 'may' },   // tool icon tag for needed to build/fix something
+		{ label: 'June', value: 'june' },  // watering task
+		{ label: 'July', value: 'july' }, // planning task tag
+		{ label: 'Aug', value: 'august' },  // rake task tag icon
+		{ label: 'Sept', value: 'september' },  // shovel for digging task icon
+		{ label: 'Oct', value: 'october' },   // tool icon tag for needed to build/fix something
+		{ label: 'Nov', value: 'november' },  // watering task
+		{ label: 'Dec', value: 'december' }, // planning task tag
+
+	]);
+	const [open, setOpen] = useState(false);
+	month, setMonth = useState('january'); {/*must initialize with string of value from items list to assign a default option*/ }
+	const [value, setValue] = useState('watering-can'); {/*must initialize with string of value from items list to assign a default option*/ }
 	{/*load in all fonts used for this page*/ }
 	const [fontsLoaded, fontError] = useFonts({
 		'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
@@ -58,7 +77,7 @@ const Notebook = () => {
 					
 					<Col relativeColsCovered={2} alignItems='center'>
 						{/* <Text style={styles.pageTitle}>Settings</Text>*/}
-						<AppButton title="To-Do" specifiedStyle={styles.ovals} onPress={() =>  router.push('/todo') } />
+						<AppButton title="To-Do" specifiedStyle={styles.ovals} onPress={() => router.push('/todo') } />
 						
 					</Col>
 					<Col relativeColsCovered={2} alignItems='center'>
@@ -71,7 +90,79 @@ const Notebook = () => {
 			<ScrollView style={styles.scroll}>
 				<View style={styles.fstContainer}>
 					{/**trying this*/}
-					
+					<View style={styles.btnGridContainerDate}>
+						{/*row for profile settings*/}
+						<Row height={80}>
+
+							<Col relativeColsCovered={2} alignItems='left'>
+								{/* <Text style={styles.pageTitle}>Settings</Text>*/}
+								<DropDownPicker
+									open={open}
+									value={value}
+									items={month}
+									setOpen={setOpen}
+									setValue={setValue}
+									setItems={setMonth}
+									disableBorderRadius={true}
+									listMode='SCROLLVIEW'
+									backgroundColor={Colors.SCOTCH_MIST_TAN}
+									dropDownDirection='BOTTOM'
+									props={{
+										activeOpacity: 1,
+									}}
+									scrollViewProps={{
+										nestedScrollEnabled: false,
+										borderColor: 'clear'
+									}}
+									labelStyle={{
+										fontFamily: 'WorkSans-Regular',
+										fontSize: 16,
+									}}
+									listItemLabelStyle={{
+										fontFamily: 'WorkSans-Regular',
+										fontSize: 16,
+									}}
+									containerStyle={{
+										width: '23%',
+										//marginTop: 58,
+										zIndex: 900,
+										marginBottom: 50,
+										//marginLeft: 260,
+										//marginTop: 120
+										alignSelf: 'flex-start',
+										marginHorizontal: 7,
+										//marginBottom: -75,
+										//outerHeight: 25
+										backgroundColor: 'clear',
+										borderColor: 'clear'
+									}}
+									dropDownContainerStyle={{
+										borderWidth: 0,
+										//borderColor: 'black',
+										//borderRadius: 5,
+										zIndex: 900,
+										backgroundColor: 'clear',
+										borderColor: 'clear'
+
+									}}
+									style={{
+										//borderColor: 'black',
+										borderWidth: 0,
+										//borderRadius: 5,
+										//height: 40,
+										backgroundColor: 'clear',
+										borderColor: 'clear'
+									}}
+								/>
+
+							</Col>
+							<Col relativeColsCovered={2} alignItems='left'>
+								
+							</Col>
+						</Row>
+
+
+					</View>
 					<Input
 						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
 						inputContainerStyle={styles.inputBox}
