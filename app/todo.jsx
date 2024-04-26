@@ -9,6 +9,7 @@ import {
 	ScrollView,
 	TouchableOpacity,
 	TextInput,
+	log
 
 } from 'react-native'
 import moment from 'moment'
@@ -19,17 +20,35 @@ import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
-import { Tab, TabView, ListItem, Card, Button, Icon } from '@rneui/themed';
+import { Tab, TabView, ListItem, Card, Button, Icon,ListItemProps,Avatar, CheckBox, Stack } from '@rneui/themed';
 import { Input } from 'react-native-elements'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign,MaterialCommunityIcons } from '@expo/vector-icons'
 import { Switch } from 'react-native-elements'
-
+import DropDownPicker from 'react-native-dropdown-picker'
 
 const todo = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
 	const [checked, setChecked] = useState([false, false]); // constant for checked to-do list under ListItems from RNE
+	//const [expanded, setExpanded] = useState(false); // for accordian expansion
 	{/*constants for date input*/ }
 	//const mask = '[00]{-}[00]{-}[0000]'
+	{/*Constants for icon drop down menu*/ }
+	const [items, setItems] = useState([ //potential subscription model stuff
+		{ label: '', value: 'watering-can', icon: () => <MaterialCommunityIcons name="watering-can" size={40} color="blue" /> },  // watering task
+		{ label: '', value: '', icon: () => <MaterialCommunityIcons name="calendar-clock" size={40} color="black" /> }, // planning task tag
+		{ label: '', value: '', icon: () => <MaterialCommunityIcons name="rake" size={40} color="brown" /> },  // rake task tag icon
+		{ label: '', value: '', icon: () => <MaterialCommunityIcons name="shovel" size={40} color="black" /> },  // shovel for digging task icon
+		{ label: '', value: '', icon: () => <MaterialCommunityIcons name="tools" size={40} color="black" /> },   // tool icon tag for needed to build/fix something
+	]);
+	const [open, setOpen] = useState(false);
+	const [value, setValue] = useState('watering-can'); {/*must initialize with string of value from items list to assign a default option*/ }
+	{/*constants for checkboxes*/ }
+	const [check1, setCheck1] = useState(false);
+	const [check2, setCheck2] = useState(false);
+	const [check3, setCheck3] = useState(false);
+	const [check4, setCheck4] = useState(false);
+
+
 	{/*load in all fonts used for this page*/ }
 	const [fontsLoaded, fontError] = useFonts({
 		'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
@@ -47,6 +66,9 @@ const todo = () => {
 	//givenDate=""
 	{/*TODO: add dark mode*/ }
 	{/*return the page view with all of its contents*/ }
+
+		//const listItemProps = {};
+		//const renderRow = ({ item }: { item }) => {
 	return (
 		<View style={styles.topContainer}>
 			{/*create the default phone status bar at the top of the screen*/}
@@ -58,7 +80,7 @@ const todo = () => {
 
 					<Col relativeColsCovered={2} alignItems='center'>
 						{/* <Text style={styles.pageTitle}>Settings</Text>*/}
-						<AppButton title="Todo" specifiedStyle={styles.oval} onPress={() =>  router.push('/todo') } />
+						<AppButton title="To-do" specifiedStyle={styles.oval} onPress={() =>  router.push('/todo') } />
 
 					</Col>
 					<Col relativeColsCovered={2} alignItems='center'>
@@ -70,21 +92,81 @@ const todo = () => {
 			</View>
 			<ScrollView style={styles.scroll}>
 				<View style={styles.fstContainer}>
-					{/**trying this*/}
-
+					{/**trying this-dropdown picker for icon selection*/}
+					<DropDownPicker
+						open={open}
+						value={value}
+						items={items}
+						setOpen={setOpen}
+						setValue={setValue}
+						setItems={setItems}
+						disableBorderRadius={true}
+						listMode='SCROLLVIEW'
+						backgroundColor={Colors.SCOTCH_MIST_TAN }
+						dropDownDirection='BOTTOM'
+						props={{
+							activeOpacity: 1,
+						}}
+						scrollViewProps={{
+							nestedScrollEnabled: false,
+							borderColor: 'clear'
+						}}
+						labelStyle={{
+							fontFamily: 'WorkSans-Regular',
+							fontSize: 16,
+						}}
+						listItemLabelStyle={{
+							fontFamily: 'WorkSans-Regular',
+							fontSize: 16,
+						}}
+						containerStyle={{
+							width: '23%',
+							//marginTop: 58,
+							zIndex: 900,
+							marginBottom: 50,
+							//marginLeft: 260,
+							//marginTop: 120
+							alignSelf: 'flex-end',
+							marginHorizontal: 7,
+							//marginBottom: -75,
+							//outerHeight: 25
+							backgroundColor: 'clear',
+							borderColor: 'clear'
+						}}
+						dropDownContainerStyle={{
+							borderWidth: 0,
+							//borderColor: 'black',
+							//borderRadius: 5,
+							zIndex: 900,
+							backgroundColor: 'clear',
+							borderColor: 'clear'
+							
+						}}
+						style={{
+							//borderColor: 'black',
+							borderWidth: 0,
+							//borderRadius: 5,
+							//height: 40,
+							backgroundColor: 'clear',
+							borderColor: 'clear'
+						}}
+					/>
 					<Input
 						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
 						inputContainerStyle={styles.inputBox}
 						inputStyle={styles.inputBoxStyle}
 						selectionColor={Colors.SANTA_GRAY}
-						placeholder='What happened today?'
+						placeholder='Things to schedule'
 						defaultValue={initialFirstName}
 						autoComplete='name'
 						maxLength={256}
 						multiline={true}
 						textAlign="flex-start"
-
 					/>
+					{/* checkboxes for to-do list*/}
+					<View style={styles.checkBoxFormat}>
+						
+					</View>
 					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
 				</View>
 				<View style={styles.fstContainer}>
@@ -214,7 +296,8 @@ const styles = StyleSheet.create({
 		zIndex: 5,
 		flex: 3,
 		marginTop: 35,
-		marginBottom: -15
+		marginBottom: -15, 
+		width: '70%'
 	},
 	inputDateStyle: {
 		paddingBottom: 20,
