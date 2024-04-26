@@ -29,8 +29,8 @@ const EditProfile = () =>{
 		
 	{/*TODO: retrieve data from local storage or database*/}
 	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
-	initialFirstName = "Daniel"
-	initialLastName = "Moreno"
+	initialFirstName = "Zina"
+	initialLastName = "Townley"
 
 	{/*TODO: add dark mode*/}
 	return(
@@ -60,7 +60,7 @@ const EditProfile = () =>{
 			{/*create container for the rectangular area*/}
 			<View style = {styles.rect}>
 				{/*display an editable version of the avatar image*/}
-				<UploadImage style={styles.avatarImage} isEditable={true} />
+				<UploadImage style={styles.avatarImage} isEditable={true} cameraMode='selfie'/>
 
 				{/*first name input box*/}
 				<Text style={styles.inputLabel}>First Name</Text>

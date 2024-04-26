@@ -1,13 +1,121 @@
-import { React, Component } from 'react';
+import { React, Component, useState, setState } from 'react';
 import { 
 	StyleSheet, 
 	View, 
 	Text, 
-	FlatList
+	Modal,
+	Platform,
+	TouchableOpacity,
+    Pressable,
+    ActivityIndicator,
+	Dimensions,
 } from 'react-native';
+import { useFonts } from 'expo-font'
 import { SearchBar, ListItem } from '@rneui/themed';
 import unidecode from 'unidecode';
 import Colors from './Color.js'
+
+global.dataArray = [ { id: "1", hrfNum: "01", title: "Artichoke" } ]
+
+const SearchModal = ({
+    modalVisible,
+    onBackPress,
+    onCameraPress,
+    onGalleryPress,
+    onRemovePress,
+    isLoading = false,
+	searchValue,
+	originalData
+}) => {
+
+	const [searchBarTxt, setSearchBarTxt] = useState(searchValue);
+
+    const [fontsLoaded, fontError] = useFonts({
+        'Domine-Regular': require('./fonts/Domine-Regular.ttf'),
+        'WorkSans-Regular': require('./fonts/WorkSans-Regular.ttf'),
+    });
+    
+    if (!fontsLoaded && !fontError) {
+        return null;
+    }
+
+	//create a copy of the array
+	global.dataArray = JSON.parse(JSON.stringify(originalData))
+
+    return (
+        <Modal animationType='fade' visible={modalVisible} transparent={true} onRequestClose={onBackPress}>
+			{/*create the dark grey box around it and ability to close modal by clicking*/}
+            <Pressable style={styles.modalContainer} onPress={onBackPress}>
+                {isLoading && <ActivityIndicator size={70} color={Colors.MEDIUM_TAUPE} />}
+
+                { !isLoading && (
+				<View style={[styles.modalView, {backgroundColor: Colors.SANTA_GRAY}]} > 
+						{/*Display the search bar which looks identical to the dropdown search bar but works slightly differents*/}
+						<SearchBar 
+							placeholder="Search Crops..."
+							showCancel
+							round 
+							value={searchBarTxt} 
+							onChangeText={(text) => {searchFunction(text, originalData); setSearchBarTxt(text)}}  //call the search function and set searchBarTxt to whatever has been entered
+							autoCorrect={false} 
+							keyboardType='default'
+							style={{
+								color: 'black',
+								fontSize: 16,
+							}}
+							containerStyle={{
+								backgroundColor: 'none',
+								borderColor: 'rgba(0, 0, 0, 0)',
+								borderRadius: 50,
+								marginBottom: 0,
+								width: '90%'
+							}}
+							inputContainerStyle={{
+								backgroundColor: 'white',
+								borderRadius: 50,
+								marginBottom: 0,
+							}}
+							placeholderTextColor={Colors.CHARCOAL}
+						/> 
+						{/*Display a list of the 10 best matches*/}
+						<View style={styles.modalListStyle}>
+							{searchBarTxt && dataArray.slice(0,10).map((item, key) => (
+								<View key={key} style={styles.item}>
+									<Text>Name: {item.title} | Crop Number: {item.hrfNum}</Text> 
+								</View>
+							))}
+						</View>
+				</View>
+                )}
+            </Pressable>
+        </Modal>
+    );
+};
+
+//the search function specifically for the modal version of the search bar
+searchFunction = (text, arr) => { 
+	//clean up the text based on whether or not it is a number
+	var cleanedTxt = ""
+	if (isNumeric(text)) {
+		cleanedTxt = text.cleanNumForSearch();
+	} else {
+		cleanedTxt = text.cleanTextForSearch();
+	}
+	//TODO: make FULLTEXT SELECT search of database using cleaned text and store results in arrayholder
+
+	//sort array in descending order based on DLED
+	const updatedData = arr.sort(function(a,b){ 
+		//if number, check against HRFNumber, otherwise look at name
+		if (isNumeric(text)) {
+			//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's HRFNumber
+			return compareStrings(a.hrfNum,cleanedTxt) - compareStrings(b.hrfNum,cleanedTxt); 
+		} else {
+			//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's name
+			return compareStrings(a.title,cleanedTxt) - compareStrings(b.title,cleanedTxt); 
+		}
+	});
+	dataArray = updatedData
+}; 
 
 //Function that takes two strings and outputs value reflecting similarity
 //Uses Dice Coefficient as faster and does a better job with substrings; If match found, returns 1
@@ -185,16 +293,6 @@ const DATA = [
 	}, 
 ]; 
 
-//create the Item tag and prep it for rendering in the FlatList below the search bar
-const Item = ({ title, hrfNum }) => { 
-	return ( 
-	  <View style={styles.item}> 
-		<Text>{title} : {hrfNum}</Text> 
-	  </View> 
-	); 
-}; 
-const renderItem = ({ item }) => <Item title={item.title} hrfNum={item.hrfNum}/>; 
-
 //check if input is numeric
 const isNumeric = (num) => (typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num);
 
@@ -221,10 +319,12 @@ class SearchInput extends Component {
 			data: DATA, 
 			error: null, 
 			searchValue: "", 
+			sampleState: false,
 		}; 
 		this.arrayholder = DATA; 
+		this.props.resultDisplayMode = "dropdown";
 	} 
-	
+
 	searchFunction = (text) => { 
 		//clean up the text based on whether or not it is a number
 		var cleanedTxt = ""
@@ -249,58 +349,101 @@ class SearchInput extends Component {
 		this.setState({ data: updatedData, searchValue: text }); 
 	}; 
 
-	render() { 
-		return ( 
-			<View style={styles.container}> 
-				<SearchBar 
-					placeholder="Search Crops..."
-					showCancel
-					round 
-					value={this.state.searchValue} 
-					onChangeText={(text) => this.searchFunction(text)} 
-					autoCorrect={false} 
-					keyboardType='default'
-					style={{
-						color: 'black',
-						fontSize: 16,
-					}}
-					containerStyle={{
-						backgroundColor: 'none',
-						borderColor: 'rgba(0, 0, 0, 0)',
-						borderRadius: 50,
-						marginBottom: 0,
-					}}
-					inputContainerStyle={{
-						backgroundColor: 'white',
-						borderRadius: 50,
-						marginBottom: 0,
-					}}
-					placeholderTextColor={Colors.CHARCOAL}
-				/> 
-				<FlatList 
-					data={this.state.data.slice(0,3)} 
-					renderItem={renderItem} 
-					keyExtractor={(item) => item.id} 
-					style={[
-						styles.listStyle,
-						this.state.searchValue ? styles.filledSearch : styles.emptySearch
-					]}
-				/> 
-			</View> 
-		); 
+	render() {
+		if  (this.props.resultDisplayMode === "modal") {
+			const { sampleState } = this.state;
+			const setSampleState = sampleState => this.setState({ sampleState });
+			return ( 
+				<View style={styles.container}> 
+					<TouchableOpacity activeOpacity={0.8} onPress={() => setSampleState(true)}>
+						<SearchBar 
+							placeholder="Search Crops..."
+							round 
+							editable={false}
+							readOnly
+							keyboardType='default'
+							style={{
+								color: 'black',
+								fontSize: 16,
+							}}
+							containerStyle={{
+								backgroundColor: 'none',
+								borderColor: 'rgba(0, 0, 0, 0)',
+								borderRadius: 50,
+								marginBottom: 0,
+							}}
+							inputContainerStyle={{
+								backgroundColor: 'white',
+								borderRadius: 50,
+								marginBottom: 0,
+							}}
+							placeholderTextColor={Colors.CHARCOAL}
+						/>
+					</TouchableOpacity>
+					<SearchModal modalVisible={sampleState} 
+                    	onBackPress={() => setSampleState(false)} //disappear if it is clicked outside of the modal
+						searchValue={this.state.searchValue}
+						searchFunction={(text) => this.searchFunction(text)}
+						originalData={this.state.data}
+                	/>
+				</View> 
+			); 
+		}
+		//if it isn't a modal, assume that the user wants the dropdown format
+		else { 
+			return ( 
+				<View style={styles.container}> 
+					<SearchBar 
+						placeholder="Search Crops..."
+						showCancel
+						round 
+						value={this.state.searchValue} 
+						onChangeText={(text) => this.searchFunction(text)} 
+						autoCorrect={false} 
+						keyboardType='default'
+						style={{
+							color: 'black',
+							fontSize: 16,
+						}}
+						containerStyle={{
+							backgroundColor: 'none',
+							borderColor: 'rgba(0, 0, 0, 0)',
+							borderRadius: 50,
+							marginBottom: 0,
+						}}
+						inputContainerStyle={{
+							backgroundColor: 'white',
+							borderRadius: 50,
+							marginBottom: 0,
+						}}
+						placeholderTextColor={Colors.CHARCOAL}
+					/> 
+					{/*I use a slice and map function instead of a FlatList so that it will work on pages with ScrollView*/}
+					{/*Only possible because I only ever want the top 3 options*/}
+					<View style={styles.listStyle}>
+						{this.state.searchValue && this.state.data.slice(0,3).map((item, key) => (
+							<View key={key} style={styles.item}>
+								<Text>Name: {item.title} | Crop Number: {item.hrfNum} | {this.props.resultDisplayMode}</Text> 
+							</View>
+						))}
+					</View>
+				</View> 
+			); 
+		}
 	} 
 } 
 
 const styles = StyleSheet.create({ 
 	container: { 
-		marginTop: 30, 
 		padding: 2, 
 		width: '100%',
 		backgroundColor: 'none',
 		alignContent: 'flex-start',
 		verticalAlign: 'bottom',
 		justifyContent: 'flex-start',
-		alignSelf: 'flex-start'
+		alignSelf: 'flex-start',
+		zIndex: 9999,
+		elevation: (Platform.OS === 'android') ? 9999 : 0,
 	}, 
 	item: { 
 		backgroundColor: Colors.SCOTCH_MIST_TAN, 
@@ -311,14 +454,33 @@ const styles = StyleSheet.create({
 	listStyle: {
 		backgroundColor: Colors.ALMOND_TAN,
 		marginTop: 0,
+		position: 'absolute',
+		top: 65,
+		alignSelf: 'center',
+		width: '86%',
 	},
-	emptySearch: {
-		opacity: 0,
+	modalListStyle: {
+		backgroundColor: Colors.ALMOND_TAN,
+		marginTop: 0,
+		position: 'absolute',
+		top: 90,
+		alignSelf: 'center',
+		width: '86%',
 	},
-	filledSearch: {
-		opacity: 1,
-		zIndex: 100,
-	}
+	modalContainer: {
+		height: '100%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+		alignContent: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+	},
+	modalView: {
+        height: Dimensions.get('window').height * 0.9,
+        width: Dimensions.get('window').width * 0.86,
+        alignItems: 'center',
+        borderRadius: 25,
+    },
 });
 
 

@@ -5,7 +5,8 @@ import {
 	Text, 
 	StatusBar, 
 	Image, 
-	Alert
+	Alert,
+    Dimensions
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
@@ -27,7 +28,7 @@ const NavBar = ({ homeSelected=false, cropsSelected=false, notebookSelected=fals
     }
 
 	return  (
-        <View style={{height: 100, width: '100%', alignItems: 'center'}}>
+        <View style={{height: 100, width: '100%', alignItems: 'center', marginTop: 'auto'}}>
             <View style={styles.navbarCircle}></View>
             <View style={styles.btnGridContainer}>
                 <Row height={35}>
@@ -52,7 +53,7 @@ const NavBar = ({ homeSelected=false, cropsSelected=false, notebookSelected=fals
                         <AppButton title="Crops" specifiedStyle={cropsSelected ? styles.selectedText : styles.unselectedText} onPress={() => Alert.alert('Test')}/>
                     </Col>
                     <Col relativeColsCovered={4} alignItems='center'>
-                        <AppButton title="Notebook" specifiedStyle={notebookSelected ? styles.selectedText : styles.unselectedText} onPress={() => Alert.alert('Test')}/>
+                        <AppButton title="Notebook" specifiedStyle={notebookSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/notebook')}/>
                     </Col>
                     <Col relativeColsCovered={4} alignItems='center'>
                         <AppButton title="Home" specifiedStyle={homeSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/home')}/>
