@@ -31,7 +31,7 @@ const Notebook = () => {
 	{/*constants for date input*/ }
 	//const mask = '[00]{-}[00]{-}[0000]'
 	// date constants --months
-	const [month, setMonth] = useState([ 
+	const [items, setItems] = useState([ //potential subscription model stuff
 		{ label: 'Jan', value: 'january' },  // watering task
 		{ label: 'Feb', value: 'feburary' }, // planning task tag
 		{ label: 'March', value: 'march' },  // rake task tag icon
@@ -44,11 +44,9 @@ const Notebook = () => {
 		{ label: 'Oct', value: 'october' },   // tool icon tag for needed to build/fix something
 		{ label: 'Nov', value: 'november' },  // watering task
 		{ label: 'Dec', value: 'december' }, // planning task tag
-
 	]);
 	const [open, setOpen] = useState(false);
-	month, setMonth = useState('january'); {/*must initialize with string of value from items list to assign a default option*/ }
-	const [value, setValue] = useState('watering-can'); {/*must initialize with string of value from items list to assign a default option*/ }
+	const [value, setValue] = useState('january'); {/*must initialize with string of value from items list to assign a default option*/ }
 	{/*load in all fonts used for this page*/ }
 	const [fontsLoaded, fontError] = useFonts({
 		'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
@@ -87,22 +85,22 @@ const Notebook = () => {
 				
 				
 			</View>
-			<ScrollView style={styles.scroll}>
-				<View style={styles.fstContainer}>
+			
+				
 					{/**trying this*/}
 					<View style={styles.btnGridContainerDate}>
 						{/*row for profile settings*/}
-						<Row height={80}>
+						<Row height={20}>
 
 							<Col relativeColsCovered={2} alignItems='left'>
 								{/* <Text style={styles.pageTitle}>Settings</Text>*/}
 								<DropDownPicker
 									open={open}
 									value={value}
-									items={month}
+									items={items}
 									setOpen={setOpen}
 									setValue={setValue}
-									setItems={setMonth}
+									setItems={setItems}
 									disableBorderRadius={true}
 									listMode='SCROLLVIEW'
 									backgroundColor={Colors.SCOTCH_MIST_TAN}
@@ -112,7 +110,8 @@ const Notebook = () => {
 									}}
 									scrollViewProps={{
 										nestedScrollEnabled: false,
-										borderColor: 'clear'
+										borderColor: 'black',
+										zIndex: 800
 									}}
 									labelStyle={{
 										fontFamily: 'WorkSans-Regular',
@@ -123,35 +122,45 @@ const Notebook = () => {
 										fontSize: 16,
 									}}
 									containerStyle={{
-										width: '23%',
+										//width: '40%',
 										//marginTop: 58,
 										zIndex: 900,
-										marginBottom: 50,
+										marginBottom: 50, // height away from top of container
 										//marginLeft: 260,
-										//marginTop: 120
+										marginTop: 10,
+										
 										alignSelf: 'flex-start',
-										marginHorizontal: 7,
+										//marginHorizontal: 30,
 										//marginBottom: -75,
-										//outerHeight: 25
-										backgroundColor: 'clear',
-										borderColor: 'clear'
+										//outerHeight: 25,
+										backgroundColor: Colors.SCOTCH_MIST_TAN,
+										borderColor: 'black',
+										//witdth: '100%'
+										border:1
+										
 									}}
 									dropDownContainerStyle={{
-										borderWidth: 0,
+										borderWidth: 1,
 										//borderColor: 'black',
 										//borderRadius: 5,
-										zIndex: 900,
-										backgroundColor: 'clear',
-										borderColor: 'clear'
+										zIndex: 1000,
+										backgroundColor: 'white',
+										borderColor: 'black',
+										//height: 700,
+										width: 150
 
 									}}
 									style={{
 										//borderColor: 'black',
-										borderWidth: 0,
-										//borderRadius: 5,
-										//height: 40,
-										backgroundColor: 'clear',
-										borderColor: 'clear'
+										borderWidth: 1,
+										borderRadius: 5,
+										height: 40,
+										backgroundColor: Colors.SCOTCH_MIST_TAN,
+										borderColor: 'clear',
+										width: 150,
+										marginTop: 20,
+										zIndex: 900
+										
 									}}
 								/>
 
@@ -162,7 +171,9 @@ const Notebook = () => {
 						</Row>
 
 
-					</View>
+			</View>
+			<ScrollView style={styles.scroll}>
+				<View style={styles.fstContainer}>
 					<Input
 						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
 						inputContainerStyle={styles.inputBox}
@@ -171,7 +182,7 @@ const Notebook = () => {
 						placeholder='What happened today?'
 						defaultValue={initialFirstName}
 						autoComplete='name'
-						maxLength={256}
+						//maxLength={256}
 						multiline={true}
 						textAlign="flex-start"
 						
@@ -279,7 +290,13 @@ const styles = StyleSheet.create({
 		//marginTop: 20,
 		width: '100%'
 	},
-
+	btnGridContainerDate: {
+		zIndex: 1000,
+		marginHorizontal: 20,
+		marginBottom: 30,
+		//zIdex: 500,
+		//height: '100%'
+    },
 	topContainer: {
 		backgroundColor: Colors.PERIWINKLE_GRAY,
 		//height: '100%',
