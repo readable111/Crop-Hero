@@ -11,8 +11,6 @@ const crops = () => {
     <View style={{
       flex: 1,
     }}>
-      
-      <View style={styles.backdrop}></View>
       <Text style={styles.title}>My Crops</Text>
       {/*<View style={styles.circle}></View>*/} 
       
@@ -23,8 +21,8 @@ const crops = () => {
           </Pressable>
         </View>
         <View style={styles.button}>
-          <Pressable onPress = {() => router.push("/EditCrop")}>
-            <Text style={styles.buttonText}>Edit Crop</Text>
+          <Pressable onPress = {() => router.push("/viewcrops")}>
+            <Text style={styles.buttonText}>View Crop</Text>
           </Pressable>
         </View>
       <NavBar cropsSelected/>

@@ -1,9 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View, ScrollView, Image, TextInput, Alert } from 'react-native';
-import { useRouter } from 'expo-router'
-import { Input } from 'react-native-elements'
-import AppButton from '../assets/AppButton.jsx'
+import { useRouter } from 'expo-router';
+import { router } from 'expo-router';
+import { Input } from 'react-native-elements';
+import AppButton from '../assets/AppButton.jsx';
+import Icons from '../assets/icons/Icons.js';
+
 
 
 const addcrops = () => {
@@ -34,16 +37,16 @@ const addcrops = () => {
 
         return (
                 <ScrollView style={styles.container}> 
-                        <Text style={styles.title}>Add Crop
-                        <View></View>
-                        </Text>
+                        <Text style={styles.title}>Add Crop</Text>
                         <View style={styles.save}>
                                 <AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={printStatement}/>
                         </View>
+                        <View style={styles.back}>
+                                <AppButton title="" icon={Icons.arrow_tail_left_black} onPress={() => router.back()}/>
+                        </View>
+
 
                         <StatusBar style={{backgroundColor: 'white'}}/>
-                        
-                        <View style={{marginTop: 70}}></View>
                         <Text style={styles.label}>Crop Name</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
@@ -131,12 +134,19 @@ const styles = StyleSheet.create({
         },
         save:{
                 marginTop: 10,
-                marginLeft: 340,
+                marginLeft: 370,
                 width: 40,
                 height: 40,
                 borderRadius: 40/2,
                 backgroundColor: "lime",
-                marginBottom: -50,
+                justifyContent: "center",
+                alignItems: "center",
+        },
+        back:{
+                marginTop: -40,
+                marginLeft: 10,
+                width: 40,
+                height: 40,
                 justifyContent: "center",
                 alignItems: "center",
         },
