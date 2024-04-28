@@ -59,7 +59,7 @@ const NavBar = ({ homeSelected=false, cropsSelected=false, notebookSelected=fals
                         <AppButton title="Home" specifiedStyle={homeSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/home')}/>
                     </Col>
                     <Col relativeColsCovered={4} alignItems='center'>
-                        <AppButton title="Data Hub" specifiedStyle={dataHubSelected ? styles.selectedText : styles.unselectedText} onPress={() => Alert.alert('Test')}/>
+                        <AppButton title="Data Hub" specifiedStyle={dataHubSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/datahub')}/>
                     </Col>
                     <Col relativeColsCovered={4} alignItems='center'>
                         <AppButton title="Profile" specifiedStyle={profileSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/profile')}/>
