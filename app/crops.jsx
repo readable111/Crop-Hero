@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   background:{
     flex: 3,
     marginBottom: 'auto',
-    backgroundColor: Colors.PERIWINKLE_GRAY,
+    backgroundColor: Colors.SANTA_GRAY,
   },
   circle:{
     position: 'absolute',
@@ -76,14 +76,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   button:{
-    backgroundColor: '#FFFADA',
+    backgroundColor: Colors.ALMOND_TAN,
     textAlign: 'center',
     padding: 30,
     fontSize: 38,
     marginTop: 60,
     marginHorizontal: 20,
     borderColor: '#20232a',
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 8,
   },
   buttonText:{

@@ -1,26 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View, ScrollView, Image, TextInput, Alert } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Input } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
 import Icons from '../assets/icons/Icons.js';
 
 
 
-const addcrops = () => {
-        {/* */}
-        const [cropData, setCropData] = useState({
-                name: '',
-                variety: '',
-                source:'',
-                date:'',
-                location:'',
-                comments:'',
-                indoors:'',
-                active:'',
-                type:'',
-        })
+const cropspage = () => {
+
+        {/* Grabs variable form viewcrops page for use */}
+        const crop = useLocalSearchParams();
+        console.log(crop); //test
+        console.log(crop.name); //test
+
+        //Use state for switching if something is editable
+        const [readOnly, setReadOnly] = useState(true)
 
         const handleChange = (fieldName, input) => {
                 setCropData({
@@ -36,87 +32,83 @@ const addcrops = () => {
 
         return (
                 <ScrollView style={styles.container}> 
-                        <Text style={styles.title}>Add Crop</Text>
-                        <View style={styles.save}>
-                                <AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={printStatement}/>
-                        </View>
+                        <Text style={styles.title}>{crop.name}</Text>
+                        
                         <View style={styles.back}>
                                 <AppButton title="" icon={Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                         </View>
-
 
                         <StatusBar style={{backgroundColor: 'white'}}/>
                         <Text style={styles.label}>Crop Name</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
-                                placeholder = 'Name'
+                                value={crop.name}
                                 maxLength = {128}
-                                onChangeText={(text) => handleChange('name', text)}
+                                readOnly = {readOnly}
                         />
                         <Text style={styles.label}>Variety</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
-                                placeholder = 'Variety'
+                                value={crop.variety}
                                 maxLength={128}
-                                onChangeText={(text) => handleChange('variety', text)}
+                                readOnly = {readOnly}
                         />
                         <Text style={styles.label}>Source</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
-                                placeholder = 'Source'
+                                value={crop.source}
                                 maxLength={128}
-                                onChangeText={(text) => handleChange('source', text)}
+                                readOnly = {readOnly}
                         />
                         <Text style={styles.label}>Date Planted</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
-                                placeholder = 'Date Planted'
+                                value={crop.date}
                                 maxLength={10}
-                                onChangeText={(text) => handleChange('date', text)}
+                                readOnly = {readOnly}
                         />
                         <Text style={styles.label}>Location</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
-                                placeholder = 'Location'
+                                value={crop.location}
                                 maxLength={128}
-                                onChangeText={(text) => handleChange('location', text)}
+                                readOnly = {readOnly}
                         />
                         <Text style={styles.label}>Comments</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
-                                placeholder = 'Comments'
+                                value={crop.comments}
                                 maxLength={1024}
-                                onChangeText={(text) => handleChange('comments', text)}
+                                readOnly = {readOnly}
                         />
                         <Text style={styles.label}>Started Indoors?</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
-                                placeholder = 'Indoors? (Y/N)'
+                                value={crop.indoors}
                                 maxLength={3}
-                                onChangeText={(text) => handleChange('indoors', text)}
-
+                                readOnly = {readOnly}
                         />
                         <Text style={styles.label}>Active</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
-                                placeholder = 'Active'
+                                value={crop.active}
                                 maxLength={3}
-                                onChangeText={(text) => handleChange('active', text)}
+                                readOnly = {readOnly}
 
                         />
                         <Text style={styles.label}>Type</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
-                                placeholder = 'Type'
+                                value={crop.type}
                                 maxLength={64}
-                                onChangeText={(text) => handleChange('type', text)}
+                                readOnly = {readOnly}
 
                         />         
                 </ScrollView>
         )
 }
 
-export default addcrops;
+export default cropspage;
 
 const styles = StyleSheet.create({
         container: {
@@ -142,7 +134,6 @@ const styles = StyleSheet.create({
                 alignItems: "center",
         },
         back:{
-                marginTop: -40,
                 marginLeft: 10,
                 width: 40,
                 height: 40,

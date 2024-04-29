@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View, ScrollView, Image, TextInput, Alert} from 'react-native';
-import { useRouter } from 'expo-router';
+import { Pressable, StyleSheet, Text, View, ScrollView, Image, TextInput, FlatList, TouchableOpacity} from 'react-native';
+import { router } from 'expo-router';
 import { Input, colors } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
 import Icons from '../assets/icons/Icons.js';
@@ -16,22 +16,49 @@ const viewcrops = () => {
         {/* Dummy Data, for picker use */}
 
         const crops = [
-                { label: 'Carrot', value: { name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot' } },
-                { label: 'Cabbage', value: { name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation'} },
-                { label: 'Potato', value: { name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market" } },
-                { label: 'Tomato', value: { name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered"} }
+                { label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', date: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard'},
+                { label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', date: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' },
+                { label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", date: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard' },
+                { label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", date: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard' }
         ]
-
+        {/* Was testing something, leaving for now
         const handleChange = (itemValue, itemIndex) =>
         {
                 setItem(itemValue);
         }
+        */}
 
+        //Testing functions now
+
+        {/* Deals with rendering the items (In this case, selectables) in the flatlist */}
+
+        const renderItem = ({ item }) => 
+        (
+                <TouchableOpacity onPress={() => handlePress(item)}>
+                        <View style={styles.button}>
+                                <Text>{item.name}</Text>
+                        </View>
+                </TouchableOpacity>
+        );
+
+        const handlePress = (item) => 
+        {
+                console.log('Item pressed:');
+                router.push({pathname: '/cropspage', params: item})
+        }
         return (
                 <View>
-                        <Text style={styles.title}>View Crop</Text>
+                        <Text style={styles.title}>View Crops</Text>
                         <View style={styles.container}>
-                        
+                                <View style={styles.back}>
+                                        <AppButton title="" icon={Icons.arrow_tail_left_black} onPress={() => router.back()}/>
+                                </View>
+                                <FlatList
+                                        data={crops}
+                                        renderItem={renderItem}
+                                        keyExtractor={ item => item.label}
+                                />
+
                         </View>
                 </View>
         )
@@ -63,7 +90,6 @@ const styles = StyleSheet.create({
                 alignItems: "center",
         },
         back:{
-                marginTop: -40,
                 marginLeft: 10,
                 width: 40,
                 height: 40,
@@ -106,9 +132,16 @@ const styles = StyleSheet.create({
                 alignItems: "center",
                 backgroundColor : colors.white,
 
-        }
-
-
-
-
-      });
+        },
+        button:{
+                backgroundColor: '#FFFADA',
+                textAlign: 'center',
+                padding: 20,
+                fontSize: 38,
+                marginTop: 20,
+                marginHorizontal: 20,
+                borderColor: '#20232a',
+                borderWidth: 2,
+                borderRadius: 8,
+        },
+});
