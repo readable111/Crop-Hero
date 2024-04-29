@@ -11,8 +11,7 @@ import {
 	TextInput,
 	
 } from 'react-native'
-import moment from 'moment'
-import date from 'moment'
+
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
@@ -22,7 +21,7 @@ import AppButton from '../assets/AppButton.jsx'
 import { Tab, TabView, ListItem, Card,Button, Icon} from '@rneui/themed';
 import { Input } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons'
-import { Switch } from 'react-native-elements'
+
 import DropDownPicker from 'react-native-dropdown-picker'
 
 const Notebook = () => {
@@ -66,9 +65,9 @@ const Notebook = () => {
 	{/*return the page view with all of its contents*/ }
 	return (
 		<View style={styles.topContainer }>
-			{/*create the default phone status bar at the top of the screen*/}
+			{/*create the default phone status bar at the top of the screen----------------------------------------------------------------------*/}
 			<StatusBar backgroundColor={Colors.WHITE_SMOKE} />
-			{/*top row of buttons*/}
+			{/*two top circle buttons that swap between todo page and notebook page -------------------------------------------------------------*/}
 			<View style={styles.btnGridContainer}>
 				{/*row for profile settings*/}
 				<Row height={80}>
@@ -85,9 +84,7 @@ const Notebook = () => {
 				
 				
 			</View>
-			
-				
-					{/**trying this*/}
+					{/*Month selector for notebook entries (to be connected to database)-----------------------------------------------------*/}
 					<View style={styles.btnGridContainerDate}>
 						{/*row for profile settings*/}
 						<Row height={20}>
@@ -166,12 +163,13 @@ const Notebook = () => {
 
 							</Col>
 							<Col relativeColsCovered={2} alignItems='left'>
-								
+								{/*Hold space for year selector for semester 2 --*/ }
 							</Col>
 						</Row>
 
 
 			</View>
+			{/*start of scroll viewing portion to scroll between the entries made for the month-----------------------------------------------------*/ }
 			<ScrollView style={styles.scroll}>
 				<View style={styles.fstContainer}>
 					<Input
@@ -187,6 +185,7 @@ const Notebook = () => {
 						textAlign="flex-start"
 						
 					/>
+					{/*edit icon button that will open up the text box in semester 2*/ }
 					<AppButton specifiedStyle={{marginTop: 0, zIndex:5, alignItems: "flex-end"}} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
 				</View>
 				<View style={styles.fstContainer}>
