@@ -11,15 +11,20 @@ import Icons from '../assets/icons/Icons.js';
 const addcrops = () => {
         {/* */}
         const [cropData, setCropData] = useState({
-                name: '',
-                variety: '',
-                source:'',
-                date:'',
+                medium:'',
                 location:'',
+                type:'',
+                hrfNum:'',
+                name:'',
+                variety:'',
+                source:'',
+                datePlanted:'',
                 comments:'',
+                yield:'',
                 indoors:'',
                 active:'',
-                type:'',
+                visible:'',
+
         })
 
         const handleChange = (fieldName, input) => {
@@ -72,7 +77,7 @@ const addcrops = () => {
                                 inputContainerStyle = {styles.textBox}
                                 placeholder = 'Date Planted'
                                 maxLength={10}
-                                onChangeText={(text) => handleChange('date', text)}
+                                onChangeText={(text) => handleChange('datePlanted', text)}
                         />
                         <Text style={styles.label}>Location</Text>
                         <Input
@@ -111,7 +116,39 @@ const addcrops = () => {
                                 maxLength={64}
                                 onChangeText={(text) => handleChange('type', text)}
 
-                        />         
+                        />
+                        <Text style={styles.label}>Medium</Text>
+                        <Input
+                                inputContainerStyle = {styles.textBox}
+                                placeholder = 'Medium'
+                                maxLength={64}
+                                onChangeText={(text) => handleChange('medium', text)}
+
+                        />
+                        <Text style={styles.label}>HRF Number</Text>
+                        <Input
+                                inputContainerStyle = {styles.textBox}
+                                placeholder = 'HRF Number'
+                                maxLength={64}
+                                onChangeText={(text) => handleChange('hrfNum', text)}
+
+                        />
+                        <Text style={styles.label}>Yield</Text>
+                        <Input
+                                inputContainerStyle = {styles.textBox}
+                                placeholder = 'Yield'
+                                maxLength={64}
+                                onChangeText={(text) => handleChange('yield', text)}
+
+                        />
+                        <Text style={styles.label}>Visible</Text>
+                        <Input
+                                inputContainerStyle = {styles.textBox}
+                                placeholder = 'Visibility'
+                                maxLength={64}
+                                onChangeText={(text) => handleChange('visible', text)}
+
+                        />
                 </ScrollView>
         )
 }
