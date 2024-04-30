@@ -14,6 +14,7 @@ import AppButton from '../assets/AppButton.jsx'
 import { Input } from 'react-native-elements'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import DropDownPicker from 'react-native-dropdown-picker'
+import NavBar from '../assets/NavBar.jsx'
 
 const todo = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
@@ -24,10 +25,10 @@ const todo = () => {
 	{/*Constants for icon drop down menu*/ }
 	const [items, setItems] = useState([ //potential subscription model stuff
 		{ label: '', value: 'watering-can', icon: () => <MaterialCommunityIcons name="watering-can" size={40} color="blue" /> },  // watering task
-		{ label: '', value: '', icon: () => <MaterialCommunityIcons name="calendar-clock" size={40} color="black" /> }, // planning task tag
-		{ label: '', value: '', icon: () => <MaterialCommunityIcons name="rake" size={40} color="brown" /> },  // rake task tag icon
-		{ label: '', value: '', icon: () => <MaterialCommunityIcons name="shovel" size={40} color="black" /> },  // shovel for digging task icon
-		{ label: '', value: '', icon: () => <MaterialCommunityIcons name="tools" size={40} color="black" /> },   // tool icon tag for needed to build/fix something
+		{ label: '', value: 'calender-clock', icon: () => <MaterialCommunityIcons name="calendar-clock" size={40} color="black" /> }, // planning task tag
+		{ label: '', value: 'rake', icon: () => <MaterialCommunityIcons name="rake" size={40} color={Colors.IRISH_GREEN} /> },  // rake task tag icon
+		{ label: '', value: 'shovel', icon: () => <MaterialCommunityIcons name="shovel" size={40} color="black" /> },  // shovel for digging task icon
+		{ label: '', value: 'tools', icon: () => <MaterialCommunityIcons name="tools" size={40} color="black" /> },   // tool icon tag for needed to build/fix something
 	]);
 	const [open, setOpen] = useState(false);
 	const [value, setValue] = useState('watering-can'); {/*must initialize with string of value from items list to assign a default option*/ }
@@ -70,7 +71,7 @@ const todo = () => {
 
 					<Col relativeColsCovered={2} alignItems='center'>
 						{/* <Text style={styles.pageTitle}>Settings</Text>*/}
-						<AppButton title="To-do" specifiedStyle={styles.oval} onPress={() =>  router.push('/todo') } />
+						<AppButton title="To-Do" specifiedStyle={styles.oval} onPress={() =>  router.push('/todo') } />
 
 					</Col>
 					<Col relativeColsCovered={2} alignItems='center'>
@@ -94,6 +95,7 @@ const todo = () => {
 						listMode='SCROLLVIEW'
 						backgroundColor={Colors.SCOTCH_MIST_TAN }
 						dropDownDirection='BOTTOM'
+						showTickIcon={false}
 						props={{
 							activeOpacity: 1,
 						}}
@@ -235,6 +237,7 @@ const todo = () => {
 					<AppButton specifiedStyle={{ marginTop: -5, zIndex: 1, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
 				</View>
 			</ScrollView>
+			<NavBar notebookSelected/>
 		</View>
 	)
 };

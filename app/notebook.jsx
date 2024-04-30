@@ -6,7 +6,6 @@ import {
 	Alert,
 	ScrollView,
 } from 'react-native'
-
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
@@ -14,6 +13,7 @@ import Colors from '../assets/Color.js'
 import AppButton from '../assets/AppButton.jsx'
 import { Input } from 'react-native-elements'
 import DropDownPicker from 'react-native-dropdown-picker'
+import NavBar from '../assets/NavBar.jsx'
 
 const Notebook = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
@@ -256,7 +256,8 @@ const Notebook = () => {
 					<AppButton specifiedStyle={{ marginTop: -5, zIndex: 1, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
 				</View>
 			</ScrollView>
-			</View>
+			<NavBar notebookSelected/>
+	</View>
 	)
 };
 
