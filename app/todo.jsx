@@ -229,7 +229,7 @@ const todo = () => {
 						selectionColor={Colors.SANTA_GRAY}
 						placeholder='What happened today?'
 						defaultValue={initialFirstName}
-						autoComplete='Things I did today...'
+						autoComplete='name'
 						maxLength={256}
 						multiline={true}
 						textAlign="flex-start"
