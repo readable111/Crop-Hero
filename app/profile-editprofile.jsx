@@ -29,8 +29,8 @@ const EditProfile = () =>{
 		
 	{/*TODO: retrieve data from local storage or database*/}
 	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
-	initialFirstName = "Daniel"
-	initialLastName = "Moreno"
+	initialFirstName = "Zina"
+	initialLastName = "Townley"
 
 	{/*TODO: add dark mode*/}
 	return(
