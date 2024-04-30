@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View, ScrollView, Image, TextInput, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
@@ -63,7 +63,7 @@ const cropspage = () => {
                         <Text style={styles.label}>Date Planted</Text>
                         <Input
                                 inputContainerStyle = {styles.textBox}
-                                value={crop.date}
+                                value={crop.datePlanted}
                                 maxLength={10}
                                 readOnly = {readOnly}
                         />
@@ -103,7 +103,31 @@ const cropspage = () => {
                                 maxLength={64}
                                 readOnly = {readOnly}
 
-                        />         
+                        />
+                        <Text style={styles.label}>HRF Number</Text>
+                        <Input
+                                inputContainerStyle = {styles.textBox}
+                                value={crop.hrfNum}
+                                maxLength={64}
+                                readOnly = {readOnly}
+
+                        />
+                        <Text style={styles.label}>Visible</Text>
+                        <Input
+                                inputContainerStyle = {styles.textBox}
+                                value={crop.visible}
+                                maxLength={64}
+                                readOnly = {readOnly}
+
+                        />
+                        <Text style={styles.label}>Yield</Text>
+                        <Input
+                                inputContainerStyle = {styles.textBox}
+                                value={crop.yield}
+                                maxLength={64}
+                                readOnly = {readOnly}
+
+                        />
                 </ScrollView>
         )
 }

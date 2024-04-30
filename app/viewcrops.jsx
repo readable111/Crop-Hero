@@ -7,19 +7,27 @@ import AppButton from '../assets/AppButton.jsx';
 import Icons from '../assets/icons/Icons.js';
 import { Picker } from '@react-native-picker/picker';
 import Colors from '../assets/Color';
+import { useFonts } from 'expo-font'
 
 
 
 const viewcrops = () => {
         {/* Array of objects, used to differentiate picked items */}
         const [selectedItem, setItem] = useState(null);
-        {/* Dummy Data, for picker use */}
 
+        //Fonts
+        const [fontsLoaded, fontError] = useFonts({
+                'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
+                'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
+                'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+        });
+
+        {/* Dummy Data, for picker use */}
         const crops = [
-                { label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', date: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard'},
-                { label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', date: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' },
-                { label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", date: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard' },
-                { label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", date: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard' }
+                { label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', datePlanted: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '193242', visible:'visible', yield:'none'},
+                { label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', datePlanted: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' , medium: 'Hugel Mound', hrfNum: '945304', visible:'not visible', yield:'large'},
+                { label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", datePlanted: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard', medium: 'Hugel Mound', hrfNum: '835242', visible:'visible', yield:'medium' },
+                { label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' }
         ]
         {/* Was testing something, leaving for now
         const handleChange = (itemValue, itemIndex) =>
@@ -36,7 +44,7 @@ const viewcrops = () => {
         (
                 <TouchableOpacity onPress={() => handlePress(item)}>
                         <View style={styles.button}>
-                                <Text>{item.name}</Text>
+                                <Text style={styles.buttonText}>{item.name}</Text>
                         </View>
                 </TouchableOpacity>
         );
@@ -69,10 +77,10 @@ export default viewcrops;
 const styles = StyleSheet.create({
         container: {
           height: "100%",
-          backgroundColor: '#97A5BF',
+          backgroundColor: Colors.SANTA_GRAY,
         },
         title:{
-                backgroundColor: '#f1ddbf',
+                backgroundColor: Colors.ALMOND_TAN,
                 borderColor: '#20232a',
                 borderWidth: 1,
                 padding: 18,
@@ -128,13 +136,8 @@ const styles = StyleSheet.create({
                 borderColor: "#ccc",
                 borderRadius: 5,
         },
-        backdrop: {
-                alignItems: "center",
-                backgroundColor : colors.white,
-
-        },
         button:{
-                backgroundColor: '#FFFADA',
+                backgroundColor: Colors.SCOTCH_MIST_TAN,
                 textAlign: 'center',
                 padding: 20,
                 fontSize: 38,
@@ -144,4 +147,10 @@ const styles = StyleSheet.create({
                 borderWidth: 2,
                 borderRadius: 8,
         },
+        buttonText:{
+                fontSize: 24,
+                fontFamily: 'Domine-Regular',
+                textAlign: 'center',
+
+        }
 });

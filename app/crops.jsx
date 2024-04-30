@@ -7,6 +7,11 @@ import Colors from '../assets/Color';
 import { useFonts } from 'expo-font';
 const crops = () => {
   const router = useRouter();
+  const [fontsLoaded, fontError] = useFonts({
+    'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
+    'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
+    'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+});
   return (
     <View style={{
       flex: 1,
@@ -37,7 +42,7 @@ export default crops;
 const styles = StyleSheet.create({
   container: {
     flex: 4,
-    backgroundColor: '#f1ddbf',
+    backgroundColor: Colors.SANTA_GRAY,
   },
   circleBlock:{
     backgroundColor: 'white',
@@ -52,7 +57,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     textAlign: 'right',
+    alignContent: 'center',
     fontSize: 42,
+    fontFamily: 'Domine-Medium'
   },
   backdrop:{
     flex: 10,
@@ -76,7 +83,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   button:{
-    backgroundColor: Colors.ALMOND_TAN,
+    backgroundColor: Colors.SCOTCH_MIST_TAN,
     textAlign: 'center',
     padding: 30,
     fontSize: 38,
@@ -88,7 +95,8 @@ const styles = StyleSheet.create({
   },
   buttonText:{
     textAlign: 'center',
-    fontSize: 38,
+    fontSize: 32,
+    fontFamily: 'Domine-Regular'
   },
   whitebox: {
     backgroundColor: 'white',
