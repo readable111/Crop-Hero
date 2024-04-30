@@ -1,19 +1,31 @@
+{/*McKenna Beard for IT Capstone 2024  UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 4_30_2024*/ }
+{/*This  page is meant to keep track of what was done that day for future reference if needed*/ }
+
 import { React, useState } from 'react';
 import {
 	StyleSheet,
 	View,
 	StatusBar,
+	Text,
+	Image,
 	Alert,
 	ScrollView,
+	TouchableOpacity,
+	TextInput,
+	
 } from 'react-native'
+
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
+import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
+import { Tab, TabView, ListItem, Card,Button, Icon} from '@rneui/themed';
 import { Input } from 'react-native-elements'
+import { AntDesign } from '@expo/vector-icons'
+
 import DropDownPicker from 'react-native-dropdown-picker'
-import NavBar from '../assets/NavBar.jsx'
 
 const Notebook = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
@@ -40,7 +52,6 @@ const Notebook = () => {
 	{/*load in all fonts used for this page*/ }
 	const [fontsLoaded, fontError] = useFonts({
 		'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
-		'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
 		'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
 		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
 	});
@@ -49,10 +60,16 @@ const Notebook = () => {
 	if (!fontsLoaded && !fontError) {
 		return null;
 	}
-	//place holder variables for todo tasks when testing
-	initialFirstName = ""
-	givenDate = ''
-	//givenDate=""
+	//place holder variables for notebook entries
+	
+	entryOne = ""
+	entryTwo = ""
+	entryThree = ""
+	entryFour = ""
+	entryFive = ""
+	entrySix = ""
+	
+	
 	{/*TODO: add dark mode*/ }
 	{/*return the page view with all of its contents*/ }
 	return (
@@ -170,8 +187,8 @@ const Notebook = () => {
 						inputStyle={styles.inputBoxStyle}
 						selectionColor={Colors.SANTA_GRAY}
 						placeholder='What happened today?'
-						defaultValue={initialFirstName}
-						autoComplete='name'
+						defaultValue={entryOne}
+						autoComplete='Things I did today...'
 						//maxLength={256}
 						multiline={true}
 						textAlign="flex-start"
@@ -186,9 +203,9 @@ const Notebook = () => {
 						inputContainerStyle={styles.inputBox}
 						inputStyle={styles.inputBoxStyle}
 						selectionColor={Colors.SANTA_GRAY}
-						placeholder='What happened today?'
-						defaultValue={initialFirstName}
-						autoComplete='name'
+						placeholder='5. Made plans for new storage space for upcoming plants. Will begin to assemble task list for upcoming weeks to complete tasks needed.'
+						defaultValue={entryTwo}
+						autoComplete='Things I did today...'
 						maxLength={256}
 						multiline={true}
 						textAlign="flex-start"
@@ -201,9 +218,9 @@ const Notebook = () => {
 						inputContainerStyle={styles.inputBox}
 						inputStyle={styles.inputBoxStyle}
 						selectionColor={Colors.SANTA_GRAY}
-						placeholder='What happened today?'
-						defaultValue={initialFirstName}
-						autoComplete='name'
+						placeholder='4. Updated storage on seed packets, will locate them in building next to the chicken coop. May need to build new organization options.'
+						defaultValue={entryThree}
+						autoComplete='Things I did today....'
 						maxLength={256}
 						multiline={true}
 						textAlign="flex-start"
@@ -216,9 +233,9 @@ const Notebook = () => {
 						inputContainerStyle={styles.inputBox}
 						inputStyle={styles.inputBoxStyle}
 						selectionColor={Colors.SANTA_GRAY}
-						placeholder='What happened today?'
-						defaultValue={initialFirstName}
-						autoComplete='name'
+						placeholder='3. Was able to complete list of todo items for the upcoming week. Will be looking into new crops to plant in the upcoming season.'
+						defaultValue={entryFour}
+						autoComplete='Things I did today...'
 						maxLength={256}
 						multiline={true}
 						textAlign="flex-start"
@@ -231,9 +248,9 @@ const Notebook = () => {
 						inputContainerStyle={styles.inputBox}
 						inputStyle={styles.inputBoxStyle}
 						selectionColor={Colors.SANTA_GRAY}
-						placeholder='What happened today?'
-						defaultValue={initialFirstName}
-						autoComplete='name'
+						placeholder='2. Had a delivery of fertilizer, it was placed to the right of the hugel mound. This will be great for spring refresh. '
+						defaultValue={entryFive}
+						autoComplete='Things I did today...'
 						maxLength={256}
 						multiline={true}
 						textAlign="flex-start"
@@ -246,8 +263,8 @@ const Notebook = () => {
 						inputContainerStyle={styles.inputBox}
 						inputStyle={styles.inputBoxStyle}
 						selectionColor={Colors.SANTA_GRAY}
-						placeholder='What happened today?'
-						defaultValue={initialFirstName}
+						placeholder='1. Today was cold. The greenhouses remained at around 70 degrees upon checking. Went through upcoming crops that need plantining.'
+						defaultValue={entrySix}
 						autoComplete='Things I did today...'
 						maxLength={256}
 						multiline={true}
@@ -256,8 +273,7 @@ const Notebook = () => {
 					<AppButton specifiedStyle={{ marginTop: -5, zIndex: 1, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
 				</View>
 			</ScrollView>
-			<NavBar notebookSelected/>
-	</View>
+			</View>
 	)
 };
 
@@ -309,7 +325,7 @@ const styles = StyleSheet.create({
 		//marginTop: -18,
 		fontFamily: 'WorkSans-Regular',
 		fontSize: 16,
-		//paddingLeft: 10,
+		paddingLeft: 5,
 		//marginBottom: 0,
 		zIndex: 5,
 		flex: 3,
