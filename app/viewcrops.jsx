@@ -1,0 +1,147 @@
+import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
+import { Pressable, StyleSheet, Text, View, ScrollView, Image, TextInput, FlatList, TouchableOpacity} from 'react-native';
+import { router } from 'expo-router';
+import { Input, colors } from 'react-native-elements';
+import AppButton from '../assets/AppButton.jsx';
+import Icons from '../assets/icons/Icons.js';
+import { Picker } from '@react-native-picker/picker';
+import Colors from '../assets/Color';
+
+
+
+const viewcrops = () => {
+        {/* Array of objects, used to differentiate picked items */}
+        const [selectedItem, setItem] = useState(null);
+        {/* Dummy Data, for picker use */}
+
+        const crops = [
+                { label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', date: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard'},
+                { label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', date: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' },
+                { label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", date: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard' },
+                { label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", date: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard' }
+        ]
+        {/* Was testing something, leaving for now
+        const handleChange = (itemValue, itemIndex) =>
+        {
+                setItem(itemValue);
+        }
+        */}
+
+        //Testing functions now
+
+        {/* Deals with rendering the items (In this case, selectables) in the flatlist */}
+
+        const renderItem = ({ item }) => 
+        (
+                <TouchableOpacity onPress={() => handlePress(item)}>
+                        <View style={styles.button}>
+                                <Text>{item.name}</Text>
+                        </View>
+                </TouchableOpacity>
+        );
+
+        const handlePress = (item) => 
+        {
+                console.log('Item pressed:');
+                router.push({pathname: '/cropspage', params: item})
+        }
+        return (
+                <View>
+                        <Text style={styles.title}>View Crops</Text>
+                        <View style={styles.container}>
+                                <View style={styles.back}>
+                                        <AppButton title="" icon={Icons.arrow_tail_left_black} onPress={() => router.back()}/>
+                                </View>
+                                <FlatList
+                                        data={crops}
+                                        renderItem={renderItem}
+                                        keyExtractor={ item => item.label}
+                                />
+
+                        </View>
+                </View>
+        )
+}
+
+export default viewcrops;
+
+const styles = StyleSheet.create({
+        container: {
+          height: "100%",
+          backgroundColor: '#97A5BF',
+        },
+        title:{
+                backgroundColor: '#f1ddbf',
+                borderColor: '#20232a',
+                borderWidth: 1,
+                padding: 18,
+                textAlign: 'right',
+                fontSize: 42,
+        },
+        save:{
+                marginTop: 10,
+                marginLeft: 370,
+                width: 40,
+                height: 40,
+                borderRadius: 40/2,
+                backgroundColor: "lime",
+                justifyContent: "center",
+                alignItems: "center",
+        },
+        back:{
+                marginLeft: 10,
+                width: 40,
+                height: 40,
+                justifyContent: "center",
+                alignItems: "center",
+        },
+        textBox:{
+                marginTop: -10,
+                backgroundColor: "#FFFFFF",
+                borderColor: "#20232a",
+                overflow: 'hidden',
+                borderWidth: 2,
+                borderBottomWidth: 2,
+                marginLeft: 20,
+                marginRight: 30,
+                width: 350,
+                height: 40,
+                borderRadius: 12,
+                paddingLeft: 10,
+        },
+        label:{
+                marginTop: -12,
+		marginLeft: 47,
+		alignSelf: 'flex-start',
+		backgroundColor: 'white',
+		zIndex: 10,
+		fontSize: 16,
+		borderWidth: 3,
+		borderRadius: 7,
+		borderColor: 'white',
+        },
+        dropdownBox: {
+                width: 200, 
+                height: 40, 
+                borderWidth: 1, 
+                borderColor: "#ccc",
+                borderRadius: 5,
+        },
+        backdrop: {
+                alignItems: "center",
+                backgroundColor : colors.white,
+
+        },
+        button:{
+                backgroundColor: '#FFFADA',
+                textAlign: 'center',
+                padding: 20,
+                fontSize: 38,
+                marginTop: 20,
+                marginHorizontal: 20,
+                borderColor: '#20232a',
+                borderWidth: 2,
+                borderRadius: 8,
+        },
+});
