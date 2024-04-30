@@ -3,25 +3,16 @@ import {
 	StyleSheet,
 	View,
 	StatusBar,
-	Text,
-	Image,
 	Alert,
 	ScrollView,
-	TouchableOpacity,
-	TextInput,
-	
 } from 'react-native'
 
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
-import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
-import { Tab, TabView, ListItem, Card,Button, Icon} from '@rneui/themed';
 import { Input } from 'react-native-elements'
-import { AntDesign } from '@expo/vector-icons'
-
 import DropDownPicker from 'react-native-dropdown-picker'
 
 const Notebook = () => {
@@ -49,6 +40,7 @@ const Notebook = () => {
 	{/*load in all fonts used for this page*/ }
 	const [fontsLoaded, fontError] = useFonts({
 		'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
+		'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
 		'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
 		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
 	});
