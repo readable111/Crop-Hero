@@ -23,20 +23,21 @@ import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
 import { Tab, TabView, ListItem, Card, Button, Icon,ListItemProps,Avatar, CheckBox, Stack } from '@rneui/themed';
 import { Input } from 'react-native-elements'
-import { AntDesign,MaterialCommunityIcons } from '@expo/vector-icons'
-import { Switch } from 'react-native-elements'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { CheckBox } from '@rneui/themed';
 import DropDownPicker from 'react-native-dropdown-picker'
 
 const todo = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
-	//const [checked, setChecked] = useState([false, false]); // constant for checked to-do list under ListItems from RNE
+	const [checked, setChecked] = useState(true);
+	const toggleCheckbox = () => setChecked(!checked);
 	//const [expanded, setExpanded] = useState(false); // for accordian expansion
 	
 	{/*Constants for icon drop down menu*/ }
 	const [items, setItems] = useState([ //potential subscription model stuff
 		{ label: '', value: 'watering-can', icon: () => <MaterialCommunityIcons name="watering-can" size={40} color="blue" /> },  // watering task
-		{ label: '', value: 'calendar', icon: () => <MaterialCommunityIcons name="calendar-clock" size={40} color="black" /> }, // planning task tag
-		{ label: '', value: 'rake', icon: () => <MaterialCommunityIcons name="rake" size={40} color="brown" /> },  // rake task tag icon
+		{ label: '', value: 'calender', icon: () => <MaterialCommunityIcons name="calendar" size={40} color="black" /> }, // planning task tag
+		{ label: '', value: 'rake', icon: () => <MaterialCommunityIcons name="rake" size={40} color={Colors.IRISH_GREEN} /> },  // rake task tag icon
 		{ label: '', value: 'shovel', icon: () => <MaterialCommunityIcons name="shovel" size={40} color="black" /> },  // shovel for digging task icon
 		{ label: '', value: 'tools', icon: () => <MaterialCommunityIcons name="tools" size={40} color="black" /> },   // tool icon tag for needed to build/fix something
 	]);
@@ -78,9 +79,8 @@ const todo = () => {
 		<View style={styles.topContainer}>
 			{/*create the default phone status bar at the top of the screen-------------------------------------*/}
 			<StatusBar backgroundColor={Colors.WHITE_SMOKE} />
-			{/*top row of buttons*/}
 			{/*Button Grid for switching between Notebook and todo pages---------------------------------------*/ }
-			<View style={styles.btnGridContainer}> 
+			<View style={styles.btnGridContainer}>
 				{/*row for profile settings*/}
 				<Row height={80}>
 
@@ -100,88 +100,73 @@ const todo = () => {
 			</View>
 			{/*start of scrolling section of the page---------------------------------------------------------------------------------*/ }
 			<ScrollView style={styles.scroll}>
-				<View style={styles.fstTryContainer}> 
-					<Input
-						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
-						inputContainerStyle={styles.inputBox}
-						inputStyle={styles.inputBoxStyle}
-						selectionColor={Colors.SANTA_GRAY}
-						placeholder='Things to do'
-						defaultValue={taskTitle}
-						autoComplete='Things I did today...'
-						maxLength={256}
-						multiline={true}
-						textAlign="flex-start"
-					/>
-					{/**trying this-dropdown picker for icon selection*/}
-					<DropDownPicker
-						open={open}
-						value={value}
-						items={items}
-						setOpen={setOpen}
-						setValue={setValue}
-						setItems={setItems}
-						disableBorderRadius={true}
-						listMode='SCROLLVIEW'
-						backgroundColor={Colors.SCOTCH_MIST_TAN }
-						dropDownDirection='BOTTOM'
-						props={{
-							activeOpacity: 1,
-						}}
-						scrollViewProps={{
-							nestedScrollEnabled: true,
-							borderColor: 'clear',
-							zIndex: 1000
-						}}
-						labelStyle={{
-							fontFamily: 'WorkSans-Regular',
-							fontSize: 16,
-						}}
-						listItemLabelStyle={{
-							fontFamily: 'WorkSans-Regular',
-							fontSize: 16,
-						}}
-						containerStyle={{
-							width: '20%',
-							//marginTop: 58,
-							zIndex: 900,
-							marginBottom: -60,
-							//marginTop: -20,
-							//marginLeft: 260,
-							//marginTop: 120
-							alignSelf: 'flex-end',
-							marginHorizontal: 20,
-							//marginBottom: -75,
-							//outerHeight: 25
-							backgroundColor: 'clear',
-							borderColor: 'clear'
-						}}
-						dropDownContainerStyle={{
-							borderWidth: 0,
-							//borderColor: 'black',
-							//borderRadius: 5,
-							zIndex: 900,
-							backgroundColor: 'clear',
-							borderColor: 'clear'
+				<View style={styles.fstTryContainer}>
+						{/**trying this-dropdown picker for icon selection*/}
+						<DropDownPicker
+							open={open}
+							value={value}
+							items={items}
+							setOpen={setOpen}
+							setValue={setValue}
+							setItems={setItems}
+							disableBorderRadius={true}
+							listMode='SCROLLVIEW'
+							backgroundColor={Colors.SCOTCH_MIST_TAN }
+							dropDownDirection='BOTTOM'
+							showTickIcon={false}
 							
-						}}
-						style={{
-							//borderColor: 'black',
-							borderWidth: 0,
-							//borderRadius: 5,
-							//height: '35%',
-							backgroundColor: 'clear',
-							borderColor: 'clear',
-							//marginTop: 5
-							
-						}}
-					/>
-
-					
+							props={{
+								activeOpacity: 1,
+							}}
+							scrollViewProps={{
+								nestedScrollEnabled: true,
+								borderColor: 'clear',
+								zIndex: 1000,
+							}}
+							labelStyle={{
+								fontFamily: 'WorkSans-Regular',
+								fontSize: 16,
+							}}
+							listItemLabelStyle={{
+								fontFamily: 'WorkSans-Regular',
+								fontSize: 16,
+							}}
+							containerStyle={{
+								width: '20%',
+								zIndex: 900,
+								marginBottom: -80,
+								alignSelf: 'flex-end',
+								marginHorizontal: 20,
+								backgroundColor: Colors.SCOTCH_MIST_TAN,
+								borderColor: 'clear'
+							}}
+							dropDownContainerStyle={{
+								borderWidth: 0,
+								zIndex: 900,
+								backgroundColor: Colors.SCOTCH_MIST_TAN,
+								borderColor: 'clear',
+								
+							}}
+							style={{
+								borderWidth: 0,
+								backgroundColor: Colors.SCOTCH_MIST_TAN,
+								borderColor: 'clear',
+							}}
+						/>
+						<Input
+							inputContainerStyle={styles.inputBox}
+							inputStyle={styles.inputBoxStyle}
+							selectionColor={Colors.SANTA_GRAY}
+							placeholder='Things to do'
+							defaultValue={taskTitle}
+							maxLength={256}
+							multiline={true}
+							textAlign="flex-start"
+						/>
+						
 					{/* checkboxes for to-do list*/}
 					<View style={styles.checkBoxFormat}>
-						<Row height={80}>
-
+						<Row height={100}>
 							<Col relativeColsCovered={1} alignItems='left'>
 								{/* <Text style={styles.pageTitle}>Settings</Text>*/}
 								{/*Button to switch to To-do page*/}
@@ -200,7 +185,6 @@ const todo = () => {
 							</Col>
 							<Col relativeColsCovered={3} alignItems='center'>
 								<Input
-
 									inputContainerStyle={styles.inputBoxCheck}
 									inputStyle={styles.inputBoxStyleTry}
 									selectionColor={Colors.SANTA_GRAY}
@@ -210,12 +194,10 @@ const todo = () => {
 									maxLength={256}
 									multiline={true}
 									textAlign="flex-start"
-									//height = '20%'
-
 								/>
 							</Col>
 						</Row>
-						<Row height={80}>
+						<Row height={100}>
 
 							<Col relativeColsCovered={1} alignItems='left'>
 								{/* <Text style={styles.pageTitle}>Settings</Text>*/}
@@ -235,8 +217,7 @@ const todo = () => {
 							</Col>
 							<Col relativeColsCovered={3} alignItems='center'>
 								<Input
-
-									inputContainerStyle={styles.inputBox}
+									inputContainerStyle={styles.inputBoxCheck}
 									inputStyle={styles.inputBoxStyleTry}
 									selectionColor={Colors.SANTA_GRAY}
 									placeholder='Things to schedule'
@@ -245,13 +226,10 @@ const todo = () => {
 									maxLength={256}
 									multiline={true}
 									textAlign="flex-start"
-								//height = '20%'
-
 								/>
 							</Col>
 						</Row>
-						<Row height={80}>
-
+						<Row height={100}>
 							<Col relativeColsCovered={1} alignItems='left'>
 								{/* <Text style={styles.pageTitle}>Settings</Text>*/}
 								{/*Button to switch to To-do page*/}
@@ -265,14 +243,12 @@ const todo = () => {
 									uncheckedColor='black'
 									backgroundColor='clear'
 									containerStyle={styles.checkBoxContainer}
-									//title = "todo"
 								/>
 
 							</Col>
 							<Col relativeColsCovered={3} alignItems='left'>
 								<Input
-
-									inputContainerStyle={styles.inputBox}
+									inputContainerStyle={styles.inputBoxCheck}
 									inputStyle={styles.inputBoxStyleTry}
 									selectionColor={Colors.SANTA_GRAY}
 									placeholder='Things to schedule'
@@ -281,34 +257,14 @@ const todo = () => {
 									maxLength={256}
 									multiline={true}
 									textAlign="flex-start"
-								//height = '20%'
-
 								/>
 							</Col>
 						</Row>
-						
 					</View>
 					{/* Button below is the edit icon which will open up the text input features in semester 2*/ }
 					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
 				</View>
 				{/*Will be try to use rows and coloumns to organize box 2x2-----------------------------------------------------------------------------*/}
-				
-				
-				<View style={styles.fstContainer}>
-					<Input
-						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
-						inputContainerStyle={styles.inputBox}
-						inputStyle={styles.inputBoxStyle}
-						selectionColor={Colors.SANTA_GRAY}
-						placeholder='Things to Do'
-						defaultValue={initialFirstName}
-						autoComplete='name'
-						maxLength={256}
-						multiline={true}
-						textAlign="flex-start"
-					/>
-					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
-				</View>
 				<View style={styles.fstContainer}>
 					<Input
 						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
@@ -326,7 +282,6 @@ const todo = () => {
 				</View>
 				<View style={styles.fstContainer}>
 					<Input
-						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
 						inputContainerStyle={styles.inputBox}
 						inputStyle={styles.inputBoxStyle}
 						selectionColor={Colors.SANTA_GRAY}
@@ -341,7 +296,34 @@ const todo = () => {
 				</View>
 				<View style={styles.fstContainer}>
 					<Input
-						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
+						inputContainerStyle={styles.inputBox}
+						inputStyle={styles.inputBoxStyle}
+						selectionColor={Colors.SANTA_GRAY}
+						placeholder='Things to do'
+						defaultValue={initialFirstName}
+						autoComplete='name'
+						maxLength={256}
+						multiline={true}
+						textAlign="flex-start"
+					/>
+					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
+				</View>
+				<View style={styles.fstContainer}>
+					<Input
+						inputContainerStyle={styles.inputBox}
+						inputStyle={styles.inputBoxStyle}
+						selectionColor={Colors.SANTA_GRAY}
+						placeholder='Things to do'
+						defaultValue={initialFirstName}
+						autoComplete='name'
+						maxLength={256}
+						multiline={true}
+						textAlign="flex-start"
+					/>
+					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
+				</View>
+				<View style={styles.fstContainer}>
+					<Input
 						inputContainerStyle={styles.inputBox}
 						inputStyle={styles.inputBoxStyle}
 						selectionColor={Colors.SANTA_GRAY}
@@ -362,45 +344,32 @@ const todo = () => {
 {/*define all of the custom styles for this page*/ }
 const styles = StyleSheet.create({
 	checkBoxContainer: {
-		backgroundColor: Colors.SCOTCH_MIST_TAN
+		backgroundColor: Colors.SCOTCH_MIST_TAN,
+		paddingBottom: 30,
     },
 	fstContainer: {
 		width: '90%',
 		backgroundColor: Colors.SCOTCH_MIST_TAN,
-		//alignItems: "center",
 		padding: 5,
-		//paddingVertial: 50,
 		marginBottom: 27,
 		marginTop: 20,
-		//paddingTop:40
 		border: 'black',
 		borderWidth: 1,
 		borderRadius: 5,
 		alignSelf: 'center',
 		//height: '90%'
 	},
-	checkBoxFormat: {
-		width: '90%',
-		border: 1,
-		borderRadius: 5,
-		backgroundColor: Colors.SCOTCH_MIST_TAN,
-		//marginTop: 100
-    },
 	fstTryContainer: {
 		width: '90%',
 		backgroundColor: Colors.SCOTCH_MIST_TAN,
-		//alignItems: "center",
 		padding: 5,
-		//paddingVertial: 50,
 		marginBottom: 5,
 		marginTop: 10,
-		//paddingTop:40
 		border: 'black',
 		borderWidth: 1,
 		borderRadius: 5,
 		alignSelf: 'center',
-		height: '35%'
-
+		height: 'auto'
     },
 	gridContainerInput: {
 		flex: 2,
@@ -411,19 +380,21 @@ const styles = StyleSheet.create({
 		width: '90%',
 		alignSelf: 'center'
     },
+	checkBoxFormat: {
+		width: '90%',
+		border: 1,
+		borderRadius: 5,
+		backgroundColor: Colors.SCOTCH_MIST_TAN,
+  },
 	scroll: {
-		//flex: 1,
-		//marginTop: 20,
-		width: '100%'
+		width: '100%',
+		height: '100%'
 	},
-
 	topContainer: {
 		backgroundColor: Colors.PERIWINKLE_GRAY,
-		//height: '100%',
 		flex: 1,
 		alignItems: 'flex-start',
 		flexDirection: 'column',
-		//marginBottom: '145%',
 		zIndex: -1,
 		height: 20
 	},
@@ -434,21 +405,32 @@ const styles = StyleSheet.create({
 		borderColor: 'black',
 		overflow: 'hidden',
 		borderBottomWidth: 2,
-		//marginTop: -18,
 		fontFamily: 'WorkSans-Regular',
 		fontSize: 16,
-		//paddingLeft: 10,
-		//marginBottom: 0,
 		zIndex: 5,
 		flex: 3,
 		marginTop: 35,
 		marginBottom: -15, 
 		width: '70%',
-		height: '70%'
+		paddingLeft: 5,
 	},
 	inputDateStyle: {
 		paddingBottom: 20,
-
+	},
+	inputBoxStyleTry: {
+		fontFamily: 'WorkSans-Regular',
+		fontSize: 16,
+		color: 'black',
+		paddingLeft: 1,
+		height: '80%',
+		padding: 2,
+	},
+	inputBoxStyleCheck: {
+		fontFamily: 'WorkSans-Regular',
+		fontSize: 16,
+		color: 'black',
+		height: '80%',
+		width: '50%',
 	},
 	inputBoxStyleTry: {
 		fontFamily: 'WorkSans-Regular',
@@ -474,50 +456,36 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: 'black',
 		paddingLeft: 1,
+		padding: 2,
 		height: '80%',
-		padding: 2
 	},
-
 	oval: {
 		backgroundColor: Colors.IRISH_GREEN,
 		width: 180,
 		height: 180,
 		borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
-		//transform: [{ scaleX: 2 }],
-		//marginTop: -250,
 		paddingTop: 120,
 		marginTop: -90,
 		fontSize: 18,
 		textAlign: 'center',
 		fontFamily: 'Domine-Regular',
-		//marginBottom: 20
-
 	},
 	ovals: {
 		backgroundColor: Colors.ALMOND_TAN,
 		width: 180,
 		height: 180,
 		borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
-		//transform: [{ scaleX: 2 }],
-		//marginTop: -250,
 		paddingTop: 120,
 		marginTop: -90,
 		fontSize: 18,
 		textAlign: 'center',
 		fontFamily: 'Domine-Regular',
-		//marginBottom: 20
-
 	},
-
-
-
 	profileName: {
 		color: 'white',
 		fontSize: 36,
 		fontFamily: 'Domine-Medium',
-		//marginTop: -130,
 	},
-
 	editProfileBtn: {
 		fontSize: 16,
 		color: "black",
@@ -529,17 +497,11 @@ const styles = StyleSheet.create({
 		//flex: -1, // # of columns
 		marginHorizontal: "auto",
 		width: '100%',
-		//marginTop: 12,
 		backgroundColor: Colors.ALMOND_TAN,
 		borderRadius: 5,
 		borderColor: 'black',
 		borderWidth: 1,
-		//marginBottom: -20,
 		height: '13%'
-		//height: 20,
-
-
-
 	}
 })
 
