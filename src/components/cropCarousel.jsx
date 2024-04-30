@@ -1,9 +1,13 @@
 import React from 'react'
-import { View, FlatList, Dimensions, Text, StyleSheet, Image } from 'react-native'
+import { View, FlatList, Dimensions, Text, StyleSheet, Image, Pressable } from 'react-native'
+import { useRouter } from 'expo-router'
 import Colors from '../../assets/Color.js'
 const { width } = Dimensions.get('window')
 
 const Carousel = ({data}) => {
+  const router  = useRouter();
+
+
   return(
           <FlatList
             data={data}
@@ -12,13 +16,15 @@ const Carousel = ({data}) => {
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
+        <Pressable onPress = {() => router.push({pathname:'/cropspage', params: item})}>
           <View style={styles.item}>
             <Image source = {require("../../assets/icons/cropDefaultImage.png")}/>
-            <Text> Name: {item.cropName}</Text> 
-            <Text> Medium: {item.medium}</Text>
+            <Text> Name: {item.name}</Text> 
+            <Text> Medium: {/*item.medium*/}</Text>
             <Text> Loction: {item.location}</Text>
-            <Text> Day #: {item.day}</Text>
+            <Text> Start Date: {item.date}</Text>
           </View>
+        </Pressable>
         )}
     />
   )
@@ -34,6 +40,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 4,
   },
 });
 

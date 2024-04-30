@@ -9,8 +9,53 @@ import SearchInput from '../assets/SearchFeature.jsx'
 import NavBar from '../assets/NavBar.jsx'
 
 
+const Home = () =>{
 
-const Home = () =>{ 
+	//ignore for now, was messing around with weather apis
+//		const getWeather = async () =>{	
+//		const params = {
+//			"latitude": 33.20,
+//			"longitude": -97.15,
+//			"daily": ["temperature_2m_max", "temperature_2m_min", "uv_index_clear_sky_max", "precipitation_sum", "showers_sum", "snowfall_sum"],
+//			"temperature_unit": "fahrenheit",
+//			"wind_speed_unit": "mph",
+//			"precipitation_unit": "inch"
+//		};
+//		const url = "https://api.open-meteo.com/v1/forecast";
+//		const forecast = await fetch(url, params)
+//		const response = forecast[0];
+//		const daily = response.daily();
+//		
+//		const weatherData = {
+//	
+//			daily: {
+//				time: range(Number(daily.time()), Number(daily.timeEnd()), daily.interval()).map(
+//					(t) => new Date((t + utcOffsetSeconds) * 1000)
+//				),
+//				temperature2mMax: daily.variables(0).valuesArray(),
+//				temperature2mMin: daily.variables(1).valuesArray(),
+//				uvIndexClearSkyMax: daily.variables(2).valuesArray(),
+//				precipitationSum: daily.variables(3).valuesArray(),
+//				showersSum: daily.variables(4).valuesArray(),
+//				snowfallSum: daily.variables(5).valuesArray(),
+//			},
+//	
+//		};
+//
+//	for (let i = 0; i < weatherData.daily.time.length; i++) {
+//		console.log(
+//			weatherData.daily.time[i].toISOString(),
+//			weatherData.daily.temperature2mMax[i],
+//			weatherData.daily.temperature2mMin[i],
+//			weatherData.daily.uvIndexClearSkyMax[i],
+//			weatherData.daily.precipitationSum[i],
+//			weatherData.daily.showersSum[i],
+//			weatherData.daily.snowfallSum[i]
+//		);
+//	}
+//		return weatherData;
+//	}
+
 	const [fontsLoaded, fontError] = useFonts({
 	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
 	'Domine-Bold': require('../assets/fonts/Domine-Bold.ttf')
@@ -22,8 +67,13 @@ const Home = () =>{
 		
 	const weather = [{id:1, day: "Mo", weather: "rainy"},{id:2,day: "Tu", weather: "pcloudy"},{id:3,day: "We", weather: "cloudy"},{id:4,day: "Th", weather: "sunny"},{id:5,day: "Fr", weather: "sunny"},{id:6,day: "Sat", weather: "rainy"},{id:7,day: "Sun", weather: "snow"}]
 	
-	const crops = [{cropName: "Carrots", medium: "Hugel Mound", location: "8", day: "7"},{cropName: "Carrots", medium: "Hugel Mound", location: "8", day: "7"},{cropName: "Carrots", medium: "Hugel Mound", location: "8", day: "7"}]
 
+        const crops = [
+                { label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', date: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard'},
+                { label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', date: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' },
+                { label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", date: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard' },
+                { label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", date: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard' }
+        ]
 
 	const temp = [{temp: 70, perc: 80},{temp: 68, perc:68}, {temp: 70, perc: 72}]
 	
@@ -76,9 +126,13 @@ const Home = () =>{
 					}
 					keyExtractor={(item) => item.id}/>
 		</View>		
-		<HomeCarousel data={temp} style = {styles.component}/>
-		<SearchInput style = {styles.component}/>
-		<CropCarousel crops = {crops} style = {styles.component}/>
+		<View style = {styles.weatherCarousel}>
+			<HomeCarousel data={temp}/>
+		</View>
+		<View style = {styles.Search}>
+			<SearchInput/>
+		</View>
+			<CropCarousel crops = {crops} style = {styles.cropCarousel}/>
 		<NavBar homeSelected/>
 	</View>)
 };
@@ -104,7 +158,6 @@ const styles = StyleSheet.create({
 		width: '100%',
 		borderRadius: 5,
 		flexDirection: 'row',
-		marginTop: 8,
 		marginBottom: 20,
 		alignContent: 'flex-start',
 		justifyContent: 'center'
@@ -137,9 +190,18 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center'
 	},
-	component:{
+	weatherCarousel:{
+		marginVertical:10,
 		flex:1,
-		alignSelf: 'flex-start'
+	},
+	Search:{
+		flex:1,
+		marginBottom: 10,
+		zIndex: 9999
+	},
+	cropCarousel:{
+		flex:1,
+		marginVertical: 5,
 	}
 
 })

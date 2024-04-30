@@ -1,32 +1,38 @@
 {/*McKenna Beard for IT Capstone 2024  UNT To-do Page as apart of the notebook tab on the nav bar*/ }
 {/*This page can only be accessed after clicking on the notebook page from the main nav bar*/ }
-
 import { React, useState } from 'react';
 import {
 	StyleSheet,
 	View,
 	StatusBar,
+	Text,
+	Image,
 	Alert,
 	ScrollView,
+	TouchableOpacity,
+	TextInput,
+	log
+
 } from 'react-native'
+
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
+import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
+import { Tab, TabView, ListItem, Card, Button, Icon,ListItemProps,Avatar, CheckBox, Stack } from '@rneui/themed';
 import { Input } from 'react-native-elements'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { CheckBox } from '@rneui/themed';
 import DropDownPicker from 'react-native-dropdown-picker'
-import NavBar from '../assets/NavBar.jsx'
 
 const todo = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
 	const [checked, setChecked] = useState(true);
 	const toggleCheckbox = () => setChecked(!checked);
 	//const [expanded, setExpanded] = useState(false); // for accordian expansion
-	{/*constants for date input*/ }
-	//const mask = '[00]{-}[00]{-}[0000]'
+	
 	{/*Constants for icon drop down menu*/ }
 	const [items, setItems] = useState([ //potential subscription model stuff
 		{ label: '', value: 'watering-can', icon: () => <MaterialCommunityIcons name="watering-can" size={40} color="blue" /> },  // watering task
@@ -42,12 +48,12 @@ const todo = () => {
 	const [check2, setCheck2] = useState(false);
 	const [check3, setCheck3] = useState(false);
 	const [check4, setCheck4] = useState(false);
-
+	const [checked, setChecked] = useState(true);
+	const toggleCheckbox = () => setChecked(!checked);
 
 	{/*load in all fonts used for this page*/ }
 	const [fontsLoaded, fontError] = useFonts({
 		'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
-		'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
 		'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
 		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
 	});
@@ -80,7 +86,8 @@ const todo = () => {
 
 					<Col relativeColsCovered={2} alignItems='center'>
 						{/* <Text style={styles.pageTitle}>Settings</Text>*/}
-						<AppButton title="To-Do" specifiedStyle={styles.oval} onPress={() =>  router.push('/todo') } />
+						{/*Button to switch to To-do page*/ }
+						<AppButton title="To-do" specifiedStyle={styles.oval} onPress={() =>  router.push('/todo') } /> 
 
 					</Col>
 					<Col relativeColsCovered={2} alignItems='center'>
@@ -160,7 +167,6 @@ const todo = () => {
 					{/* checkboxes for to-do list*/}
 					<View style={styles.checkBoxFormat}>
 						<Row height={100}>
-
 							<Col relativeColsCovered={1} alignItems='left'>
 								{/* <Text style={styles.pageTitle}>Settings</Text>*/}
 								{/*Button to switch to To-do page*/}
@@ -211,7 +217,6 @@ const todo = () => {
 							</Col>
 							<Col relativeColsCovered={3} alignItems='center'>
 								<Input
-
 									inputContainerStyle={styles.inputBoxCheck}
 									inputStyle={styles.inputBoxStyleTry}
 									selectionColor={Colors.SANTA_GRAY}
@@ -225,7 +230,6 @@ const todo = () => {
 							</Col>
 						</Row>
 						<Row height={100}>
-
 							<Col relativeColsCovered={1} alignItems='left'>
 								{/* <Text style={styles.pageTitle}>Settings</Text>*/}
 								{/*Button to switch to To-do page*/}
@@ -256,7 +260,6 @@ const todo = () => {
 								/>
 							</Col>
 						</Row>
-
 					</View>
 					{/* Button below is the edit icon which will open up the text input features in semester 2*/ }
 					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
@@ -326,7 +329,7 @@ const todo = () => {
 						selectionColor={Colors.SANTA_GRAY}
 						placeholder='Things to do'
 						defaultValue={initialFirstName}
-						autoComplete='name'
+						autoComplete='Things I did today...'
 						maxLength={256}
 						multiline={true}
 						textAlign="flex-start"
@@ -334,7 +337,6 @@ const todo = () => {
 					<AppButton specifiedStyle={{ marginTop: -5, zIndex: 1, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
 				</View>
 			</ScrollView>
-			<NavBar notebookSelected/>
 		</View>
 	)
 };
@@ -354,7 +356,8 @@ const styles = StyleSheet.create({
 		border: 'black',
 		borderWidth: 1,
 		borderRadius: 5,
-		alignSelf: 'center'
+		alignSelf: 'center',
+		//height: '90%'
 	},
 	fstTryContainer: {
 		width: '90%',
@@ -367,7 +370,6 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		alignSelf: 'center',
 		height: 'auto'
-
     },
 	gridContainerInput: {
 		flex: 2,
@@ -383,7 +385,7 @@ const styles = StyleSheet.create({
 		border: 1,
 		borderRadius: 5,
 		backgroundColor: Colors.SCOTCH_MIST_TAN,
-    },
+  },
 	scroll: {
 		width: '100%',
 		height: '100%'
@@ -429,6 +431,25 @@ const styles = StyleSheet.create({
 		color: 'black',
 		height: '80%',
 		width: '50%',
+	},
+	inputBoxStyleTry: {
+		fontFamily: 'WorkSans-Regular',
+		fontSize: 16,
+		color: 'black',
+		paddingLeft: 1,
+		height: '80%',
+		padding: 2
+	},
+	inputBoxStyleCheck: {
+		fontFamily: 'WorkSans-Regular',
+		fontSize: 16,
+		color: 'black',
+		//paddingLeft: 1,
+		height: '80%',
+		//padding: 2
+		width: '50%',
+		//lineHeight: 50
+		borderColor: 'black'
 	},
 	inputBoxStyle: {
 		fontFamily: 'WorkSans-Regular',
