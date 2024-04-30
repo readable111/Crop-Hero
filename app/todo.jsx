@@ -5,32 +5,22 @@ import {
 	StyleSheet,
 	View,
 	StatusBar,
-	Text,
-	Image,
 	Alert,
 	ScrollView,
-	TouchableOpacity,
-	TextInput,
-	log
-
 } from 'react-native'
-
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
-import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
-import { Tab, TabView, ListItem, Card, Button, Icon,ListItemProps,Avatar, CheckBox, Stack } from '@rneui/themed';
 import { Input } from 'react-native-elements'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { CheckBox } from '@rneui/themed';
 import DropDownPicker from 'react-native-dropdown-picker'
+import NavBar from '../assets/NavBar.jsx'
 
 const todo = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
-	const [checked, setChecked] = useState(true);
-	const toggleCheckbox = () => setChecked(!checked);
 	//const [expanded, setExpanded] = useState(false); // for accordian expansion
 	
 	{/*Constants for icon drop down menu*/ }
@@ -329,7 +319,7 @@ const todo = () => {
 						selectionColor={Colors.SANTA_GRAY}
 						placeholder='Things to do'
 						defaultValue={initialFirstName}
-						autoComplete='Things I did today...'
+						autoComplete='name'
 						maxLength={256}
 						multiline={true}
 						textAlign="flex-start"
@@ -337,6 +327,7 @@ const todo = () => {
 					<AppButton specifiedStyle={{ marginTop: -5, zIndex: 1, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
 				</View>
 			</ScrollView>
+			<NavBar notebookSelected/>
 		</View>
 	)
 };
