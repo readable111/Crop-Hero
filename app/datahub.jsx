@@ -123,21 +123,24 @@ const styles = StyleSheet.create({
   searchContainer: {
     width: '100%',
     padding: 10,
-    backgroundColor: Colors.WHITE, // Ensures search bar has a distinct background
+    backgroundColor: Colors.SANTA_GRAY,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
+    zIndex: 9999,
   },
   collapsiblesContainer: {
     width: '90%',
     alignSelf: 'center',
     marginBottom: 10,
+    zIndex: 1,
   },
   collapsibleContainer: {
     backgroundColor: Colors.ALMOND_TAN,
     borderRadius: 5,
     padding: 20,
     marginBottom: 20,
+    zIndex: 1,
   },
   header: {
      backgroundColor: Colors.ALMOND_TAN,
@@ -161,7 +164,7 @@ const styles = StyleSheet.create({
    },
  collapsibleContent: {
    padding: 20, // Increased padding around the content
-   backgroundColor: Colors.LIGHT_GRAY,
+   backgroundColor: Colors.ALMOND_TAN,
    borderRadius: 5,
    marginTop: 5,
    minHeight: 200,
