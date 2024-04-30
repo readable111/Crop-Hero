@@ -16,13 +16,16 @@ import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
+import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
 
 
-const EditProfile = () =>{ 
+const BillingDetailsProfile = () =>{ 
 	{/*TODO: retrieve data from local storage or database*/}
 	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
 	initialEmail = "test@example.com"
 	initialPhoneNum = "+1 (012) 345-6789"
+	initialZipCode = "02914"
+	initialState = "Rhode Island"
 
 	{/*TODO: retrieve current model*/}
 	{/*create the subscription model list*/}
@@ -63,7 +66,7 @@ const EditProfile = () =>{
 				<Col relativeColsCovered={2}>
 					{/*TODO: link save button to get input field contents and save them to the database*/}
 					{/*TODO: when picture is saved, it is compressed via react-native-compressor library & https://stackoverflow.com/questions/37639360/how-to-optimise-an-image-in-react-native before being put into proper field*/}
-					<AppButton title="" icon={Icons.save_icon_white} onPress={() => Alert.alert('Icon Button pressed')}/>
+					<AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={() => Alert.alert('Save icon button pressed')}/>
 				</Col>
 			</Row>
 		</View>
@@ -74,9 +77,51 @@ const EditProfile = () =>{
 			{/*create container for the rectangular area*/}
 			<View style = {styles.rect}>
 				{/*avatar image and edit button*/}
-				<Image
-					style={styles.avatarImg}
-					source = {require('../assets/ProfilePageImages/AvatarPlaceholder.png')}
+				<UploadImage style={styles.avatarImg} isEditable={false} />
+				{/*subscription model dropdown box*/}
+				<Text style={[styles.dropdownInputLabel]}>Subscription Model</Text>
+				<DropDownPicker
+					open={open}
+					value={value}
+					items={items}
+					setOpen={setOpen}
+					setValue={setValue}
+					setItems={setItems}
+					disableBorderRadius={true}
+					listMode='SCROLLVIEW'
+					dropDownDirection='BOTTOM'
+					props={{
+						activeOpacity: 1,
+					}}
+					scrollViewProps={{
+						nestedScrollEnabled: true
+					}}
+					labelStyle={{
+						fontFamily: 'WorkSans-Regular',
+						fontSize: 16,
+					}}
+					listItemLabelStyle={{
+						fontFamily: 'WorkSans-Regular',
+						fontSize: 16,
+					}}
+					containerStyle={{
+						width: '94%',
+						marginTop: -18,
+						zIndex: 500,
+						marginBottom: 26
+					}}
+					dropDownContainerStyle={{
+						borderWidth: 2,
+						borderColor: 'black',
+						borderRadius: 12,
+						zIndex: 500,
+					}}
+					style={{
+						borderColor: 'black',
+						borderWidth: 2,
+						borderRadius: 12,
+						height: 52,
+					}}
 				/>
 				{/*email input box*/}
 				<Text style={styles.inputLabel}>Email</Text>
@@ -104,44 +149,31 @@ const EditProfile = () =>{
 					keyboardType='phone-pad'
 					maxLength={32}
 				/>
-				{/*subscription model dropdown box*/}
-				<Text style={styles.inputLabel}>Subscription Model</Text>
-				<DropDownPicker
-					open={open}
-					value={value}
-					items={items}
-					setOpen={setOpen}
-					setValue={setValue}
-					setItems={setItems}
-					disableBorderRadius={true}
-					listMode='FLATLIST'
-					props={{
-						activeOpacity: 1,
-					}}
-					labelStyle={{
-						fontFamily: 'WorkSans-Regular',
-						fontSize: 16,
-					}}
-					listItemLabelStyle={{
-						fontFamily: 'WorkSans-Regular',
-						fontSize: 16,
-					}}
-					containerStyle={{
-						width: '94%',
-						marginTop: -18,
-						zIndex: 1,
-					}}
-					dropDownContainerStyle={{
-						borderWidth: 2,
-						borderColor: 'black',
-						borderRadius: 12,
-					}}
-					style={{
-						borderColor: 'black',
-						borderWidth: 2,
-						borderRadius: 12,
-						height: 52,
-					}}
+				{/*zip code input box*/}
+				<Text style={styles.inputLabel}>Zip Code</Text>
+				<Input
+					leftIcon={<Image source={Icons.zip_mail_green} style={{width: 25, height: 25}}/>}
+					inputContainerStyle={styles.inputBox}
+					inputStyle={styles.inputBoxStyle}
+					selectionColor={Colors.SANTA_GRAY}
+					placeholder='01234'
+					defaultValue={initialZipCode}
+					autoComplete='postal-code'
+					keyboardType='numeric'
+					maxLength={16}
+				/>
+				{/*state input box*/}
+				<Text style={styles.inputLabel}>State</Text>
+				<Input
+					leftIcon={<Image source={Icons.flag_country_green} style={{width: 25, height: 25}}/>}
+					inputContainerStyle={styles.inputBox}
+					inputStyle={styles.inputBoxStyle}
+					selectionColor={Colors.SANTA_GRAY}
+					placeholder='Texas'
+					defaultValue={initialState}
+					autoComplete='address-line1'
+					keyboardType='default'
+					maxLength={64}
 				/>
 			</View>
         </View>
@@ -175,21 +207,8 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	avatarImg: {
-		width: 130,
-		height: 130,
-		borderWidth: 2,
-		borderRadius: 75,
 		marginTop: -100,
 		marginBottom: 20,
-	},
-	editBtn: {
-		width: 50,
-    	height: 50,
-    	borderRadius: 50 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
-		backgroundColor: Colors.IRISH_GREEN,
-		marginTop: -50,
-		marginLeft: 130,
-		marginBottom: 40,
 	},
 	inputBox: {
 		backgroundColor: "white",
@@ -215,7 +234,6 @@ const styles = StyleSheet.create({
 		marginLeft: 47,
 		alignSelf: 'flex-start',
 		backgroundColor: "white",
-		zIndex: 100,
 		fontSize: 16,
 		fontFamily: 'WorkSans-Regular',
 		borderWidth: 3,
@@ -223,7 +241,22 @@ const styles = StyleSheet.create({
 		borderColor: 'white',
 		textAlign: 'center',
 		textAlignVertical: 'top',
-		zIndex: 10,
+		zIndex: 5,
+	}, 
+	dropdownInputLabel: {
+		marginBottom: 0,
+		marginTop: -6,
+		marginLeft: 47,
+		alignSelf: 'flex-start',
+		backgroundColor: "white",
+		fontSize: 16,
+		fontFamily: 'WorkSans-Regular',
+		borderWidth: 3,
+		borderRadius: 7,
+		borderColor: 'white',
+		textAlign: 'center',
+		textAlignVertical: 'top',
+		zIndex: 501,
 	}, 
 	btnGridContainer: {
 		flex: 12, // # of columns
@@ -233,4 +266,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default EditProfile;
+export default BillingDetailsProfile;
