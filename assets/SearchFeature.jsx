@@ -20,9 +20,6 @@ global.dataArray = [ { id: "1", hrfNum: "01", title: "Artichoke" } ]
 const SearchModal = ({
     modalVisible,
     onBackPress,
-    onCameraPress,
-    onGalleryPress,
-    onRemovePress,
     isLoading = false,
 	searchValue,
 	originalData
@@ -57,7 +54,7 @@ const SearchModal = ({
 							round 
 							value={searchBarTxt} 
 							onChangeText={(text) => {searchFunction(text, originalData); setSearchBarTxt(text)}}  //call the search function and set searchBarTxt to whatever has been entered
-							autoCorrect={false} 
+							autoCorrect={true} 
 							keyboardType='default'
 							style={{
 								color: 'black',
@@ -121,15 +118,46 @@ searchFunction = (text, arr) => {
 //Uses Dice Coefficient as faster and does a better job with substrings; If match found, returns 1
 //Uses Damerau-Levenshtein Edit Distance as more resilient to both typos and overlapping patterns; Returns DLED + 0.1
 this["compareStrings"] = function(s, t) {
-	//get the SDC value
-	sdc = sorensenDiceCoefficient(s.toUpperCase(),t.toUpperCase())
+	//remove diacretics and other unicodes by turning them into ASCII-equivalent
+	sClean = unidecode(s)
+	tClean = unidecode(t)
+	//ignore case
+	sUpper = sClean.toUpperCase()
+	tUpper = tClean.toUpperCase()
+
+	//get the SDC value; high number is good
+	sdc = sorensenDiceCoefficient(sUpper,tUpper)
 	//if the SDC is high enough, just return that and skip DLED
-	if (sdc >= 0.45) { //TODO: tune this with proper database
+	if (sdc >= 0.45) { 
 		return 1
 	}
-	//get the DLED value
-	dled = damerauLevenshteinDistance(s.toUpperCase(),t.toUpperCase(), 10) + 0.1 //add 0.1 to ensure that it is always going to be bigger than the SDC
+	//get the DLED value; low number is good
+	dled = damerauLevenshteinDistance(sUpper,tUpper, 20) + 0.1 //add 0.1 to ensure that it is always going to be bigger than the SDC
 	return dled
+
+	//TODO: possible ideas to improve it; aim for 90% threshold with response time of <=100ms which covers network delay and search; aim for score range of [-50, 50]
+	//handle each word separately in a string that builds up over time possibly
+	//check for exact matches and return 0 for it to massively favor it
+	//try out double metaphone (first encoding) with stemmer for phonetic comparisons
+	//try out prefix matches & look into mixing Baeza-Yates-Gonnet/bitap algorithm with DLED to determine how close a substring is to the whole
+	//favor typos if keys are close to each other on QWERTY keyboard
+	//tune SDC/DLED transition threshold
+	//match of the first letter has bonus score as least likely letter to be wrong
+	//match of the last letter has slightly smaller bonus score as still less likely to be wrong
+	//length of the words matters so if s is 5 letters, favor words that are 5 letters
+	//length of match matters so if s is same, longer t should have slight penalty (done by DLED)
+	//test out cosine similarity too
+	//look at Sublime Text search which would allow for acronyms and as replacement for substring matching: https://www.forrestthewoods.com/blog/reverse_engineering_sublime_texts_fuzzy_match/ & https://github.com/Srekel/the-debuginator/blob/master/the_debuginator.h#L1856
+		//tries to match each character in sequence
+		//hidden score where some matched characters are worth more points than others (score starts at 0)
+			//matched letter (good): +0
+			//unmatched letter (bad): -1
+			//Consecutively matched letters (very good): +5
+			//letter following separator (good): +10
+			//uppercase following lowercase (CamelCase; good): +10
+			//unmatched leading letter: -3 (max of -9)
+		//exhaustive search and returns match with highest score (basically already doing this with sort)
+
 }
 
 //Function that Ka-Weihe Fast Sorensen-Dice Coefficient (SDC) algorithm to quickly calculate value in nearly O(N) time complexity
@@ -205,7 +233,7 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
 
             //Calculate the values for Levenshtein distance
             var mi = d[i - 1][j] + 1; //deletion
-            var b = d[i][j - 1] + 1; //insertion
+            var b = d[i][j - 1] + 1; //insertion //TODO: add a slight penalty to insertions for the search algorithm
             var c = d[i - 1][j - 1] + cost; //substitution
 			//find the minimum
             if (b < mi) mi = b;
@@ -300,7 +328,6 @@ const isNumeric = (num) => (typeof(num) === 'number' || typeof(num) === "string"
 //list of stopwords for InnoDB with space following it to ensure it only hits words
 const StopWords = ['a ', 'about ', 'an ', 'are ', 'as ', 'at ', 'be ', 'by ', 'com ', 'de ', 'en ', 'for ', 'from ', 'how ', 'i ', 'in ', 'is ', 'it ', 'la ', 'of ', 'on ', 'or ', 'that ', 'the ', 'this ', 'to ', 'was ', 'what ', 'when ', 'where ', 'who ', 'will ', 'with ', 'und ', 'the ', 'www ']
 String.prototype.cleanTextForSearch = function(){
-	newVal = unidecode(this) //handle most Unicode characters by romanizing them
 	newVal = newVal.toUpperCase() //make all characters uppercase
 	newVal = newVal.replace(/[^A-Z ]/g, ""); //remove all characters that aren't a letter or space
 	let regex = new RegExp("\\b"+StopWords.join('|')+"\\b","gi") //remove all stopwords
@@ -399,7 +426,7 @@ class SearchInput extends Component {
 						round 
 						value={this.state.searchValue} 
 						onChangeText={(text) => this.searchFunction(text)} 
-						autoCorrect={false} 
+						autoCorrect={true} 
 						keyboardType='default'
 						style={{
 							color: 'black',
