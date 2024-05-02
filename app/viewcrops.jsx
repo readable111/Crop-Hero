@@ -5,7 +5,6 @@ import { router } from 'expo-router';
 import { Input, colors } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
 import Icons from '../assets/icons/Icons.js';
-import { Picker } from '@react-native-picker/picker';
 import Colors from '../assets/Color';
 import { useFonts } from 'expo-font'
 

@@ -43,7 +43,7 @@ const DataHub = () => {
       <ScrollView style={styles.scrollArea}>
             <Text style={styles.title}>Data Hub</Text>
         <View style={styles.searchContainer}>
-          <SearchInput/>
+          <SearchInput resultDisplayMode={"dropdown"}/>
         </View>
         <View style={styles.collapsiblesContainer}>
           <Collapsible

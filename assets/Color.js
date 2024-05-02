@@ -1,9 +1,11 @@
 //basically creates an enumeration of custom named colors that can be used throughout the app
 const Colors = {
     //dark gray; color of navbar in dark mode; equivalent of ALMOND_TAN
-    CHARCOAL: '#383838',
+    CHARCOAL: '#1E1E1E',
     //midtone tan; color of navbar in light mode; equivalent of CHARCOAL
     ALMOND_TAN: '#F1DDBF',
+    //bright green used for shadows
+    HOT_GREEN: '#00FB49',
     //unselected dull green for buttons
     SOFT_GREEN: '#6FCC8A',
     //selected bright green for buttons
@@ -30,5 +32,7 @@ const Colors = {
     TAUPE: '#463731',
     //light gray; color for status bar
     WHITE_SMOKE: '#F5F5F5',
+    //dark gray; color for input field backgrounds; used like white in light mode
+    IRIDIUM: '#383838',
 }
 export default Colors;
