@@ -13,7 +13,7 @@ import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import AppButton from '../assets/AppButton.jsx'
-import { Input } from 'react-native-elements'
+import { Input,CheckBox } from 'react-native-elements'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import DropDownPicker from 'react-native-dropdown-picker'
 import NavBar from '../assets/NavBar.jsx'
@@ -77,7 +77,7 @@ const todo = () => {
 					<Col relativeColsCovered={2} alignItems='center'>
 						{/* <Text style={styles.pageTitle}>Settings</Text>*/}
 						{/*Button to switch to To-do page*/ }
-						<AppButton title="To-do" specifiedStyle={styles.oval} onPress={() =>  router.replace('/todo') } /> 
+						<AppButton title="To-Do" specifiedStyle={styles.oval} onPress={() =>  router.replace('/todo') } /> 
 
 					</Col>
 					<Col relativeColsCovered={2} alignItems='center'>
