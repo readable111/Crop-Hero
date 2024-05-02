@@ -8,25 +8,25 @@ import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 {/*creates a custom button that changes opacity when touched, allows user to specify text style & background color*/}
 {/*refer to https://icons.expo.fyi/Index with filters at AntDesign and MaterialCommunityIcons*/}
-const AppButton = ({ onPress, title='Press me', icon, specifiedStyle, backgroundColor='', mci, mciSize, mciColor, ad, adSize, adColor }) => {
+const AppButton = ({ onPress, title='Press me', icon, specifiedStyle, backgroundColor='', mci, mciSize, mciColor, ad, adSize, adColor, opacity=0.5}) => {
 	{/*containerless button with/without title and without icon*/}
 	if (!backgroundColor && !icon && title) {
 		return  (
-			<TouchableOpacity activeOpacity={0.5} onPress={onPress}>
+			<TouchableOpacity activeOpacity={opacity} onPress={onPress}>
 				  <Text style={specifiedStyle}>{title}</Text>
 			</TouchableOpacity>
 		)
 	} 
 	else if (backgroundColor && title && !icon) { {/*container button with title and without icon*/}
 		return  (
-			<TouchableOpacity activeOpacity={0.5} onPress={onPress} style={[styles.appButtonContainer, backgroundColor && {backgroundColor}]}>
+			<TouchableOpacity activeOpacity={opacity} onPress={onPress} style={[styles.appButtonContainer, backgroundColor && {backgroundColor}]}>
 				<Text style={specifiedStyle}>{title}</Text>
 			</TouchableOpacity>
 		)
 	}
 	else if (icon && !title) { {/*button without title and with icon*/}
 		return  (
-			<TouchableOpacity activeOpacity={0.5} onPress={onPress}>
+			<TouchableOpacity activeOpacity={opacity} onPress={onPress}>
 				<Image 
 					style={specifiedStyle}
 					source={icon}
@@ -36,7 +36,7 @@ const AppButton = ({ onPress, title='Press me', icon, specifiedStyle, background
 	}
 	else if (mci && !icon && !title) { {/*button without title and with material community icon*/}
 		return  (
-			<TouchableOpacity activeOpacity={0.5} onPress={onPress} style={[specifiedStyle, backgroundColor && {backgroundColor}]}>
+			<TouchableOpacity activeOpacity={opacity} onPress={onPress} style={[specifiedStyle, backgroundColor && {backgroundColor}]}>
 				<MaterialCommunityIcons 
 					name={mci}
 					size={mciSize}
@@ -47,7 +47,7 @@ const AppButton = ({ onPress, title='Press me', icon, specifiedStyle, background
 	}
 	else if (ad && !icon && !title) { {/*button without title and with ant design icon*/}
 		return  (
-			<TouchableOpacity activeOpacity={0.5} onPress={onPress} style={[specifiedStyle, backgroundColor && {backgroundColor}]}>
+			<TouchableOpacity activeOpacity={opacity} onPress={onPress} style={[specifiedStyle, backgroundColor && {backgroundColor}]}>
 				<AntDesign 
 					name={ad}
 					size={adSize} 
@@ -59,7 +59,7 @@ const AppButton = ({ onPress, title='Press me', icon, specifiedStyle, background
 	}
 	else { {/*default to containerless, no icon*/}
 		return  (
-			<TouchableOpacity activeOpacity={0.5} onPress={onPress}>
+			<TouchableOpacity activeOpacity={opacity} onPress={onPress}>
 				  <Text style={specifiedStyle}>{title}</Text>
 			</TouchableOpacity>
 		)
