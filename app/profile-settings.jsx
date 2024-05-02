@@ -39,7 +39,7 @@ const SettingsProfile = () =>{
 	const [open, setOpen] = useState(false);
   	const [value, setValue] = useState(null);
   	const [items, setItems] = useState([
-    	{label: 'Farmer Joe', value: 'farmer joe'},
+    	{label: 'Zina Townley', value: 'zina townley'},
     	{label: 'Farmer Benjamin Folger-Franklin', value: 'farmer benjamin folger-franklin'}
   	]);
 

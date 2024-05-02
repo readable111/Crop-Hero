@@ -11,7 +11,7 @@ import {
 	Dimensions,
 } from 'react-native';
 import { useFonts } from 'expo-font'
-import { SearchBar, ListItem } from '@rneui/themed';
+import { SearchBar } from '@rneui/themed';
 import unidecode from 'unidecode';
 import Colors from './Color.js'
 
@@ -447,13 +447,15 @@ class SearchInput extends Component {
 					/> 
 					{/*I use a slice and map function instead of a FlatList so that it will work on pages with ScrollView*/}
 					{/*Only possible because I only ever want the top 3 options*/}
-					<View style={styles.listStyle}>
-						{this.state.searchValue && this.state.data.slice(0,3).map((item, key) => (
+					{this.state.searchValue && <View style={styles.unfoldedlistStyle}>
+						{this.state.data.slice(0,3).map((item, key) => (
 							<View key={key} style={styles.item}>
 								<Text>Name: {item.title} | Crop Number: {item.hrfNum} | {this.props.resultDisplayMode}</Text> 
 							</View>
 						))}
-					</View>
+					</View>}
+					{!this.state.searchValue && <View style={styles.foldedlistStyle}>
+					</View>}
 				</View> 
 			); 
 		}
@@ -478,13 +480,28 @@ const styles = StyleSheet.create({
 		marginVertical: 6, 
 		marginHorizontal: 10, 
 	}, 
-	listStyle: {
+	foldedlistStyle: {
 		backgroundColor: Colors.ALMOND_TAN,
 		marginTop: 0,
 		position: 'absolute',
 		top: 65,
 		alignSelf: 'center',
 		width: '86%',
+		zIndex: 9999,
+		elevation: (Platform.OS === 'android') ? 9999 : 0,
+	},
+	unfoldedlistStyle: {
+		backgroundColor: Colors.ALMOND_TAN,
+		marginTop: 0,
+		position: 'absolute',
+		top: 65,
+		alignSelf: 'center',
+		width: '86%',
+		zIndex: 9999,
+		elevation: (Platform.OS === 'android') ? 9999 : 0,
+		borderColor: Colors.CHARCOAL,
+		borderWidth: 2,
+		borderRadius: 5,
 	},
 	modalListStyle: {
 		backgroundColor: Colors.ALMOND_TAN,

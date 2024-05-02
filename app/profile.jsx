@@ -35,7 +35,7 @@ const Profile = () =>{
 		<StatusBar backgroundColor={Colors.WHITE_SMOKE} />
 		{/*green oval at the top to denote profile picture and name*/}
 		<Text style = {styles.oval}></Text>
-		<Text style = {styles.profileName}>Daniel Moreno</Text>
+		<Text style = {styles.profileName}>Zina Townley</Text>
 		{/*TODO: set image to display profile picture after retrieving it*/}
 		<UploadImage style={styles.avatarImg} isEditable={false} />
 		{/*add edit profile button*/}
