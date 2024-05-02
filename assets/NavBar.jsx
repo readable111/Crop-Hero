@@ -36,7 +36,7 @@ const NavBar = ({ homeSelected=false, cropsSelected=false, notebookSelected=fals
                             <AppButton title="" mci="grass" mciSize={35} mciColor={cropsSelected ? Colors.IRISH_GREEN : Colors.CHARCOAL} onPress={() => router.replace('/crops')}/>
                         </Col>
                         <Col relativeColsCovered={4} alignItems='center'>
-                            <AppButton title="" mci={notebookSelected ? "notebook-edit" : "notebook-edit-outline"} mciSize={30} mciColor={notebookSelected ? Colors.IRISH_GREEN : Colors.CHARCOAL} onPress={() => Alert.alert('Test')}/>
+                            <AppButton title="" mci={notebookSelected ? "notebook-edit" : "notebook-edit-outline"} mciSize={30} mciColor={notebookSelected ? Colors.IRISH_GREEN : Colors.CHARCOAL} onPress={() => router.replace('/todo')}/>
                         </Col>
                         <Col relativeColsCovered={4} alignItems='center'>
                             <AppButton title="" mci={homeSelected ? "home" : "home-outline"} mciSize={35} mciColor={homeSelected ? Colors.IRISH_GREEN : Colors.CHARCOAL} onPress={() => router.replace('/home')}/>
@@ -53,7 +53,7 @@ const NavBar = ({ homeSelected=false, cropsSelected=false, notebookSelected=fals
                         <AppButton title="Crops" specifiedStyle={cropsSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/crops')}/>
                     </Col>
                     <Col relativeColsCovered={4} alignItems='center'>
-                        <AppButton title="Notebook" specifiedStyle={notebookSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/notebook')}/>
+                        <AppButton title="Notebook" specifiedStyle={notebookSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/todo')}/>
                     </Col>
                     <Col relativeColsCovered={4} alignItems='center'>
                         <AppButton title="Home" specifiedStyle={homeSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/home')}/>
