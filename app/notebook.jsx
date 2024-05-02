@@ -71,10 +71,10 @@ const Notebook = () => {
 				<Row height={80}>
 					<Col relativeColsCovered={2} alignItems='center'>
 						{/* <Text style={styles.pageTitle}>Settings</Text>*/}
-						<AppButton title="To-Do" specifiedStyle={styles.ovals} onPress={() => router.push('/todo') } />
+						<AppButton title="To-Do" specifiedStyle={styles.ovals} onPress={() => router.replace('/todo') } />
 					</Col>
 					<Col relativeColsCovered={2} alignItems='center'>
-						<AppButton title="Notebook" specifiedStyle={styles.oval} onPress={() => router.push('/notebook')} />
+						<AppButton title="Notebook" specifiedStyle={styles.oval} onPress={() => router.replace('/notebook')} />
 					</Col>
 				</Row>
 			</View>

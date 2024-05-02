@@ -13,9 +13,8 @@ import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import AppButton from '../assets/AppButton.jsx'
-import { Input } from 'react-native-elements'
+import { Input,CheckBox } from 'react-native-elements'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { CheckBox } from '@rneui/themed';
 import DropDownPicker from 'react-native-dropdown-picker'
 import NavBar from '../assets/NavBar.jsx'
 
@@ -43,6 +42,7 @@ const todo = () => {
 
 	{/*load in all fonts used for this page*/ }
 	const [fontsLoaded, fontError] = useFonts({
+		'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
 		'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
 		'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
 		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
@@ -77,12 +77,12 @@ const todo = () => {
 					<Col relativeColsCovered={2} alignItems='center'>
 						{/* <Text style={styles.pageTitle}>Settings</Text>*/}
 						{/*Button to switch to To-do page*/ }
-						<AppButton title="To-do" specifiedStyle={styles.oval} onPress={() =>  router.push('/todo') } /> 
+						<AppButton title="To-Do" specifiedStyle={styles.oval} onPress={() =>  router.replace('/todo') } /> 
 
 					</Col>
 					<Col relativeColsCovered={2} alignItems='center'>
 						{/*Button to switch to notebook page*/ }
-						<AppButton title="Notebook" specifiedStyle={styles.ovals} onPress={() => router.push('/notebook')} />
+						<AppButton title="Notebook" specifiedStyle={styles.ovals} onPress={() => router.replace('/notebook')} />
 					</Col>
 				</Row>
 
@@ -348,7 +348,6 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 5,
 		alignSelf: 'center',
-		//height: '90%'
 	},
 	fstTryContainer: {
 		width: '90%',
@@ -382,7 +381,7 @@ const styles = StyleSheet.create({
 		height: '100%'
 	},
 	topContainer: {
-		backgroundColor: Colors.PERIWINKLE_GRAY,
+		backgroundColor: Colors.SANTA_GRAY,
 		flex: 1,
 		alignItems: 'flex-start',
 		flexDirection: 'column',
@@ -435,11 +434,8 @@ const styles = StyleSheet.create({
 		fontFamily: 'WorkSans-Regular',
 		fontSize: 16,
 		color: 'black',
-		//paddingLeft: 1,
 		height: '80%',
-		//padding: 2
 		width: '50%',
-		//lineHeight: 50
 		borderColor: 'black'
 	},
 	inputBoxStyle: {
