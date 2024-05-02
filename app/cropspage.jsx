@@ -11,9 +11,14 @@ import Icons from '../assets/icons/Icons.js';
 const cropspage = () => {
 
         {/* Grabs variable form viewcrops page for use */}
-        const crop = useLocalSearchParams();
-        console.log(crop); //test
-        console.log(crop.name); //test
+        let crop = useLocalSearchParams();
+        //If crop.name couldn't be retrieved, assume that ?param= was used
+        if(!crop.name) {
+                console.log("?param passed")
+                crop = JSON.parse(crop.param)
+        }
+        console.log("CROP: " + crop); //test
+        console.log("Crop name: " + crop.name); //test
 
         //Use state for switching if something is editable
         const [readOnly, setReadOnly] = useState(true)

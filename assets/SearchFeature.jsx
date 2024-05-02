@@ -1,4 +1,4 @@
-import { React, Component, useState, setState } from 'react';
+import { React, Component, useState } from 'react';
 import { 
 	StyleSheet, 
 	View, 
@@ -9,20 +9,20 @@ import {
     Pressable,
     ActivityIndicator,
 	Dimensions,
+	Alert
 } from 'react-native';
 import { useFonts } from 'expo-font'
 import { SearchBar } from '@rneui/themed';
 import unidecode from 'unidecode';
 import Colors from './Color.js'
+import { useRouter, Link, useLocalSearchParams } from 'expo-router'
 
-global.dataArray = [ { id: "1", hrfNum: "01", title: "Artichoke" } ]
+//initialize to a bunch of weird, random values that will make it obvious if it is used
+global.dataArray = [ { label: 'temp', name: 'temp', hrfNum: '00', active: 'NaN', location: 'Lorem Ipsum', variety: 'Test', source: 'The store', date: '00/00/1001', comments: 'Who knows', indoors: 'Maybe', type:'Weird'} ]
 
 const SearchModal = ({
     modalVisible,
     onBackPress,
-    onCameraPress,
-    onGalleryPress,
-    onRemovePress,
     isLoading = false,
 	searchValue,
 	originalData
@@ -57,7 +57,7 @@ const SearchModal = ({
 							round 
 							value={searchBarTxt} 
 							onChangeText={(text) => {searchFunction(text, originalData); setSearchBarTxt(text)}}  //call the search function and set searchBarTxt to whatever has been entered
-							autoCorrect={false} 
+							autoCorrect={true} 
 							keyboardType='default'
 							style={{
 								color: 'black',
@@ -80,9 +80,11 @@ const SearchModal = ({
 						{/*Display a list of the 10 best matches*/}
 						<View style={styles.modalListStyle}>
 							{searchBarTxt && dataArray.slice(0,10).map((item, key) => (
-								<View key={key} style={styles.item}>
-									<Text>Name: {item.title} | Crop Number: {item.hrfNum}</Text> 
-								</View>
+								<Link key={key} href={{ pathname: "/cropspage", params: { param: JSON.stringify(item) } }} push style={styles.item}>
+									<View >
+										<Text>Name: {item.name} | Crop Number: {item.hrfNum}</Text> 
+									</View>
+								</Link>
 							))}
 						</View>
 				</View>
@@ -111,7 +113,7 @@ searchFunction = (text, arr) => {
 			return compareStrings(a.hrfNum,cleanedTxt) - compareStrings(b.hrfNum,cleanedTxt); 
 		} else {
 			//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's name
-			return compareStrings(a.title,cleanedTxt) - compareStrings(b.title,cleanedTxt); 
+			return compareStrings(a.name,cleanedTxt) - compareStrings(b.name,cleanedTxt); 
 		}
 	});
 	dataArray = updatedData
@@ -121,27 +123,63 @@ searchFunction = (text, arr) => {
 //Uses Dice Coefficient as faster and does a better job with substrings; If match found, returns 1
 //Uses Damerau-Levenshtein Edit Distance as more resilient to both typos and overlapping patterns; Returns DLED + 0.1
 this["compareStrings"] = function(s, t) {
-	//get the SDC value
-	sdc = sorensenDiceCoefficient(s.toUpperCase(),t.toUpperCase())
+	//remove diacretics and other unicodes by turning them into ASCII-equivalent
+	sClean = unidecode(s)
+	tClean = unidecode(t)
+	//ignore case
+	sUpper = sClean.toUpperCase()
+	tUpper = tClean.toUpperCase()
+
+	//get the SDC value; high number is good
+	sdc = sorensenDiceCoefficient(sUpper,tUpper)
 	//if the SDC is high enough, just return that and skip DLED
-	if (sdc >= 0.45) { //TODO: tune this with proper database
+	if (sdc >= 0.45) { 
 		return 1
 	}
-	//get the DLED value
-	dled = damerauLevenshteinDistance(s.toUpperCase(),t.toUpperCase(), 10) + 0.1 //add 0.1 to ensure that it is always going to be bigger than the SDC
+	//get the DLED value; low number is good
+	dled = damerauLevenshteinDistance(sUpper,tUpper, 20) + 0.1 //add 0.1 to ensure that it is always going to be bigger than the SDC
 	return dled
+
+	//TODO: possible ideas to improve it; aim for 90% threshold with response time of <=100ms which covers network delay and search; aim for score range of [-50, 50]
+	//handle each word separately in a string that builds up over time possibly
+	//check for exact matches and return 0 for it to massively favor it
+	//try out double metaphone (first encoding) with stemmer for phonetic comparisons
+	//try out prefix matches & look into mixing Baeza-Yates-Gonnet/bitap algorithm with DLED to determine how close a substring is to the whole
+	//favor typos if keys are close to each other on QWERTY keyboard
+	//tune SDC/DLED transition threshold
+	//match of the first letter has bonus score as least likely letter to be wrong
+	//match of the last letter has slightly smaller bonus score as still less likely to be wrong
+	//length of the words matters so if s is 5 letters, favor words that are 5 letters
+	//length of match matters so if s is same, longer t should have slight penalty (done by DLED)
+	//test out cosine similarity too
+	//look at Sublime Text search which would allow for acronyms and as replacement for substring matching: https://www.forrestthewoods.com/blog/reverse_engineering_sublime_texts_fuzzy_match/ & https://github.com/Srekel/the-debuginator/blob/master/the_debuginator.h#L1856
+		//tries to match each character in sequence
+		//hidden score where some matched characters are worth more points than others (score starts at 0)
+			//matched letter (good): +0
+			//unmatched letter (bad): -1
+			//Consecutively matched letters (very good): +5
+			//letter following separator (good): +10
+			//uppercase following lowercase (CamelCase; good): +10
+			//unmatched leading letter: -3 (max of -9)
+		//exhaustive search and returns match with highest score (basically already doing this with sort)
+
 }
 
 //Function that Ka-Weihe Fast Sorensen-Dice Coefficient (SDC) algorithm to quickly calculate value in nearly O(N) time complexity
 //Returns value in range of [0, 1] with 1 being a perfect match
 //This function was copied in rather than being imported from the library due to issues with outdated npm; comments are mine; original at www.npmjs.com/package/fast-dice-coefficient
 this["sorensenDiceCoefficient"] = function(fst, snd) {
-	//define variables
-	var i, j, k, map, match, ref, ref1, sub;
+	//if a variable is undefined, just return 0
+	if (typeof(fst) !== 'undefined' || typeof(snd) !== 'undefined') {
+		return 0
+	}
 	//if either string is too short, just return 0
 	if (fst.length < 2 || snd.length < 2) {
 		return 0;
 	}
+
+	//define variables
+	var i, j, k, map, match, ref, ref1, sub;
 	//define map if previous if wasn't triggered, saving space
 	map = new Map;
 	//create a map of bigrams
@@ -172,6 +210,12 @@ this["sorensenDiceCoefficient"] = function(fst, snd) {
 //Stored using this[] to improve size compression during compilation without it getting shrunk down to nothingness
 //Returns distance in range of [0, maxDistance]
 this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
+	//Step 0: test to see if it should exit prematurely
+	//if a variable is undefined, just return 10
+	if (typeof(fst) !== 'undefined' || typeof(snd) !== 'undefined') {
+		return 10
+	}
+
     var d = []; //2d matrix
 
     // Step 1: store string lengths
@@ -205,7 +249,7 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
 
             //Calculate the values for Levenshtein distance
             var mi = d[i - 1][j] + 1; //deletion
-            var b = d[i][j - 1] + 1; //insertion
+            var b = d[i][j - 1] + 1; //insertion //TODO: add a slight penalty to insertions for the search algorithm
             var c = d[i - 1][j - 1] + cost; //substitution
 			//find the minimum
             if (b < mi) mi = b;
@@ -225,73 +269,12 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
     return d[n][m];
 };
 
-const DATA = [ 
-	{ 
-	  id: "1", 
-	  hrfNum: "01",
-	  title: "Artichoke", 
-	}, 
-	{ 
-	  id: "2", 
-	  hrfNum: "42",
-	  title: "Avocado", 
-	}, 
-	{ 
-	  id: "3", 
-	  hrfNum: "68",
-	  title: "Carrot", 
-	}, 
-	{ 
-	  id: "4", 
-	  hrfNum: "70",
-	  title: "Pecan", 
-	}, 
-	{ 
-	  id: "5", 
-	  hrfNum: "185",
-	  title: "Apple", 
-	}, 
-	{ 
-	  id: "6", 
-	  hrfNum: "95",
-	  title: "Grapes", 
-	}, 
-	{ 
-	  id: "7", 
-	  hrfNum: "13",
-	  title: "Strawberries", 
-	}, 
-	{ 
-	  id: "8", 
-	  hrfNum: "56",
-	  title: "Tomato", 
-	}, 
-	{ 
-	  id: "9", 
-	  hrfNum: "36",
-	  title: "Cabbage", 
-	}, 
-	{ 
-	  id: "10", 
-	  hrfNum: "28",
-	  title: "Red Cabbage", 
-	}, 
-	{ 
-	  id: "11", 
-	  hrfNum: "131",
-	  title: "Pepper", 
-	}, 
-	{ 
-	  id: "12", 
-	  hrfNum: "84",
-	  title: "Peach", 
-	}, 
-	{ 
-		id: "13", 
-		hrfNum: "08",
-		title: "Carrots", 
-	}, 
-]; 
+const CROPS = [
+	{ label: 'Carrot', name: 'Carrot', hrfNum: '01', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', date: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard'},
+	{ label: 'Cabbage', name: 'Cabbage', hrfNum: '73', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', date: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' },
+	{ label: 'Potato', name: 'Potato', hrfNum: '185', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", date: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard' },
+	{ label: 'Tomato', name: "Tomato", hrfNum: '08', active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", date: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard' }
+]
 
 //check if input is numeric
 const isNumeric = (num) => (typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num);
@@ -300,8 +283,7 @@ const isNumeric = (num) => (typeof(num) === 'number' || typeof(num) === "string"
 //list of stopwords for InnoDB with space following it to ensure it only hits words
 const StopWords = ['a ', 'about ', 'an ', 'are ', 'as ', 'at ', 'be ', 'by ', 'com ', 'de ', 'en ', 'for ', 'from ', 'how ', 'i ', 'in ', 'is ', 'it ', 'la ', 'of ', 'on ', 'or ', 'that ', 'the ', 'this ', 'to ', 'was ', 'what ', 'when ', 'where ', 'who ', 'will ', 'with ', 'und ', 'the ', 'www ']
 String.prototype.cleanTextForSearch = function(){
-	newVal = unidecode(this) //handle most Unicode characters by romanizing them
-	newVal = newVal.toUpperCase() //make all characters uppercase
+	newVal = this.toUpperCase() //make all characters uppercase
 	newVal = newVal.replace(/[^A-Z ]/g, ""); //remove all characters that aren't a letter or space
 	let regex = new RegExp("\\b"+StopWords.join('|')+"\\b","gi") //remove all stopwords
 	return newVal.replace(regex, '');
@@ -311,17 +293,27 @@ String.prototype.cleanNumForSearch = function(){
 	return newVal;
 }
 
+const SearchListItem = ({itemProp}) =>{
+    return(
+		<Pressable onPress={() => router.push({pathname:'/cropspage', params: itemProp})}>
+			<View style={styles.item}>
+				<Text>Name: {itemProp.name} | Crop Number: {itemProp.hrfNum}</Text> 
+			</View>
+		</Pressable>
+	)
+}
+
 class SearchInput extends Component { 
 	constructor(props) { 
 		super(props); 
 		this.state = { 
 			loading: false, 
-			data: DATA, 
+			data: CROPS, 
 			error: null, 
 			searchValue: "", 
 			sampleState: false,
 		}; 
-		this.arrayholder = DATA; 
+		this.arrayholder = CROPS; 
 		this.props.resultDisplayMode = "dropdown";
 	} 
 
@@ -343,7 +335,7 @@ class SearchInput extends Component {
 				return compareStrings(a.hrfNum,cleanedTxt) - compareStrings(b.hrfNum,cleanedTxt); 
 			} else {
 				//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's name
-				return compareStrings(a.title,cleanedTxt) - compareStrings(b.title,cleanedTxt); 
+				return compareStrings(a.name,cleanedTxt) - compareStrings(b.name,cleanedTxt); 
 			}
 		});
 		this.setState({ data: updatedData, searchValue: text }); 
@@ -399,7 +391,7 @@ class SearchInput extends Component {
 						round 
 						value={this.state.searchValue} 
 						onChangeText={(text) => this.searchFunction(text)} 
-						autoCorrect={false} 
+						autoCorrect={true} 
 						keyboardType='default'
 						style={{
 							color: 'black',
@@ -420,11 +412,13 @@ class SearchInput extends Component {
 					/> 
 					{/*I use a slice and map function instead of a FlatList so that it will work on pages with ScrollView*/}
 					{/*Only possible because I only ever want the top 3 options*/}
-					{this.state.searchValue && <View style={styles.unfoldedlistStyle}>
+					{this.state.searchValue && <View style={styles.unfoldedlistStyle}> 
 						{this.state.data.slice(0,3).map((item, key) => (
-							<View key={key} style={styles.item}>
-								<Text>Name: {item.title} | Crop Number: {item.hrfNum} | {this.props.resultDisplayMode}</Text> 
-							</View>
+							<Link key={key} href={{ pathname: "/cropspage", params: { param: JSON.stringify(item) } }} push style={styles.item}>
+								<View >
+									<Text>Name: {item.name} | Crop Number: {item.hrfNum}</Text> 
+								</View>
+							</Link>
 						))}
 					</View>}
 					{!this.state.searchValue && <View style={styles.foldedlistStyle}>
