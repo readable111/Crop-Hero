@@ -16,6 +16,10 @@ import { SearchBar } from '@rneui/themed';
 import unidecode from 'unidecode';
 import Colors from './Color.js'
 import { useRouter, Link, useLocalSearchParams } from 'expo-router'
+import { doubleMetaphone } from 'double-metaphone'
+import { stemmer } from 'stemmer'
+import { lemmatize } from 'wink-lemmatizer'
+import CROPS from '../test_data/testCropData.json'
 
 //initialize to a bunch of weird, random values that will make it obvious if it is used
 global.dataArray = [ { label: 'temp', name: 'temp', hrfNum: '00', active: 'NaN', location: 'Lorem Ipsum', variety: 'Test', source: 'The store', date: '00/00/1001', comments: 'Who knows', indoors: 'Maybe', type:'Weird'} ]
@@ -98,60 +102,108 @@ const SearchModal = ({
 searchFunction = (text, arr) => { 
 	//clean up the text based on whether or not it is a number
 	var cleanedTxt = ""
+	var updatedData = []
 	if (isNumeric(text)) {
 		cleanedTxt = text.cleanNumForSearch();
+		//sort array in descending order (find highest value) based on DLED
+		updatedData = arr.sort(function(a,b){ 
+			//use the damerauLevenshteinDistance function to sort the array based on the crop's HRFNumber
+			return compareStrings(b.hrfNum,cleanedTxt) - compareStrings(a.hrfNum,cleanedTxt); 
+		});
 	} else {
 		cleanedTxt = text.cleanTextForSearch();
+		updatedData = arr.sort(function(a,b){ 
+			//use the damerauLevenshteinDistance function to sort the array based on the crop's name
+			return compareStrings(b.name,cleanedTxt) - compareStrings(a.name,cleanedTxt); 
+		});
 	}
 	//TODO: make FULLTEXT SELECT search of database using cleaned text and store results in arrayholder
 
-	//sort array in descending order based on DLED
-	const updatedData = arr.sort(function(a,b){ 
-		//if number, check against HRFNumber, otherwise look at name
-		if (isNumeric(text)) {
-			//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's HRFNumber
-			return compareStrings(a.hrfNum,cleanedTxt) - compareStrings(b.hrfNum,cleanedTxt); 
-		} else {
-			//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's name
-			return compareStrings(a.name,cleanedTxt) - compareStrings(b.name,cleanedTxt); 
-		}
-	});
 	dataArray = updatedData
 }; 
 
-//Function that takes two strings and outputs value reflecting similarity
-//Uses Dice Coefficient as faster and does a better job with substrings; If match found, returns 1
-//Uses Damerau-Levenshtein Edit Distance as more resilient to both typos and overlapping patterns; Returns DLED + 0.1
+//Function that takes two strings and outputs value reflecting similarity; High score = good
 this["compareStrings"] = function(s, t) {
 	//remove diacretics and other unicodes by turning them into ASCII-equivalent
-	sClean = unidecode(s)
-	tClean = unidecode(t)
+	sASCII = unidecode(s)
+	tASCII = unidecode(t)
 	//ignore case
-	sUpper = sClean.toUpperCase()
-	tUpper = tClean.toUpperCase()
+	sUpper = sASCII.toUpperCase()
+	tUpper = tASCII.toUpperCase()
 
-	//get the SDC value; high number is good
-	sdc = sorensenDiceCoefficient(sUpper,tUpper)
-	//if the SDC is high enough, just return that and skip DLED
-	if (sdc >= 0.45) { 
-		return 1
+	//if exact match, return highest possible score
+	if (matchExact(sUpper,tUpper)) {
+		return 500
 	}
-	//get the DLED value; low number is good
-	dled = damerauLevenshteinDistance(sUpper,tUpper, 20) + 0.1 //add 0.1 to ensure that it is always going to be bigger than the SDC
-	return dled
 
-	//TODO: possible ideas to improve it; aim for 90% threshold with response time of <=100ms which covers network delay and search; aim for score range of [-50, 50]
-	//handle each word separately in a string that builds up over time possibly
-	//check for exact matches and return 0 for it to massively favor it
-	//try out double metaphone (first encoding) with stemmer for phonetic comparisons
-	//try out prefix matches & look into mixing Baeza-Yates-Gonnet/bitap algorithm with DLED to determine how close a substring is to the whole
-	//favor typos if keys are close to each other on QWERTY keyboard
-	//tune SDC/DLED transition threshold
-	//match of the first letter has bonus score as least likely letter to be wrong
-	//match of the last letter has slightly smaller bonus score as still less likely to be wrong
-	//length of the words matters so if s is 5 letters, favor words that are 5 letters
-	//length of match matters so if s is same, longer t should have slight penalty (done by DLED)
-	//test out cosine similarity too
+	//store the length of each passed string
+	sL = sUpper.length
+	tL = tUpper.length
+
+	//get the SDC value and multiply by 100 to get score and round to nearest whole number to eliminate decimals; high number is good
+	matchScore = customRound(sorensenDiceCoefficient(sUpper,tUpper) * 100)	
+
+	//give bonus score if first letters match as least likely letter to be wrong
+	if (sUpper.charAt(0) === tUpper.charAt(0)) {
+		matchScore += 18
+	}
+	//give bonus score if last letters match as still less likely to be wrong
+	if (sUpper.charAt(sL - 1) === tUpper.charAt(tL - 1)) {
+		matchScore += 5
+	}
+	//check the first letter after each space for both words by getting all of them, merging them into one string, and sending them through DLED as they are less likely to be wrong
+	let sAcronym = sUpper.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
+	let tAcronym = tUpper.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
+	matchScore += customRound(5 / (damerauLevenshteinDistance(sAcronym,tAcronym, 10) )) //add 1 so never dividing by 0, then divide 5 by distance to determine score so diminishing bonus with increasing distance
+
+	//give penalty if different length
+	if (sL !== tL) {
+		matchScore -= customAbs(sL - tL)
+	}
+	//give bonus if same number of syllables
+	if (syllableCount(sUpper) === syllableCount(tUpper)) {
+		matchScore += 5
+	}
+
+	//do a prefix match to assign a bonus if t starts with s
+	if (tUpper.startsWith(sUpper)) {
+		matchScore += 20
+	}
+
+	//apply penalty to score equal to the DLED value times a constant
+	matchScore -= (damerauLevenshteinDistance(sUpper,tUpper, 50) * 2)
+
+	//apply bonus from Jaro-Winkler Similarity which counts transpositions and matching characters with scaling bonus for prefix match
+	jws = jaroWinklerSimilarity(sUpper, tUpper)
+	matchScore += (jws * 15)
+
+	//apply a stemmer algorithm to extract the English stem (removes plurals, men vs. man, past tense, z vs. s, democracy vs democratic, etc.)
+	//uses a lemmatizer (Wink family of packages) rather than a stemmer to identify lemma using morphological analysis because a stemmer turns all operational/operative/operating into oper
+	//lemmatizer considers context and produces a valid word which works better with doubleMetaphone though it does turn better into good
+	//then send that through the Double Metaphone algorithm to receive 2 approximate phonetic encodings (PhonetEx strings) to account for pronunciations and accents (ensures smyth points to smith, not smash)
+	var lemmatize = require( 'wink-lemmatizer' )
+	sMetaphoneCodes = doubleMetaphone(lemmatize.noun(sUpper))
+	tMetaphoneCodes = doubleMetaphone(lemmatize.noun(sUpper))
+	//compare both primary codes; only give bonus if exact match
+	if (matchExact(sMetaphoneCodes[0],tMetaphoneCodes[0])) {
+		matchScore += 15
+	}
+	//compare s primary with t secondary; only give bonus if exact match
+	if (matchExact(sMetaphoneCodes[0],tMetaphoneCodes[1])) {
+		matchScore += 12
+	}
+	//compare s secondary with t primary; only give bonus if exact match
+	if (matchExact(sMetaphoneCodes[1],tMetaphoneCodes[0])) {
+		matchScore += 11
+	}
+	//compare s secondary with s secondary; only give bonus if exact match
+	if (matchExact(sMetaphoneCodes[1],tMetaphoneCodes[1])) {
+		matchScore += 10
+	}
+
+	return matchScore
+
+	//TODO: possible ideas to improve it; aim for 90% threshold with response time of <=100ms which covers network delay and search
 	//look at Sublime Text search which would allow for acronyms and as replacement for substring matching: https://www.forrestthewoods.com/blog/reverse_engineering_sublime_texts_fuzzy_match/ & https://github.com/Srekel/the-debuginator/blob/master/the_debuginator.h#L1856
 		//tries to match each character in sequence
 		//hidden score where some matched characters are worth more points than others (score starts at 0)
@@ -165,25 +217,154 @@ this["compareStrings"] = function(s, t) {
 
 }
 
-//Function that Ka-Weihe Fast Sorensen-Dice Coefficient (SDC) algorithm to quickly calculate value in nearly O(N) time complexity
+this["matchExact"] = function(s, t) {
+	//ensure that s and t are defined and the same length
+	if (typeof(s) === 'undefined' || typeof(t) === 'undefined') {
+		return false
+	}
+	if (s.length !== t.length) {
+		return false
+	}
+	//set up the regex to check for exact match
+	//Finds match for "This is a test" or "This is a test if regex is working" but not "This is a -test+"
+	//Positive lookbehind to match group before main expression, main expression, and positive lookahead to match group after main expression
+	//Flags: global, case insensitive, and multiline
+	const re = new RegExp("(?<=^| )" + s + "(?=$| )", "gmi")
+	//match regex against t
+	var match = t.match(re);
+	//does match exist AND does t equal the first value returned in match
+	return match && t === match[0];
+}
+
+this["syllableCount"] = function(s) {
+	//ensure that s and t are defined and the same length
+	if (typeof(s) === 'undefined') {
+		return false
+	}
+    var someCount = 0;
+    if(s.length>3) {
+      if(s.substring(0,4)=="SOME") { //accounts for the fact that "somewhere" is two syllables
+        s = s.replace("SOME","") 
+        someCount++
+      }
+    }
+    s = s.replace(/(?:[^LAEIOUY]|ED|[^LAEIOUY]E)$/, '');   
+    s = s.replace(/^Y/, '');                                    
+    var syl = s.match(/[AEIOUY]{1,2}/g);
+    if(syl) {
+        return syl.length + someCount;
+    }
+}
+
+//Function that is a Javascript translation of Miguel Serrano's C-based version and Lars Garshol's Java-based version of the Jaro-Winkler Similarity algorithm to achieve O(len(s)*len(t)) time complexity
+//returns a value between 0 and 1 with 0 being no match and 1 being exact match
+this["jaroWinklerSimilarity"] = function(s, a) {
+	//return early if either are undefined
+	if (typeof(s) === 'undefined' || typeof(a) === 'undefined') {
+		return 0.0
+	}	
+	//return early if either of the strings is empty
+	if (!(s.length) || !(a.length)) {
+		return 0.0
+	}
+	//return early if they are an exact match
+	if (s === a) {
+    	return 1.0;
+    }
+
+	//initialize all of these variables to 0
+	//i,j,l are indices
+	//m is count of matching characters
+	//t is count of transpositions
+	i = j = l = m = t = 0
+	dw = 0.0
+	//store the length of the strings
+	sL = s.length
+	aL = a.length
+	//store the viable range so that it isn't recalculated
+	range = aL / 2
+	//initialize the flag arrays
+	flags = Array(aL).fill(0)
+
+	//calculate matching characters and transpositions simultaneously, decreasing number of loops
+	prevpos = -1
+	for (i = 0; i < sL; i++) {
+	  ch = s.charAt(i) //store the character so that it isn't recalculated
+    for (j = customMax(i - range, 0), l = customMin(i + range, aL); j < l; j++) {
+      if (ch == a.charAt(j) && !flags[j]) {
+        m++ //matching char found
+        flags[j] = true
+        if (prevpos != -1 && j < prevpos) {
+          t++ //moved back before earlier
+        }
+        prevpos = j
+        break
+      }
+    }
+  }
+
+	//return early if no matches were found
+	if (!m || m === 0) {
+		return 0.0
+	}
+
+	//calculate Jaro Distance
+	dw = ((m / sL) + (m / aL) + ((m - t) / m)) / 3.0
+	
+	//only calculate Jaro-Winkler distance if above threshold
+	const JD_THRESHOLD = 0.5
+	if (dw > JD_THRESHOLD) {
+  	//calculate common string prefix up to 4 chars
+  	l = 0;
+    for (i = 0; i < customMin(customMin(sL, aL), 4); i++){
+      if (s.charAt(i) == a.charAt(i)) {
+        l++;
+      }
+    }
+  
+  	//calculate Jaro-Winkler distance with scaling factor of 0.2
+  	const SCALING_FACTOR = 0.3
+  	dw = dw + (l * SCALING_FACTOR * (1 - dw));
+	}
+
+	return dw.toFixed(6)
+}
+
+//write some custom math functions to speed stuff up
+this["customMax"] = function(x, y) {
+	return x > y ? x : y
+}
+this["customMin"] = function(x, y) {
+	return x < y ? x : y
+}
+this["customRound"] = function(x) {
+	return (x + (x>0?0.5:-0.5)) << 0;
+}
+this["customAbs"] = function(x) {
+	return (x + (x >> 31)) ^ (x >> 31);
+}
+
+//Function that uses Ka-Weihe Fast Sorensen-Dice Coefficient (SDC) algorithm to quickly calculate value in nearly O(len(fst) + len(snd)) time complexity
 //Returns value in range of [0, 1] with 1 being a perfect match
 //This function was copied in rather than being imported from the library due to issues with outdated npm; comments are mine; original at www.npmjs.com/package/fast-dice-coefficient
 this["sorensenDiceCoefficient"] = function(fst, snd) {
 	//if a variable is undefined, just return 0
-	if (typeof(fst) !== 'undefined' || typeof(snd) !== 'undefined') {
+	if (typeof(fst) === 'undefined' || typeof(snd) === 'undefined') {
 		return 0
 	}
-	//if either string is too short, just return 0
-	if (fst.length < 2 || snd.length < 2) {
-		return 0;
-	}
-
+	
 	//define variables
 	var i, j, k, map, match, ref, ref1, sub;
+	fstL = fst.length
+	sndL = snd.length
+	//if either string is too short, just return 0
+	if (fstL < 2 || sndL < 2) {
+		return 0;
+	}
 	//define map if previous if wasn't triggered, saving space
 	map = new Map;
 	//create a map of bigrams
-	for (i = j = 0, ref = fst.length - 2; (0 <= ref ? j <= ref : j >= ref); i = 0 <= ref ? ++j : --j) {
+	for (i = j = 0, ref = fstL - 2; (0 <= ref ? j <= ref : j >= ref); i = 0 <= ref ? ++j : --j) {
 		sub = fst.substr(i, 2);
 		if (map.has(sub)) {
 			map.set(sub, map.get(sub) + 1);
@@ -193,7 +374,7 @@ this["sorensenDiceCoefficient"] = function(fst, snd) {
 	}
 	//find the number of bigrams in common between the two strings based on set theory
 	match = 0;
-	for (i = k = 0, ref1 = snd.length - 2; (0 <= ref1 ? k <= ref1 : k >= ref1); i = 0 <= ref1 ? ++k : --k) {
+	for (i = k = 0, ref1 = sndL - 2; (0 <= ref1 ? k <= ref1 : k >= ref1); i = 0 <= ref1 ? ++k : --k) {
 		sub = snd.substr(i, 2);
 		if (map.get(sub) > 0) {
 			match++;
@@ -203,17 +384,63 @@ this["sorensenDiceCoefficient"] = function(fst, snd) {
 	//divide the number of elements in common by the average size of sets (mostly)
 	//multiple by two because otherwise you're only getting a half
 	//simplified version of 2 * true positives / (2 * true positives + false positives + false negatives)
-	return 2.0 * match / (fst.length + snd.length - 2);
+	return 2.0 * match / (fstL + sndL - 2);
 };
 
+//map of cartesian coordinates for all letters on a QWERTY keyboard
+keyboardCartesianCoords = {
+    'Q': {'y': 0, 'x': 0},
+    'W': {'y': 0, 'x': 1},
+    'E': {'y': 0, 'x': 2},
+    'R': {'y': 0, 'x': 3},
+    'T': {'y': 0, 'x': 4},
+    'Y': {'y': 0, 'x': 5},
+    'U': {'y': 0, 'x': 6},
+    'I': {'y': 0, 'x': 7},
+    'O': {'y': 0, 'x': 8},
+    'P': {'y': 0, 'x': 9},
+	//0.25 x stagger from top row
+    'A': {'y': 1, 'x': 0.25},
+    'S': {'y': 1, 'x': 1.25},
+    'D': {'y': 1, 'x': 2.25},
+    'F': {'y': 1, 'x': 3.25},
+    'G': {'y': 1, 'x': 4.25},
+    'H': {'y': 1, 'x': 5.25},
+    'J': {'y': 1, 'x': 6.25},
+    'K': {'y': 1, 'x': 7.25},
+    'L': {'y': 1, 'x': 8.25},
+	//0.75 x stagger from top row
+    'Z': {'y': 2, 'x': 0.75},
+    'X': {'y': 2, 'x': 1.75},
+    'C': {'y': 2, 'x': 2.75},
+    'V': {'y': 2, 'x': 3.75},
+    'B': {'y': 2, 'x': 4.75},
+    'N': {'y': 2, 'x': 5.75},
+    'M': {'y': 2, 'x': 6.75},
+}
+//based the keyboardCartesianCoords, it will output a value of 0 or a decimal between 1 and 9 (inclusive)
+this["euclideanDistance"] = function(a, b) {
+	if (typeof(a) === 'undefined' || typeof(b) === 'undefined') {
+		return 50
+	}
+	if (a.length === 1 && a.match(/[A-Z]/i) && b.length === 1 && b.match(/[A-Z]/i)) {
+		s = (keyboardCartesianCoords[a]['x']-keyboardCartesianCoords[b]['x'])**2
+		t = (keyboardCartesianCoords[a]['y']-keyboardCartesianCoords[b]['y'])**2
+		return Math.sqrt(s+t)
+	} else {
+		return 50
+	}	
+}
+
 //Function that implements the Damerau-Levenshtein Edit Distance (DLED) algorithm which considers insertions, deletions, substitutions, and transpositions in O(len(s)*maxDistance) time complexity
+//Also applies Euclidean Distance between keys on a QWERTY keyboard to penalize certain combinations
 //Stored using this[] to improve size compression during compilation without it getting shrunk down to nothingness
 //Returns distance in range of [0, maxDistance]
 this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
 	//Step 0: test to see if it should exit prematurely
-	//if a variable is undefined, just return 10
-	if (typeof(fst) !== 'undefined' || typeof(snd) !== 'undefined') {
-		return 10
+	//if a variable is undefined, just return maxDistance
+	if (typeof(s) === 'undefined' || typeof(t) === 'undefined') {
+		return maxDistance
 	}
 
     var d = []; //2d matrix
@@ -239,18 +466,21 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
         var s_i = s.charAt(i - 1);
         // Step 4: populate the columns of the 2d table
 		//optimize algorithm by ignoring all cells in original matrix where |i-j| > max_distance
-		for (var j = Math.max(0, i-maxDistance); j <= Math.min(m, i+maxDistance); j++) {
+		for (var j = customMax(0, i-maxDistance); j <= customMin(m, i+maxDistance); j++) {
             //Check the jagged levenshtein distance total so far to see if the length of n can be returned as the edit distance early
             if (i == j && d[i][j] > 4) return n;
 
-			// Step 5: store the cost for substitution
+			// Step 5: store the costs based on distance on QWERTY keyboard
             var t_j = t.charAt(j - 1);
-            var cost = (s_i == t_j) ? 0 : 1; 
+            var subCost = euclideanDistance(s_i, t_j) / 3; //divide by 3 so bring range down to [0,3]; also used for transposition (plus extra penalty) as still related to nearness on keyboard
+			var insertCost = 2 //always less than distance between say 'q' and 'p' but still more than the deletion cost
+			var deleteCost = 1
+			
 
             //Calculate the values for Levenshtein distance
-            var mi = d[i - 1][j] + 1; //deletion
-            var b = d[i][j - 1] + 1; //insertion //TODO: add a slight penalty to insertions for the search algorithm
-            var c = d[i - 1][j - 1] + cost; //substitution
+            var mi = d[i - 1][j] + deleteCost; //deletion
+            var b = d[i][j - 1] + insertCost; //insertion; slight penalty to insertions so 1.5 rather than 1
+            var c = d[i - 1][j - 1] + subCost; //substitution
 			//find the minimum
             if (b < mi) mi = b;
             if (c < mi) mi = c;
@@ -260,7 +490,7 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
 
             //Damerau transposition check based on optimal string alignment distance (triangle inequality doesn't hold)
             if (i > 1 && j > 1 && s_i == t.charAt(j - 2) && s.charAt(i - 2) == t_j) {
-                d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + cost);
+                d[i][j] = customMin(d[i][j], d[i - 2][j - 2] + subCost + 0.5);
             }
         }
     }
@@ -268,13 +498,6 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
     // Step 7: return the value in the final cell of the table
     return d[n][m];
 };
-
-const CROPS = [
-	{ label: 'Carrot', name: 'Carrot', hrfNum: '01', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', date: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard'},
-	{ label: 'Cabbage', name: 'Cabbage', hrfNum: '73', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', date: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' },
-	{ label: 'Potato', name: 'Potato', hrfNum: '185', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", date: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard' },
-	{ label: 'Tomato', name: "Tomato", hrfNum: '08', active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", date: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard' }
-]
 
 //check if input is numeric
 const isNumeric = (num) => (typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num);
@@ -320,24 +543,24 @@ class SearchInput extends Component {
 	searchFunction = (text) => { 
 		//clean up the text based on whether or not it is a number
 		var cleanedTxt = ""
+		var updatedData = []
 		if (isNumeric(text)) {
 			cleanedTxt = text.cleanNumForSearch();
+			//sort array in descending order (find highest value) based on DLED
+			updatedData = this.arrayholder.sort(function(a,b){ 
+				//use the damerauLevenshteinDistance function to sort the array based on the crop's HRFNumber
+				return compareStrings(b.hrfNum,cleanedTxt) - compareStrings(a.hrfNum,cleanedTxt); 
+			});
 		} else {
 			cleanedTxt = text.cleanTextForSearch();
+			//sort array in descending order (find highest value) based on DLED
+			updatedData = this.arrayholder.sort(function(a,b){ 
+				//use the damerauLevenshteinDistance function to sort the array based on the crop's HRFNumber
+				return compareStrings(b.name,cleanedTxt) - compareStrings(a.name,cleanedTxt); 
+			});
 		}
 		//TODO: make FULLTEXT SELECT search of database using cleaned text and store results in arrayholder
 
-		//sort array in descending order based on DLED
-		const updatedData = this.arrayholder.sort(function(a,b){ 
-			//if number, check against HRFNumber, otherwise look at name
-			if (isNumeric(text)) {
-				//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's HRFNumber
-				return compareStrings(a.hrfNum,cleanedTxt) - compareStrings(b.hrfNum,cleanedTxt); 
-			} else {
-				//use the damerauLevenshteinDistance function to sort the array in descending order based on the crop's name
-				return compareStrings(a.name,cleanedTxt) - compareStrings(b.name,cleanedTxt); 
-			}
-		});
 		this.setState({ data: updatedData, searchValue: text }); 
 	}; 
 
