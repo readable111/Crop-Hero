@@ -1,0 +1,65 @@
+S10,13,14,15,16
+
+Capstone
+V*Write peer eval
+V*Write Final Reflection
+V*Submit Final Reflection
+V*Submit everything for Sprint 2 Deliverables
+V-Remove font warning from To-Do
+V-Make search bar pressable
+V-Improve the navbar
+V-Merge notebook back into master
+V-Sign into Azure
+-Access the database
+-Create the database tables
+-Pull data for profile page
+-Pull data for search algorithm
+-Improve speed of search
+	*If <= 100 entries in DB, return everything. Else, run FULLTEXT index MATCH to get top 100 (reduce N)
+	*Bucket the data into categories
+	*Look into custom sorting algorithm with quadsort, radix, counting, min heap
+	*Fix the functions causing an issue
+	*Remove mins and conditional checks (or find faster alts.)
+	*Return early from compareStrings after SDC and every penalty applied if it drops below a threshold (probably 0 or 10)
+	*Possibly lower the max distances for DLED
+	*Improve DLED: https://turnerj.com/blog/levenshtein-distance-part-2-gotta-go-fast; https://turnerj.com/blog/levenshtein-distance-part-3-optimize-everything; https://github.com/rljacobson/Levenshtein/blob/master/damlevlim.cpp; https://github.com/DanHarltey/Fastenshtein/
+
+-Step 1 to improve search
+	*Don't call searchFunction when the search bar is cleared
+	*Use SDC instead of DLED to assess acronym with n-gram of 2
+	*Add parameter to change SDC n-gram length and JWS p value
+	*Skip acronym check if no spaces in both
+	*Benefit: Instant response when clearing bar. 34.2% of original time for acronym/first-last-letter portion
+-Step 2 to improve search by improving DLED
+	*Src:
+		*https://github.com/rljacobson/Levenshtein/blob/master/damlevlim.cpp
+		*https://github.com/ka-weihe/fastest-levenshtein/blob/master/test.ts
+	*If one string is prefix of other, return length difference
+	*If 1st string is longer, swap the strings as 1st string has bigger impact on math
+	*Early exit if min. edit distance exceeds max distance
+	*Use the jagged distance if the two chars. in the strings at the current i & j are the same
+	*Benefit: 86% of original time for DLED portion when >1 char. entered. 65% when 1 char. entered
+
+
+var preprocessingTime = 152.1305+142.7549+156.2923+149.3439
+var sdcTime = 118.4706+169.8967+171.2035+164.4202
+var firstLastLetterTime = 354.8146+336.6674+321.1497+307.0399
+*Step 1   var firstLastLetterTime = 113.095+113.611+99.153+119.506+115.622+117.332+111.193
+var lengthSyllableTime = 257.2539+242.6834+252.7593+226.1053
+var prefixMatchTime = 107.5689+104.2818+102.2720+101.4081
+var dledTime = 713.2361+962.7232+1272.3150+952.8102 (unknown # of chars)
+*Step 2	  var dledTime = 494.592+880.181+1150.531 (for 1,2,3 chars in search box, respectively)
+var jwsTime = 204.9688+204.7897+249.0801+209.3546
+var lemmatizeTime = 512.8513+465.6032+476.2088+456.3506
+var dmTime = 458.7942+453.1207+436.0807+433.5262
+Sort Time = 3955.7529 (955.3939ms from sort, rest came from comparator)
+24.2%: default sort()
+24.1%: DLED
+11.5%: lemmatizer
+11.0%: double metaphone
+7.8%   firstLastLetter
+5.7%:  lengthSyllable
+5.3%:  JWS
+4.2%:  SDC
+3.8%:  Preprocessing
+2.6%:  Prefix Matching

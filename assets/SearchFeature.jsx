@@ -117,13 +117,11 @@ searchFunction = (text, arr) => {
 		cleanedTxt = text.cleanNumForSearch();
 		//sort array in descending order (find highest value) based on DLED
 		updatedData = arr.sort(function(a,b){ 
-			//use the damerauLevenshteinDistance function to sort the array based on the crop's HRFNumber
 			return compareStrings(b.hrfNum,cleanedTxt) - compareStrings(a.hrfNum,cleanedTxt); 
 		});
 	} else {
 		cleanedTxt = text.cleanTextForSearch();
 		updatedData = arr.sort(function(a,b){ 
-			//use the damerauLevenshteinDistance function to sort the array based on the crop's name
 			return compareStrings(b.name,cleanedTxt) - compareStrings(a.name,cleanedTxt); 
 		});
 	}
@@ -169,9 +167,11 @@ this["compareStrings"] = function(s, t) {
 		matchScore += 5
 	}
 	//check the first letter after each space for both words by getting all of them, merging them into one string, and sending them through DLED as they are less likely to be wrong
-	let sAcronym = sUpper.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
-	let tAcronym = tUpper.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
-	matchScore += customRound(6 / (damerauLevenshteinDistance(sAcronym,tAcronym, 4) + 1)) //add 1 so never dividing by 0, then divide 5 by distance to determine score so diminishing bonus with increasing distance
+	if (sUpper.indexOf(' ') >= 0 && tUpper.indexOf(' ') >= 0) {
+		let sAcronym = sUpper.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
+		let tAcronym = tUpper.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
+		matchScore += customRound(7 * sorensenDiceCoefficient(sAcronym,tAcronym)) //multiply by 7 to determine score so diminishing bonus with increasing distance, approaching 0
+	}
 	endTime = performance.now()
 	firstLastLetterTime += endTime - startTime
 
@@ -302,7 +302,7 @@ this["syllableCount"] = function(s) {
 
 //Function that is a Javascript translation of Miguel Serrano's C-based version and Lars Garshol's Java-based version of the Jaro-Winkler Similarity algorithm to achieve O(len(s)*len(a)) time complexity
 //returns a value between 0 and 1 with 0 being no match and 1 being exact match
-this["jaroWinklerSimilarity"] = function(s, a) {
+this["jaroWinklerSimilarity"] = function(s, a, p_val=0.16) {
 	//return early if either are undefined
 	if (typeof(s) === 'undefined' || typeof(a) === 'undefined') {
 		return 0.0
@@ -366,9 +366,8 @@ this["jaroWinklerSimilarity"] = function(s, a) {
 		}
 		}
 	
-		//calculate Jaro-Winkler distance with scaling factor of 0.16
-		const SCALING_FACTOR = 0.16
-		dw = dw + (l * SCALING_FACTOR * (1 - dw));
+		//calculate Jaro-Winkler distance with scaling factor
+		dw = dw + (l * p_val * (1 - dw));
 	}
 
 	return dw.toFixed(2)
@@ -394,7 +393,7 @@ this["customSqrt"] = function(x) {
 //Function that uses Ka-Weihe Fast Sorensen-Dice Coefficient (SDC) algorithm to quickly calculate value in nearly O(len(s) + len(t)) time complexity
 //Returns value in range of [0, 1] with 1 being a perfect match
 //This function was copied in rather than being imported from the library due to issues with outdated npm; comments are mine; original at www.npmjs.com/package/fast-dice-coefficient
-this["sorensenDiceCoefficient"] = function(s, t) {
+this["sorensenDiceCoefficient"] = function(s, t, ngram_len=2) {
 	//if a variable is undefined, just return 0
 	if (typeof(s) === 'undefined' || typeof(t) === 'undefined') {
 		return 0;
@@ -404,25 +403,25 @@ this["sorensenDiceCoefficient"] = function(s, t) {
 	var i, j, k, map, match, ref, ref1, sub;
 	sL = s.length;
 	tL = t.length;
-	//if either string is too short for an n-gram of length 2 to be collected, just return 0
-	if (sL < 2 || tL < 2) {
+	//if either string is too short for a n-gram to be collected, just return 0.11
+	if (sL < ngram_len || tL < ngram_len) {
 		return 0.11;
 	}
 	//define map after conditional returns to save space and time
 	map = new Map;
-	//create a map of bigrams (n-grams with a length of 2)
-	for (i = j = 0, ref = sL - 2; (0 <= ref ? j <= ref : j >= ref); i = 0 <= ref ? ++j : --j) {
-		sub = s.substr(i, 2);
+	//create a map of ngrams (bi-gram = n-gram with length of 2)
+	for (i = j = 0, ref = sL - ngram_len; (0 <= ref ? j <= ref : j >= ref); i = 0 <= ref ? ++j : --j) {
+		sub = s.substr(i, ngram_len);
 		if (map.has(sub)) {
 			map.set(sub, map.get(sub) + 1);
 		} else {
 			map.set(sub, 1);
 		}
 	}
-	//find the number of bigrams in common between the two strings based on set theory
+	//find the number of ngrams in common between the two strings based on set theory
 	match = 0;
-	for (i = k = 0, ref1 = tL - 2; (0 <= ref1 ? k <= ref1 : k >= ref1); i = 0 <= ref1 ? ++k : --k) {
-		sub = t.substr(i, 2);
+	for (i = k = 0, ref1 = tL - ngram_len; (0 <= ref1 ? k <= ref1 : k >= ref1); i = 0 <= ref1 ? ++k : --k) {
+		sub = t.substr(i, ngram_len);
 		if (map.get(sub) > 0) {
 			match++;
 			map.set(sub, map.get(sub) - 1);
@@ -489,6 +488,13 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
 		return maxDistance
 	}
 
+	//make s shorter than t, even if that means swapping them
+	if (s.length > t.length) {
+		temp = t;
+		t = s;
+		s = temp;
+	}
+
     var d = []; //2d matrix
 
     // Step 1: store string lengths
@@ -497,6 +503,14 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
 	//ensure that both strings contain characters based on principles of short-circuit evaluation
     if (n == 0) return m;
     if (m == 0) return n;
+
+	//check if either string is prefix of other and return length difference if so
+	if (t.indexOf(s) == 0) {
+		return m - n;
+	}
+	else if (s.indexOf(t) == 0) {
+		return n - m;
+	}
 
     //Create an array of arrays in javascript with note that d is zero-indexed while n is one-indexed
 	//A descending loop is quicker
@@ -510,35 +524,48 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
 	//remember that n and m are one-indexed as lengths
     for (var i = 1; i <= n; i++) {
         var s_i = s.charAt(i - 1);
+		var col_min = maxDistance;
         // Step 4: populate the columns of the 2d table
 		//optimize algorithm by ignoring all cells in original matrix where |i-j| > max_distance
 		for (var j = customMax(0, i-maxDistance); j <= customMin(m, i+maxDistance); j++) {
             //Check the jagged levenshtein distance total so far to see if the length of n can be returned as the edit distance early
             if (i == j && d[i][j] > maxDistance) return n;
+			var t_j = t.charAt(j - 1);
+			//if the two characters are the same, use the jagged distance
+			if (s_i === t_j) {
+				d[i][j] = d[i][j - 1];
+			}
+			else {
+				// Step 5: store the costs based on distance on QWERTY keyboard
+				var subCost = euclideanDistance(s_i, t_j, maxDistance) / 3 //divide by 3 so bring range down to [0,3]; also used for transposition (plus extra penalty) as still related to nearness on keyboard
+				var insertCost = 2 //always less than distance between say 'q' and 'p' but still more than the deletion cost
+				var deleteCost = 1
+				var transCost = 1.5
+				
 
-			// Step 5: store the costs based on distance on QWERTY keyboard
-            var t_j = t.charAt(j - 1);
-            var subCost = euclideanDistance(s_i, t_j, maxDistance) / 3; //divide by 3 so bring range down to [0,3]; also used for transposition (plus extra penalty) as still related to nearness on keyboard
-			var insertCost = 2 //always less than distance between say 'q' and 'p' but still more than the deletion cost
-			var deleteCost = 1
-			
+				//Calculate the values for Levenshtein distance
+				var mi = d[i - 1][j] + deleteCost; //deletion
+				var b = d[i][j - 1] + insertCost; //insertion; slight penalty to insertions so 2 rather than 1
+				var c = d[i - 1][j - 1] + subCost; //substitution
+				//find the minimum
+				if (b < mi) mi = b;
+				if (c < mi) mi = c;
 
-            //Calculate the values for Levenshtein distance
-            var mi = d[i - 1][j] + deleteCost; //deletion
-            var b = d[i][j - 1] + insertCost; //insertion; slight penalty to insertions so 2 rather than 1
-            var c = d[i - 1][j - 1] + subCost; //substitution
-			//find the minimum
-            if (b < mi) mi = b;
-            if (c < mi) mi = c;
+				// Step 6: store the minimum
+				d[i][j] = mi; 
 
-			// Step 6: store the minimum
-            d[i][j] = mi; 
+				//Damerau transposition check based on optimal string alignment distance (triangle inequality doesn't hold)
+				if (i > 1 && j > 1 && s_i == t.charAt(j - 2) && s.charAt(i - 2) == t_j) {
+					d[i][j] = customMin(d[i][j], d[i - 2][j - 2] + transCost);
+				}
+			}
 
-            //Damerau transposition check based on optimal string alignment distance (triangle inequality doesn't hold)
-            if (i > 1 && j > 1 && s_i == t.charAt(j - 2) && s.charAt(i - 2) == t_j) {
-                d[i][j] = customMin(d[i][j], d[i - 2][j - 2] + 1.5);
-            }
+			col_min = customMin(col_min, d[i][j]);
         }
+		//early exit if min. edit distance exceeds the max distance
+		if (col_min > maxDistance) {
+			return maxDistance;
+		}
     }
 
     // Step 7: return the value in the final cell of the table
@@ -577,50 +604,55 @@ class SearchInput extends Component {
 	} 
 
 	searchFunction = (text) => { 
-		//clean up the text based on whether or not it is a number
-		var cleanedTxt = ""
-		var updatedData = []
-		let searchStartTime = performance.now()
-		//if the first character is a number, assume that the user wants to enter a number
-		let firstChar = text.charAt(0)
-		if (firstChar <= '9' && firstChar >= '0') {
-			cleanedTxt = text.cleanNumForSearch();
-			//sort array in descending order (find highest value) based on DLED
-			updatedData = this.arrayholder.sort(function(a,b){ 
-				//use the damerauLevenshteinDistance function to sort the array based on the crop's HRFNumber
-				return compareStrings(b.hrfNum,cleanedTxt) - compareStrings(a.hrfNum,cleanedTxt); 
-			});
-		} else {
-			cleanedTxt = text.cleanTextForSearch();
-			//sort array in descending order (find highest value) based on DLED
-			updatedData = this.arrayholder.sort(function(a,b){ 
-				//use the damerauLevenshteinDistance function to sort the array based on the crop's HRFNumber
-				return compareStrings(b.name,cleanedTxt) - compareStrings(a.name,cleanedTxt); 
-			});
+		if (text.length != 0) {
+			//clean up the text based on whether or not it is a number
+			var cleanedTxt = ""
+			var updatedData = []
+			let searchStartTime = performance.now()
+			//if the first character is a number, assume that the user wants to enter a number
+			let firstChar = text.charAt(0)
+			if (firstChar <= '9' && firstChar >= '0') {
+				cleanedTxt = text.cleanNumForSearch();
+				//sort array in descending order (find highest value) based on DLED
+				updatedData = this.arrayholder.sort(function(a,b){ 
+					//use the damerauLevenshteinDistance function to sort the array based on the crop's HRFNumber
+					return compareStrings(b.hrfNum,cleanedTxt) - compareStrings(a.hrfNum,cleanedTxt); 
+				});
+			} else {
+				cleanedTxt = text.cleanTextForSearch();
+				//sort array in descending order (find highest value) based on DLED
+				updatedData = this.arrayholder.sort(function(a,b){ 
+					//use the damerauLevenshteinDistance function to sort the array based on the crop's HRFNumber
+					return compareStrings(b.name,cleanedTxt) - compareStrings(a.name,cleanedTxt); 
+				});
+			}
+			let searchEndTime = performance.now()
+			//TODO: make FULLTEXT SELECT search of database using cleaned text and store results in arrayholder
+			console.log("Preprocessing   : " + preprocessingTime + "ms")
+			preprocessingTime = 0
+			console.log("Sorensen Dice   : " + sdcTime + "ms")
+			sdcTime = 0
+			console.log("Check 1st/last  : " + firstLastLetterTime + "ms")
+			firstLastLetterTime = 0
+			console.log("Length/Syllable : " + lengthSyllableTime + "ms")
+			lengthSyllableTime = 0
+			console.log("Prefix Match    : " + prefixMatchTime + "ms")
+			prefixMatchTime = 0
+			console.log("DLEditDistance  : " + dledTime + "ms")
+			dledTime = 0
+			console.log("JWS algorithm   : " + jwsTime + "ms")
+			jwsTime = 0
+			console.log("Lemmatizer      : " + lemmatizeTime + "ms")
+			lemmatizeTime = 0
+			console.log("Double Metaphone: " + dmTime + "ms")
+			dmTime = 0
+			console.log("Sort Time       : " + (searchEndTime - searchStartTime) + "ms")
+			searchStartTime = searchEndTime = 0
+			this.setState({ data: updatedData, searchValue: text }); 
 		}
-		let searchEndTime = performance.now()
-		//TODO: make FULLTEXT SELECT search of database using cleaned text and store results in arrayholder
-		console.log("Preprocessing   : " + preprocessingTime + "ms")
-		preprocessingTime = 0
-		console.log("Sorensen Dice   : " + sdcTime + "ms")
-		sdcTime = 0
-		console.log("Check 1st/last  : " + firstLastLetterTime + "ms")
-		firstLastLetterTime = 0
-		console.log("Length/Syllable : " + lengthSyllableTime + "ms")
-		lengthSyllableTime = 0
-		console.log("Prefix Match    : " + prefixMatchTime + "ms")
-		prefixMatchTime = 0
-		console.log("DLEditDistance  : " + dledTime + "ms")
-		dledTime = 0
-		console.log("JWS algorithm   : " + jwsTime + "ms")
-		jwsTime = 0
-		console.log("Lemmatizer      : " + lemmatizeTime + "ms")
-		lemmatizeTime = 0
-		console.log("Double Metaphone: " + dmTime + "ms")
-		dmTime = 0
-		console.log("Sort Time       : " + (searchEndTime - searchStartTime) + "ms")
-		searchStartTime = searchEndTime = 0
-		this.setState({ data: updatedData, searchValue: text }); 
+		else {
+			this.setState({ data: this.arrayholder, searchValue: text });
+		}
 	}; 
 
 	render() {
