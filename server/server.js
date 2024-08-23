@@ -8,15 +8,15 @@ const app = express()
 
 const jwtCheck = auth({
   audience: 'https://cropauth',
-  issuerBaseURL: 'https://dev-00e0exzucdhwq0a0.us.auth0.com/',
+  issuerBaseURL: //,
   tokenSigningAlg: 'RS256'
 });
 
 app.use(jwtCheck)
 var connection=mysql.createConnection({
-  host:"cropdev.mysql.database.azure.com", 
-  user:"tjb0264", 
-  password:"CropALly!", 
+  host:"", 
+  user:"", 
+  password:"", 
   database:"db_cropdev", 
   port:3306, 
   ssl:{
