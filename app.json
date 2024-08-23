@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.CropAlly"
     },
     "android": {
       "adaptiveIcon": {
@@ -30,6 +31,12 @@
     },
     "plugins": [
       [
+        "react-native-auth0",
+        {
+          "domain": "dev-00e0exzucdhwq0a0.us.auth0.com"
+        }
+      ],
+      [
         "expo-font",
         {
           "fonts": [
@@ -43,6 +50,14 @@
       ],
       "expo-router"
     ],
-    "scheme": "CropAlly-scheme"
+    "scheme": "CropAlly-scheme",
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "15f33880-0402-4be3-9a45-f14deb832296"
+      }
+    }
   }
 }
