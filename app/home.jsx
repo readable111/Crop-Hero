@@ -1,5 +1,5 @@
 import { useCallBack } from 'react';
-import { StyleSheet, View, Text, Scrollable, TextInput, FlatList, Image } from 'react-native'
+import { StyleSheet, View, Text, Scrollable, TextInput, FlatList, Image, Button } from 'react-native'
 import { useFonts } from 'expo-font'
 import { Link } from 'expo-router'
 import Colors from '../assets/Color.js'
@@ -7,6 +7,9 @@ import HomeCarousel from '../src/components/carousel.jsx'
 import CropCarousel from '../src/components/cropCarousel.jsx'
 import SearchInput from '../assets/SearchFeature.jsx'
 import NavBar from '../assets/NavBar.jsx'
+import LoginButton from './login.jsx';
+
+
 
 
 const Home = () =>{
@@ -61,6 +64,8 @@ const Home = () =>{
 	'Domine-Bold': require('../assets/fonts/Domine-Bold.ttf')
 	});
 
+
+
 	if (!fontsLoaded && !fontError) {
 		return null;
 	}
@@ -76,7 +81,8 @@ const Home = () =>{
         ]
 
 	const temp = [{temp: 70, perc: 80},{temp: 68, perc:68}, {temp: 70, perc: 72}]
-	
+
+
 	return(
 	<View style = {styles.container}>	
 		<View style = {styles.weatherContainer}>
@@ -132,7 +138,8 @@ const Home = () =>{
 		<View style = {styles.Search}>
 			<SearchInput/>
 		</View>
-			<CropCarousel crops = {crops} style = {styles.cropCarousel}/>
+		<LoginButton/>		
+		<CropCarousel crops = {crops} style = {styles.cropCarousel}/>
 		<NavBar homeSelected/>
 	</View>)
 };

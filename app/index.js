@@ -1,13 +1,13 @@
 import Home from './home.jsx'
-import React { useEffect, useState } from 'react'
+import { View, Text } from 'react-native'
+import { useAuth0, Auth0Provider} from 'react-native-auth0'
+import { Button } from 'react-native-elements';
+
+
+
+
 export default function Page() {
 
-  const [ backendData, getBackendData ] = useState()
-
-  useEffect({
-    fetch.get('/connect').then(response=>response.json()
-    ).then(d=>console.log(d)
-  })
 
   return (
     //<View style={styles.container}>
@@ -16,6 +16,8 @@ export default function Page() {
         //<Text style={styles.subtitle}>This is the first page of your app.</Text>
       //</View>
     //</View>
-    <Home/>
+    <Auth0Provider domain ={"localhost:3000"} clientId={"n9emrUe1MQcYoFlIlguf3SFOz16hADMR"}>
+      <Home/>
+    </Auth0Provider>
   );
 }
