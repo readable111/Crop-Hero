@@ -19,8 +19,11 @@ const config = {
 const app = express() 
 
 
+
+
 app.use(auth(config))
 var connection=mysql.createConnection({
+
   host:process.env.DB_HOST_URL, 
   user:process.env.DB_ADMIN_USER, 
   password:process.env.DB_ADMIN_PASSWORD, 
