@@ -11,9 +11,9 @@ const config = {
   authRequired: false,
   auth0Logout: true,
   secret: 'a long, randomly-generated string stored in env',
-  baseURL: 'http://localhost:3000',
-  clientID: 'CBBwPxvnwu8abEKR7OGhyF9ci8tfokvc',
-  issuerBaseURL: 'https://dev-00e0exzucdhwq0a0.us.auth0.com'
+  baseURL: process.env.BASE_URL,
+  clientID: process.env.CLIENT_ID,
+  issuerBaseURL: process.env.ISSUER_BASE_URL
 };
 
 const app = express() 
@@ -42,7 +42,6 @@ app.get('/profile',requiresAuth(),(req, res)=> {
 app.get('/sub',(req,res)=>{
   connection.query("SELECT * FROM tbl_subscribers;", (error, results, fields)=>{
     res.json(results)
-    res.send(200)
   })
 
 })
