@@ -22,6 +22,25 @@ import CROPS from '../test_data/testCropData.json'
 
 //initialize to a bunch of weird, random values that will make it obvious if it is used
 global.dataArray = [ { label: 'temp', name: 'temp', hrfNum: '00', active: 'NaN', location: 'Lorem Ipsum', variety: 'Test', source: 'The store', date: '00/00/1001', comments: 'Who knows', indoors: 'Maybe', type:'Weird'} ]
+//create some caches
+var compareStrings_cache = {}
+var sorensenDiceCoefficient_cache = {}
+var removeCommonPrefixAndSuffix_cache = {}
+var syllableCount_cache = {}
+var damerauLevenshteinDistance_cache = {}
+var euclideanDistance_cache = {}
+var jaroWinklerSimilarity_cache = {}
+var doubleMetaphone_cache = {}
+this["genCacheKey"] = function(funcName, firstArg, ...args) {
+	cacheKey = `${funcName}:${firstArg}:`
+	for (const arg of args) {
+		cacheKey += String(arg)
+      	cacheKey += ":"
+	}
+	return cacheKey;
+}
+
+
 
 const SearchModal = ({
     modalVisible,
@@ -64,7 +83,7 @@ const SearchModal = ({
 							keyboardType='default'
 							style={{
 								color: 'black',
-								fontSize: 16,
+								fontSize: 14,
 							}}
 							containerStyle={{
 								backgroundColor: 'none',
@@ -140,22 +159,23 @@ this["compareStrings"] = function(s, t) {
 	sUpper = sASCII.toUpperCase()
 	tUpper = tASCII.toUpperCase()
 
+	compareStringsCacheKey = genCacheKey("compareStrings", s, t)
+	if (compareStringsCacheKey in compareStrings_cache) {
+		return compareStrings_cache[compareStringsCacheKey]
+	}
+
 	//if exact match, return highest possible score
 	if (matchExact(sUpper,tUpper)) {
-		return 500
+		compareStrings_cache[compareStringsCacheKey] = 1000
+		return 1000
 	}
 
 	//store the length of each passed string
 	sL = sUpper.length
 	tL = tUpper.length
+	matchScore = 0
 	let endTime = performance.now()
 	preprocessingTime += endTime - startTime
-
-	//get the SDC value and multiply by 100 to get score and round to nearest whole number to eliminate decimals; high number is good
-	startTime = performance.now()
-	matchScore = customRound(sorensenDiceCoefficient(sUpper,tUpper) * 100)	
-	endTime = performance.now()
-	sdcTime += endTime - startTime
 
 	//give bonus score if first letters match as least likely letter to be wrong
 	startTime = performance.now()
@@ -166,14 +186,39 @@ this["compareStrings"] = function(s, t) {
 	if (sUpper.charAt(sL - 1) === tUpper.charAt(tL - 1)) {
 		matchScore += 5
 	}
-	//check the first letter after each space for both words by getting all of them, merging them into one string, and sending them through DLED as they are less likely to be wrong
+	//check the first letter after each space for both words by getting all of them, merging them into one string, and sending them through SDC as they are less likely to be wrong
 	if (sUpper.indexOf(' ') >= 0 && tUpper.indexOf(' ') >= 0) {
+		matchScore += 10 //if both have spaces, provide a bonus
 		let sAcronym = sUpper.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
 		let tAcronym = tUpper.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
-		matchScore += customRound(7 * sorensenDiceCoefficient(sAcronym,tAcronym)) //multiply by 7 to determine score so diminishing bonus with increasing distance, approaching 0
+		matchScore += customRound(15 * sorensenDiceCoefficient(sAcronym,tAcronym)) //multiply by X to determine score so diminishing bonus with increasing distance, approaching 0
+	}
+	else if ((sUpper.indexOf(' ') >= 0 && tUpper.indexOf(' ') < 0) || (sUpper.indexOf(' ') < 0 && tUpper.indexOf(' ') >= 0)) {
+		matchScore -= 10 //if only one has a space, apply a penalty
 	}
 	endTime = performance.now()
 	firstLastLetterTime += endTime - startTime
+
+	//remove any common prefix & suffix, providing a bonus the larger that the difference is from the original
+	startTime = performance.now()
+	corrected_strings = removeCommonPrefixAndSuffix(sUpper, tUpper)
+	sShortened = corrected_strings[0]
+	tShortened = corrected_strings[1]
+	//3 chars removed from both so boost score by 24 total
+	matchScore += ((sL - sShortened)*4)
+	matchScore += ((tL - tShortened)*4)
+	endTime = performance.now()
+	prefixMatchTime += endTime - startTime
+
+	//get the SDC value and multiply by 100 to get score and round to nearest whole number to eliminate decimals; high number is good
+	startTime = performance.now()
+	matchScore += customRound(sorensenDiceCoefficient(sUpper,tUpper) * 100)	
+	if (matchScore < 30) {
+		compareStrings_cache[compareStringsCacheKey] = matchScore
+		return matchScore
+	}
+	endTime = performance.now()
+	sdcTime += endTime - startTime
 
 	//give penalty if different length
 	startTime = performance.now()
@@ -187,17 +232,14 @@ this["compareStrings"] = function(s, t) {
 	endTime = performance.now()
 	lengthSyllableTime += endTime - startTime
 
-	//do a prefix match to assign a bonus if t starts with s
-	startTime = performance.now()
-	if (tUpper.startsWith(sUpper)) {
-		matchScore += 20
-	}
-	endTime = performance.now()
-	prefixMatchTime += endTime - startTime
-
 	//apply penalty to score equal to the DLED value times a constant
+	//uses the shortened versions of the strings to cut down on string size
 	startTime = performance.now()
-	matchScore -= (damerauLevenshteinDistance(sUpper,tUpper, 10) * 2)
+	matchScore -= (damerauLevenshteinDistance(sShortened,tShortened, 5) * 3)
+	if (matchScore < 40) {
+		compareStrings_cache[compareStringsCacheKey] = matchScore
+		return matchScore
+	}
 	endTime = performance.now()
 	dledTime += endTime - startTime
 
@@ -205,6 +247,10 @@ this["compareStrings"] = function(s, t) {
 	startTime = performance.now()
 	jws = jaroWinklerSimilarity(sUpper, tUpper)
 	matchScore += (jws * 15)
+	if (matchScore < 50) {
+		compareStrings_cache[compareStringsCacheKey] = matchScore
+		return matchScore
+	}
 	endTime = performance.now()
 	jwsTime += endTime - startTime
 
@@ -213,46 +259,47 @@ this["compareStrings"] = function(s, t) {
 	//lemmatizer considers context and produces a valid word which works better with doubleMetaphone though it does turn better into good
 	//then send that through the Double Metaphone algorithm to receive 2 approximate phonetic encodings (PhonetEx strings) to account for pronunciations and accents (ensures smyth points to smith, not smash)
 	startTime = performance.now()
-	var lemmatize = require( 'wink-lemmatizer' )
-	sMetaphoneCodes = doubleMetaphone(lemmatize.noun(sUpper))
-	tMetaphoneCodes = doubleMetaphone(lemmatize.noun(sUpper))
+	sMetaphoneCacheKey = genCacheKey("doubleMetaphone", sUpper)
+	tMetaphoneCacheKey = genCacheKey("doubleMetaphone", tUpper)
+	if (sMetaphoneCacheKey in doubleMetaphone_cache) {
+		sMetaphoneCodes = doubleMetaphone_cache[sMetaphoneCacheKey]
+	} else {
+		var lemmatize = require( 'wink-lemmatizer' )
+		sMetaphoneCodes = doubleMetaphone(lemmatize.noun(sUpper))
+		doubleMetaphone_cache[sMetaphoneCacheKey] = sMetaphoneCodes
+	}
+	if (tMetaphoneCacheKey in doubleMetaphone_cache) {
+		tMetaphoneCodes = doubleMetaphone_cache[tMetaphoneCacheKey]
+	} else {
+		var lemmatize = require( 'wink-lemmatizer' )
+		tMetaphoneCodes = doubleMetaphone(lemmatize.noun(sUpper))
+		doubleMetaphone_cache[tMetaphoneCacheKey] = tMetaphoneCodes
+	}	
 	endTime = performance.now()
 	lemmatizeTime += endTime - startTime
 
 	startTime = performance.now()
 	//compare both primary codes; only give bonus if exact match
-	if (matchExact(sMetaphoneCodes[0],tMetaphoneCodes[0])) {
+	if (sMetaphoneCodes[0] === tMetaphoneCodes[0]) {
 		matchScore += 15
 	}
 	//compare s primary with t secondary; only give bonus if exact match
-	if (matchExact(sMetaphoneCodes[0],tMetaphoneCodes[1])) {
+	if (sMetaphoneCodes[0] === tMetaphoneCodes[1]) {
 		matchScore += 12
 	}
 	//compare s secondary with t primary; only give bonus if exact match
-	if (matchExact(sMetaphoneCodes[1],tMetaphoneCodes[0])) {
+	if (sMetaphoneCodes[1] === tMetaphoneCodes[0]) {
 		matchScore += 11
 	}
 	//compare s secondary with s secondary; only give bonus if exact match
-	if (matchExact(sMetaphoneCodes[1],tMetaphoneCodes[1])) {
+	if (sMetaphoneCodes[1] === tMetaphoneCodes[1]) {
 		matchScore += 10
 	}
 	endTime = performance.now()
 	dmTime += endTime - startTime
 
+	compareStrings_cache[compareStringsCacheKey] = matchScore
 	return matchScore
-
-	//TODO: possible ideas to improve it; aim for 90% threshold with response time of <=100ms which covers network delay and search
-	//look at Sublime Text search which would allow for acronyms and as replacement for substring matching: https://www.forrestthewoods.com/blog/reverse_engineering_sublime_texts_fuzzy_match/ & https://github.com/Srekel/the-debuginator/blob/master/the_debuginator.h#L1856
-		//tries to match each character in sequence
-		//hidden score where some matched characters are worth more points than others (score starts at 0)
-			//matched letter (good): +0
-			//unmatched letter (bad): -1
-			//Consecutively matched letters (very good): +5
-			//letter following separator (good): +10
-			//uppercase following lowercase (CamelCase; good): +10
-			//unmatched leading letter: -3 (max of -9)
-		//exhaustive search and returns match with highest score (basically already doing this with sort)
-
 }
 
 this["matchExact"] = function(s, t) {
@@ -270,7 +317,7 @@ this["matchExact"] = function(s, t) {
 	const re = new RegExp("(?<=^| )" + s + "(?=$| )", "gmi")
 	//match regex against t
 	var match = t.match(re);
-	//does match exist AND does t equal the first value returned in match
+	//does match exist AND t equals the first value returned in match
 	return match && t === match[0];
 }
 
@@ -279,6 +326,12 @@ this["syllableCount"] = function(s) {
 	if (typeof(s) === 'undefined' || s.length === 0) {
 		return 0
 	}
+
+	cacheKey = genCacheKey("syllableCount", s)
+	if (cacheKey in syllableCount_cache) {
+		return syllableCount_cache[cacheKey]
+	}
+
     var someCount = 0;
     if(s.length>3) {
       if(s.substring(0,4)=="SOME") { //accounts for the fact that "somewhere" is two syllables as silent e causes issues
@@ -294,27 +347,47 @@ this["syllableCount"] = function(s) {
 	s = s.replace(/(?<=Q)U|(?<=[AEIOUY]{2,2})U/, '');            
     var syl = s.match(/[AEIOUY]{1,2}/g);
     if(syl) {
-        return syl.length + someCount;
+		finalVal = syl.length + someCount
+		syllableCount_cache[cacheKey] = finalVal
+        return finalVal;
     } else {
+		syllableCount_cache[cacheKey] = 0
 		return 0
 	}
 }
 
 //Function that is a Javascript translation of Miguel Serrano's C-based version and Lars Garshol's Java-based version of the Jaro-Winkler Similarity algorithm to achieve O(len(s)*len(a)) time complexity
 //returns a value between 0 and 1 with 0 being no match and 1 being exact match
-this["jaroWinklerSimilarity"] = function(s, a, p_val=0.16) {
+this["jaroWinklerSimilarity"] = function(s, a, p_val=0.16, min_score=0.7) {
 	//return early if either are undefined
 	if (typeof(s) === 'undefined' || typeof(a) === 'undefined') {
 		return 0.0
-	}	
+	}
+
+	cacheKey = genCacheKey("jaroWinklerSimilarity", s, a, p_val, min_score)
+	if (cacheKey in jaroWinklerSimilarity_cache) {
+		return jaroWinklerSimilarity_cache[cacheKey]
+	}
+
+	sL = s.length
+	aL = a.length
 	//return early if either of the strings is empty
-	if (!(s.length) || !(a.length)) {
+	if (!(sL) || !(aL)) {
+		jaroWinklerSimilarity_cache[cacheKey] = 0
 		return 0.0
 	}
 	//return early if they are an exact match
 	if (s === a) {
+		jaroWinklerSimilarity_cache[cacheKey] = 1
     	return 1.0;
     }
+
+	//check if min_score is even possible
+	min_matches_for_score = Math.ceil((3.0 * min_score * sL * aL - (sL * aL)) / (sL + aL))
+	if (min_matches_for_score > aL) {
+		jaroWinklerSimilarity_cache[cacheKey] = 0
+		return 0.0
+	}
 
 	//initialize all of these variables to 0
 	//i,j,l are indices
@@ -322,9 +395,6 @@ this["jaroWinklerSimilarity"] = function(s, a, p_val=0.16) {
 	//t is count of transpositions
 	i = j = l = m = t = 0
 	dw = 0.0
-	//store the length of the strings
-	sL = s.length
-	aL = a.length
 	//store the viable range so that it isn't recalculated
 	range = aL / 2
 	//initialize the flag arrays
@@ -349,6 +419,7 @@ this["jaroWinklerSimilarity"] = function(s, a, p_val=0.16) {
 
 	//return early if no matches were found
 	if (!m || m === 0) {
+		jaroWinklerSimilarity_cache[cacheKey] = 0
 		return 0.0
 	}
 
@@ -356,20 +427,15 @@ this["jaroWinklerSimilarity"] = function(s, a, p_val=0.16) {
 	dw = ((m / sL) + (m / aL) + ((m - t) / m)) / 3.0
 	
 	//only calculate Jaro-Winkler distance if Jaro Similarity is above threshold
-	const JD_THRESHOLD = 0.5
+	const JD_THRESHOLD = 0.4
 	if (dw > JD_THRESHOLD) {
-		//calculate common string prefix up to 4 chars
-		l = 0;
-		for (i = 0; i < customMin(customMin(sL, aL), 4); i++){
-		if (s.charAt(i) == a.charAt(i)) {
-			l++;
-		}
-		}
-	
+		//calculate common string prefix length
+		l = getCommonPrefix(s, a)
 		//calculate Jaro-Winkler distance with scaling factor
 		dw = dw + (l * p_val * (1 - dw));
 	}
 
+	jaroWinklerSimilarity_cache[cacheKey] = dw.toFixed(2)
 	return dw.toFixed(2)
 }
 
@@ -398,6 +464,11 @@ this["sorensenDiceCoefficient"] = function(s, t, ngram_len=2) {
 	if (typeof(s) === 'undefined' || typeof(t) === 'undefined') {
 		return 0;
 	}
+
+	cacheKey = genCacheKey("sorensenDiceCoefficient", s, t, ngram_len)
+	if (cacheKey in sorensenDiceCoefficient_cache) {
+		return sorensenDiceCoefficient_cache[cacheKey]
+	}
 	
 	//define variables
 	var i, j, k, map, match, ref, ref1, sub;
@@ -405,6 +476,7 @@ this["sorensenDiceCoefficient"] = function(s, t, ngram_len=2) {
 	tL = t.length;
 	//if either string is too short for a n-gram to be collected, just return 0.11
 	if (sL < ngram_len || tL < ngram_len) {
+		sorensenDiceCoefficient_cache[cacheKey] = 0.11
 		return 0.11;
 	}
 	//define map after conditional returns to save space and time
@@ -429,7 +501,9 @@ this["sorensenDiceCoefficient"] = function(s, t, ngram_len=2) {
 	}
 	//divide the number of elements in common by the average size of sets (mostly)
 	//multiple by two because otherwise you're only getting a half
-	return 2.0 * match / (sL + tL - 2);
+	result = 2.0 * match / (sL + tL - 2)
+	sorensenDiceCoefficient_cache[cacheKey] = result
+	return result;
 };
 
 //map of cartesian coordinates for all letters on a QWERTY keyboard
@@ -468,11 +542,20 @@ this["euclideanDistance"] = function(a, b, maxDistance=50) {
 	if (typeof(a) === 'undefined' || typeof(b) === 'undefined') {
 		return maxDistance
 	}
+
+	cacheKey = genCacheKey("euclideanDistance", a, b, maxDistance)
+	if (cacheKey in euclideanDistance_cache) {
+		return euclideanDistance_cache[cacheKey]
+	}
+
 	if (a.length === 1 && a.match(/[A-Z]/i) && b.length === 1 && b.match(/[A-Z]/i)) {
 		s = (keyboardCartesianCoords[a]['x']-keyboardCartesianCoords[b]['x'])**2
 		t = (keyboardCartesianCoords[a]['y']-keyboardCartesianCoords[b]['y'])**2
-		return customSqrt(s+t)
+		result = customSqrt(s+t)
+		euclideanDistance_cache[cacheKey] = result
+		return result
 	} else {
+		euclideanDistance_cache[cacheKey] = maxDistance
 		return maxDistance
 	}	
 }
@@ -488,6 +571,11 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
 		return maxDistance
 	}
 
+	cacheKey = genCacheKey("damerauLevenshteinDistance", s, t, maxDistance)
+	if (cacheKey in damerauLevenshteinDistance_cache){
+		return damerauLevenshteinDistance_cache[cacheKey]
+	}
+
 	//make s shorter than t, even if that means swapping them
 	if (s.length > t.length) {
 		temp = t;
@@ -501,14 +589,27 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
     var n = s.length;
     var m = t.length;
 	//ensure that both strings contain characters based on principles of short-circuit evaluation
-    if (n == 0) return m;
-    if (m == 0) return n;
+    if (n == 0) {
+		damerauLevenshteinDistance_cache[cacheKey] = m
+		return m
+	};
+    if (m == 0) {
+		damerauLevenshteinDistance_cache[cacheKey] = n
+		return n
+	};
+	//if strings are equal, return 0
+	if (s == t) {
+		damerauLevenshteinDistance_cache[cacheKey] = 0
+		return 0
+	};
 
 	//check if either string is prefix of other and return length difference if so
 	if (t.indexOf(s) == 0) {
+		damerauLevenshteinDistance_cache[cacheKey] = m - n
 		return m - n;
 	}
 	else if (s.indexOf(t) == 0) {
+		damerauLevenshteinDistance_cache[cacheKey] = n - m
 		return n - m;
 	}
 
@@ -529,7 +630,10 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
 		//optimize algorithm by ignoring all cells in original matrix where |i-j| > max_distance
 		for (var j = customMax(0, i-maxDistance); j <= customMin(m, i+maxDistance); j++) {
             //Check the jagged levenshtein distance total so far to see if the length of n can be returned as the edit distance early
-            if (i == j && d[i][j] > maxDistance) return n;
+            if (i == j && d[i][j] > maxDistance) {
+				damerauLevenshteinDistance_cache[cacheKey] = n
+				return n
+			};
 			var t_j = t.charAt(j - 1);
 			//if the two characters are the same, use the jagged distance
 			if (s_i === t_j) {
@@ -551,26 +655,63 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
 				if (b < mi) mi = b;
 				if (c < mi) mi = c;
 
-				// Step 6: store the minimum
-				d[i][j] = mi; 
-
 				//Damerau transposition check based on optimal string alignment distance (triangle inequality doesn't hold)
 				if (i > 1 && j > 1 && s_i == t.charAt(j - 2) && s.charAt(i - 2) == t_j) {
-					d[i][j] = customMin(d[i][j], d[i - 2][j - 2] + transCost);
+					mi = customMin(mi, d[i - 2][j - 2] + transCost);
 				}
+
+				// Step 6: store the minimum
+				d[i][j] = mi; 
 			}
 
 			col_min = customMin(col_min, d[i][j]);
         }
 		//early exit if min. edit distance exceeds the max distance
 		if (col_min > maxDistance) {
+			damerauLevenshteinDistance_cache[cacheKey] = maxDistance
 			return maxDistance;
 		}
     }
 
     // Step 7: return the value in the final cell of the table
+	damerauLevenshteinDistance_cache[cacheKey] = d[n][m]
     return d[n][m];
 };
+
+//Return modified strings with the common prefixes and suffixes between them removed
+this["getCommonPrefix"] = function(first, last) {
+	let prefix_len = 0
+    for(let i = 0; i < customMin(first.length,last.length); i++){
+        if(first[i] != last[i]){
+            break
+        }
+        prefix_len += 1
+    }
+	return prefix_len
+}
+this["getCommonSuffix"] = function(first, last) {
+	let suffix_len = 0;
+    while (suffix_len < customMin(first.length,last.length) && first[first.length - 1 - suffix_len] === last[last.length - 1 - suffix_len]) {
+        suffix_len++;
+    }
+    suffix_len = -1 * suffix_len;
+	return suffix_len
+}
+this["removeCommonPrefixAndSuffix"] = function(first, last) {
+	cacheKey = genCacheKey("removeCommonPrefixAndSuffix", first, last)
+	if (cacheKey in removeCommonPrefixAndSuffix_cache) {
+		return removeCommonPrefixAndSuffix_cache[cacheKey]
+	}
+	else {
+		let prefix_len = getCommonPrefix(first, last)
+
+		let suffix_len = getCommonSuffix(first, last)
+
+		results = [first.slice(prefix_len, suffix_len), last.slice(prefix_len, suffix_len)]
+		removeCommonPrefixAndSuffix_cache[cacheKey] = results
+		return results
+	}
+}
 
 //check if input is numeric
 const isNumeric = (num) => (typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num);
@@ -670,7 +811,7 @@ class SearchInput extends Component {
 							keyboardType='default'
 							style={{
 								color: 'black',
-								fontSize: 16,
+								fontSize: 14,
 							}}
 							containerStyle={{
 								backgroundColor: 'none',
@@ -709,7 +850,7 @@ class SearchInput extends Component {
 						keyboardType='default'
 						style={{
 							color: 'black',
-							fontSize: 16,
+							fontSize: 14,
 						}}
 						containerStyle={{
 							backgroundColor: 'none',
@@ -759,7 +900,8 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.SCOTCH_MIST_TAN, 
 		padding: 10, 
 		marginVertical: 6, 
-		marginHorizontal: 10, 
+		marginHorizontal: 10,
+		fontSize: 10,
 	}, 
 	foldedlistStyle: {
 		backgroundColor: Colors.ALMOND_TAN,
