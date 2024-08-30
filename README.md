@@ -1,6 +1,6 @@
 # Crop-Hero
 ### Version 0.0.0
-CSCE 4901/4905 Capstone course Group 7's Github
+CSCE 4902/4925 Capstone course Group 7's Github
 ## Group Members 
 Members: 
   * McKenna Beard
@@ -11,7 +11,7 @@ Members:
   * Chandler Garrett
 
 ## Tracking the App Version
-When a new version of the app is released, please update the value stored in package.json and the value stored in this README file. The code will retrieve the value from package.json using the following code, separated by each language used.
+When a new version of the app is released, please update the value stored in package.json and the value stored in this README file. The program will retrieve the value from package.json using the following code.
  * **React Native:** `var pkg = require('../package.json')` followed by `const softwareVersion = pkg.version`
 
 ## IMPORTANT: Branch Management
@@ -29,7 +29,7 @@ Assumes that you are using a Windows operating system
 #### Expo-CLI is Deprecated
  1. Open a terminal with admin privileges
  2. Enter `npm install -g yarn`
- 3. Change the working directory to the base Crop-Hero directory (use `cd` or `pushd`)
+ 3. Change the working directory to the base Crop-Hero directory (use `cd`, not `pushd` as that can cause issues)
  4. Enter `yarn add expo`
 #### Cannot Open Emulator
  1. Open Android Studio
@@ -53,6 +53,15 @@ Assumes that you are using a Windows operating system
      * Set Boot Option to Cold Boot
  8. Go to the Memory and Storage section
      * Increase the available RAM
+#### Emulator Says "Something went wrong. Can't connect to Internet."
+ 1. Close the two Expo tabs on the phone
+ 2. Click the Expo icon on the home screen
+ 3. Re-enter 'a' in the command line
+ 4. Keep doing this until it works. Sometimes it can take 3-4 tries
+### Emulator Reloads When I Try to Type 'R' Into an Input Field
+ 1. Wait for the emulator to reload
+ 2. Go back to that page
+ 3. Type in the values more slowly or use the emulator's keyboard. If you type with the keyboard too quickly, the emulator can't register it so the value gets sent to the command line which interprets it as a reload command.
 #### Error due to Different Number of Hooks Between Renders
  1. Find all return statements within an if-else block or a loop (called conditional returns)
  2. Find all instances of the useState() and useEffect() functions
