@@ -149,6 +149,97 @@ searchFunction = (text, arr) => {
 	dataArray = updatedData
 }; 
 
+//functions to support the custom sort algorithm of Floyd-Wirth
+function swap(arr, i, j) {
+    const tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+}
+function signum(x) {
+    if (x < 0) {
+        return -1
+    } else if (x > 0) {
+        return 1
+    } else {
+        return x
+    }
+}
+function defaultCompare(a, b) {
+    return a < b ? -1 : a > b ? 1 : 0;
+}
+
+//new custom sort algorithm
+function FloydWirth_kth(arr, length, kTHvalue, compare = defaultCompare) {
+    let left = 0;       
+    let right = length - 1;     
+    let left2 = 0;
+    let right2 = length - 1;
+
+    while (left < right) {        
+        if(compare(arr[right2], arr[left2]) < 0) {
+            swap(arr, left2, right2)
+        };
+        if(compare(arr[right2], arr[kTHvalue]) < 0) {
+            swap(arr, kTHvalue, right2)
+        };
+        if(compare(arr[kTHvalue], arr[left2]) < 0) {
+            swap(arr, left2, kTHvalue)
+        };
+
+        let rightleft = right - left;
+
+        if (rightleft < kTHvalue) {
+            let n = right - left + 1;
+            let ii = kTHvalue - left + 1;
+            let s = (n + n) / 3;
+            let sd = (n * s * (n - s) / n) * signum(ii - n / 2);
+            left2 = Math.max(left, kTHvalue - ii * s / n + sd);
+            right2 = Math.min(right, kTHvalue + (n - ii) * s / n + sd);              
+        }
+
+        let x = arr[kTHvalue];
+
+        while ((right2 > kTHvalue) && (left2 < kTHvalue)) {
+            left2++;
+            while (compare(arr[left2], x) < 0) {
+                left2++;
+            }
+
+            right2--;
+            while (compare(arr[right2], x) > 0) {
+                right2--;
+            }
+
+            swap(arr, left2, right2);
+        }
+        left2++;
+        right2--;
+
+        if (right2 < kTHvalue) {
+            while (compare(arr[left2], x) < 0) {
+                left2++;
+            }
+            left = left2;
+            right2 = right;
+        }
+
+        if (kTHvalue < left2) {
+            while (compare(arr[right2], x) > 0) {
+                right2--;
+            }
+
+            right = right2;
+            left2 = left;
+        }
+
+        if(compare(arr[left], arr[right]) < 0) {
+            swap(arr, right, left)
+        };
+    }
+
+    return arr[kTHvalue];
+}
+
 //Function that takes two strings and outputs value reflecting similarity; High score = good
 this["compareStrings"] = function(s, t) {
 	let startTime = performance.now()
@@ -508,34 +599,45 @@ this["sorensenDiceCoefficient"] = function(s, t, ngram_len=2) {
 
 //map of cartesian coordinates for all letters on a QWERTY keyboard
 keyboardCartesianCoords = {
-    'Q': {'y': 0, 'x': 0},
-    'W': {'y': 0, 'x': 1},
-    'E': {'y': 0, 'x': 2},
-    'R': {'y': 0, 'x': 3},
-    'T': {'y': 0, 'x': 4},
-    'Y': {'y': 0, 'x': 5},
-    'U': {'y': 0, 'x': 6},
-    'I': {'y': 0, 'x': 7},
-    'O': {'y': 0, 'x': 8},
-    'P': {'y': 0, 'x': 9},
-	//0.25 x stagger from top row
-    'A': {'y': 1, 'x': 0.25},
-    'S': {'y': 1, 'x': 1.25},
-    'D': {'y': 1, 'x': 2.25},
-    'F': {'y': 1, 'x': 3.25},
-    'G': {'y': 1, 'x': 4.25},
-    'H': {'y': 1, 'x': 5.25},
-    'J': {'y': 1, 'x': 6.25},
-    'K': {'y': 1, 'x': 7.25},
-    'L': {'y': 1, 'x': 8.25},
-	//0.75 x stagger from top row
-    'Z': {'y': 2, 'x': 0.75},
-    'X': {'y': 2, 'x': 1.75},
-    'C': {'y': 2, 'x': 2.75},
-    'V': {'y': 2, 'x': 3.75},
-    'B': {'y': 2, 'x': 4.75},
-    'N': {'y': 2, 'x': 5.75},
-    'M': {'y': 2, 'x': 6.75},
+	'1': {'y': 0, 'x': 0},
+    '2': {'y': 0, 'x': 1},
+    '3': {'y': 0, 'x': 2},
+    '4': {'y': 0, 'x': 3},
+    '5': {'y': 0, 'x': 4},
+    '6': {'y': 0, 'x': 5},
+    '7': {'y': 0, 'x': 6},
+    '8': {'y': 0, 'x': 7},
+    '9': {'y': 0, 'x': 8},
+    '0': {'y': 0, 'x': 9},
+	//0.5 x stagger from previous row
+    'Q': {'y': 1, 'x': 0.5},
+    'W': {'y': 1, 'x': 1.5},
+    'E': {'y': 1, 'x': 2.5},
+    'R': {'y': 1, 'x': 3.5},
+    'T': {'y': 1, 'x': 4.5},
+    'Y': {'y': 1, 'x': 5.5},
+    'U': {'y': 1, 'x': 6.5},
+    'I': {'y': 1, 'x': 7.5},
+    'O': {'y': 1, 'x': 8.5},
+    'P': {'y': 1, 'x': 9.5},
+	//0.25 x stagger from previous row
+    'A': {'y': 2, 'x': 0.75},
+    'S': {'y': 2, 'x': 1.75},
+    'D': {'y': 2, 'x': 2.75},
+    'F': {'y': 2, 'x': 3.75},
+    'G': {'y': 2, 'x': 4.75},
+    'H': {'y': 2, 'x': 5.75},
+    'J': {'y': 2, 'x': 6.75},
+    'K': {'y': 2, 'x': 7.75},
+    'L': {'y': 2, 'x': 8.75},
+	//0.5 x stagger from previous row
+    'Z': {'y': 3, 'x': 1.25},
+    'X': {'y': 3, 'x': 2.25},
+    'C': {'y': 3, 'x': 3.25},
+    'V': {'y': 3, 'x': 4.25},
+    'B': {'y': 3, 'x': 5.25},
+    'N': {'y': 3, 'x': 6.25},
+    'M': {'y': 3, 'x': 7.25},
 }
 //based the keyboardCartesianCoords, it will output a value of 0 or a decimal between 1 and 9 (inclusive)
 this["euclideanDistance"] = function(a, b, maxDistance=50) {
@@ -756,14 +858,12 @@ class SearchInput extends Component {
 				cleanedTxt = text.cleanNumForSearch();
 				//sort array in descending order (find highest value) based on DLED
 				updatedData = this.arrayholder.sort(function(a,b){ 
-					//use the damerauLevenshteinDistance function to sort the array based on the crop's HRFNumber
 					return compareStrings(b.hrfNum,cleanedTxt) - compareStrings(a.hrfNum,cleanedTxt); 
 				});
 			} else {
 				cleanedTxt = text.cleanTextForSearch();
 				//sort array in descending order (find highest value) based on DLED
 				updatedData = this.arrayholder.sort(function(a,b){ 
-					//use the damerauLevenshteinDistance function to sort the array based on the crop's HRFNumber
 					return compareStrings(b.name,cleanedTxt) - compareStrings(a.name,cleanedTxt); 
 				});
 			}
