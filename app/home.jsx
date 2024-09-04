@@ -13,6 +13,13 @@ import icons from '../assets/icons/Icons.js';
 
 //eventually transfer this to account creation pages so that it can be cached in the database
 async function getGridpoints(zipcode) {
+	if (!(zipcode in ZipLookup)) {
+		return {
+			status: 406, //invalid zip code
+			gridpoint: ''
+		};
+	}
+
 	let coords = ZipLookup[zipcode]
 	let lat = coords[0]
 	let long = coords[1]
