@@ -1,5 +1,5 @@
 import { useCallBack, useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Scrollable, TextInput, FlatList, Image } from 'react-native'
+import { StyleSheet, View, Text, Scrollable, TextInput, FlatList, Image, TouchableOpacity } from 'react-native'
 import { useFonts } from 'expo-font'
 import { Link } from 'expo-router'
 import Colors from '../assets/Color.js'
@@ -8,6 +8,8 @@ import CropCarousel from '../src/components/cropCarousel.jsx'
 import SearchInput from '../assets/SearchFeature.jsx'
 import NavBar from '../assets/NavBar.jsx'
 import ZipLookup from '../assets/zip_codes.js';
+import { getWeatherIcon } from '../assets/WeatherTypes.tsx';
+import icons from '../assets/icons/Icons.js';
 
 //eventually transfer this to account creation pages so that it can be cached in the database
 async function getGridpoints(zipcode) {
@@ -36,17 +38,72 @@ async function getGridpoints(zipcode) {
 	}
 }
 
-//list of possible forecast info and mapped values
+//
+const WeatherIcon = ({ forecastVal="clear", day="Mon" }) => {
+	//get the proper weather icon based on the forecast value
+	weatherIconDetails = getWeatherIcon(forecastVal)
+	image_url = weatherIconDetails[0]
+	prob_val = weatherIconDetails[1]
 
+	currentStyle = null
+	onlyPossible = false
+	if (prob_val == "None") {
+		currentStyle = styles.noneProb
+		onlyPossible = false
+	}
+	else if (prob_val == "Slight") {
+		currentStyle = styles.slightProb
+		onlyPossible = true
+	}
+	else if (prob_val == "Chance") {
+		currentStyle = styles.chanceProb
+		onlyPossible = true
+	}
+	else if (prob_val == "Likely") {
+		currentStyle = styles.likelyProb
+		onlyPossible = true
+	}
+
+	return (
+		<TouchableOpacity activeOpacity={1} style={styles.weatherIconContainer}>
+			<Image 
+				style={[styles.weatherIcon, currentStyle]}
+				source={image_url}
+			/>
+			{onlyPossible && <Image 
+				source={icons.percent_black}
+				style={styles.percentImg}
+			/> }
+			<Text style={styles.weatherDayLabel}>{day}</Text>
+		</TouchableOpacity>
+	)
+}
+
+const todayDayLookup = {
+	"Monday": "Sunday",
+	"Tuesday": "Monday",
+	"Wednesday": "Tuesday",
+	"Thursday": "Wednesday",
+	"Friday": "Thursday",
+	"Saturday": "Friday",
+	"Sunday": "Saturday",
+}
 
 const Home = () =>{ 
 	const [forecastDataDay1, setforecastDataDay1] = useState(null);
+	const [dayName1, setDayName1] = useState(null);
 	const [forecastDataDay2, setforecastDataDay2] = useState(null);
+	const [dayName2, setDayName2] = useState(null);
 	const [forecastDataDay3, setforecastDataDay3] = useState(null);
+	const [dayName3, setDayName3] = useState(null);
 	const [forecastDataDay4, setforecastDataDay4] = useState(null);
+	const [dayName4, setDayName4] = useState(null);
 	const [forecastDataDay5, setforecastDataDay5] = useState(null);
+	const [dayName5, setDayName5] = useState(null);
 	const [forecastDataDay6, setforecastDataDay6] = useState(null);
+	const [dayName6, setDayName6] = useState(null);
 	const [forecastDataDay7, setforecastDataDay7] = useState(null);
+	const [dayName7, setDayName7] = useState(null);
 
 	useEffect(() => {
 		// declare the async data fetching function
@@ -55,7 +112,6 @@ const Home = () =>{
 		  const data = await getGridpoints('76131');
 		  // convert the data to json
 		  if (data.status == 200) {
-			console.log(data.gridpoint)
 			const response = await fetch(
 				`https://api.weather.gov/gridpoints/${data.gridpoint}/forecast`
 			).then((res) => res.json());
@@ -63,6 +119,16 @@ const Home = () =>{
 			//get the short weather forecast for today unless it is already night and then the next few days
 			//ignore the night-time forecast
 			if (forecast[0].name === "Tonight") {
+				//Based on tomorrow's name, figure out today's name
+				todayName = todayDayLookup[forecast[3].name]
+				setDayName1(todayName.substring(0,3))
+				setDayName2(forecast[3].name.substring(0,3))
+				setDayName3(forecast[5].name.substring(0,3))
+				setDayName4(forecast[7].name.substring(0,3))
+				setDayName5(forecast[9].name.substring(0,3))
+				setDayName6(forecast[11].name.substring(0,3))
+				setDayName7(forecast[13].name.substring(0,3))
+
 				setforecastDataDay1(forecast[1].shortForecast)
 				setforecastDataDay2(forecast[3].shortForecast)
 				setforecastDataDay3(forecast[5].shortForecast)
@@ -72,6 +138,16 @@ const Home = () =>{
 				setforecastDataDay7(forecast[13].shortForecast)
 			}
 			else {
+				//Based on tomorrow's name, figure out today's name
+				todayName = todayDayLookup[forecast[2].name]
+				setDayName1(todayName.substring(0,3))
+				setDayName2(forecast[2].name.substring(0,3))
+				setDayName3(forecast[4].name.substring(0,3))
+				setDayName4(forecast[6].name.substring(0,3))
+				setDayName5(forecast[8].name.substring(0,3))
+				setDayName6(forecast[10].name.substring(0,3))
+				setDayName7(forecast[12].name.substring(0,3))
+
 				setforecastDataDay1(forecast[0].shortForecast)
 				setforecastDataDay2(forecast[2].shortForecast)
 				setforecastDataDay3(forecast[4].shortForecast)
@@ -112,61 +188,14 @@ const Home = () =>{
 	return(
 	<View style = {styles.container}>	
 		<View style = {styles.weatherContainer}>
-			<FlatList
-					data = {weather}
-					horizontal
-					renderItem = {({item}) =>{
-						switch(item.weather){
-							case "rainy":
-							return(
-								<View style ={styles.weatherItem}>
-									<Image source = {require('../assets/icons/icon _rain_.png')} style = {styles.image}/>
-									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
-								</View>
-								)	
-							case "sunny":
-							return(
-								<View style ={styles.weatherItem}>
-									<Image source = {require('../assets/icons/icon _day sunny_.png')} style = {styles.image}/>
-									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
-								</View>
-								)
-								
-							case "cloudy":
-							return(
-								<View style ={styles.weatherItem}>
-									<Image source = {require('../assets/icons/icon_cloudy.png')} style = {styles.image}/>
-									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
-								</View>
-								)
-							case "pcloudy":
-							return(
-								<View style ={styles.weatherItem}>
-									<Image source = {require('../assets/icons/icon _day sunny overcast_.png')} style = {styles.image}/>
-									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
-								</View>
-								)
-							case "snow":
-							return(
-								<View style ={styles.weatherItem}>
-									<Image source = {require('../assets/icons/interface-weather-snow-flake--winter-freeze-snow-freezing-ice-cold-weather-snowflake.png')} style = {styles.image}/>
-									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
-								</View>
-								)
-							}
-						}
-					}
-					keyExtractor={(item) => item.id}/>
+			<WeatherIcon forecastVal={forecastDataDay1} day={dayName1}/>
+			<WeatherIcon forecastVal={forecastDataDay2} day={dayName2}/>
+			<WeatherIcon forecastVal={forecastDataDay3} day={dayName3}/>
+			<WeatherIcon forecastVal={forecastDataDay4} day={dayName4}/>
+			<WeatherIcon forecastVal={forecastDataDay5} day={dayName5}/>
+			<WeatherIcon forecastVal={forecastDataDay6} day={dayName6}/>
+			<WeatherIcon forecastVal={forecastDataDay7} day={dayName7}/>
 		</View>
-		<Text>
-			<Text>{forecastDataDay1},</Text>
-			<Text>{forecastDataDay2},</Text>
-			<Text>{forecastDataDay3},</Text>
-			<Text>{forecastDataDay4},</Text>
-			<Text>{forecastDataDay5},</Text>
-			<Text>{forecastDataDay6},</Text>
-			<Text>{forecastDataDay7}</Text>
-		</Text>
 		<HomeCarousel data={temp} style = {styles.component}/>
 		<SearchInput style = {styles.component}/>
 		<CropCarousel crops = {crops} style = {styles.component}/>
@@ -191,7 +220,7 @@ const styles = StyleSheet.create({
 	},
 	weatherContainer: {
 		backgroundColor: Colors.SCOTCH_MIST_TAN,
-		height: 55,
+		height: 60,
 		width: '100%',
 		borderRadius: 5,
 		flexDirection: 'row',
@@ -231,8 +260,50 @@ const styles = StyleSheet.create({
 	component:{
 		flex:1,
 		alignSelf: 'flex-start'
-	}
-
+	},
+	weatherIconContainer:{
+		backgroundColor: Colors.SCOTCH_MIST_TAN,
+		height: 50,
+		flexDirection: 'column',
+		marginLeft: 11,
+		marginRight: 11,
+		marginTop: 8,
+		alignContent: 'flex-start',
+		justifyContent: 'center'
+	},
+	weatherIcon:{
+		justifyContent: 'center',
+		alignItems: 'center',
+		width: 30,
+		height: 25,
+		marginBottom: -20,
+	},
+	weatherDayLabel:{
+		fontFamily: 'Domine-Regular',
+		fontSize: 15,
+		alignSelf: 'center',
+		justifyContent: 'center',
+		marginTop: 25,
+	},
+	noneProb: {
+		opacity: 1,
+	},
+	slightProb: {
+		opacity: 0.4,
+	},
+	chanceProb: {
+		opacity: 0.7,
+	},
+	likelyProb: {
+		opacity: 1,
+	},
+	percentImg: {
+		marginBottom:-22,
+		marginTop: 10,
+		marginLeft: 18,
+		height: 13,
+		width: 13,
+	},
 })
 
 export default Home;

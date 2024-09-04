@@ -7,6 +7,7 @@ const icons = {
     logout_icon_black: require('./logout-icon-black.png'),
     visibility_eye_black: require('./visibility-eye-black.png'),
     arrow_tail_left_black: require('./arrow-tail-left-black.png'),
+    percent_black: require('./percent_black.png'),
 
     gear_big_empty_white: require('./gear-big-empty-white.png'),
     arrow_right_white: require('./arrow-right-white.png'),
@@ -19,6 +20,17 @@ const icons = {
 
     zip_mail_green: require('./zip-mail-green.png'),
     flag_country_green: require('./flag-country-green.png'),
+
+    weather_clear_gold: require('./weather_clear_gold.png'),
+    weather_fewclouds_yellow: require('./weather_fewclouds_yellow.png'),
+    weather_partlycloudy_yellowgray: require('./weather_partlycloudy_yellowgray.png'),
+    weather_mostlycloudy_lightgray: require('./weather_mostlycloudy_lightgray.png'),
+    weather_overcast_gray: require('./weather_overcast_gray.png'),
+    weather_rainy_blue: require('./weather_rainy_blue.png'),
+    weather_stormy_bluegray: require('./weather_stormy_bluegray.png'),
+    weather_snowy_gray: require('./weather_snowy_gray.png'),
+    weather_misty_bluegray: require('./weather_misty_bluegray.png'),
+    weather_dusty_darkbrown: require('./weather_dusty_darkbrown.png'),
 };
 
 export default icons;
