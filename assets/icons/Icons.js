@@ -8,6 +8,7 @@ const icons = {
     visibility_eye_black: require('./visibility-eye-black.png'),
     arrow_tail_left_black: require('./arrow-tail-left-black.png'),
     percent_black: require('./percent_black.png'),
+    progress_clock_black: require('./progress_clock_black.png'),
 
     gear_big_empty_white: require('./gear-big-empty-white.png'),
     arrow_right_white: require('./arrow-right-white.png'),

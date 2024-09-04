@@ -93,7 +93,7 @@ export function getWeatherIcon(forecastDesc) {
 
     if (!forecastDesc) {
         console.log("forecastDesc was null")
-        return [icons.weather_clear_gold, "None"]
+        return [icons.progress_clock_black, "None"]
     }
 
     //get just the stuff before 'then', and remove any spaces or capitals
@@ -116,7 +116,7 @@ export function getWeatherIcon(forecastDesc) {
 
     let image_url = ""
     if (matchedKeyWeather < 0) {
-        image_url = icons.weather_clear_gold
+        image_url = icons.progress_clock_black
     }
     else {
         switch(keysWeather[matchedKeyWeather]) { 
@@ -161,7 +161,7 @@ export function getWeatherIcon(forecastDesc) {
                 break; 
             }
             default: { 
-                image_url = icons.weather_clear_gold
+                image_url = icons.progress_clock_black
                 break; 
             } 
         } 

@@ -65,7 +65,7 @@ const WeatherIcon = ({ forecastVal="clear", day="Mon" }) => {
 	}
 
 	return (
-		<TouchableOpacity activeOpacity={1} style={styles.weatherIconContainer}>
+		<View style={styles.weatherIconContainer}>
 			<Image 
 				style={[styles.weatherIcon, currentStyle]}
 				source={image_url}
@@ -75,7 +75,7 @@ const WeatherIcon = ({ forecastVal="clear", day="Mon" }) => {
 				style={styles.percentImg}
 			/> }
 			<Text style={styles.weatherDayLabel}>{day}</Text>
-		</TouchableOpacity>
+		</View>
 	)
 }
 
