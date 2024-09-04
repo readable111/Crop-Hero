@@ -1,4 +1,4 @@
-import { useCallBack } from 'react';
+import { useCallBack, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Scrollable, TextInput, FlatList, Image } from 'react-native'
 import { useFonts } from 'expo-font'
 import { Link } from 'expo-router'
@@ -7,10 +7,92 @@ import HomeCarousel from '../src/components/carousel.jsx'
 import CropCarousel from '../src/components/cropCarousel.jsx'
 import SearchInput from '../assets/SearchFeature.jsx'
 import NavBar from '../assets/NavBar.jsx'
+import ZipLookup from '../assets/zip_codes.js';
 
+//eventually transfer this to account creation pages so that it can be cached in the database
+async function getGridpoints(zipcode) {
+	let coords = ZipLookup[zipcode]
+	let lat = coords[0]
+	let long = coords[1]
+  
+	try {
+		const response = await fetch(
+			`https://api.weather.gov/points/${lat},${long}`
+		).then((res) => res.json());
+
+		forecastURL = response.properties.forecast
+		urlParts = forecastURL.split('/')
+		gridpoint = urlParts[4] + '/' + urlParts[5]
+	
+		return {
+			status: 200,
+			gridpoint: gridpoint
+		};
+	} catch (error) {
+		return {
+			status: 500,
+			gridpoint: ''
+		};
+	}
+}
+
+//list of possible forecast info and mapped values
 
 
 const Home = () =>{ 
+	const [forecastDataDay1, setforecastDataDay1] = useState(null);
+	const [forecastDataDay2, setforecastDataDay2] = useState(null);
+	const [forecastDataDay3, setforecastDataDay3] = useState(null);
+	const [forecastDataDay4, setforecastDataDay4] = useState(null);
+	const [forecastDataDay5, setforecastDataDay5] = useState(null);
+	const [forecastDataDay6, setforecastDataDay6] = useState(null);
+	const [forecastDataDay7, setforecastDataDay7] = useState(null);
+
+	useEffect(() => {
+		// declare the async data fetching function
+		const fetchData = async () => {
+		  // get the data from the api
+		  const data = await getGridpoints('76131');
+		  // convert the data to json
+		  if (data.status == 200) {
+			console.log(data.gridpoint)
+			const response = await fetch(
+				`https://api.weather.gov/gridpoints/${data.gridpoint}/forecast`
+			).then((res) => res.json());
+			forecast = response.properties.periods
+			//get the short weather forecast for today unless it is already night and then the next few days
+			//ignore the night-time forecast
+			if (forecast[0].name === "Tonight") {
+				setforecastDataDay1(forecast[1].shortForecast)
+				setforecastDataDay2(forecast[3].shortForecast)
+				setforecastDataDay3(forecast[5].shortForecast)
+				setforecastDataDay4(forecast[7].shortForecast)
+				setforecastDataDay5(forecast[9].shortForecast)
+				setforecastDataDay6(forecast[11].shortForecast)
+				setforecastDataDay7(forecast[13].shortForecast)
+			}
+			else {
+				setforecastDataDay1(forecast[0].shortForecast)
+				setforecastDataDay2(forecast[2].shortForecast)
+				setforecastDataDay3(forecast[4].shortForecast)
+				setforecastDataDay4(forecast[6].shortForecast)
+				setforecastDataDay5(forecast[8].shortForecast)
+				setforecastDataDay6(forecast[10].shortForecast)
+				setforecastDataDay7(forecast[12].shortForecast)
+			}
+			
+		  }
+		  else {
+			console.log("bad")
+		  }
+		}
+	  
+		// call the function
+		fetchData()
+		  // make sure to catch any error
+		  .catch(console.error);;
+	}, [])
+
 	const [fontsLoaded, fontError] = useFonts({
 	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
 	'Domine-Bold': require('../assets/fonts/Domine-Bold.ttf')
@@ -75,7 +157,16 @@ const Home = () =>{
 						}
 					}
 					keyExtractor={(item) => item.id}/>
-		</View>		
+		</View>
+		<Text>
+			<Text>{forecastDataDay1},</Text>
+			<Text>{forecastDataDay2},</Text>
+			<Text>{forecastDataDay3},</Text>
+			<Text>{forecastDataDay4},</Text>
+			<Text>{forecastDataDay5},</Text>
+			<Text>{forecastDataDay6},</Text>
+			<Text>{forecastDataDay7}</Text>
+		</Text>
 		<HomeCarousel data={temp} style = {styles.component}/>
 		<SearchInput style = {styles.component}/>
 		<CropCarousel crops = {crops} style = {styles.component}/>
