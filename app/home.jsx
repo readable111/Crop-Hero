@@ -180,8 +180,13 @@ const Home = () =>{
 		
 	const weather = [{id:1, day: "Mo", weather: "rainy"},{id:2,day: "Tu", weather: "pcloudy"},{id:3,day: "We", weather: "cloudy"},{id:4,day: "Th", weather: "sunny"},{id:5,day: "Fr", weather: "sunny"},{id:6,day: "Sat", weather: "rainy"},{id:7,day: "Sun", weather: "snow"}]
 	
-	const crops = [{cropName: "Carrots", medium: "Hugel Mound", location: "8", day: "7"},{cropName: "Carrots", medium: "Hugel Mound", location: "8", day: "7"},{cropName: "Carrots", medium: "Hugel Mound", location: "8", day: "7"}]
 
+        const crops = [
+                { label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', date: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard'},
+                { label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', date: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' },
+                { label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", date: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard' },
+                { label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", date: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard' }
+        ]
 
 	const temp = [{temp: 70, perc: 80},{temp: 68, perc:68}, {temp: 70, perc: 72}]
 	
@@ -196,16 +201,20 @@ const Home = () =>{
 			<WeatherIcon forecastVal={forecastDataDay6} day={dayName6}/>
 			<WeatherIcon forecastVal={forecastDataDay7} day={dayName7}/>
 		</View>
-		<HomeCarousel data={temp} style = {styles.component}/>
-		<SearchInput style = {styles.component}/>
-		<CropCarousel crops = {crops} style = {styles.component}/>
+		<View style = {styles.weatherCarousel}>
+			<HomeCarousel data={temp}/>
+		</View>
+		<View style = {styles.Search}>
+			<SearchInput/>
+		</View>
+			<CropCarousel crops = {crops} style = {styles.cropCarousel}/>
 		<NavBar homeSelected/>
 	</View>)
 };
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: 0x97A5BF,
+		backgroundColor: Colors.SANTA_GRAY,
 		height: '100%',
 		flex: 1,
 		flexDirection: 'column',
@@ -224,7 +233,6 @@ const styles = StyleSheet.create({
 		width: '100%',
 		borderRadius: 5,
 		flexDirection: 'row',
-		marginTop: 8,
 		marginBottom: 20,
 		alignContent: 'flex-start',
 		justifyContent: 'center'
@@ -257,7 +265,8 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center'
 	},
-	component:{
+	weatherCarousel:{
+		marginVertical:10,
 		flex:1,
 		alignSelf: 'flex-start'
 	},
@@ -303,6 +312,15 @@ const styles = StyleSheet.create({
 		marginLeft: 18,
 		height: 13,
 		width: 13,
+	},
+	Search:{
+		flex:1,
+		marginBottom: 10,
+		zIndex: 9999
+	},
+	cropCarousel:{
+		flex:1,
+		marginVertical: 5,
 	},
 })
 
