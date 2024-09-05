@@ -32,6 +32,8 @@ const Colors = {
     TAUPE: '#463731',
     //light gray; color for status bar
     WHITE_SMOKE: '#F5F5F5',
+    //dark gray; color for dark mode status bar
+    ALMOST_BLACK: '#0A0A0A',
     //dark gray; color for input field backgrounds; used like white in light mode
     IRIDIUM: '#383838',
 }

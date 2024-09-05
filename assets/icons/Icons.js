@@ -18,6 +18,7 @@ const icons = {
     visibility_eye_white: require('./visibility-eye-white.png'),
     save_icon_white: require('./save-icon-white.png'),
     pencil_edit: require('./pencil-edit-white.png'),
+    arrow_tail_left_white: require('./arrow-tail-left-white.png'),
 
     zip_mail_green: require('./zip-mail-green.png'),
     flag_country_green: require('./flag-country-green.png'),

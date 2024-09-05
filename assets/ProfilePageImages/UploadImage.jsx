@@ -11,7 +11,7 @@ import UploadModal from './UploadModal.jsx'
 import imgPlaceholder from "./AvatarPlaceholder.png"
 
 
-const UploadImage = ({ style, isEditable=true, cameraMode="selfie" }) => {
+const UploadImage = ({ style, isEditable=true, cameraMode="selfie", darkMode=false }) => {
     //data storage for later, maybe: https://www.youtube.com/watch?v=B1dWuh3U4O8
 	const [modalVisible, setModalVisible] = useState(false);
 	const [imageURI, setImageURI] = useState();
@@ -95,7 +95,7 @@ const UploadImage = ({ style, isEditable=true, cameraMode="selfie" }) => {
 				/>
 	
 				{/*display the edit button; clicking it will display the modal*/}
-				<AppButton title="" mci="image-edit-outline" mciSize={30} mciColor={Colors.SCOTCH_MIST_TAN} specifiedStyle={styles.editBtn} onPress={() => setModalVisible(true)}/>
+				<AppButton title="" mci="image-edit-outline" mciSize={30} mciColor={darkMode ? Colors.WHITE_SMOKE : Colors.ALMOST_BLACK} specifiedStyle={styles.editBtn} onPress={() => setModalVisible(true)}/>
 	
 				{/*render the modal which will appear once the button is pressed*/}
 				<UploadModal modalVisible={modalVisible} 
