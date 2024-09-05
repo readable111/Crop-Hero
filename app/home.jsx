@@ -173,7 +173,7 @@ const Home = () =>{
 		// call the function
 		fetchData()
 		  // make sure to catch any error
-		  .catch(console.error);;
+		  .catch(console.error);
 	}, [])
 
 	const [fontsLoaded, fontError] = useFonts({
