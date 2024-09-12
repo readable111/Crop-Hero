@@ -1,3 +1,9 @@
+/****
+ * @author Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester 
+ ***/
+
 const ZipLookup = {
     '99553': ['54.1430', '-165.7854'],
     '99571': ['55.1858', '-162.7211'],

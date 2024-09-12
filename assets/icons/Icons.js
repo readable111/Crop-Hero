@@ -1,4 +1,11 @@
-//allows the code to pass around icons as parameters
+/****
+ * @author Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester 
+ * 
+ * allows the code to pass around icons as parameters
+ ***/
+
 const icons = {
     gear_big_empty_black: require('./gear-big-empty-black.png'),
     arrow_right_black: require('./arrow-right-black.png'),
@@ -9,6 +16,7 @@ const icons = {
     arrow_tail_left_black: require('./arrow-tail-left-black.png'),
     percent_black: require('./percent_black.png'),
     rainfall_black: require('./rainfall_black.png'),
+    progress_clock_black: require('./progress_clock_black.png'),
 
     gear_big_empty_white: require('./gear-big-empty-white.png'),
     arrow_right_white: require('./arrow-right-white.png'),
@@ -19,6 +27,7 @@ const icons = {
     save_icon_white: require('./save-icon-white.png'),
     pencil_edit: require('./pencil-edit-white.png'),
     percent_white: require('./percent_white.png'),
+    arrow_tail_left_white: require('./arrow-tail-left-white.png'),
 
     zip_mail_green: require('./zip-mail-green.png'),
     flag_country_green: require('./flag-country-green.png'),

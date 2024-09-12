@@ -58,7 +58,7 @@ Assumes that you are using a Windows operating system
  2. Click the Expo icon on the home screen
  3. Re-enter 'a' in the command line
  4. Keep doing this until it works. Sometimes it can take 3-4 tries
-### Emulator Reloads When I Try to Type 'R' Into an Input Field
+#### Emulator Reloads When I Try to Type 'R' Into an Input Field
  1. Wait for the emulator to reload
  2. Go back to that page
  3. Type in the values more slowly or use the emulator's keyboard. If you type with the keyboard too quickly, the emulator can't register it so the value gets sent to the command line which interprets it as a reload command.

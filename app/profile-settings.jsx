@@ -1,17 +1,25 @@
-import { useState } from 'react';
+/****
+ * @author Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester 
+ ***/
+
+import { useState, useEffect } from 'react';
 import { 
 	StyleSheet, 
 	View, 
 	Text, 
 	StatusBar, 
 	Alert,
-	ScrollView
+	ScrollView,
+	Appearance
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Switch } from 'react-native-elements'
 import { CheckBox } from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
@@ -25,6 +33,33 @@ const SettingsProfile = () =>{
 
 	{/*create the isDarkMode flag for later use*/}
 	const [isDarkMode, setIsDarkMode] = useState(false)
+
+	useEffect(() => {
+		// declare the async data fetching function
+		const fetchDarkModeSetting = async () => {
+			const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
+			let result = null
+    		if (JSON_VALUE) {
+				result = JSON.parse(JSON_VALUE)
+				console.log("Async: " + result)
+			} else {
+				colorScheme = Appearance.getColorScheme()
+				if (colorScheme == 'dark') {
+					result = true
+				} else {
+					result = false
+				}
+				console.log("Color Scheme: " + result)
+				await AsyncStorage.setItem('dark_mode_setting', result.toString())
+			}
+			setIsDarkMode(result)
+		}
+	  
+		// call the function
+		fetchDarkModeSetting()
+		  	// make sure to catch any error
+		  	.catch(console.error);
+	}, [])
 
 	{/*create the private/public flag for later use*/}
 	const [hasPublicDefaultVisibility, setHasPublicDefaultVisibility] = useState(false)
@@ -54,39 +89,42 @@ const SettingsProfile = () =>{
 	}
 
 	return(
-	<ScrollView style = {styles.container}>
+	<ScrollView style = {[styles.container, isDarkMode && styles.containerDark]}>
 		{/*create the default phone status bar at the top of the screen*/}
-		<StatusBar backgroundColor={Colors.WHITE_SMOKE} />
+		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
         {/*top row of buttons*/}
 		<View style={styles.btnGridContainer}>
 			{/*row for profile settings*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
 					{/*create the arrow to unwind the stack and go back one page*/}
-					<AppButton title="" icon={Icons.arrow_tail_left_black} onPress={() => router.back()}/>
+					<AppButton title="" icon={isDarkMode ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
 				</Col>
 				<Col relativeColsCovered={8} alignItems='center'>
-					<Text style={styles.pageTitle}>Settings</Text>
+					<Text style={[styles.pageTitle, isDarkMode && styles.pageTitleDark]}>Settings</Text>
 				</Col>
 				<Col relativeColsCovered={2} alignItems='center'>
 				</Col>
 			</Row>
 		</View>
 		{/*user preferences section*/}
-		<Text style={styles.categoryTitle}>User Preferences</Text>
+		<Text style={[styles.categoryTitle, isDarkMode && styles.categoryTitleDark]}>User Preferences</Text>
 		<View style={{alignItems:'center'}}>
-			<View style={styles.settingsCategory}>
+			<View style={[styles.settingsCategory, isDarkMode && styles.settingsCategoryDark]}>
 				{/*light/dark mode toggle*/}
 				<Row height={80} >
 					<Col relativeColsCovered={9} alignItems='flex-start' >
-						<Text style={styles.settingsTitle}>Light/Dark Mode</Text>
+						<Text style={[styles.settingsTitle]}>Light/Dark Mode</Text>
 						<Text style={styles.settingsDesc}>Toggle between light mode (left) and dark mode (right)</Text>
 					</Col>
 					<Col relativeColsCovered={3} alignItems='center'>
 						{/*TODO: set dark mode across multiple pages*/}
 						<Switch 
-							value={isDarkMode} 
-							onValueChange={() => setIsDarkMode((previousState) => !previousState)}
+							value={isDarkMode}
+							onValueChange={async (previousState) => { 
+								await AsyncStorage.setItem('dark_mode_setting', previousState.toString())
+								setIsDarkMode((previousState) => !previousState)
+							}}
 							thumbColor={Colors.IRISH_GREEN}
 							trackColor={{false: Colors.SOFT_GREEN, true: Colors.MALACHITE}}
 						></Switch>
@@ -130,7 +168,7 @@ const SettingsProfile = () =>{
 				</Row>
 				<Row height={53} specifiedStyle={{marginTop: -20,}}>
 					<Col relativeColsCovered={9} alignItems='center' >
-					<Text style={(hasNotificationsEnabled) ? {
+						<Text style={[(hasNotificationsEnabled) ? {
 							fontFamily: 'WorkSans-Regular',
 							fontSize: 14,
 							marginTop: 10,
@@ -143,7 +181,7 @@ const SettingsProfile = () =>{
 							marginTop: 0,
 							paddingTop: 0,
 							color: 'black',
-						}}>
+						}, isDarkMode && (hasNotificationsEnabled ? {color: Colors.HOT_GREEN} : {color: Colors.ALMOST_BLACK})]}>
 							Tasks
 						</Text>
 					</Col>
@@ -158,17 +196,17 @@ const SettingsProfile = () =>{
 							onIconPress={hasNotificationsEnabled ? () => setHasTaskNotificationsEnabled(!hasTaskNotificationsEnabled) : handleDisabledEvent}
 							size={25}
 							uncheckedColor={Colors.SANTA_GRAY}
-							checkedColor={Colors.IRISH_GREEN}
-							containerStyle={{backgroundColor: Colors.SCOTCH_MIST_TAN}}
+							checkedColor={isDarkMode ? Colors.HOT_GREEN : Colors.IRISH_GREEN}
+							containerStyle={isDarkMode ? {backgroundColor: Colors.LICHEN} : {backgroundColor: Colors.SCOTCH_MIST_TAN}}
 						/>
 					</Col>
 				</Row>
 				<Row height={53} specifiedStyle={{marginTop: -20,}}>
 					<Col relativeColsCovered={9} alignItems='center' >
-						<Text style={(hasNotificationsEnabled) ? {
+						<Text style={[(hasNotificationsEnabled) ? {
 							fontFamily: 'WorkSans-Regular',
 							fontSize: 14,
-							marginTop: 0,
+							marginTop: 10,
 							paddingTop: 0,
 							color: Colors.IRISH_GREEN,
 						} : {
@@ -178,7 +216,7 @@ const SettingsProfile = () =>{
 							marginTop: 0,
 							paddingTop: 0,
 							color: 'black',
-						}}>
+						}, isDarkMode && (hasNotificationsEnabled ? {color: Colors.HOT_GREEN} : {color: Colors.ALMOST_BLACK})]}>
 							Payments
 						</Text>
 					</Col>
@@ -192,18 +230,18 @@ const SettingsProfile = () =>{
 							checked={hasPaymentNotificationsEnabled}
 							onIconPress={hasNotificationsEnabled ? () => setHasPaymentNotificationsEnabled(!hasPaymentNotificationsEnabled) : handleDisabledEvent}
 							size={25}
-							uncheckedColor={Colors.SANTA_GRAY}
-							checkedColor={Colors.IRISH_GREEN}
-							containerStyle={{backgroundColor: Colors.SCOTCH_MIST_TAN}}
+							uncheckedColor={isDarkMode ? Colors.PERIWINKLE_GRAY : Colors.SANTA_GRAY}
+							checkedColor={isDarkMode ? Colors.HOT_GREEN : Colors.IRISH_GREEN}
+							containerStyle={isDarkMode ? {backgroundColor: Colors.LICHEN} : {backgroundColor: Colors.SCOTCH_MIST_TAN}}
 						/>
 					</Col>
 				</Row>
 			</View>
 		</View>
 		{/*user preferences section*/}
-		<Text style={styles.categoryTitle}>Account Details</Text>
+		<Text style={[styles.categoryTitle, isDarkMode && styles.categoryTitleDark]}>Account Details</Text>
 		<View style={{alignItems:'center'}}>
-			<View style={[styles.settingsCategory2]}>
+			<View style={[styles.settingsCategory2, isDarkMode && styles.settingsCategoryDark]}>
 				{/*select current former*/}
 				<Row height={110} >
 					<Col relativeColsCovered={7} alignItems='flex-start' >
@@ -213,6 +251,7 @@ const SettingsProfile = () =>{
 					<Col relativeColsCovered={5} alignItems='center'>
 						{/*TODO: get selected result and store it if it was new*/}
 						<DropDownPicker
+							theme={isDarkMode ? 'DARK' : 'LIGHT'}
 							open={open}
 							value={value}
 							items={items}
@@ -230,14 +269,17 @@ const SettingsProfile = () =>{
 							}}
 							labelStyle={{
 								fontFamily: 'WorkSans-Regular',
-								fontSize: 10
+								fontSize: 10,
 							}}
 							listItemLabelStyle={{
 								fontFamily: 'WorkSans-Regular',
-								fontSize: 16
+								fontSize: 16,
 							}}
 							searchPlaceholder='Search/Add...'
 							addCustomItem={true}
+							modalContentContainerStyle={isDarkMode && {
+								backgroundColor: Colors.BALTIC_SEA,
+							}}
 						/>
 					</Col>
 				</Row>
@@ -302,6 +344,12 @@ const styles = StyleSheet.create({
 	container: {
 		backgroundColor: Colors.SANTA_GRAY,
 		height: '100%',
+		color: Colors.ALMOST_BLACK,
+	},
+	containerDark: {
+		backgroundColor: Colors.BALTIC_SEA,
+		height: '100%',
+		color: Colors.WHITE_SMOKE,
 	},
     btnGridContainer: {
 		flex: 12, // # of columns
@@ -313,15 +361,24 @@ const styles = StyleSheet.create({
 	pageTitle: {
 		fontFamily: 'Domine-Regular',
 		fontSize: 28,
+		color: Colors.ALMOST_BLACK,
+	},
+	pageTitleDark: {
+		color: Colors.WHITE_SMOKE,
 	},
 	categoryTitle: {
 		fontFamily: 'WorkSans-Regular',
 		fontSize: 22,
 		marginTop: 10,
 		marginLeft: 39,
+		color: Colors.ALMOST_BLACK,
+	},
+	categoryTitleDark: {
+		color: Colors.WHITE_SMOKE,
 	},
 	settingsCategory: {
 		backgroundColor: Colors.SCOTCH_MIST_TAN,
+		color: Colors.ALMOST_BLACK,
 		width: '90%',
 		height: 380,
 		borderRadius: 12,
@@ -330,8 +387,13 @@ const styles = StyleSheet.create({
 		paddingRight: 5,
 		paddingTop: 10,
 	},
+	settingsCategoryDark: {
+		backgroundColor: Colors.LICHEN,
+		color: Colors.WHITE_SMOKE,
+	},
 	settingsCategory2: {
 		backgroundColor: Colors.SCOTCH_MIST_TAN,
+		color: Colors.ALMOST_BLACK,
 		width: '90%',
 		height: 440,
 		borderRadius: 12,
@@ -341,6 +403,7 @@ const styles = StyleSheet.create({
 		paddingTop: 10,
 	},
 	settingsTitle: {
+		color: Colors.ALMOST_BLACK,
 		fontFamily: 'WorkSans-Regular',
 		fontSize: 18,
 		marginTop: 0,
@@ -348,11 +411,18 @@ const styles = StyleSheet.create({
 		paddingBottom: 0,
 	},
 	settingsDesc: {
+		color: Colors.ALMOST_BLACK,
 		fontFamily: 'WorkSans-Regular',
 		fontSize: 16,
 		marginTop: 0,
 		marginBottom: 0,
 		paddingTop: 0,
+	},
+	settingsTitleDark: {
+		color: Colors.WHITE_SMOKE,
+	},
+	settingsDescDark: {
+		color: Colors.WHITE_SMOKE,
 	},
 	settingsDescDisabled: {
 		fontFamily: 'WorkSans-Regular',
