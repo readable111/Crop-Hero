@@ -47,7 +47,8 @@ const SearchModal = ({
     onBackPress,
     isLoading = false,
 	searchValue,
-	originalData
+	originalData,
+	isDarkMode = false,
 }) => {
 
 	const [searchBarTxt, setSearchBarTxt] = useState(searchValue);
@@ -71,7 +72,7 @@ const SearchModal = ({
                 {isLoading && <ActivityIndicator size={70} color={Colors.MEDIUM_TAUPE} />}
 
                 { !isLoading && (
-				<View style={[styles.modalView, {backgroundColor: Colors.SANTA_GRAY}]} > 
+				<View style={[styles.modalView, isDarkMode ? {backgroundColor: Colors.BALTIC_SEA} : {backgroundColor: Colors.SANTA_GRAY}]} > 
 						{/*Display the search bar which looks identical to the dropdown search bar but works slightly differents*/}
 						<SearchBar 
 							placeholder="Search Crops..."
@@ -81,8 +82,11 @@ const SearchModal = ({
 							onChangeText={(text) => {searchFunction(text, originalData); setSearchBarTxt(text)}}  //call the search function and set searchBarTxt to whatever has been entered
 							autoCorrect={true} 
 							keyboardType='default'
-							style={{
-								color: 'black',
+							style={ isDarkMode ? {
+								color: Colors.WHITE_SMOKE,
+								fontSize: 14,
+							} : {
+								color: Colors.CHARCOAL,
 								fontSize: 14,
 							}}
 							containerStyle={{
@@ -92,19 +96,23 @@ const SearchModal = ({
 								marginBottom: 0,
 								width: '90%'
 							}}
-							inputContainerStyle={{
-								backgroundColor: 'white',
+							inputContainerStyle={isDarkMode ? {
+								backgroundColor: Colors.IRIDIUM,
+								borderRadius: 50,
+								marginBottom: 0,
+							} : {
+								backgroundColor: Colors.WHITE_SMOKE,
 								borderRadius: 50,
 								marginBottom: 0,
 							}}
-							placeholderTextColor={Colors.CHARCOAL}
+							placeholderTextColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
 						/> 
 						{/*Display a list of the 10 best matches*/}
-						<View style={styles.modalListStyle}>
+						<View style={[styles.modalListStyle, isDarkMode && styles.modalListStyleDark]}>
 							{searchBarTxt && dataArray.slice(0,10).map((item, key) => (
-								<Link key={key} href={{ pathname: "/cropspage", params: { param: JSON.stringify(item) } }} push style={styles.item}>
-									<View >
-										<Text>Name: {item.name} | Crop Number: {item.hrfNum}</Text> 
+								<Link key={key} href={{ pathname: "/cropspage", params: { param: JSON.stringify(item) } }} push style={[styles.item, isDarkMode && styles.itemDark]}>
+									<View style={{flex: 0.8, flexShrink: 1, flexGrow: 1, flexWrap:'wrap', flexDirection: 'row',}}>
+										<Text style={{flex: 0.8, flexShrink: 1, flexWrap:'wrap', flexDirection: 'row',}}>Name: {item.name} | Crop Number: {item.hrfNum}</Text> 
 									</View>
 								</Link>
 							))}
@@ -844,6 +852,7 @@ class SearchInput extends Component {
 		}; 
 		this.arrayholder = CROPS;
 		this.props.resultDisplayMode = "dropdown";
+		this.props.isDarkMode = false;
 	} 
 
 	searchFunction = (text) => { 
@@ -909,8 +918,11 @@ class SearchInput extends Component {
 							editable={false}
 							readOnly
 							keyboardType='default'
-							style={{
-								color: 'black',
+							style={this.props.isDarkMode ? {
+								color: Colors.WHITE_SMOKE,
+								fontSize: 14,
+							} : {
+								color: Colors.CHARCOAL,
 								fontSize: 14,
 							}}
 							containerStyle={{
@@ -919,12 +931,21 @@ class SearchInput extends Component {
 								borderRadius: 50,
 								marginBottom: 0,
 							}}
-							inputContainerStyle={{
-								backgroundColor: 'white',
+							inputContainerStyle={this.props.isDarkMode ? {
+								backgroundColor: Colors.IRIDIUM,
+								borderRadius: 50,
+								marginBottom: 0,
+							} : {
+								backgroundColor: Colors.WHITE_SMOKE,
 								borderRadius: 50,
 								marginBottom: 0,
 							}}
-							placeholderTextColor={Colors.CHARCOAL}
+							searchIcon={this.props.isDarkMode ? {
+								color: Colors.WHITE_SMOKE
+							} : {
+								color: Colors.CHARCOAL
+							}}
+							placeholderTextColor={this.props.isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
 						/>
 					</TouchableOpacity>
 					<SearchModal modalVisible={isModalVisible} 
@@ -932,6 +953,7 @@ class SearchInput extends Component {
 						searchValue={this.state.searchValue}
 						searchFunction={(text) => this.searchFunction(text)}
 						originalData={this.state.data}
+						isDarkMode={this.props.isDarkMode}
                 	/>
 				</View> 
 			); 
@@ -948,8 +970,11 @@ class SearchInput extends Component {
 						onChangeText={(text) => this.searchFunction(text)} 
 						autoCorrect={true} 
 						keyboardType='default'
-						style={{
-							color: 'black',
+						style={this.props.isDarkMode ? {
+							color: Colors.WHITE_SMOKE,
+							fontSize: 14,
+						} : {
+							color: Colors.CHARCOAL,
 							fontSize: 14,
 						}}
 						containerStyle={{
@@ -958,18 +983,27 @@ class SearchInput extends Component {
 							borderRadius: 50,
 							marginBottom: 0,
 						}}
-						inputContainerStyle={{
-							backgroundColor: 'white',
+						inputContainerStyle={this.props.isDarkMode ? {
+							backgroundColor: Colors.IRIDIUM,
+							borderRadius: 50,
+							marginBottom: 0,
+						} : {
+							backgroundColor: Colors.WHITE_SMOKE,
 							borderRadius: 50,
 							marginBottom: 0,
 						}}
-						placeholderTextColor={Colors.CHARCOAL}
+						searchIcon={this.props.isDarkMode ? {
+							color: Colors.WHITE_SMOKE
+						} : {
+							color: Colors.CHARCOAL
+						}}
+						placeholderTextColor={this.props.isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
 					/> 
 					{/*I use a slice and map function instead of a FlatList so that it will work on pages with ScrollView*/}
 					{/*Only possible because I only ever want the top 3 options*/}
-					{this.state.searchValue && <View style={styles.unfoldedlistStyle}> 
+					{this.state.searchValue && <View style={[styles.unfoldedlistStyle, this.props.isDarkMode && styles.unfoldedlistStyleDark]}> 
 						{this.state.data.slice(0,3).map((item, key) => (
-							<Link key={key} href={{ pathname: "/cropspage", params: { param: JSON.stringify(item) } }} push style={styles.item}>
+							<Link key={key} href={{ pathname: "/cropspage", params: { param: JSON.stringify(item) } }} push style={[styles.item, this.props.isDarkMode && styles.itemDark]}>
 								<View >
 									<Text>Name: {item.name} | Crop Number: {item.hrfNum}</Text> 
 								</View>
@@ -1002,6 +1036,15 @@ const styles = StyleSheet.create({
 		marginVertical: 6, 
 		marginHorizontal: 10,
 		fontSize: 10,
+		flexWrap: 'wrap',
+		flexShrink: 1,
+		flexGrow: 1,
+		flex: 1,
+		width: 'auto',
+		height: 'auto',
+	}, 
+	itemDark: { 
+		backgroundColor: Colors.LICHEN, 
 	}, 
 	foldedlistStyle: {
 		backgroundColor: Colors.ALMOND_TAN,
@@ -1026,6 +1069,10 @@ const styles = StyleSheet.create({
 		borderWidth: 2,
 		borderRadius: 5,
 	},
+	unfoldedlistStyleDark: {
+		backgroundColor: Colors.CHARCOAL,
+		borderColor: Colors.LICHEN,
+	},
 	modalListStyle: {
 		backgroundColor: Colors.ALMOND_TAN,
 		marginTop: 0,
@@ -1033,6 +1080,9 @@ const styles = StyleSheet.create({
 		top: 90,
 		alignSelf: 'center',
 		width: '86%',
+	},
+	modalListStyleDark: {
+		backgroundColor: Colors.CHARCOAL,
 	},
 	modalContainer: {
 		height: '100%',
