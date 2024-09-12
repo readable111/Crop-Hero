@@ -1,3 +1,12 @@
+/****
+ * @author McKenna Beard
+ * @reviewer Daniel Moreno
+ * @tester 
+ * 
+ * UNT To-do Page as apart of the notebook tab on the nav bar
+ * This page can only be accessed after clicking on the notebook page from the main nav bar
+ ***/
+
 {/*McKenna Beard for IT Capstone 2024  UNT To-do Page as apart of the notebook tab on the nav bar*/ }
 {/*This page can only be accessed after clicking on the notebook page from the main nav bar*/ }
 import { React, useState } from 'react';
