@@ -1,3 +1,9 @@
+/****
+ * @author Matthew Bustamente
+ * @reviewer Daniel Moreno
+ * @tester 
+ ***/
+
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, StatusBar, Dimensions, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useFonts } from 'expo-font';
