@@ -1,3 +1,9 @@
+/****
+ * @author Isaac Boodt
+ * @reviewer Daniel Moreno
+ * @tester 
+ ***/
+
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View, ScrollView, Image, TextInput, FlatList, TouchableOpacity} from 'react-native';
