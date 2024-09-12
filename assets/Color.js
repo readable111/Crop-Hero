@@ -1,3 +1,9 @@
+/****
+ * @author Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester Daniel Moreno
+ ***/
+
 //basically creates an enumeration of custom named colors that can be used throughout the app
 const Colors = {
     //dark gray; color of navbar in dark mode; equivalent of ALMOND_TAN
