@@ -1,3 +1,9 @@
+/****
+ * @author Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester Daniel Moreno
+ ***/
+
 import { React, Component, useState } from 'react';
 import { 
 	StyleSheet, 

@@ -1,16 +1,19 @@
 import icons from "./icons/Icons"
-
-/*
-NWS hopes to create proper codes eventually
-Possibly based on WMO codes: https://www.nodc.noaa.gov/archive/arc0021/0002199/1.1/data/0-data/HTML/WMO-CODE/WMO4677.HTM
-
-Current sources:
-    - https://www.weather.gov/forecast-icons/
-    - https://api.weather.gov/icons
-    - https://graphical.weather.gov/xml/xml_fields_icon_weather_conditions.php
-    - https://github.com/weather-gov/api/discussions/453
-    - https://github.com/ktrue/NWS-forecast/blob/ccdfc4b0acf2598a1d9c5d500267be6362b6e0d5/advforecast2.php#L1747
-*/
+/****
+ * @author Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester Daniel Moreno
+ * 
+ * NWS hopes to create proper codes eventually, they just haven't yet
+ * Possibly based on WMO codes: https://www.nodc.noaa.gov/archive/arc0021/0002199/1.1/data/0-data/HTML/WMO-CODE/WMO4677.HTM
+ * 
+ * Current sources:
+ *    - https://www.weather.gov/forecast-icons/
+ *    - https://api.weather.gov/icons
+ *    - https://graphical.weather.gov/xml/xml_fields_icon_weather_conditions.php
+ *    - https://github.com/weather-gov/api/discussions/453
+ *    - https://github.com/ktrue/NWS-forecast/blob/ccdfc4b0acf2598a1d9c5d500267be6362b6e0d5/advforecast2.php#L1747
+ ***/
 
 enum WeatherTypes {
     //0-10% cloud coverage

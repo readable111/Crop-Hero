@@ -1,4 +1,11 @@
-//allows the code to pass around icons as parameters
+/****
+ * @author Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester Daniel Moreno
+ * 
+ * allows the code to pass around icons as parameters
+ ***/
+
 const icons = {
     gear_big_empty_black: require('./gear-big-empty-black.png'),
     arrow_right_black: require('./arrow-right-black.png'),

@@ -1,4 +1,10 @@
-{/*created to establish HTML and DOM like tags for specific pages that only contain text which needs to be formatted in a consistent manner*/}
+/****
+ * @author Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester Daniel Moreno
+ * 
+ * Created to establish HTML and DOM-like tags for specific pages that only contain text which needs to be formatted in a consistent manner
+ ***/
 
 import { React } from 'react';
 import { 

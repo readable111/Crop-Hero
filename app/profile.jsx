@@ -1,10 +1,15 @@
+/****
+ * @author Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester Daniel Moreno
+ ***/
+
 import { React, useState, useEffect } from 'react';
 import { 
 	StyleSheet, 
 	View, 
 	Text, 
 	StatusBar, 
-	Image, 
 	Alert,
 	Appearance
 } from 'react-native'

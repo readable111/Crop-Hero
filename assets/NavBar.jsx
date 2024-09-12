@@ -1,12 +1,12 @@
-import { useState } from 'react';
+/****
+ * @author Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester Daniel Moreno
+ ***/
+
 import { 
 	StyleSheet, 
 	View, 
-	Text, 
-	StatusBar, 
-	Image, 
-	Alert,
-    Dimensions
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
