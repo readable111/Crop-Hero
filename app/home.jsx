@@ -223,7 +223,6 @@ const Home = () =>{
                 console.log("colorScheme: " + result)
 			}
 			setIsDarkMode(result)
-			setIsDarkMode(true)
 		}
 	  
 		// call the function

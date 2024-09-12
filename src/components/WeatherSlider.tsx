@@ -58,9 +58,6 @@ const INTRO_DATA = [
 ];
 
 export const WeatherSlider = ({isDarkMode=false, intro_data=INTRO_DATA}) => {
-  console.log(intro_data)
-  console.log("Dark Mode: ", isDarkMode)
-
   const { width } = useWindowDimensions();
   const ref = React.useRef<PagerView>(null);
   const positionSharedValue = useSharedValue(0);

@@ -92,7 +92,6 @@ export function getWeatherIcon(forecastDesc) {
     let matchedKeyProb = -1
 
     if (!forecastDesc) {
-        console.log("forecastDesc was null")
         return [icons.weather_clear_gold, "None"]
     }
 
