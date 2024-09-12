@@ -1,3 +1,8 @@
+/****
+ * @author Tyler Bowen
+ * @reviewer Daniel Moreno
+ ***/
+
 import * as React from "react"
 import * as ReactDom from "react-dom/client"
 import {createBrowserRouter, RouterProvider,} from "react-router-dom"

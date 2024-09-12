@@ -1,7 +1,13 @@
-import { useCallBack, useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Scrollable, TextInput, FlatList, Image, TouchableOpacity } from 'react-native'
+/****
+ * @author Tyler Bowen
+ * @weatherauthor Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester 
+ ***/
+
+import { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native'
 import { useFonts } from 'expo-font'
-import { Link } from 'expo-router'
 import Colors from '../assets/Color.js'
 import HomeCarousel from '../src/components/carousel.jsx'
 import CropCarousel from '../src/components/cropCarousel.jsx'
