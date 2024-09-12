@@ -1,3 +1,9 @@
+/****
+ * @author Tyler Bowen
+ * @reviewer Daniel Moreno
+ * @tester 
+ ***/
+
 import React from 'react'
 import { View, FlatList, Dimensions, Text, StyleSheet, Image, Pressable } from 'react-native'
 import { useRouter } from 'expo-router'
