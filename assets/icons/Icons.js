@@ -1,7 +1,7 @@
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester Daniel Moreno
+ * @tester 
  * 
  * allows the code to pass around icons as parameters
  ***/

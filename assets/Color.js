@@ -1,7 +1,7 @@
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester Daniel Moreno
+ * @tester 
  ***/
 
 //basically creates an enumeration of custom named colors that can be used throughout the app

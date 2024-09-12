@@ -1,7 +1,7 @@
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester Daniel Moreno
+ * @tester 
  * 
  * Can be used to establish a grid on a page
  * Design inspired by Bootstrap's 12 column grid with similar purpose of ensuring responsive design
