@@ -1,7 +1,10 @@
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester Daniel Moreno
+ * @tester 
+ * 
+ * creates a custom button that changes opacity when touched, allows user to specify text style & background color
+ * refer to https://icons.expo.fyi/Index with filters at AntDesign and MaterialCommunityIcons
  ***/
 
 import { 
@@ -12,8 +15,6 @@ import {
 } from 'react-native'
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
-{/*creates a custom button that changes opacity when touched, allows user to specify text style & background color*/}
-{/*refer to https://icons.expo.fyi/Index with filters at AntDesign and MaterialCommunityIcons*/}
 const AppButton = ({ onPress, title='Press me', icon, specifiedStyle, backgroundColor='', mci, mciSize, mciColor, ad, adSize, adColor, opacity=0.5}) => {
 	{/*containerless button with/without title and without icon*/}
 	if (!backgroundColor && !icon && title) {
