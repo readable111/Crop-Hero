@@ -34,7 +34,7 @@
       1. [Rows & Columns](#grid)
    1. [Search Bar](#search_bar)
       1. [Background](#search_bar_bkgd)
-      1. [Search Bar Component](#component)
+      1. [Search Bar Component](#search_bar_component)
       1. [Search Function](#search_func)
       1. [Initial String Comparison](#str_comparison)
       1. [Testing the Search Function With Mock Data](#init_search_testing)
@@ -509,6 +509,7 @@ lev_{a,b}(tail(a),tail(b))+1_{a_{i}\neq b_{j}}
 You can still recognize the length checks. However, the function definition for lev has changed a bit. The values 'a' and 'b' still represent the two strings while 'i' represents the terminal character position of a and 'j' represents the terminal character position of b. Since we are dealing with lengths, the position variables of i and j are 1-indexed rather than 0-indexed. There is a conditional on that final +1 which means that the edit number is only incremented if the character at position i in string a is not equal to the character at position j in string b. However, the math is a bit abstract so let's look at an example. Here's the completed example matrix if a="sitting" and b="kitten" 
 
 !["i=1, j=1"](./images/matrix.png)
+
 *Example variable values: a=sitting; b=kitten; i=1; j=1;*
 
 ```math
@@ -526,6 +527,7 @@ lev_{a,b}(0,0)+1_{a_{i}\neq b_{j}}=0+1=1
 This is the piecewise function to calculate the red '1' in the green circle. I have substituted in i and j and marked the invalid conditions as red. The function calls lev(0,1) or lev(1,0) will return 1. When plugged into the equations and then sent through the min function, a result of 1 is returned and placed in the matrix. 
 
 *Example variable values: a=sitting; b=kitten; i=1; j=2;*
+
 ```math
 lev(i,j)=\left\{\begin{matrix}
 {\color{Red}\left| a\right|} & {\color{Red}\textrm{if} \left| b\right| = 0}  \\
@@ -541,6 +543,7 @@ min\left\{\begin{matrix}
 This is the piecewise function to calculate the red '2' in the yellow circle. I have substituted in i and j and marked the invalid conditions as red. The function calls are color-coded with the circles in the matrix. The blue lev(0,2) returns the value in the blue circle which is 2. The green lev(1,1) returns the value in the green circle which is 1. The pink lev(0,1) returns the value in the pink circle which is 1. All of that is plugged into the values so that the minimum can be returned and stored in the matrix. 
 
 *Example variable values: a=sitting; b=kitten; i=7; j=6;*
+
 ```math
 lev(i,j)=\left\{\begin{matrix}
 {\color{Red}\left| a\right|} & {\color{Red}\textrm{if} \left| b\right| = 0}  \\
@@ -568,7 +571,7 @@ dled_{a,b}(i-2,j-2)+1_{a_{i}\neq b_{j}} & \textrm{if } i,j > 1 \textrm{and} a_{i
 \end{matrix}\right.
 ```
 
-	This looks the same as the LED piecewise with the length conditionals being followed by deletion, insertion, and substitution in that order. The new line with i-2 and j-2 describes the transposition of 2 neighboring characters. 
+This looks the same as the LED piecewise with the length conditionals being followed by deletion, insertion, and substitution in that order. The new line with i-2 and j-2 describes the transposition of 2 neighboring characters. 
 
 Importantly, I am using the optimal string alignment version of the DLED algorithm which means that the triangle inequality does not hold. I prefer this version as it does not permit multiple operations on the same substring. For example, it will return an edit distance of 3 for "CA" and "ABC" as a transposition of "CA" → "AC" would not permit a second operation of "AC" → "ABC". Instead, the shortest string of operations for equivalent operation costs of 1 would be "CA" → "A" → "AB" → "ABC". Restricted edit distance is the alternative to optimal string alignment distance and does not have this restriction, but I felt that it was less useful for my purposes. 
 
