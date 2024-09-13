@@ -29,6 +29,9 @@
    1. [Client Overview & Intended Audience](#audience)
 1. [Brief System Overview](#brief_overview)
 1. [In-Depth System Overview](#indepth_overview)
+   1. [Understanding React Native](#react_native)
+      1. [Class Vs. Functional Components](#component_types)
+      1. [Inter-Page Routing](#routing)
 1. [Installation & Setup](#setup)
 1. [Maintenance Tasks](#maint)
 1. [Troubleshooting](#trblsht)
@@ -59,6 +62,53 @@ This maintenance manual is meant to help the client and any future developers on
 ## Brief System Overview <a name="brief_overview"></a>
 
 ## In-Depth System Overview <a name="indepth_overview"></a>
+### Understanding React Native <a name="react_native"></a>
+#### Class Vs. Functional Components <a name="component_types"></a>
+*Author: Daniel*
+
+All React Native components fit one of these two categories. Class components extend the React Component class and are considered JavaScript ES2015/ES6 classes. In comparison, functional/stateless/pure components are defined as functions saved as a constant. The official documentation recommends that functional components should be used where possible as they are easier to read, test, and maintain. 
+
+~~~
+class ClassComp extends Component { 
+    render () { 
+        return ( 
+            <Text>Hello World!</Text> 
+        ) 
+    } 
+} 
+
+const FuncComp = () => { 
+    return ( 
+       <Text>Hello World!</Text> 
+    ); 
+} 
+~~~
+
+Class components can access React lifecycle methods like render, along with state/prop functionality from the parent Component class. As such, they often serve as container components to handle state management and wrap child components. Since they can lifecycle methods on their own, hooks will not work in a class component ever, even when indirectly called by a class component. Since they predate functional components and are good for handling complex logic, class components possess far more extensive and useful documentation. 
+
+Functional components do not manage their own state nor have access to the lifecycle methods provided by React Native. If you want to define props, they are specified in the parentheses like parameters. Functional components are just JavaScript functions that return JSX, which is HTML-like rendering commands. To handle state updates and user interactions, they must use hooks or call a class component. Due to their lightweight nature and minimal overhead, functional components are faster than class components. 
+
+If you want to use that component as a tag in other files, make sure that the final line in the file reads `export default Home`, or whatever name you assigned to the component. 
+#### Inter-Page Routing <a name="routing"></a>
+*Author: Daniel*
+
+The CropAlly app uses the [expo-router library](https://docs.expo.dev/router/navigating-pages/) and the index.js file. The index.js file determines the default page when a user opens up the app for the first time. To specify the page, import the page component and then call the component in the Page function’s return statement. For example, the following code in index.js makes the Home page into the default page. 
+
+~~~
+import Home from './home.jsx' 
+
+export default function Page() { 
+  return ( 
+    <Home/> 
+  ); 
+} 
+~~~
+
+Besides being versatile, this library is bundled with Expo which is also the library that we use to access our emulator. The Link tag exists to navigate between the app’s pages. However, this tag has limited options and can only be implemented in specific situations. As such, I recommend utilizing the router function instead. 
+
+The router object has 6 available functions: navigate, push, replace, back, canGoBack, and setParams. Before describing the functions, I want to quickly mention that Expo Router uses a stack to track all pages that have been loaded or displayed. The navigate function only pushes a new page if the new route is different, ignoring the search parameters and the hash. Otherwise, the current screen rerenders with the new parameters. If you navigate to a route that is in the history, the stack will pop any pages to that route. The push function always pushes the new page on to the top of the stack and displays it. You can push the current route multiple times or with new parameters. The replace function pops the current page before pushing the new page, making it useful for redirects. The back function pops the current page and displays the page below the current one in the stack. The canGoBack function returns true only if a valid page history stack exists and if the current page can be popped. The setParams function can update the query parameters for the currently selected page. 
+
+The Expo Router library will automatically generate statically typed routes for any new files in the app/ folder. As such, you can use a route immediately after creating the page’s file. The route is always the file’s full name, except for the file extension. 
 
 ## Installation & Setup <a name="setup"></a>
 
