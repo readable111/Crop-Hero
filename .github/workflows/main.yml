@@ -18,13 +18,15 @@ jobs:
           echo; echo "Input Folder Listing"
           ls
           echo; echo "Generating PDF"
-          cat mpm.md | md-to-pdf > ../_output/mpm.pdf
-          cd ../_output
+          cat mpm.md | md-to-pdf > mpm.pdf
           echo; echo "Output Folder Listing"
           ls
-          cd ..
+          git add .
+          git commit -m "Upload MPM PDF"
+          git push
+          
       
       - uses: actions/upload-artifact@v4
         with:
           name: output
-          path: _output
+          path: MPM/
