@@ -65,6 +65,7 @@ const addcrops = () => {
                 /* Behavior subject to change, mostly making keyboard disappear after tapping elsewhere*/
                 <KeyboardAvoidingView
                  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                 keyboardVerticalOffset={Platform.OS ==='ios' ? 0 : 20}
                  style={styles.containment}
                  >
                 <TouchableWithoutFeedback onPress = {Keyboard.dismiss}>
