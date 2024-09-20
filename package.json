@@ -12,9 +12,23 @@
     "updateTestSnapshots": "jest -u --coverage=false"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "transform": {
+      "\\.[jt]sx?$": "babel-jest"
+    },
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "app/**/*.tsx",
+      "app/**/*.jsx",
+      "assets/**/*.tsx",
+      "assets/**/*.jsx",
+      "src/components/*.tsx",
+      "src/components/*.jsx"
+    ]
   },
   "dependencies": {
+    "@babel/preset-env": "^7.25.4",
+    "@babel/preset-react": "^7.24.7",
     "@expo/vector-icons": "^14.0.0",
     "@react-native-async-storage/async-storage": "^2.0.0",
     "@react-native-picker/picker": "^2.8.0",
