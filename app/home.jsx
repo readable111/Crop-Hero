@@ -58,6 +58,14 @@ const Home = () =>{
 //	}
 //		return weatherData;
 //	}
+	async function fetchData() {
+		const response = await fetch('localhost:3000/sub');
+  const data = await response.json();
+  return data;
+}
+
+	data =fetchData()
+
 
 	const [fontsLoaded, fontError] = useFonts({
 	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
@@ -138,7 +146,6 @@ const Home = () =>{
 		<View style = {styles.Search}>
 			<SearchInput/>
 		</View>
-		<LoginButton/>		
 		<CropCarousel crops = {crops} style = {styles.cropCarousel}/>
 		<NavBar homeSelected/>
 	</View>)
