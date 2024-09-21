@@ -17,7 +17,7 @@ import { StyleSheet,
         Alert } from 'react-native';
         
 import Colors from '../assets/Color';
-import { useFonts } from 'expo-font';
+import { useFonts, useLocalSeachParams } from 'expo-font';
 import { router } from 'expo-router';
 import { Input } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
@@ -28,11 +28,11 @@ import Icons from '../assets/icons/Icons.js';
 const addcrops = () => {
         {/* */}
         const [cropData, setCropData] = useState({
+                name:'',
                 medium:'',
                 location:'',
                 type:'',
                 hrfNum:'',
-                name:'',
                 variety:'',
                 source:'',
                 datePlanted:'',
@@ -50,6 +50,12 @@ const addcrops = () => {
                         [fieldName]: input,
                 })
         }
+
+        const handleSave = (item) =>{
+                Alert.alert(cropData.name + " saved");
+                
+                router.push({pathname: '/viewcrops', params: {newCrop: JSON.stringify(cropData)}});
+        };
         const printStatement = () =>
         {
                 Alert.alert('Save pressed');
@@ -78,7 +84,7 @@ const addcrops = () => {
                         <ScrollView> 
 
                                 <View style={styles.save}>
-                                        <AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={printStatement}/>
+                                        <AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={handleSave}/>
                                 </View>
                                 <View style={styles.back}>
                                         <AppButton title="" icon={Icons.arrow_tail_left_black} onPress={() => router.back()}/>
@@ -258,7 +264,7 @@ const styles = StyleSheet.create({
                 borderColor: Colors.CHARCOAL,
 		borderWidth: 2,
 		borderRadius: 7,
-                FontFamily: 'Domine-Regular',
+                fontFamily: 'Domine-Regular',
 		borderColor: 'white',
         },
         inputText:{

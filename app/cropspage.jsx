@@ -19,10 +19,12 @@ const cropspage = () => {
         {/* Grabs variable form viewcrops page for use */}
         let crop = useLocalSearchParams();
         //If crop.name couldn't be retrieved, assume that ?param= was used
+        /*
         if(!crop.name) {
                 console.log("?param passed")
                 crop = JSON.parse(crop.param)
         }
+                */
         console.log("CROP: " + crop); //test
         console.log("Crop name: " + crop.name); //test
 
