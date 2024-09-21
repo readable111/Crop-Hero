@@ -18,7 +18,7 @@ import {
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
-import Colors from '../assets/Color.js'
+import Colors from '../assets/Color'
 import AppButton from '../assets/AppButton.jsx'
 import { Input } from 'react-native-elements'
 import DropDownPicker from 'react-native-dropdown-picker'

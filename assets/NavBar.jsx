@@ -11,7 +11,7 @@ import {
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from './Grid.jsx'
-import Colors from './Color.js'
+import Colors from './Color'
 import AppButton from './AppButton.jsx'
 
 const NavBar = ({ homeSelected=false, cropsSelected=false, notebookSelected=false, dataHubSelected=false, profileSelected=false, darkMode=false}) => {

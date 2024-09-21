@@ -16,7 +16,7 @@ import {
 import { router } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Col, Row } from '../assets/Grid.jsx'
-import Colors from '../assets/Color.js'
+import Colors from '../assets/Color'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
 import { DOMStyles, Strong } from '../assets/DOMStyles.jsx'
@@ -28,7 +28,7 @@ const PrivacyPolicy = () =>{
 		const fetchDarkModeSetting = async () => {
 			const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
 			let result = null
-    		if (JSON_VALUE) {
+    		if (JSON_VALUE && JSON_VALUE !== "") {
 				result = JSON.parse(JSON_VALUE)
                 console.log("Async: " + result)
 			} else {

@@ -16,12 +16,12 @@ import {
 
 
 {/*define special tags for my grid layout*/}
-const Column = ({ testID, relativeColsCovered, children, alignItems='flex-start'}) => {
+const Column = ({ testID, relativeColsCovered=1, children=[], alignItems='flex-start'}) => {
 	return  (
 		<View style={[styles[`${relativeColsCovered}col`], styles.baseCol, alignItems && {alignItems}]}>{children}</View>
 	)
 }
-const RowTag = ({ testID, children, height, specifiedStyle }) => (
+const RowTag = ({ testID, height=50, children=[], specifiedStyle=null  }) => (
 	<View style={[styles.row, specifiedStyle, height && {height}]}>{children}</View>
 )
 
