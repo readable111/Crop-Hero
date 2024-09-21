@@ -7,7 +7,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, StatusBar, Dimensions, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useFonts } from 'expo-font';
-import Colors from '../assets/Color.js';
+import Colors from '../assets/Color';
 import NavBar from '../assets/NavBar.jsx';
 import SearchInput from '../assets/SearchFeature.jsx';
 import { LineChart } from 'react-native-chart-kit';

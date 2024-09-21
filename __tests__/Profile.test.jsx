@@ -5,41 +5,41 @@ import {
     screen,
     fireEvent,
 } from "@testing-library/react-native";
-import ToS from '../app/termsofservice';
+import Profile from '../app/profile'
 import Colors from "../assets/Color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import renderer from "react-test-renderer";
 jest.useFakeTimers();
 
-describe('Light Mode <ToS/>', () =>{
+describe('Light Mode <Profile/>', () =>{
     beforeEach(async () => {
         await AsyncStorage.setItem("dark_mode_setting", "false");
     });
 
     test('renders correctly', () =>{
-        const tree = render(<ToS/>).toJSON();
+        const tree = render(<Profile/>).toJSON();
         expect(tree).toMatchSnapshot();
     })
 })
 
-describe('Dark Mode <ToS/>', () =>{
+describe('Dark Mode <Profile/>', () =>{
     beforeEach(async () => {
         await AsyncStorage.setItem("dark_mode_setting", "true");
     });
 
     test('renders correctly', () =>{
-        const tree = render(<ToS/>).toJSON();
+        const tree = render(<Profile/>).toJSON();
         expect(tree).toMatchSnapshot();
     })
 })
 
-describe('No Async <ToS/>', () =>{
+describe('No Async <Profile/>', () =>{
     beforeEach(async () => {
         await AsyncStorage.setItem("dark_mode_setting", "");
     });
 
     test('renders correctly', () =>{
-        const tree = render(<ToS/>).toJSON();
+        const tree = render(<Profile/>).toJSON();
         expect(tree).toMatchSnapshot();
     })
 })

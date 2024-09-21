@@ -15,7 +15,7 @@ import {
 } from 'react-native'
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
-const AppButton = ({ onPress, title='Press me', icon, specifiedStyle, backgroundColor='', mci, mciSize, mciColor, ad, adSize, adColor, opacity=0.5}) => {
+const AppButton = ({ onPress, title='Press me', icon='', specifiedStyle={}, backgroundColor='', mci='', mciSize='', mciColor='', ad='', adSize='', adColor='', opacity=0.5}) => {
 	{/*containerless button with/without title and without icon*/}
 	if (!backgroundColor && !icon && title) {
 		return  (

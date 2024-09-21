@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, StatusBar, Appearance } from 'react-native'
 import { useFonts } from 'expo-font'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Colors from '../assets/Color.js'
+import Colors from '../assets/Color'
 import CropCarousel from '../src/components/cropCarousel.jsx'
 import SearchInput from '../assets/SearchFeature.jsx'
 import NavBar from '../assets/NavBar.jsx'

@@ -712,7 +712,7 @@ useEffect(() => {
   const fetchDarkModeSetting = async () => { 
     const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting'); 
     let result = null 
-    if (JSON_VALUE) { 
+    if (JSON_VALUE && JSON_VALUE !== "") { 
       result = JSON.parse(JSON_VALUE) 
       console.log("Async: " + result) 
     } else { 

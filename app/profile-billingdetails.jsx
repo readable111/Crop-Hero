@@ -21,20 +21,13 @@ import { AntDesign } from '@expo/vector-icons'
 import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Col, Row } from '../assets/Grid.jsx'
-import Colors from '../assets/Color.js'
+import Colors from '../assets/Color'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
 import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
 
 
 const BillingDetailsProfile = () =>{ 
-	{/*TODO: retrieve data from local storage or database*/}
-	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
-	initialEmail = "test@example.com"
-	initialPhoneNum = "+1 (012) 345-6789"
-	initialZipCode = "02914"
-	initialState = "Rhode Island"
-
 	{/*TODO: retrieve current model*/}
 	{/*create the subscription model list*/}
 	const [items, setItems] = useState([ //potential subscription model stuff
@@ -47,23 +40,13 @@ const BillingDetailsProfile = () =>{
 	const [open, setOpen] = useState(false);
   	const [value, setValue] = useState('family'); {/*must initialize with string of value from items list to assign a default option; TODO: retrieve option from database*/}
 
-
-	const [fontsLoaded, fontError] = useFonts({
-	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
-	'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
-	});
-
-	if (!fontsLoaded && !fontError) {
-		return null;
-	}
-
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
 		// declare the async data fetching function
 		const fetchDarkModeSetting = async () => {
 			const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
 			let result = null
-    		if (JSON_VALUE) {
+    		if (JSON_VALUE && JSON_VALUE !== "") {
 				result = JSON.parse(JSON_VALUE)
                 console.log("Async: " + result)
 			} else {
@@ -83,6 +66,22 @@ const BillingDetailsProfile = () =>{
 		  	// make sure to catch any error
 		  	.catch(console.error);
 	}, [])
+
+	{/*TODO: retrieve data from local storage or database*/}
+	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
+	initialEmail = "test@example.com"
+	initialPhoneNum = "+1 (012) 345-6789"
+	initialZipCode = "02914"
+	initialState = "Rhode Island"
+
+	const [fontsLoaded, fontError] = useFonts({
+		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+		'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
+	});
+
+	if (!fontsLoaded && !fontError) {
+		return null;
+	}
 
 	return(
 	<View style = {styles.container}>
