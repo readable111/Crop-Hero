@@ -5,14 +5,25 @@
  ***/
 
 import React from 'react';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions, ViewStyle, StyleProp } from 'react-native';
 import Animated, {
   interpolate,
   Extrapolation,
   interpolateColor,
   useAnimatedStyle,
+  SharedValue
 } from 'react-native-reanimated';
-import { ScalingDotProps } from './PagingDots';
+
+type ScalingDotProps = {
+  data: Array<Object>;
+  scrollX: SharedValue<number>;
+  dotStyle?: ViewStyle;
+  inActiveDotOpacity?: number;
+  inActiveDotColor?: string;
+  activeDotScale?: number;
+  activeDotColor?: string;
+  style?: StyleProp<ViewStyle>;
+};
 
 type Props = Omit<ScalingDotProps, 'data' | 'containerStyle'> & {
   index: number;
