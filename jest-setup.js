@@ -8,5 +8,3 @@ jest.mock('@rneui/themed', () => ({
   Input: jest.fn(() => <MockInput />),
   Icon: jest.fn(() => <></>)
 }))
-
-

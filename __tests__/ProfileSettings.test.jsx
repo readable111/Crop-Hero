@@ -5,10 +5,11 @@ import {
     screen,
     fireEvent,
 } from "@testing-library/react-native";
-import SettingsProfile from "../app/profile-settings";
+import SettingsProfile from "../app/profile-settings"
 import Colors from "../assets/Color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import renderer from "react-test-renderer";
+import * as Font from 'expo-font';
 jest.useFakeTimers();
 
 describe('Light Mode <SettingsProfile/>', () =>{

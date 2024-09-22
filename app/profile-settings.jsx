@@ -80,8 +80,8 @@ const SettingsProfile = () =>{
 
 	
 	const [fontsLoaded, fontError] = useFonts({
-	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
-	'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
+		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+		'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
 	});
 
 	if (!fontsLoaded && !fontError) {

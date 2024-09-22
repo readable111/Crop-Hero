@@ -155,7 +155,27 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
               }
             }
           >
-            <Text />
+            <Text
+              allowFontScaling={false}
+              selectable={false}
+              style={
+                [
+                  {
+                    "color": "#1E1E1E",
+                    "fontSize": 30,
+                  },
+                  undefined,
+                  {
+                    "fontFamily": "material-community",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
+                ]
+              }
+            >
+              󰆓
+            </Text>
           </View>
         </View>
       </View>
@@ -270,7 +290,27 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
               }
             }
           >
-            <Text />
+            <Text
+              allowFontScaling={false}
+              selectable={false}
+              style={
+                [
+                  {
+                    "color": "#0A0A0A",
+                    "fontSize": 30,
+                  },
+                  undefined,
+                  {
+                    "fontFamily": "material-community",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
+                ]
+              }
+            >
+              󱇤
+            </Text>
           </View>
         </View>
         <Text
@@ -342,7 +382,27 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                 }
               }
             >
-              <Text />
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#6FCC8A",
+                      "fontSize": 24,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "anticon",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
             </View>
             <TextInput
               autoComplete="name"
@@ -444,7 +504,27 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                 }
               }
             >
-              <Text />
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#6FCC8A",
+                      "fontSize": 24,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "anticon",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
             </View>
             <TextInput
               autoComplete="name"
@@ -546,7 +626,27 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                 }
               }
             >
-              <Text />
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#6FCC8A",
+                      "fontSize": 24,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "anticon",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
             </View>
             <TextInput
               contextMenuHidden={true}
@@ -579,7 +679,27 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                 }
               }
             >
-              <Text />
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#6FCC8A",
+                      "fontSize": 24,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "anticon",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
             </View>
           </View>
           <Text
@@ -661,7 +781,27 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                 }
               }
             >
-              <Text />
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#6FCC8A",
+                      "fontSize": 24,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "anticon",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
             </View>
             <TextInput
               contextMenuHidden={true}
@@ -694,7 +834,27 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                 }
               }
             >
-              <Text />
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#6FCC8A",
+                      "fontSize": 24,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "anticon",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
             </View>
           </View>
           <Text
@@ -713,7 +873,878 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
 </RCTScrollView>
 `;
 
-exports[`Light Mode <EditProfile/> renders correctly 1`] = `null`;
+exports[`Light Mode <EditProfile/> renders correctly 1`] = `
+<RCTScrollView
+  style={
+    {
+      "backgroundColor": "#00AF33",
+      "height": "100%",
+    }
+  }
+>
+  <View>
+    <View
+      style={
+        {
+          "flex": 12,
+          "marginHorizontal": "auto",
+          "marginTop": 7,
+          "width": "100",
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+            {
+              "height": 40,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "flex": 2,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-end",
+              },
+            ]
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+          >
+            <Image
+              source={1}
+              style={{}}
+            />
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 8,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-start",
+              },
+            ]
+          }
+        />
+        <View
+          style={
+            [
+              {
+                "flex": 2,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-start",
+              },
+            ]
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+          >
+            <Text
+              allowFontScaling={false}
+              selectable={false}
+              style={
+                [
+                  {
+                    "color": "#1E1E1E",
+                    "fontSize": 30,
+                  },
+                  undefined,
+                  {
+                    "fontFamily": "material-community",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
+                ]
+              }
+            >
+              󰆓
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "overflow": "hidden",
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "alignItems": "center",
+              "backgroundColor": "#97A5BF",
+              "borderRadius": 150,
+              "height": 420,
+              "marginTop": 60,
+              "transform": [
+                {
+                  "scaleX": 2,
+                },
+              ],
+              "width": 300,
+            },
+            false,
+          ]
+        }
+      />
+      <View
+        style={
+          [
+            {
+              "alignItems": "center",
+              "backgroundColor": "#97A5BF",
+              "height": 540,
+              "marginTop": -300,
+              "width": "100%",
+            },
+            false,
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "alignItems": "center",
+                "height": 130,
+                "width": 200,
+              },
+              {
+                "marginBottom": 40,
+                "marginTop": -100,
+              },
+            ]
+          }
+        >
+          <Image
+            source={1}
+            style={
+              {
+                "borderRadius": 75,
+                "borderWidth": 2,
+                "height": 130,
+                "width": 130,
+              }
+            }
+          />
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "#00AF33",
+                "borderRadius": 25,
+                "height": 50,
+                "justifyContent": "center",
+                "marginLeft": 130,
+                "marginTop": -50,
+                "opacity": 1,
+                "width": 50,
+              }
+            }
+          >
+            <Text
+              allowFontScaling={false}
+              selectable={false}
+              style={
+                [
+                  {
+                    "color": "#0A0A0A",
+                    "fontSize": 30,
+                  },
+                  undefined,
+                  {
+                    "fontFamily": "material-community",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
+                ]
+              }
+            >
+              󱇤
+            </Text>
+          </View>
+        </View>
+        <Text
+          style={
+            [
+              {
+                "alignSelf": "flex-start",
+                "backgroundColor": "#F5F5F5",
+                "borderColor": "#F5F5F5",
+                "borderRadius": 7,
+                "borderWidth": 3,
+                "color": "#1E1E1E",
+                "fontFamily": "WorkSans-Regular",
+                "fontSize": 16,
+                "marginBottom": 0,
+                "marginLeft": 47,
+                "marginTop": -6,
+                "textAlign": "center",
+                "textAlignVertical": "top",
+                "zIndex": 100,
+              },
+              false,
+            ]
+          }
+        >
+          First Name
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "#F5F5F5",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "fontFamily": "WorkSans-Regular",
+                "fontSize": 16,
+                "marginBottom": 0,
+                "marginTop": -18,
+                "overflow": "hidden",
+                "paddingLeft": 10,
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "height": 40,
+                  "justifyContent": "center",
+                  "marginVertical": 4,
+                  "paddingRight": 4,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#6FCC8A",
+                      "fontSize": 24,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "anticon",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+            <TextInput
+              autoComplete="name"
+              defaultValue="Zina"
+              editable={true}
+              maxLength={256}
+              placeholder="John"
+              placeholderTextColor="#86939e"
+              selectionColor="#97A5BF"
+              style={
+                {
+                  "color": "#1E1E1E",
+                  "flex": 1,
+                  "fontFamily": "WorkSans-Regular",
+                  "fontSize": 16,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            [
+              {
+                "alignSelf": "flex-start",
+                "backgroundColor": "#F5F5F5",
+                "borderColor": "#F5F5F5",
+                "borderRadius": 7,
+                "borderWidth": 3,
+                "color": "#1E1E1E",
+                "fontFamily": "WorkSans-Regular",
+                "fontSize": 16,
+                "marginBottom": 0,
+                "marginLeft": 47,
+                "marginTop": -6,
+                "textAlign": "center",
+                "textAlignVertical": "top",
+                "zIndex": 100,
+              },
+              false,
+            ]
+          }
+        >
+          Last Name
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "#F5F5F5",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "fontFamily": "WorkSans-Regular",
+                "fontSize": 16,
+                "marginBottom": 0,
+                "marginTop": -18,
+                "overflow": "hidden",
+                "paddingLeft": 10,
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "height": 40,
+                  "justifyContent": "center",
+                  "marginVertical": 4,
+                  "paddingRight": 4,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#6FCC8A",
+                      "fontSize": 24,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "anticon",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+            <TextInput
+              autoComplete="name"
+              defaultValue="Townley"
+              editable={true}
+              maxLength={256}
+              placeholder="Doe"
+              placeholderTextColor="#86939e"
+              selectionColor="#97A5BF"
+              style={
+                {
+                  "color": "#1E1E1E",
+                  "flex": 1,
+                  "fontFamily": "WorkSans-Regular",
+                  "fontSize": 16,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            [
+              {
+                "alignSelf": "flex-start",
+                "backgroundColor": "#F5F5F5",
+                "borderColor": "#F5F5F5",
+                "borderRadius": 7,
+                "borderWidth": 3,
+                "color": "#1E1E1E",
+                "fontFamily": "WorkSans-Regular",
+                "fontSize": 16,
+                "marginBottom": 0,
+                "marginLeft": 47,
+                "marginTop": -6,
+                "textAlign": "center",
+                "textAlignVertical": "top",
+                "zIndex": 100,
+              },
+              false,
+            ]
+          }
+        >
+          Change Password
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "#F5F5F5",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "fontFamily": "WorkSans-Regular",
+                "fontSize": 16,
+                "marginBottom": 0,
+                "marginTop": -18,
+                "overflow": "hidden",
+                "paddingLeft": 10,
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "height": 40,
+                  "justifyContent": "center",
+                  "marginVertical": 4,
+                  "paddingRight": 4,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#6FCC8A",
+                      "fontSize": 24,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "anticon",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+            <TextInput
+              contextMenuHidden={true}
+              editable={false}
+              placeholder="•••••••••••• - disabled till Phase 2"
+              placeholderTextColor="#86939e"
+              readOnly={true}
+              secureTextEntry={true}
+              selectionColor="#97A5BF"
+              style={
+                {
+                  "color": "#1E1E1E",
+                  "flex": 1,
+                  "fontFamily": "WorkSans-Regular",
+                  "fontSize": 16,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "height": 40,
+                  "justifyContent": "center",
+                  "marginVertical": 4,
+                  "paddingRight": 4,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#6FCC8A",
+                      "fontSize": 24,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "anticon",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            [
+              {
+                "alignSelf": "flex-start",
+                "backgroundColor": "#F5F5F5",
+                "borderColor": "#F5F5F5",
+                "borderRadius": 7,
+                "borderWidth": 3,
+                "color": "#1E1E1E",
+                "fontFamily": "WorkSans-Regular",
+                "fontSize": 16,
+                "marginBottom": 0,
+                "marginLeft": 47,
+                "marginTop": -6,
+                "textAlign": "center",
+                "textAlignVertical": "top",
+                "zIndex": 100,
+              },
+              false,
+            ]
+          }
+        >
+          Confirm Password
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "#F5F5F5",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "fontFamily": "WorkSans-Regular",
+                "fontSize": 16,
+                "marginBottom": 0,
+                "marginTop": -18,
+                "overflow": "hidden",
+                "paddingLeft": 10,
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "height": 40,
+                  "justifyContent": "center",
+                  "marginVertical": 4,
+                  "paddingRight": 4,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#6FCC8A",
+                      "fontSize": 24,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "anticon",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+            <TextInput
+              contextMenuHidden={true}
+              editable={false}
+              placeholder="•••••••••••• - disabled till Phase 2"
+              placeholderTextColor="#86939e"
+              readOnly={true}
+              secureTextEntry={true}
+              selectionColor="#97A5BF"
+              style={
+                {
+                  "color": "#1E1E1E",
+                  "flex": 1,
+                  "fontFamily": "WorkSans-Regular",
+                  "fontSize": 16,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "height": 40,
+                  "justifyContent": "center",
+                  "marginVertical": 4,
+                  "paddingRight": 4,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#6FCC8A",
+                      "fontSize": 24,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "anticon",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+      </View>
+    </View>
+  </View>
+</RCTScrollView>
+`;
 
 exports[`No Async <EditProfile/> renders correctly 1`] = `
 <RCTScrollView
