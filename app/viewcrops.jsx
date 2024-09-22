@@ -16,7 +16,7 @@ import { useFonts } from 'expo-font'
 
 
 
-const viewcrops = () => {
+const viewCrops = () => {
         {/* Array of objects, used to differentiate picked items */}
         const [selectedItem, setItem] = useState(null);
 
@@ -33,6 +33,15 @@ const viewcrops = () => {
                 {label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', datePlanted: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' , medium: 'Hugel Mound', hrfNum: '945304', visible:'not visible', yield:'large'},
                 {label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", datePlanted: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard', medium: 'Hugel Mound', hrfNum: '835242', visible:'visible', yield:'medium' },
                 {label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato2', name: "Tomato2", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato3', name: "Tomato3", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato4', name: "Tomato4", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato5', name: "Tomato5", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato6', name: "Tomato6", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato7', name: "Tomato7", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato8', name: "Tomato8", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+        
+        
         ]);
         const { newCrop } = useLocalSearchParams();
 
@@ -75,7 +84,7 @@ const viewcrops = () => {
                 router.push({pathname: '/cropspage', params: item})
         }
         return (
-                <View>
+                <View style={styles.wrapper}>
                         <Text style={styles.title}>View Crops</Text>
                         <View style={styles.container}>
                                 <View style={styles.back}>
@@ -85,6 +94,8 @@ const viewcrops = () => {
                                         data={crops}
                                         renderItem={renderItem}
                                         keyExtractor={ item => item.hrfNum}
+                                        contentContainerStyle={{paddingBottom:20}}
+                                        style={styles.list}
                                 />
 
                         </View>
@@ -92,7 +103,7 @@ const viewcrops = () => {
         )
 }
 
-export default viewcrops;
+export default viewCrops;
 
 const styles = StyleSheet.create({
         container: {
@@ -172,5 +183,11 @@ const styles = StyleSheet.create({
                 fontFamily: 'Domine-Regular',
                 textAlign: 'center',
 
+        },
+        list:{
+                flex:1,
+        },
+        wrapper:{
+                flex:1
         }
 });

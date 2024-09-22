@@ -25,7 +25,7 @@ import Icons from '../assets/icons/Icons.js';
 
 
 
-const addcrops = () => {
+const addCrops = () => {
         {/* */}
         const [cropData, setCropData] = useState({
                 name:'',
@@ -200,7 +200,7 @@ const addcrops = () => {
         )
 }
 
-export default addcrops;
+export default addCrops;
 
 const styles = StyleSheet.create({
         container: {
