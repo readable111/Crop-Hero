@@ -5,9 +5,9 @@
  ***/
 
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View, ScrollView, Image, TextInput, FlatList, TouchableOpacity, Alert} from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import React, { useState } from 'react';
+import { Pressable, StyleSheet, Text, View, ScrollView, Image, TextInput, FlatList, TouchableOpacity} from 'react-native';
+import { router } from 'expo-router';
 import { Input, colors } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
 import Icons from '../assets/icons/Icons.js';
@@ -28,6 +28,7 @@ const viewcrops = () => {
         });
 
         {/* Dummy Data, for picker use */}
+
         const [crops, setCrops] = useState([
                 {label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', datePlanted: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '193242', visible:'visible', yield:'none'},
                 {label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', datePlanted: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' , medium: 'Hugel Mound', hrfNum: '945304', visible:'not visible', yield:'large'},
@@ -48,7 +49,6 @@ const viewcrops = () => {
                         }
         }, [newCrop]);
         console.log(crops);
-               
         {/* Was testing something, leaving for now
         const handleChange = (itemValue, itemIndex) =>
         {
@@ -79,12 +79,14 @@ const viewcrops = () => {
                         <Text style={styles.title}>View Crops</Text>
                         <View style={styles.container}>
                                 <View style={styles.back}>
-                                        <AppButton title="" icon={Icons.arrow_tail_left_black} onPress={() => router.push('/crops')}/>
+                                        <AppButton title="" icon={Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                 </View>
                                 <FlatList
                                         data={crops}
                                         renderItem={renderItem}
                                         keyExtractor={ item => item.hrfNum}
+
+
                                 />
 
                         </View>
