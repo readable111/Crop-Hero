@@ -95,9 +95,10 @@ const addCrops = () => {
                                 <Text style={styles.label}>Crop Name</Text>
                                 <Input
                                         inputContainerStyle = {styles.textBox}
-                                        placeholder = ' Name'
+                                        placeholder = "name"
                                         maxLength = {128}
                                         onChangeText={(text) => handleChange('name', text)}
+                                        testID="name-input"
                                 />
                                 <Text style={styles.label}>Variety</Text>
                                 <Input
@@ -200,7 +201,6 @@ const addCrops = () => {
         )
 }
 
-export default addCrops;
 
 const styles = StyleSheet.create({
         container: {
@@ -277,3 +277,4 @@ const styles = StyleSheet.create({
 
 
       });
+      export default addCrops;
