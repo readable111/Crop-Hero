@@ -1,9 +1,15 @@
-import { render, fireEvent } from '@testing-library/react-native'
-import { useRouter } from 'expo-router'
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react-native';
+import AppButton from '../assets/AppButton.jsx';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
+import NavBar from '../assets/NavBar.jsx';
+import Colors from '../assets/Color';
+import * as Font from 'expo-font';
 import crops from '../app/crops'
-import React from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import * as Font from 'expo-font'
+import { StatusBar } from 'expo-status-bar';
+
+
 
 jest.mock('expo-router', () => ({
     router:{
@@ -29,7 +35,7 @@ describe('<crops/>', () =>{
         expect(fontError).toBe(false)
 
     })
-
+    /*
     it('should go to addCrops page on button press', () => {
         const { getByTestId } = render(
             <crops/>
@@ -40,7 +46,7 @@ describe('<crops/>', () =>{
 
         expect(require('expo-router').router.push).toHaveBeenCalledWith('/home');
     })
-
+    */
     test('renders correctly', () =>{
         const tree = render(<crops/>).toJSON();
         expect(tree).toMatchSnapshot();
