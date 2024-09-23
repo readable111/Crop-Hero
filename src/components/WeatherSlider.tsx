@@ -57,7 +57,9 @@ const INTRO_DATA = [
   }
 ];
 
-export const WeatherSlider = ({isDarkMode=false, intro_data=INTRO_DATA}) => {
+export const WeatherSlider = () => <h1>Let’s work together</h1>
+//export const WeatherSlider = ({isDarkMode=false, intro_data=INTRO_DATA}) => {
+const a = ({isDarkMode=false, intro_data=INTRO_DATA}) => {
   const { width } = useWindowDimensions();
   const ref = React.useRef<PagerView>(null);
   const positionSharedValue = useSharedValue(0);

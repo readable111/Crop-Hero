@@ -17,10 +17,10 @@ import {
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Switch } from 'react-native-elements'
-import { CheckBox } from '@rneui/themed'
+import  {CheckBox}  from '@rneui/themed'
 import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Col, Row } from '../assets/Grid.jsx'
+import {Col, Row} from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
@@ -39,11 +39,11 @@ const SettingsProfile = () =>{
 		const fetchDarkModeSetting = async () => {
 			const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
 			let result = null
-    		if (JSON_VALUE) {
+    		if (JSON_VALUE && JSON_VALUE !== "") {
 				result = JSON.parse(JSON_VALUE)
 				console.log("Async: " + result)
 			} else {
-				colorScheme = Appearance.getColorScheme()
+				let colorScheme = Appearance.getColorScheme()
 				if (colorScheme == 'dark') {
 					result = true
 				} else {
@@ -80,8 +80,8 @@ const SettingsProfile = () =>{
 
 	
 	const [fontsLoaded, fontError] = useFonts({
-	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
-	'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
+		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+		'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
 	});
 
 	if (!fontsLoaded && !fontError) {

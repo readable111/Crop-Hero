@@ -5,7 +5,7 @@ import {
     screen,
     fireEvent,
 } from "@testing-library/react-native";
-import ToS from '../app/termsofservice';
+import PrivacyPolicy from "../app/privacypolicy";
 import Colors from "../assets/Color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import renderer from "react-test-renderer";
@@ -16,9 +16,9 @@ jest.mock('expo-font', ()=>({
     useFonts: jest.fn(),
     loadAsync: jest.fn().mockResolvedValue(true),
     isLoaded: jest.fn(()=>true)
-  }))
+}))
 
-describe('Light Mode <ToS/>', () =>{
+describe('Light Mode <PrivacyPolicy/>', () =>{
     beforeEach(async () => {
         await AsyncStorage.setItem("dark_mode_setting", "false");
         Font.useFonts.mockReturnValue([true, false])
@@ -28,12 +28,12 @@ describe('Light Mode <ToS/>', () =>{
     });
 
     test('renders correctly', () =>{
-        const tree = render(<ToS/>).toJSON();
+        const tree = render(<PrivacyPolicy/>).toJSON();
         expect(tree).toMatchSnapshot();
     })
 })
 
-describe('Dark Mode <ToS/>', () =>{
+describe('Dark Mode <PrivacyPolicy/>', () =>{
     beforeEach(async () => {
         await AsyncStorage.setItem("dark_mode_setting", "true");
         Font.useFonts.mockReturnValue([true, false])
@@ -43,12 +43,12 @@ describe('Dark Mode <ToS/>', () =>{
     });
 
     test('renders correctly', () =>{
-        const tree = render(<ToS/>).toJSON();
+        const tree = render(<PrivacyPolicy/>).toJSON();
         expect(tree).toMatchSnapshot();
     })
 })
 
-describe('No Async <ToS/>', () =>{
+describe('No Async <PrivacyPolicy/>', () =>{
     beforeEach(async () => {
         await AsyncStorage.setItem("dark_mode_setting", "");
         Font.useFonts.mockReturnValue([true, false])
@@ -58,7 +58,7 @@ describe('No Async <ToS/>', () =>{
     });
 
     test('renders correctly', () =>{
-        const tree = render(<ToS/>).toJSON();
+        const tree = render(<PrivacyPolicy/>).toJSON();
         expect(tree).toMatchSnapshot();
     })
 })

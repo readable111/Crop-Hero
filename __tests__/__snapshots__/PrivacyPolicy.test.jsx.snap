@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Dark Mode <ToS/> renders correctly 1`] = `
+exports[`Dark Mode <PrivacyPolicy/> renders correctly 1`] = `
 <RCTScrollView
   style={
     [
@@ -19,7 +19,6 @@ exports[`Dark Mode <ToS/> renders correctly 1`] = `
           {
             "backgroundColor": "#F1DDBF",
             "flex": 12,
-            "height": 140,
             "marginBottom": 10,
             "marginHorizontal": "auto",
             "marginTop": 0,
@@ -37,7 +36,7 @@ exports[`Dark Mode <ToS/> renders correctly 1`] = `
             },
             null,
             {
-              "height": 120,
+              "height": 60,
             },
           ]
         }
@@ -128,7 +127,7 @@ exports[`Dark Mode <ToS/> renders correctly 1`] = `
               ]
             }
           >
-            Terms & Conditions of Service
+            Privacy Policy
           </Text>
         </View>
         <View
@@ -171,7 +170,7 @@ exports[`Dark Mode <ToS/> renders correctly 1`] = `
           ]
         }
       >
-        Your rights to use the CropAlly Service and App
+        Interpretation and Definitions
       </Text>
       <Text
         style={
@@ -186,7 +185,7 @@ exports[`Dark Mode <ToS/> renders correctly 1`] = `
           ]
         }
       >
-        Access to the CropAlly Service and App
+        Interpretation
       </Text>
       <Text
         style={
@@ -208,15 +207,15 @@ exports[`Dark Mode <ToS/> renders correctly 1`] = `
           [
             {
               "color": "black",
-              "fontFamily": "WorkSans-Regular",
-              "fontSize": 16,
-              "marginTop": 4,
+              "fontFamily": "Domine-Medium",
+              "fontSize": 18,
+              "marginTop": 10,
             },
             false,
           ]
         }
       >
-        Tincidunt vitae semper quis lectus nulla at volutpat diam ut. Orci phasellus egestas tellus rutrum tellus. Lorem ipsum dolor sit amet consectetur adipiscing. Facilisis volutpat est velit egestas dui id ornare arcu. Ut placerat orci nulla pellentesque dignissim enim sit. Id cursus metus aliquam eleifend. Varius sit amet mattis vulputate enim nulla aliquet. Commodo sed egestas egestas fringilla. Aliquam faucibus purus in massa tempor nec. Odio ut sem nulla pharetra diam sit. In hendrerit gravida rutrum quisque. Ullamcorper eget nulla facilisi etiam dignissim diam quis enim lobortis. Nisi scelerisque eu ultrices vitae auctor eu augue ut. Aliquet enim tortor at auctor urna nunc. Hac habitasse platea dictumst quisque sagittis purus sit. Magna etiam tempor orci eu lobortis. Blandit turpis cursus in hac.
+        Definitions
       </Text>
       <Text
         style={
@@ -231,14 +230,39 @@ exports[`Dark Mode <ToS/> renders correctly 1`] = `
           ]
         }
       >
-        Velit euismod in pellentesque massa placerat duis ultricies lacus. Mauris in aliquam sem fringilla ut morbi tincidunt. Aliquam ut porttitor leo a diam sollicitudin tempor. Viverra orci sagittis eu volutpat. Eget nunc lobortis mattis aliquam faucibus purus. Sed risus ultricies tristique nulla. Pretium fusce id velit ut tortor. Amet consectetur adipiscing elit pellentesque. Molestie ac feugiat sed lectus vestibulum mattis. Pulvinar elementum integer enim neque volutpat ac tincidunt. Vestibulum lectus mauris ultrices eros in cursus turpis. Purus semper eget duis at tellus at urna condimentum. Sem viverra aliquet eget sit amet tellus cras. Ultricies lacus sed turpis tincidunt. Sit amet massa vitae tortor condimentum lacinia.
+        For the purposes of this Privacy Policy:
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "paddingLeft": 10,
+            },
+            false,
+          ]
+        }
+      >
+        • 
+        <Text
+          style={
+            {
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Lorem ipsum:
+        </Text>
+         euismod in
       </Text>
     </View>
   </View>
 </RCTScrollView>
 `;
 
-exports[`Light Mode <ToS/> renders correctly 1`] = `
+exports[`Light Mode <PrivacyPolicy/> renders correctly 1`] = `
 <RCTScrollView
   style={
     [
@@ -257,7 +281,6 @@ exports[`Light Mode <ToS/> renders correctly 1`] = `
           {
             "backgroundColor": "#F1DDBF",
             "flex": 12,
-            "height": 140,
             "marginBottom": 10,
             "marginHorizontal": "auto",
             "marginTop": 0,
@@ -275,7 +298,7 @@ exports[`Light Mode <ToS/> renders correctly 1`] = `
             },
             null,
             {
-              "height": 120,
+              "height": 60,
             },
           ]
         }
@@ -366,7 +389,7 @@ exports[`Light Mode <ToS/> renders correctly 1`] = `
               ]
             }
           >
-            Terms & Conditions of Service
+            Privacy Policy
           </Text>
         </View>
         <View
@@ -409,7 +432,7 @@ exports[`Light Mode <ToS/> renders correctly 1`] = `
           ]
         }
       >
-        Your rights to use the CropAlly Service and App
+        Interpretation and Definitions
       </Text>
       <Text
         style={
@@ -424,7 +447,7 @@ exports[`Light Mode <ToS/> renders correctly 1`] = `
           ]
         }
       >
-        Access to the CropAlly Service and App
+        Interpretation
       </Text>
       <Text
         style={
@@ -446,15 +469,15 @@ exports[`Light Mode <ToS/> renders correctly 1`] = `
           [
             {
               "color": "black",
-              "fontFamily": "WorkSans-Regular",
-              "fontSize": 16,
-              "marginTop": 4,
+              "fontFamily": "Domine-Medium",
+              "fontSize": 18,
+              "marginTop": 10,
             },
             false,
           ]
         }
       >
-        Tincidunt vitae semper quis lectus nulla at volutpat diam ut. Orci phasellus egestas tellus rutrum tellus. Lorem ipsum dolor sit amet consectetur adipiscing. Facilisis volutpat est velit egestas dui id ornare arcu. Ut placerat orci nulla pellentesque dignissim enim sit. Id cursus metus aliquam eleifend. Varius sit amet mattis vulputate enim nulla aliquet. Commodo sed egestas egestas fringilla. Aliquam faucibus purus in massa tempor nec. Odio ut sem nulla pharetra diam sit. In hendrerit gravida rutrum quisque. Ullamcorper eget nulla facilisi etiam dignissim diam quis enim lobortis. Nisi scelerisque eu ultrices vitae auctor eu augue ut. Aliquet enim tortor at auctor urna nunc. Hac habitasse platea dictumst quisque sagittis purus sit. Magna etiam tempor orci eu lobortis. Blandit turpis cursus in hac.
+        Definitions
       </Text>
       <Text
         style={
@@ -469,14 +492,39 @@ exports[`Light Mode <ToS/> renders correctly 1`] = `
           ]
         }
       >
-        Velit euismod in pellentesque massa placerat duis ultricies lacus. Mauris in aliquam sem fringilla ut morbi tincidunt. Aliquam ut porttitor leo a diam sollicitudin tempor. Viverra orci sagittis eu volutpat. Eget nunc lobortis mattis aliquam faucibus purus. Sed risus ultricies tristique nulla. Pretium fusce id velit ut tortor. Amet consectetur adipiscing elit pellentesque. Molestie ac feugiat sed lectus vestibulum mattis. Pulvinar elementum integer enim neque volutpat ac tincidunt. Vestibulum lectus mauris ultrices eros in cursus turpis. Purus semper eget duis at tellus at urna condimentum. Sem viverra aliquet eget sit amet tellus cras. Ultricies lacus sed turpis tincidunt. Sit amet massa vitae tortor condimentum lacinia.
+        For the purposes of this Privacy Policy:
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "paddingLeft": 10,
+            },
+            false,
+          ]
+        }
+      >
+        • 
+        <Text
+          style={
+            {
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Lorem ipsum:
+        </Text>
+         euismod in
       </Text>
     </View>
   </View>
 </RCTScrollView>
 `;
 
-exports[`No Async <ToS/> renders correctly 1`] = `
+exports[`No Async <PrivacyPolicy/> renders correctly 1`] = `
 <RCTScrollView
   style={
     [
@@ -495,7 +543,6 @@ exports[`No Async <ToS/> renders correctly 1`] = `
           {
             "backgroundColor": "#F1DDBF",
             "flex": 12,
-            "height": 140,
             "marginBottom": 10,
             "marginHorizontal": "auto",
             "marginTop": 0,
@@ -513,7 +560,7 @@ exports[`No Async <ToS/> renders correctly 1`] = `
             },
             null,
             {
-              "height": 120,
+              "height": 60,
             },
           ]
         }
@@ -604,7 +651,7 @@ exports[`No Async <ToS/> renders correctly 1`] = `
               ]
             }
           >
-            Terms & Conditions of Service
+            Privacy Policy
           </Text>
         </View>
         <View
@@ -647,7 +694,7 @@ exports[`No Async <ToS/> renders correctly 1`] = `
           ]
         }
       >
-        Your rights to use the CropAlly Service and App
+        Interpretation and Definitions
       </Text>
       <Text
         style={
@@ -662,7 +709,7 @@ exports[`No Async <ToS/> renders correctly 1`] = `
           ]
         }
       >
-        Access to the CropAlly Service and App
+        Interpretation
       </Text>
       <Text
         style={
@@ -684,15 +731,15 @@ exports[`No Async <ToS/> renders correctly 1`] = `
           [
             {
               "color": "black",
-              "fontFamily": "WorkSans-Regular",
-              "fontSize": 16,
-              "marginTop": 4,
+              "fontFamily": "Domine-Medium",
+              "fontSize": 18,
+              "marginTop": 10,
             },
             false,
           ]
         }
       >
-        Tincidunt vitae semper quis lectus nulla at volutpat diam ut. Orci phasellus egestas tellus rutrum tellus. Lorem ipsum dolor sit amet consectetur adipiscing. Facilisis volutpat est velit egestas dui id ornare arcu. Ut placerat orci nulla pellentesque dignissim enim sit. Id cursus metus aliquam eleifend. Varius sit amet mattis vulputate enim nulla aliquet. Commodo sed egestas egestas fringilla. Aliquam faucibus purus in massa tempor nec. Odio ut sem nulla pharetra diam sit. In hendrerit gravida rutrum quisque. Ullamcorper eget nulla facilisi etiam dignissim diam quis enim lobortis. Nisi scelerisque eu ultrices vitae auctor eu augue ut. Aliquet enim tortor at auctor urna nunc. Hac habitasse platea dictumst quisque sagittis purus sit. Magna etiam tempor orci eu lobortis. Blandit turpis cursus in hac.
+        Definitions
       </Text>
       <Text
         style={
@@ -707,7 +754,32 @@ exports[`No Async <ToS/> renders correctly 1`] = `
           ]
         }
       >
-        Velit euismod in pellentesque massa placerat duis ultricies lacus. Mauris in aliquam sem fringilla ut morbi tincidunt. Aliquam ut porttitor leo a diam sollicitudin tempor. Viverra orci sagittis eu volutpat. Eget nunc lobortis mattis aliquam faucibus purus. Sed risus ultricies tristique nulla. Pretium fusce id velit ut tortor. Amet consectetur adipiscing elit pellentesque. Molestie ac feugiat sed lectus vestibulum mattis. Pulvinar elementum integer enim neque volutpat ac tincidunt. Vestibulum lectus mauris ultrices eros in cursus turpis. Purus semper eget duis at tellus at urna condimentum. Sem viverra aliquet eget sit amet tellus cras. Ultricies lacus sed turpis tincidunt. Sit amet massa vitae tortor condimentum lacinia.
+        For the purposes of this Privacy Policy:
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "paddingLeft": 10,
+            },
+            false,
+          ]
+        }
+      >
+        • 
+        <Text
+          style={
+            {
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Lorem ipsum:
+        </Text>
+         euismod in
       </Text>
     </View>
   </View>
