@@ -26,7 +26,6 @@
    1. [Purpose of Project](#project_purpose)
    1. [Purpose of MPM & Document Conventions](#mpm_purpose)
    1. [Client Overview & Intended Audience](#audience)
-1. [Brief System Overview](#brief_overview)
 1. [In-Depth System Overview](#indepth_overview)
    1. [Home Page](#indepth_home)
       1. [General Weather Forecast](#weather_forecast)
@@ -58,7 +57,6 @@
       1. [Importing the Search Bar](#import_search)
 1. [Troubleshooting](#trblsht)
 1. [Tools & Resources](#tools)
-1. [Logs & Records](#logs)
 1. [Appendices](#appendices)
    1. [Appendix A: Understanding React Native](#react_native)
       1. [Class Vs. Functional Components](#component_types)
@@ -83,8 +81,6 @@ Each chapter in the document will be marked by a high-level header which will be
 The client is Zina Townley, a current product owner and release train engineer at L3Harris Technologies. Also, she is a former Scrum master, application support manager, IT manager, and programmer analyst. She and her husband created the Ashby-Browning Family Scholarship in Engineering at UNT. Importantly for this application, she is a hobbyist farmer who owns 11 acres. This marks her as a Lifestyle user according to our user class definitions. 
 
 This maintenance manual is meant to help the client and any future developers on this project. The MPM will help the developers to understand the project's structure as they are onboarded. In addition, the MPM will provide details regarding any maintenance tasks, troubleshooting tips, and useful resources for those developers.
-
-## Brief System Overview <a name="brief_overview"></a>
 
 ## In-Depth System Overview <a name="indepth_overview"></a>
 ### Home Page <a name="indepth_home"></a>
