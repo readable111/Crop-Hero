@@ -23,15 +23,3 @@ Please check out a new branch in order to develop your feature, and the push to 
  1. Open a command line in the base Crop-Hero directory
  2. Enter `npx expo start`
  3. After the menu options have been printed, enter `a` to open the Android emulator
-
-## Troubleshooting
-Assumes that you are using a Windows operating system
-#### Expo-CLI is Deprecated
- 1. Open a terminal with admin privileges
- 2. Enter `npm install -g yarn`
- 3. Change the working directory to the base Crop-Hero directory (use `cd`, not `pushd` as that can cause issues)
- 4. Enter `yarn add expo`
-#### Error due to Different Number of Hooks Between Renders
- 1. Find all return statements within an if-else block or a loop (called conditional returns)
- 2. Find all instances of the useState() and useEffect() functions
- 3. Move all instances of the useState() and useEffect() functions before any conditional returns

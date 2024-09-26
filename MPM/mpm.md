@@ -23,44 +23,62 @@
 
 ## Table of Contents
 1. [Introduction](#intro)
-   1. [Purpose of Project](#project_purpose)
-   1. [Purpose of MPM & Document Conventions](#mpm_purpose)
-   1. [Client Overview & Intended Audience](#audience)
+    1. [Purpose of Project](#project_purpose)
+    1. [Purpose of MPM & Document Conventions](#mpm_purpose)
+    1. [Client Overview & Intended Audience](#audience)
 1. [In-Depth System Overview](#indepth_overview)
-   1. [Home Page](#indepth_home)
-      1. [General Weather Forecast](#weather_forecast)
-   1. [Components & Assets](#components_n_assets)
-      1. [Rows & Columns](#grid)
-   1. [Search Bar](#search_bar)
-      1. [Background](#search_bar_bkgd)
-      1. [Search Bar Component](#search_bar_component)
-      1. [Search Function](#search_func)
-      1. [Initial String Comparison](#str_comparison)
-      1. [Testing the Search Function With Mock Data](#init_search_testing)
-      1. [A New String Comparison Function](#new_str_comparison)
-      1. [Initial Optimizations](#init_optimizations)
-      1. [Sørensen-Dice Coefficient (SDC)](#sdc)
-      1. [Damerau-Levenshtein Edit Distance (DLED)](#dled)
-      1. [Jaro-Winkler Similarity (JWS)](#jws)
-      1. [Transliteration Library](#transliteration)
-      1. [Lemmatizer](#lemmatizer)
-      1. [Double Metaphone](#double_metaphone)
-      1. [Exact String Matching](#exact_str)
-      1. [First and Last Letter Section](#1st_last_letter)
-      1. [Syllable Counting](#syllables)
-      1. [Common Prefix and Suffix](#common_prefix_suffix)
+    1. [Home Page](#indepth_home)
+        1. [General Weather Forecast](#weather_forecast)
+    1. [Components & Assets](#components_n_assets)
+        1. [Rows & Columns](#grid)
+    1. [Search Bar](#search_bar)
+        1. [Background](#search_bar_bkgd)
+        1. [Search Bar Component](#search_bar_component)
+        1. [Search Function](#search_func)
+        1. [Initial String Comparison](#str_comparison)
+        1. [Testing the Search Function With Mock Data](#init_search_testing)
+        1. [A New String Comparison Function](#new_str_comparison)
+        1. [Initial Optimizations](#init_optimizations)
+        1. [Sørensen-Dice Coefficient (SDC)](#sdc)
+        1. [Damerau-Levenshtein Edit Distance (DLED)](#dled)
+        1. [Jaro-Winkler Similarity (JWS)](#jws)
+        1. [Transliteration Library](#transliteration)
+        1. [Lemmatizer](#lemmatizer)
+        1. [Double Metaphone](#double_metaphone)
+        1. [Exact String Matching](#exact_str)
+        1. [First and Last Letter Section](#1st_last_letter)
+        1. [Syllable Counting](#syllables)
+        1. [Common Prefix and Suffix](#common_prefix_suffix)
 1. [Installation & Setup](#setup)
 1. [Maintenance Tasks](#maint)
-   1. [Adding a New Page](#add_page)
-      1. [Adding Dark Mode](#add_dark_mode)
-      1. [Expanding the Navbar](#expand_navbar)
-      1. [Importing the Search Bar](#import_search)
+    1. [Adding a New Page](#add_page)
+        1. [Adding Dark Mode](#add_dark_mode)
+        1. [Expanding the Navbar](#expand_navbar)
+        1. [Importing the Search Bar](#import_search)
 1. [Troubleshooting](#trblsht)
+    1. [Emulator Errors](#emulator_errors)
+        1. [Cannot Open Emulator](#cant_open_em)
+        1. [Emulator Says "The system UI isn't responding"](#ui_not_responding)
+        1. [Emulator Says "Something went wrong. Can't connect to Internet."](#no_internet)
+        1. [Emulator Reloads When I Try to Type 'R' Into an Input Field](#reloads_on_r)
+    1. [Expo Errors](#expo_errors)
+        1. [Expo-CLI is Deprecated / Legacy Expo-CLI](#cli_deprecated)
+    1. [Common React Native Compilation Errors](#rn_compilation_err)
+        1. [Error due to Different Number of Hooks Between Renders](#different_number_hooks)
+    1. [Jest Errors](#jest_errors)
+        1. [General Troubleshooting Advice For Jest](#general_ts_advice)
+        1. [No Tests Found](#no_tests)
+        1. [Cannot Use Import Statement Outside a Module ](#cant_use_import)
+        1. [Unexpected Token](#unexpected_token)
+        1. [Unable to Find an Element](#unable_find_element)
+        1. [Snap File is Mostly Empty](#empty_snap_file)
+        1. [Expected String or Class/Function But Got Undefined](#undefined_not_string_class)
+        1. [Error About Act Wrapping](#act_wrapping)
 1. [Tools & Resources](#tools)
 1. [Appendices](#appendices)
-   1. [Appendix A: Understanding React Native](#react_native)
-      1. [Class Vs. Functional Components](#component_types)
-      1. [Inter-Page Routing](#routing)
+    1. [Appendix A: Understanding React Native](#react_native)
+        1. [Class Vs. Functional Components](#component_types)
+        1. [Inter-Page Routing](#routing)
 
 ## Introduction <a name="intro"></a>
 ### Purpose of Project <a name="project_purpose"></a>
@@ -780,9 +798,11 @@ If you call the `<SearchInput />` tag, this will default to the dropdown mode. T
 ## Troubleshooting <a name="trblsht"></a>
 Assumes that you are using a Windows OS
 
-### Emulator Errors
+### Emulator Errors <a name="emulator_errors"></a>
 
-#### Cannot Open Emulator
+#### Cannot Open Emulator <a name="cant_open_em"></a>
+*Author: Daniel*
+
 1. Open Android Studio
 1. Go to the SDK manager in the Tools menu
 1. Update your installation of the Android API (cannot be one of the "ext-" APIs)
@@ -791,7 +811,9 @@ Assumes that you are using a Windows OS
 1. Make sure that you have installed and updated the Android SDK Build-Tools, Android Emulator, Android SDK Platform-Tools
     - It will be installed & updated if you see a checkmark rather than an empty box or a minus sign
 
-#### Emulator Says "The system UI isn't responding"
+#### Emulator Says "The system UI isn't responding" <a name="ui_not_responding"></a>
+*Author: Daniel*
+
 1. Open Android Studio
 1. Go to the Device Manager
 1. Click the vertical meatball menu (the 3 dots) for your emulator
@@ -806,21 +828,176 @@ Assumes that you are using a Windows OS
 1. Go to the Memory and Storage section
     - Increase the available RAM
 
-#### Emulator Says "Something went wrong. Can't connect to Internet."
+#### Emulator Says "Something went wrong. Can't connect to Internet." <a name="no_internet"></a>
+*Author: Daniel*
+
 1. Close the two Expo tabs on the phone
 1. Click the Expo icon on the home screen
 1. Re-enter 'a' in the command line
 1. Keep doing this until it works. Sometimes it can take 3-6 tries
 
-#### Emulator Reloads When I Try to Type 'R' Into an Input Field
+#### Emulator Reloads When I Try to Type 'R' Into an Input Field <a name="reloads_on_r"></a>
+*Author: Daniel*
+
 1. Wait for the emulator to reload
 1. Go back to that page
 1. Type in the values more slowly or use the emulator's keyboard.
     - If you type with the keyboard too quickly, the emulator can't register it as an input so the value gets sent to the command line which interprets it as a reload command
 
-### Expo Errors
+### Expo Errors <a name="expo_errors"></a>
 
-### Common React Native Compilation Errors
+#### Expo-CLI is Deprecated / Legacy Expo-CLI <a name="cli_deprecated"></a>
+*Author: Daniel*
+
+1. Use `npx expo ...` rather than `expo ...` or `npm expo ...`
+
+An alternate solution involves installing yarn and then executing `yarn add expo`. However, the addition of yarn will cause other issues with libraries like jest and with our other package manager, npm.
+
+### Common React Native Compilation Errors <a name="rn_compilation_err"></a>
+
+#### Error due to Different Number of Hooks Between Renders <a name="different_number_hooks"></a>
+*Author: Daniel*
+
+1. Find all return/render statements within an if-else block or a loop (called conditional returns)
+1. Find all instances of the useState() and useEffect() functions
+1. Move all instances of the useState() and useEffect() functions before any conditional returns. You may need to move other hooks too, but these are the most common sources of issues.
+
+### Jest Errors <a name="jest_errors"></a>
+
+#### General Troubleshooting Advice For Jest <a name="general_ts_advice"></a>
+*Author: Daniel*
+
+1. Create a component with the same name in the same file as the old component that is triggering errors
+    - Make sure to rename your old component
+1. In the new component, return a single Text component and a console.log like in the example code
+~~~
+const YourComponent = () => {
+    console.log("Component Imported Successfully!")
+    return (
+        <Text>Hello World!</Text>
+    )
+}
+~~~
+If that `console.log` isn't triggered, then you know that your issue lies with your import statements in that file, with your export of this component, with your import of this component in the test, or with the jest configuration. If the Text component isn't being rendered in the .snap file, it probably means the same thing.
+
+Once the `console.log` is triggered and the Text component is properly rendered, add an instance of each component type in the original component to this temporary component. Keep doing this one at a time until it breaks. Don't worry about formatting or styling; just try to nail down what component or hook is causing your issue.
+
+When the issue is resolved, rename your test component and give your original component back its name. If the original component works, great! Now you can delete the test component and move on. If not, I would recommend returning to the test component and continuing to mess with things.
+
+#### No Tests Found <a name="no_tests"></a>
+*Author: Daniel*
+
+Your error code will probably look something like this, though the same principles apply if you are trying to determine why your new test file isn't being detected.
+~~~
+No tests found, exiting with code 1
+Run with `--passWithNoTests` to exit with code 0
+In <Your Repo's File Path Here>
+  33 files checked.
+  testMatch: **/__tests__/**/*.[jt]s?(x), **/?(*.)+(spec|test).[tj]s?(x) - 0 matches
+  testPathIgnorePatterns: \\node_modules\\ - 33 matches
+  testRegex:  - 0 matches
+Pattern:  - 0 matches
+~~~
+
+There are 2 general causes for this issue.
+
+1. Your file type may not be specified in the jest.config.js file.
+    1. Go to the root directory of the repo
+    1. Open the jest.config.js file
+    1. Find the line which specifies the `moduleFileExtensions` key
+    1. Add your file extension to the list in quotes
+        - If your file was YourComponent.test.jsx, the `moduleFileExtensions` list should contain 'jsx'. Note the fact that the period is not included.
+1. Your test files are incorrectly named
+    1. Go to the root directory of the repo
+    1. Find a folder called "\_\_tests\_\_" or create it if it isn't there
+    1. Place all test files into that folder
+    1. Verify the names of all test files as they must follow a certain pattern
+        - The file's name should follow a pattern of `<Your Component's Name>.test.(js|jsx|ts|tsx)`
+
+#### Cannot Use Import Statement Outside a Module <a name="cant_use_import"></a>
+*Author: Daniel*
+
+This is an error with either your babel or jest configuration so here are some things to try.
+- Create the babel.config.js and jest.config.js files
+- Set up the babel.config.js and jest.config.js files
+    - Your jest file will probably need the preset, transform, and moduleFileExtensions keys
+    - Your babel file will probably need the presets key and a preset of 'babel-preset-expo'
+- Ensure that package.json doesn't contain anything saying `type: module`
+- Ensure that you don't have a .babelrc file
+
+#### Unexpected Token <a name="unexpected_token"></a>
+*Author: Daniel*
+
+This error is generally caused by one of a few things
+- You are missing a necessary preset/plugin in babel.config.js
+- You are missing a necessary transform/transformIgnorePatterns regex pattern in jest.config.js
+- You are missing a mock in the \_\_mocks\_\_ folder, in the jest_setup.js file, or in your individual test file
+    - Determining which is dependent on what you are mocking and whether it is needed by multiple test files. I recommend checking the library's recommendations for jest testing when deciding.
+
+#### Unable to Find an Element <a name="unable_find_element"></a>
+*Author: Daniel*
+
+This error often comes with a message like "placeholder: <>" or is associated with functions like getByText, getById, or toBeInTheDocument. This can be caused by a massive number of things such as the exact text pattern or id not existing in the original component. You may also be having an import issue. Due to the many possible causes, I recommend checking the .snap file as your first step in troubleshooting. If the .snap file only contains `exports[<YourComponent/> renders correctly 1] = <YourComponent />;` or simply does not contain the desired text/placeholder/id, then you know your issue lies with the rendering process. I would recommend looking at some of the other sections which focus on rendering issues.
+
+#### Snap File is Mostly Empty <a name="empty_snap_file"></a>
+*Author: Daniel*
+
+If you ended up in this section, you likely encountered the following text in the .snap file.
+~~~
+exports[`<YourComponent/> renders correctly 1`] = `<YourComponent />`;
+~~~
+
+While this error is generally caused by the same thing, start by adding a console.log() function to the component that you are trying to test. In all likelihood, the console.log won't be triggered, and you won't see the message because of an import issue. Your IDE may also mark your import statement as unused or the component in the render function as not associated with a specific import.
+
+If you see any of that, you are having an import issue. Check the import statement, import path, and the capitalization of the component. Making the first letter of each word uppercase in accordance with a CamelCase pattern is shockingly effective at fixing issues. "viewCrops" often won't work, but "ViewCrops" will work without any other changes.
+
+#### Expected String or Class/Function But Got Undefined <a name="undefined_not_string_class"></a>
+*Author: Daniel*
+
+This is a long error message which makes it difficult to parse. Here is the important part:
+~~~
+Expected a string (for built-in components) or a class/function (for composite components) but got: undefined. 
+You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports
+~~~
+
+This is going to come down to one of two issues: circular imports or named/default import confusion. There is a separate section covering the distinction between named and default imports. Using the wrong one will often cause this error. Alternatively, circular imports can cause this issue. Let us say that you are testing File A which depends on File B. File B imports something from File C while File C also imports something from File B. This is a circular import.
+
+#### Error About Act Wrapping <a name="act_wrapping"></a>
+*Author: Daniel*
+
+You are probably getting an error or warning along the following lines:
+~~~
+When testing, code that causes React state updates should be wrapped into act(...):
+     
+     act(() => {
+       /* fire events that update state */
+     });
+     /* assert on the output */
+     
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://fb.me/react-wrap-tests-with-act
+~~~
+
+In general, the React Native testing library has already bundled act into its APIs, like the render function. This is done because act is necessary for the test environment to operate like the user environment. Basically, the act function makes sure that the code to render and update React components is properly handled in the call stack. Despite the fact that the library already bundles in act, act still may need to be added manually.
+
+##### Case 1: Asynchronous Updates
+If the page being tested is asynchronously updated, then it will trigger the act wrapping error. When the asynchronous update comes back, the setter hook will be triggered, but at this moment, the update will happen outside of React’s call stack. To fix it, before any assertions, wait for the component update to fully complete by using `waitFor`. `waitFor` is an API provided by React testing library to wait for the wrapped assertions to pass within a certain timeout window.
+
+##### Case 2: Jest Fake Timers
+You can encounter this issue if the component being tested uses setTimeout or setInterval and you are using Jest’s fake timers to manipulate time. In this case, the unit test has no idea that advancing timers will cause component updates which triggers the error. To fix this, just wrap Jest’s timer manipulations in an act block, so that the test will know advancing time will cause the component to update.
+
+##### Case 3: Premature Exit
+In this case, the error can occur when the test prematurely exits before the components finish rendering or updating. This generally occurs when there is a Loading state or a REST fetch. Basically, the test exits before the loading state finishes and data is retrieved. To fix it, just wait for the rendering and updates to be done with `waitFor` or `waitForElementToBeRemoved`.
+~~~
+expect(getByText("Loading ...")).toBeInTheDocument();
+await waitFor(() => {
+    expect(queryByText("Loading ...")).not.toBeInTheDocument();
+});
+
+await waitForElementToBeRemoved(() => queryByText("Loading ..."));
+~~~
+
+##### Case 4: Formik Updates
+Like Case 3, Case 4 is a variant of Case 1. In this case, the test simulates events to change values in form inputs like changing the value in a text input. If the form input is managed by Formik, your test will have a chance to run into this error. Just like Case 1, you can solve it by just waiting for it to complete.
 
 ## Tools & Resources <a name="tools"></a>
 
