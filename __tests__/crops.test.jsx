@@ -1,3 +1,9 @@
+/****
+ * @author Isaac Boodt, Daniel Moreno
+ * @reviewer 
+ * @tester 
+ ***/
+
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import AppButton from '../assets/AppButton.jsx';
@@ -6,7 +12,7 @@ import { router } from 'expo-router';
 import NavBar from '../assets/NavBar.jsx';
 import Colors from '../assets/Color';
 import * as Font from 'expo-font';
-import crops from '../app/crops'
+import Crops from '../app/crops'
 import { StatusBar } from 'expo-status-bar';
 
 
@@ -23,8 +29,13 @@ jest.mock('expo-font', () => ({
     loadAsync: jest.fn().mockResolvedValue(true),
     isLoaded: jest.fn(()=>true)
 }))
+jest.mock('expo-router', () => ({
+    router: {
+        replace: jest.fn(),
+    }
+}));
 
-describe('<crops/>', () =>{
+describe('<Crops/>', () =>{
     beforeEach(async () => {
         await AsyncStorage.setItem("dark_mode_setting", false);
 
@@ -48,7 +59,7 @@ describe('<crops/>', () =>{
     })
     */
     test('renders correctly', () =>{
-        const tree = render(<crops/>).toJSON();
+        const tree = render(<Crops/>).toJSON();
         expect(tree).toMatchSnapshot();
     })
 

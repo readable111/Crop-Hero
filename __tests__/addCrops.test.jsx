@@ -1,6 +1,12 @@
+/****
+ * @author Isaac Boodt, Daniel Moreno
+ * @reviewer 
+ * @tester 
+ ***/
+
 import { render, fireEvent, screen} from '@testing-library/react-native'
 import { Input } from 'react-native'
-import addCrops from '../app/addcrops'
+import AddCrops from '../app/addcrops'
 import React from 'react';
 import AppButton from '../assets/AppButton.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,7 +30,7 @@ jest.mock('expo-font', () => ({
 }))
 
 
-describe('<addCrops/>', () =>{
+describe('<AddCrops/>', () =>{
     beforeEach(async () => {
         await AsyncStorage.setItem("dark_mode_setting", false);
 
@@ -50,7 +56,7 @@ describe('<addCrops/>', () =>{
     })
         */
     test('renders correctly', () =>{
-        const tree = render(<addCrops/>).toJSON();
+        const tree = render(<AddCrops/>).toJSON();
         expect(tree).toMatchSnapshot();
     })
 })

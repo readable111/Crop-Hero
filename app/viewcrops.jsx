@@ -16,7 +16,7 @@ import { useFonts } from 'expo-font'
 
 
 
-const viewCrops = () => {
+const ViewCrops = () => {
         {/* Array of objects, used to differentiate picked items */}
         const [selectedItem, setItem] = useState(null);
 
@@ -103,7 +103,7 @@ const viewCrops = () => {
         )
 }
 
-export default viewCrops;
+export default ViewCrops;
 
 const styles = StyleSheet.create({
         container: {

@@ -1,3 +1,1235 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<addCrops/> renders correctly 1`] = `<addCrops />`;
+exports[`<AddCrops/> renders correctly 1`] = `
+<View
+  onLayout={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      {
+        "paddingBottom": 0,
+      },
+    ]
+  }
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "backgroundColor": "#97A5BF",
+        "height": "100%",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "backgroundColor": "#F1DDBF",
+          "borderColor": "#1E1E1E",
+          "borderWidth": 1,
+          "padding": 18,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "alignContent": "center",
+            "fontFamily": "Domine-Medium",
+            "fontSize": 42,
+            "textAlign": "right",
+          }
+        }
+      >
+        Add Crop
+      </Text>
+    </View>
+    <RCTScrollView>
+      <View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "#00DC40",
+              "borderRadius": 20,
+              "height": 40,
+              "justifyContent": "center",
+              "marginLeft": 370,
+              "marginTop": 10,
+              "position": "absolute",
+              "width": 40,
+            }
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+          >
+            <Text
+              allowFontScaling={false}
+              selectable={false}
+              style={
+                [
+                  {
+                    "color": "white",
+                    "fontSize": 30,
+                  },
+                  undefined,
+                  {
+                    "fontFamily": "material-community",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                  {},
+                ]
+              }
+            >
+              󰆓
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "height": 40,
+              "justifyContent": "center",
+              "marginLeft": 10,
+              "width": 40,
+            }
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+          >
+            <Image
+              source={1}
+              style={{}}
+            />
+          </View>
+        </View>
+        <Text
+          style={
+            {
+              "alignSelf": "flex-start",
+              "backgroundColor": "white",
+              "borderColor": "white",
+              "borderRadius": 7,
+              "borderWidth": 2,
+              "fontFamily": "Domine-Regular",
+              "fontSize": 16,
+              "marginLeft": "15%",
+              "marginTop": -15,
+              "zIndex": 10,
+            }
+          }
+        >
+          Crop Name
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "white",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "height": 40,
+                "marginLeft": "5%",
+                "marginRight": "5%",
+                "marginTop": -5,
+                "overflow": "hidden",
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+                "width": "90%",
+                "zIndex": 1,
+              }
+            }
+          >
+            <TextInput
+              editable={true}
+              maxLength={128}
+              onChangeText={[Function]}
+              placeholder="name"
+              placeholderTextColor="#86939e"
+              style={
+                {
+                  "color": "#242424",
+                  "flex": 1,
+                  "fontSize": 18,
+                  "minHeight": 40,
+                }
+              }
+              testID="name-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            {
+              "alignSelf": "flex-start",
+              "backgroundColor": "white",
+              "borderColor": "white",
+              "borderRadius": 7,
+              "borderWidth": 2,
+              "fontFamily": "Domine-Regular",
+              "fontSize": 16,
+              "marginLeft": "15%",
+              "marginTop": -15,
+              "zIndex": 10,
+            }
+          }
+        >
+          Variety
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "white",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "height": 40,
+                "marginLeft": "5%",
+                "marginRight": "5%",
+                "marginTop": -5,
+                "overflow": "hidden",
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+                "width": "90%",
+                "zIndex": 1,
+              }
+            }
+          >
+            <TextInput
+              editable={true}
+              maxLength={128}
+              onChangeText={[Function]}
+              placeholder=" Variety"
+              placeholderTextColor="#86939e"
+              style={
+                {
+                  "color": "#242424",
+                  "flex": 1,
+                  "fontSize": 18,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            {
+              "alignSelf": "flex-start",
+              "backgroundColor": "white",
+              "borderColor": "white",
+              "borderRadius": 7,
+              "borderWidth": 2,
+              "fontFamily": "Domine-Regular",
+              "fontSize": 16,
+              "marginLeft": "15%",
+              "marginTop": -15,
+              "zIndex": 10,
+            }
+          }
+        >
+          Source
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "white",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "height": 40,
+                "marginLeft": "5%",
+                "marginRight": "5%",
+                "marginTop": -5,
+                "overflow": "hidden",
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+                "width": "90%",
+                "zIndex": 1,
+              }
+            }
+          >
+            <TextInput
+              editable={true}
+              maxLength={128}
+              onChangeText={[Function]}
+              placeholder=" Source"
+              placeholderTextColor="#86939e"
+              style={
+                {
+                  "color": "#242424",
+                  "flex": 1,
+                  "fontSize": 18,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            {
+              "alignSelf": "flex-start",
+              "backgroundColor": "white",
+              "borderColor": "white",
+              "borderRadius": 7,
+              "borderWidth": 2,
+              "fontFamily": "Domine-Regular",
+              "fontSize": 16,
+              "marginLeft": "15%",
+              "marginTop": -15,
+              "zIndex": 10,
+            }
+          }
+        >
+          Date Planted
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "white",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "height": 40,
+                "marginLeft": "5%",
+                "marginRight": "5%",
+                "marginTop": -5,
+                "overflow": "hidden",
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+                "width": "90%",
+                "zIndex": 1,
+              }
+            }
+          >
+            <TextInput
+              editable={true}
+              maxLength={10}
+              onChangeText={[Function]}
+              placeholder=" Date Planted"
+              placeholderTextColor="#86939e"
+              style={
+                {
+                  "color": "#242424",
+                  "flex": 1,
+                  "fontSize": 18,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            {
+              "alignSelf": "flex-start",
+              "backgroundColor": "white",
+              "borderColor": "white",
+              "borderRadius": 7,
+              "borderWidth": 2,
+              "fontFamily": "Domine-Regular",
+              "fontSize": 16,
+              "marginLeft": "15%",
+              "marginTop": -15,
+              "zIndex": 10,
+            }
+          }
+        >
+          Location
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "white",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "height": 40,
+                "marginLeft": "5%",
+                "marginRight": "5%",
+                "marginTop": -5,
+                "overflow": "hidden",
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+                "width": "90%",
+                "zIndex": 1,
+              }
+            }
+          >
+            <TextInput
+              editable={true}
+              maxLength={128}
+              onChangeText={[Function]}
+              placeholder=" Location"
+              placeholderTextColor="#86939e"
+              style={
+                {
+                  "color": "#242424",
+                  "flex": 1,
+                  "fontSize": 18,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            {
+              "alignSelf": "flex-start",
+              "backgroundColor": "white",
+              "borderColor": "white",
+              "borderRadius": 7,
+              "borderWidth": 2,
+              "fontFamily": "Domine-Regular",
+              "fontSize": 16,
+              "marginLeft": "15%",
+              "marginTop": -15,
+              "zIndex": 10,
+            }
+          }
+        >
+          Comments
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "white",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "height": 40,
+                "marginLeft": "5%",
+                "marginRight": "5%",
+                "marginTop": -5,
+                "overflow": "hidden",
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+                "width": "90%",
+                "zIndex": 1,
+              }
+            }
+          >
+            <TextInput
+              editable={true}
+              maxLength={1024}
+              onChangeText={[Function]}
+              placeholder=" Comments"
+              placeholderTextColor="#86939e"
+              style={
+                {
+                  "color": "#242424",
+                  "flex": 1,
+                  "fontSize": 18,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            {
+              "alignSelf": "flex-start",
+              "backgroundColor": "white",
+              "borderColor": "white",
+              "borderRadius": 7,
+              "borderWidth": 2,
+              "fontFamily": "Domine-Regular",
+              "fontSize": 16,
+              "marginLeft": "15%",
+              "marginTop": -15,
+              "zIndex": 10,
+            }
+          }
+        >
+          Started Indoors?
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "white",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "height": 40,
+                "marginLeft": "5%",
+                "marginRight": "5%",
+                "marginTop": -5,
+                "overflow": "hidden",
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+                "width": "90%",
+                "zIndex": 1,
+              }
+            }
+          >
+            <TextInput
+              editable={true}
+              maxLength={3}
+              onChangeText={[Function]}
+              placeholder=" Indoors? (Y/N)"
+              placeholderTextColor="#86939e"
+              style={
+                {
+                  "color": "#242424",
+                  "flex": 1,
+                  "fontSize": 18,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            {
+              "alignSelf": "flex-start",
+              "backgroundColor": "white",
+              "borderColor": "white",
+              "borderRadius": 7,
+              "borderWidth": 2,
+              "fontFamily": "Domine-Regular",
+              "fontSize": 16,
+              "marginLeft": "15%",
+              "marginTop": -15,
+              "zIndex": 10,
+            }
+          }
+        >
+          Active
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "white",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "height": 40,
+                "marginLeft": "5%",
+                "marginRight": "5%",
+                "marginTop": -5,
+                "overflow": "hidden",
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+                "width": "90%",
+                "zIndex": 1,
+              }
+            }
+          >
+            <TextInput
+              editable={true}
+              maxLength={3}
+              onChangeText={[Function]}
+              placeholder=" Active"
+              placeholderTextColor="#86939e"
+              style={
+                {
+                  "color": "#242424",
+                  "flex": 1,
+                  "fontSize": 18,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            {
+              "alignSelf": "flex-start",
+              "backgroundColor": "white",
+              "borderColor": "white",
+              "borderRadius": 7,
+              "borderWidth": 2,
+              "fontFamily": "Domine-Regular",
+              "fontSize": 16,
+              "marginLeft": "15%",
+              "marginTop": -15,
+              "zIndex": 10,
+            }
+          }
+        >
+          Type
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "white",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "height": 40,
+                "marginLeft": "5%",
+                "marginRight": "5%",
+                "marginTop": -5,
+                "overflow": "hidden",
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+                "width": "90%",
+                "zIndex": 1,
+              }
+            }
+          >
+            <TextInput
+              editable={true}
+              maxLength={64}
+              onChangeText={[Function]}
+              placeholder=" Type"
+              placeholderTextColor="#86939e"
+              style={
+                {
+                  "color": "#242424",
+                  "flex": 1,
+                  "fontSize": 18,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            {
+              "alignSelf": "flex-start",
+              "backgroundColor": "white",
+              "borderColor": "white",
+              "borderRadius": 7,
+              "borderWidth": 2,
+              "fontFamily": "Domine-Regular",
+              "fontSize": 16,
+              "marginLeft": "15%",
+              "marginTop": -15,
+              "zIndex": 10,
+            }
+          }
+        >
+          Medium
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "white",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "height": 40,
+                "marginLeft": "5%",
+                "marginRight": "5%",
+                "marginTop": -5,
+                "overflow": "hidden",
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+                "width": "90%",
+                "zIndex": 1,
+              }
+            }
+          >
+            <TextInput
+              editable={true}
+              maxLength={64}
+              onChangeText={[Function]}
+              placeholder=" Medium"
+              placeholderTextColor="#86939e"
+              style={
+                {
+                  "color": "#242424",
+                  "flex": 1,
+                  "fontSize": 18,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            {
+              "alignSelf": "flex-start",
+              "backgroundColor": "white",
+              "borderColor": "white",
+              "borderRadius": 7,
+              "borderWidth": 2,
+              "fontFamily": "Domine-Regular",
+              "fontSize": 16,
+              "marginLeft": "15%",
+              "marginTop": -15,
+              "zIndex": 10,
+            }
+          }
+        >
+          HRF Number
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "white",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "height": 40,
+                "marginLeft": "5%",
+                "marginRight": "5%",
+                "marginTop": -5,
+                "overflow": "hidden",
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+                "width": "90%",
+                "zIndex": 1,
+              }
+            }
+          >
+            <TextInput
+              editable={true}
+              maxLength={64}
+              onChangeText={[Function]}
+              placeholder=" HRF Number"
+              placeholderTextColor="#86939e"
+              style={
+                {
+                  "color": "#242424",
+                  "flex": 1,
+                  "fontSize": 18,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            {
+              "alignSelf": "flex-start",
+              "backgroundColor": "white",
+              "borderColor": "white",
+              "borderRadius": 7,
+              "borderWidth": 2,
+              "fontFamily": "Domine-Regular",
+              "fontSize": 16,
+              "marginLeft": "15%",
+              "marginTop": -15,
+              "zIndex": 10,
+            }
+          }
+        >
+          Yield
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "white",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "height": 40,
+                "marginLeft": "5%",
+                "marginRight": "5%",
+                "marginTop": -5,
+                "overflow": "hidden",
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+                "width": "90%",
+                "zIndex": 1,
+              }
+            }
+          >
+            <TextInput
+              editable={true}
+              maxLength={64}
+              onChangeText={[Function]}
+              placeholder=" Yield"
+              placeholderTextColor="#86939e"
+              style={
+                {
+                  "color": "#242424",
+                  "flex": 1,
+                  "fontSize": 18,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+        <Text
+          style={
+            {
+              "alignSelf": "flex-start",
+              "backgroundColor": "white",
+              "borderColor": "white",
+              "borderRadius": 7,
+              "borderWidth": 2,
+              "fontFamily": "Domine-Regular",
+              "fontSize": 16,
+              "marginLeft": "15%",
+              "marginTop": -15,
+              "zIndex": 10,
+            }
+          }
+        >
+          Visible
+        </Text>
+        <View
+          style={
+            {
+              "paddingHorizontal": 10,
+              "width": "100%",
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "white",
+                "borderBottomWidth": 2,
+                "borderColor": "#1E1E1E",
+                "borderRadius": 12,
+                "borderWidth": 2,
+                "flexDirection": "row",
+                "height": 40,
+                "marginLeft": "5%",
+                "marginRight": "5%",
+                "marginTop": -5,
+                "overflow": "hidden",
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+                "width": "90%",
+                "zIndex": 1,
+              }
+            }
+          >
+            <TextInput
+              editable={true}
+              maxLength={64}
+              onChangeText={[Function]}
+              placeholder=" Visibility"
+              placeholderTextColor="#86939e"
+              style={
+                {
+                  "color": "#242424",
+                  "flex": 1,
+                  "fontSize": 18,
+                  "minHeight": 40,
+                }
+              }
+              testID="RNE__Input__text-input"
+              underlineColorAndroid="transparent"
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#ff190c",
+                "fontSize": 12,
+                "margin": 5,
+              }
+            }
+          />
+        </View>
+      </View>
+    </RCTScrollView>
+  </View>
+</View>
+`;

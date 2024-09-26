@@ -7,12 +7,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useRouter } from 'expo-router'
+import { router } from 'expo-router'
 import NavBar from '../assets/NavBar.jsx'
 import Colors from '../assets/Color';
 import { useFonts } from 'expo-font';
-const crops = () => {
-  const router = useRouter();
+const Crops = () => {
   const [fontsLoaded, fontError] = useFonts({
     'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
     'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
@@ -43,7 +42,7 @@ const crops = () => {
   );
 }
 
-export default crops;
+export default Crops;
 
 const styles = StyleSheet.create({
   container: {

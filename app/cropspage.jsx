@@ -14,7 +14,7 @@ import Icons from '../assets/icons/Icons.js';
 
 
 
-const cropsPage = () => {
+const CropsPage = () => {
 
         {/* Grabs variable form viewcrops page for use */}
         let crop = useLocalSearchParams();
@@ -143,7 +143,7 @@ const cropsPage = () => {
         )
 }
 
-export default cropsPage;
+export default CropsPage;
 
 const styles = StyleSheet.create({
         container: {

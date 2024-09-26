@@ -1,3 +1,9 @@
+/****
+ * @author Tyler Bowen
+ * @reviewer 
+ * @tester 
+ ***/
+
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import NavBar from '../assets/NavBar.jsx';
