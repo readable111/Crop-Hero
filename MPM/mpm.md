@@ -79,6 +79,7 @@
     1. [Appendix A: Understanding React Native](#react_native)
         1. [Class Vs. Functional Components](#component_types)
         1. [Inter-Page Routing](#routing)
+    1. [Appendix B: Glossary](#b_glossary)
 
 ## Introduction <a name="intro"></a>
 ### Purpose of Project <a name="project_purpose"></a>
@@ -1052,3 +1053,16 @@ Besides being versatile, this library is bundled with Expo which is also the lib
 The router object has 6 available functions: navigate, push, replace, back, canGoBack, and setParams. Before describing the functions, I want to quickly mention that Expo Router uses a stack to track all pages that have been loaded or displayed. The navigate function only pushes a new page if the new route is different, ignoring the search parameters and the hash. Otherwise, the current screen rerenders with the new parameters. If you navigate to a route that is in the history, the stack will pop any pages to that route. The push function always pushes the new page on to the top of the stack and displays it. You can push the current route multiple times or with new parameters. The replace function pops the current page before pushing the new page, making it useful for redirects. The back function pops the current page and displays the page below the current one in the stack. The canGoBack function returns true only if a valid page history stack exists and if the current page can be popped. The setParams function can update the query parameters for the currently selected page. 
 
 The Expo Router library will automatically generate statically typed routes for any new files in the app/ folder. As such, you can use a route immediately after creating the page’s file. The route is always the file’s full name, except for the file extension. 
+
+### Appendix B: Glossary <a name="b_glossary"></a>
+- Adaptive Maintenance: maintenance tasks after a change in the operating environment such as the OS, language, hardware, or compliance requirements; in most cases, this kind of maintenance cannot be scheduled and will not occur on a regular basis
+- Corrective Maintenance: maintenance tasks to identify, isolate, and repair/mitigate bugs and risks after they have been discovered; this kind of maintenance is generally performed when a bug is discovered though the patches may be released on a set schedule rather than the moment that it is done
+- Integration Test: while a unit test focuses on a single function or class, an integration test ensures that a limited number of components, functions, and classes are able to work together in a certain context
+- Perfective Maintenance: maintenance tasks to improve the user's experience and the software's performance by adding new features, removing unnecessary features, and optimizing algorithms in accordance with market needs and forces; perfective maintenance is always performed on a schedule, albeit infrequently <a name="perfective_maintenance"></a>
+- Preventative Maintenance: maintenance tasks to proactively prevent future failures; preventative maintenance is always performed on a regular schedule
+- Reflective Maintenance: see [Perfective Maintenance](#perfective_maintenance)
+- Routine Maintenance: maintenance tasks that are planned and regularly performed in accordance with a set schedule
+- System Test: this test focuses on testing something specific across every aspect of the system; for example, a system test might test input sanitization for every input field across the entire app
+- Unit Test: this test focuses on testing the functionality of a single function, class, or component; ensures that each individual part works before trying to combine them which allows issues to be isolated
+- Usability Test: this test focuses on asking the user to perform certain tasks and assessing whether they are capable of achieving this task in a reasonable amount of time
+- User Acceptance Test (UAT): this test focuses on the user's experience and whether the client is content with the product rather than how usable the product is
