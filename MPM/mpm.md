@@ -778,6 +778,49 @@ If you call the `<SearchInput />` tag, this will default to the dropdown mode. T
 ![Search Bar in Modal Mode](./images/Screenshot%202024-08-30%20091416.png "Modal Mode")
 
 ## Troubleshooting <a name="trblsht"></a>
+Assumes that you are using a Windows OS
+
+### Emulator Errors
+
+#### Cannot Open Emulator
+1. Open Android Studio
+1. Go to the SDK manager in the Tools menu
+1. Update your installation of the Android API (cannot be one of the "ext-" APIs)
+    - It will be installed & updated if you see a checkmark. An empty box means that it hasn't been installed while a minus sign means that it is outdated
+1. Go to the SDK Tools tab
+1. Make sure that you have installed and updated the Android SDK Build-Tools, Android Emulator, Android SDK Platform-Tools
+    - It will be installed & updated if you see a checkmark rather than an empty box or a minus sign
+
+#### Emulator Says "The system UI isn't responding"
+1. Open Android Studio
+1. Go to the Device Manager
+1. Click the vertical meatball menu (the 3 dots) for your emulator
+1. Select Wipe Data
+1. Click the pencil icon for your emulator
+1. Click the button labeled Show Advanced Settings
+1. Go to Emulated Performance section
+    - Set Graphics to Hardware
+    - Enable Multi-Core CPU, if you can
+    - Set the Multi-Core CPU value to larger than 2, if you can
+    - Set Boot Option to Cold Boot
+1. Go to the Memory and Storage section
+    - Increase the available RAM
+
+#### Emulator Says "Something went wrong. Can't connect to Internet."
+1. Close the two Expo tabs on the phone
+1. Click the Expo icon on the home screen
+1. Re-enter 'a' in the command line
+1. Keep doing this until it works. Sometimes it can take 3-6 tries
+
+#### Emulator Reloads When I Try to Type 'R' Into an Input Field
+1. Wait for the emulator to reload
+1. Go back to that page
+1. Type in the values more slowly or use the emulator's keyboard.
+    - If you type with the keyboard too quickly, the emulator can't register it as an input so the value gets sent to the command line which interprets it as a reload command
+
+### Expo Errors
+
+### Common React Native Compilation Errors
 
 ## Tools & Resources <a name="tools"></a>
 
