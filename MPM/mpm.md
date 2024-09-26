@@ -77,7 +77,9 @@
 1. [Tools & Resources](#tools)
 1. [Appendices](#appendices)
     1. [Appendix A: Understanding React Native](#react_native)
+        1. [File Types](#file_types)
         1. [Class Vs. Functional Components](#component_types)
+        1. [Import Types](#import_types)
         1. [Inter-Page Routing](#routing)
     1. [Appendix B: Glossary](#b_glossary)
 
@@ -706,6 +708,7 @@ Second, I will discuss how I determined the length of the common suffix. This fu
 
 ## Maintenance Tasks <a name="maint"></a>
 ### Adding a New Page <a name="add_page"></a>
+Maintenance Type: Perfective Maintenance Task
 #### Adding Dark Mode <a name="add_dark_mode"></a>
 *Author: Daniel*
 
@@ -1006,6 +1009,12 @@ Like Case 3, Case 4 is a variant of Case 1. In this case, the test simulates eve
 
 ## Appendices <a name="appendices"></a>
 ### Appendix A: Understanding React Native <a name="react_native"></a>
+#### File Types <a name="file_types"></a>
+*Author: Daniel*
+
+In React Native, there are 4 possible file types or extensions: js, jsx, ts, and tsx. Technically, the jsx and tsx extensions are completely optional and unnecessary as the Babel transpiler doesn't care. However, they help the IDE to understand what you are doing to better highlight stuff and makes it easier for later developers to understand whether you are using pure JavaScript or are mixing in some of the extended features like XML-style component tags (like `<Component />`).
+
+The distinction between js and ts is far more significant. The js(x) files represent JavaScript while the ts(x) files contain TypeScript. JavaScript does not care about variable data types at all. In comparison, the TypeScript files will not compile if there is a type issue. TypeScript also implements some restrictions on how variables are referenced, declared, and passed. Interestingly, at compilation, the TypeScript is transformed into JavaScript before Babel transpiles it into native code.
 #### Class Vs. Functional Components <a name="component_types"></a>
 *Author: Daniel*
 
@@ -1032,6 +1041,31 @@ Class components can access React lifecycle methods like render, along with stat
 Functional components do not manage their own state nor have access to the lifecycle methods provided by React Native. If you want to define props, they are specified in the parentheses like parameters. Functional components are just JavaScript functions that return JSX, which is HTML-like rendering commands. To handle state updates and user interactions, they must use hooks or call a class component. Due to their lightweight nature and minimal overhead, functional components are faster than class components. 
 
 If you want to use that component as a tag in other files, make sure that the final line in the file reads `export default Home`, or whatever name you assigned to the component. 
+
+#### Import Types <a name="import_types"></a>
+*Author: Daniel*
+
+In React Native, there are 2 kinds of imports: named and default. Multiple named exports can be made in the same file, but only one default export can occur in each file. Named exports must be imported with curly braces while importing a default export with curly braces would trigger an error. Here is what named exports and imports would look like:
+~~~
+export const Component2 = () => {
+    return (<></>)
+}
+export const Component1 = () => {
+    return (<></>)
+}
+//Import Here
+import { Component1, Component2 } from "./MyModule"
+~~~
+
+In contrast, a default export and import would look like this:
+~~~
+const Component = () => {
+    return <></>
+}
+export default Component;
+//Import Here
+import Component from "./MyModule"
+~~~
 
 #### Inter-Page Routing <a name="routing"></a>
 *Author: Daniel*
