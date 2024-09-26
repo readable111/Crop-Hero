@@ -4,8 +4,7 @@
  * @tester 
  ***/
 
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, 
         Text, 
         View, 
@@ -13,6 +12,7 @@ import { StyleSheet,
         KeyboardAvoidingView, 
         Platform,
         Keyboard,
+        StatusBar,
         TouchableWithoutFeedback, 
         Alert } from 'react-native';
         
@@ -22,11 +22,13 @@ import { router } from 'expo-router';
 import { Input } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
 import Icons from '../assets/icons/Icons.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
 const addCrops = () => {
         {/* */}
+        //Dummy object that will be filled in later
         const [cropData, setCropData] = useState({
                 name:'',
                 medium:'',
@@ -44,6 +46,8 @@ const addCrops = () => {
 
         })
 
+
+        //Change data as given, didn't want to worry about specifics, so search dummy object and change accordingly
         const handleChange = (fieldName, input) => {
                 setCropData({
                         ...cropData,
@@ -51,21 +55,57 @@ const addCrops = () => {
                 })
         }
 
-        const handleSave = (item) =>{
+        //on save, alert for save push to view crops and add to list
+        const handleSave = () =>{
                 Alert.alert(cropData.name + " saved");
-                
                 router.push({pathname: '/viewcrops', params: {newCrop: JSON.stringify(cropData)}});
         };
+        //Handle old unused print checker
         const printStatement = () =>
         {
                 Alert.alert('Save pressed');
                 console.log(cropData);
         }
+        const [isDark, setIsDarkMode] = useState(false)
+        useEffect(() => {
+                const fetchDarkModeSetting = async () => {
+                        const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
+                        let result = null
+                        if(JSON_VALUE && JSON_VALUE !== "")
+                        {
+                                result = JSON.parse(JSON_VALUE)
+                                console.log("Async: " + result)
+                        }
+                        else
+                        {
+                                useColorScheme.Appearence.getColorScheme()
+                                if(colorScheme == 'dark')
+                                {
+                                        result = true;
+                                }
+                                else
+                                {
+                                        result = false;
+                                }
+                                console.log("colorScheme: " + result)
+                        }
+                        setIsDarkMode(result)
+                }
+                fetchDarkModeSetting()
+                .catch(console.error);
+        }, [])
+
+        //load fonts
         const [fontsLoaded, fontError] = useFonts({
                 'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
                 'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
                 'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
         });
+
+        if(!fontsLoaded && !fontError)
+        {
+                return null;
+        }
 
         return (
                 /* Behavior subject to change, mostly making keyboard disappear after tapping elsewhere*/
@@ -75,117 +115,118 @@ const addCrops = () => {
                  style={styles.containment}
                  >
                 <TouchableWithoutFeedback onPress = {Keyboard.dismiss}>
-                <View style={styles.container}>
+                <View style={[styles.container, isDark && styles.containerDark]}>
+                        <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={ isDark ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
                         {/* Header */}
-                        <View style={styles.titleCard}>
-                                <Text style={styles.title}>Add Crop</Text>
+                        <View style={[styles.titleCard, isDark && styles.titleCarddark]}>
+                                <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>Add Crop</Text>
                         </View>
                         {/* Body (Scrollable inputs)*/}
-                        <ScrollView> 
-
+                        <View>
                                 <View style={styles.save}>
                                         <AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={handleSave}/>
                                 </View>
                                 <View style={styles.back}>
-                                        <AppButton title="" icon={Icons.arrow_tail_left_black} onPress={() => router.back()}/>
+                                        <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                 </View>
-                                
-
+                        </View>
+                        <ScrollView> 
+                                <View style={styles.spacer}/>
                                 <StatusBar style={{backgroundColor: 'white'}}/>
-                                <Text style={styles.label}>Crop Name</Text>
+                                <Text style = {[styles.label, isDark && styles.labelDark]}>Crop Name</Text>
                                 <Input
-                                        inputContainerStyle = {styles.textBox}
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = "name"
                                         maxLength = {128}
                                         onChangeText={(text) => handleChange('name', text)}
                                         testID="name-input"
                                 />
-                                <Text style={styles.label}>Variety</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Variety</Text>
                                 <Input
-                                        inputContainerStyle = {styles.textBox}
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Variety'
                                         maxLength={128}
                                         onChangeText={(text) => handleChange('variety', text)}
                                 />
-                                <Text style={styles.label}>Source</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Source</Text>
                                 <Input
-                                        inputContainerStyle = {styles.textBox}
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Source'
                                         maxLength={128}
                                         onChangeText={(text) => handleChange('source', text)}
                                 />
-                                <Text style={styles.label}>Date Planted</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted</Text>
                                 <Input
-                                        inputContainerStyle = {styles.textBox}
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Date Planted'
                                         maxLength={10}
                                         onChangeText={(text) => handleChange('datePlanted', text)}
                                 />
-                                <Text style={styles.label}>Location</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Location</Text>
                                 <Input
-                                        inputContainerStyle = {styles.textBox}
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Location'
                                         maxLength={128}
                                         onChangeText={(text) => handleChange('location', text)}
                                 />
-                                <Text style={styles.label}>Comments</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Comments</Text>
                                 <Input
-                                        inputContainerStyle = {styles.textBox}
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Comments'
                                         maxLength={1024}
                                         onChangeText={(text) => handleChange('comments', text)}
                                 />
-                                <Text style={styles.label}>Started Indoors?</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Started Indoors?</Text>
                                 <Input
-                                        inputContainerStyle = {styles.textBox}
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Indoors? (Y/N)'
                                         maxLength={3}
                                         onChangeText={(text) => handleChange('indoors', text)}
 
                                 />
-                                <Text style={styles.label}>Active</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Active</Text>
                                 <Input
-                                        inputContainerStyle = {styles.textBox}
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Active'
                                         maxLength={3}
                                         onChangeText={(text) => handleChange('active', text)}
 
                                 />
-                                <Text style={styles.label}>Type</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Type</Text>
                                 <Input
-                                        inputContainerStyle = {styles.textBox}
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Type'
                                         maxLength={64}
                                         onChangeText={(text) => handleChange('type', text)}
 
                                 />
-                                <Text style={styles.label}>Medium</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Medium</Text>
                                 <Input
-                                        inputContainerStyle = {styles.textBox}
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Medium'
                                         maxLength={64}
                                         onChangeText={(text) => handleChange('medium', text)}
 
                                 />
-                                <Text style={styles.label}>HRF Number</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
                                 <Input
-                                        inputContainerStyle = {styles.textBox}
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' HRF Number'
                                         maxLength={64}
                                         onChangeText={(text) => handleChange('hrfNum', text)}
 
                                 />
-                                <Text style={styles.label}>Yield</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Yield</Text>
                                 <Input
-                                        inputContainerStyle = {styles.textBox}
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Yield'
                                         maxLength={64}
                                         onChangeText={(text) => handleChange('yield', text)}
 
                                 />
-                                <Text style={styles.label}>Visible</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Visible</Text>
                                 <Input
-                                        inputContainerStyle = {styles.textBox}
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Visibility'
                                         maxLength={64}
                                         onChangeText={(text) => handleChange('visible', text)}
@@ -193,8 +234,10 @@ const addCrops = () => {
                                 />
                         </ScrollView>
                         
+                        <View>
+                        </View>
+                        
                 </View>
-                
                 
                 </TouchableWithoutFeedback>
                 </KeyboardAvoidingView>
@@ -207,14 +250,23 @@ const styles = StyleSheet.create({
           height: "100%",
           backgroundColor: Colors.SANTA_GRAY,
         },
+        containerDark:{
+                backgroundColor: Colors.BALTIC_SEA
+        },
         containment:{
                 flex:1
+        },
+        spacer:{
+                marginTop: 20,
         },
         titleCard:{
                 backgroundColor: Colors.ALMOND_TAN,
                 borderColor: Colors.CHARCOAL,
                 borderWidth: 1,
                 padding: 18,
+        },
+        titleCarddark:{
+                backgroundColor: Colors.CHARCOAL
         },
         title:{
                 textAlign: 'right',
@@ -254,6 +306,17 @@ const styles = StyleSheet.create({
                 borderRadius: 12,
                 zIndex: 1,
         },
+        textBoxDark:{
+                backgroundColor: Colors.IRIDIUM,
+                borderColor: Colors.WHITE_SMOKE,
+                borderWidth: 2,
+                borderBottomWidth: 2,
+                width:'90%',
+                marginLeft: '5%',
+                marginRight: '5%',
+                height: 40,
+                borderRadius: 12,
+        },
         label:{
                 marginTop: -15,
 		marginLeft: '15%',
@@ -261,11 +324,19 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 		zIndex: 10,
 		fontSize: 16,
-                borderColor: Colors.CHARCOAL,
-		borderWidth: 2,
-		borderRadius: 7,
                 fontFamily: 'Domine-Regular',
 		borderColor: 'white',
+        },
+        labelDark:{
+                backgroundColor: Colors.IRIDIUM,
+                marginTop: -17,
+		marginLeft: '15%',
+		alignSelf: 'flex-start',
+		zIndex: 10,
+		fontSize: 16,
+                color: Colors.WHITE_SMOKE,
+                fontFamily: 'Domine-Regular',
+                
         },
         inputText:{
                 fontSize: 16,
