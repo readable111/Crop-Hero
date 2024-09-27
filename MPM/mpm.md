@@ -50,6 +50,8 @@
         1. [First and Last Letter Section](#1st_last_letter)
         1. [Syllable Counting](#syllables)
         1. [Common Prefix and Suffix](#common_prefix_suffix)
+   1.[Backend Services](#backend_overview) 
+        1. [Database](#database_overview)
 1. [Installation & Setup](#setup)
     1. [Package Management](#pkg_mgmt)
         1. [Importing Libraries](#import_libs)
@@ -716,6 +718,12 @@ As part of my scoring, I remove any common prefix and suffix between the two str
 First, I will discuss how I determined the length of the common prefix. A for loop iterates through a number of characters equal to the length of the shortest string. Then, the for loop increments a counter until the two strings no longer match at the current index. 
 
 Second, I will discuss how I determined the length of the common suffix. This function uses a while loop to assess the strings. The while loop has two conditions. The first condition ensures that the found suffix length is less than the length of the shortest string. The second condition compares two characters, one from each string. The character’s index is equal to the string’s length minus 1 and minus the found suffix length, meaning that the while loop starts at the end when the found suffix length is 0 and moves forward. I multiply the final found suffix length by –1 as I need a negative length to properly slice up the strings. 
+
+### Backend Services <a name="backend_overview"/>
+#### Database <a name="database_overview"/>
+*Author: Tyler*
+
+The database consists
 
 ## Installation & Setup <a name="setup"></a>
 ### Package Management <a name="pkg_mgmt"></a>
