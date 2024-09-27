@@ -31,6 +31,7 @@
         1. [General Weather Forecast](#weather_forecast)
     1. [Components & Assets](#components_n_assets)
         1. [Rows & Columns](#grid)
+        1. [AppButton Component](#appbutton)
     1. [Search Bar](#search_bar)
         1. [Background](#search_bar_bkgd)
         1. [Search Bar Component](#search_bar_component)
@@ -50,6 +51,11 @@
         1. [Syllable Counting](#syllables)
         1. [Common Prefix and Suffix](#common_prefix_suffix)
 1. [Installation & Setup](#setup)
+    1. [Package Management](#pkg_mgmt)
+        1. [Importing Libraries](#import_libs)
+    1. [Running The Program](#run_program)
+        1. [Starting Expo Go](#start_expo)
+        1. [Starting The Test Suite](#start_tests)
 1. [Maintenance Tasks](#maint)
     1. [Adding a New Page](#add_page)
         1. [Adding Dark Mode](#add_dark_mode)
@@ -125,6 +131,13 @@ Starting with the Row tag, it can take three props with height being the most im
 The columns do something similar but use trick favored by this file’s author to dynamically specify a style based on the prop. The special quote character (ASCII 96 or `) ensures that the variables are expanded out before being stored as a string to specify which style should be applied. 
 
 All columns must be placed into a row. All rows must be placed in a grid container which has a style attribute of flex. The value for flex must be the largest sum of all values passed to the `relativeColsCovered` by all of the columns in each row. So long as the sum of all values in a row are less than or equal to the flex value, each column will be given a width based on the percentage of screen that they are given in the `relativeColsCovered` prop. If 3 columns are all given a `relativeColsCovered` value of 1 or all given a 3, each column would take up 33% of the screen’s width. If all but one of the three columns had a value of 1 and the last column had a value of 5, then the earlier columns would take up 14% of the screen, and the last column would take up 71% of the screen. Since Group 7 was most familiar with Bootstrap, most implementations of the Rows and Cols will have a flex value of 12. 
+
+#### AppButton Component <a name="appbutton"></a>
+*Author: Daniel*
+
+The AppButton component was created to provide a standardized button component for multiple pages that incorporated both text and icons from several possible libraries. An onPress event can be passed to the button as a prop, along with an opacity prop which affects the button's opacity when selected. The specifiedStyle and backgroundColor props affect the button's appearance with the backgroundColor prop creating a colored container around everything else rather than stylizing the text's style.
+
+Use the icon prop if you want to specify an image in the Icons folder. Use the mci prop if you want to specify an icon from MaterialCommunityIcons. Use the ad prop if you want to specify an icon from AntDesign. You can use [this website](https://icons.expo.fyi/Index) to find the icon strings for MaterialCommunityIcons and AntDesign. Use the associated size and color props to specify the pixel size and color code of the icon.
 
 ### Search Bar <a name="search_bar"></a>
 #### Background <a name="search_bar_bkgd"></a>
@@ -705,6 +718,27 @@ First, I will discuss how I determined the length of the common prefix. A for lo
 Second, I will discuss how I determined the length of the common suffix. This function uses a while loop to assess the strings. The while loop has two conditions. The first condition ensures that the found suffix length is less than the length of the shortest string. The second condition compares two characters, one from each string. The character’s index is equal to the string’s length minus 1 and minus the found suffix length, meaning that the while loop starts at the end when the found suffix length is 0 and moves forward. I multiply the final found suffix length by –1 as I need a negative length to properly slice up the strings. 
 
 ## Installation & Setup <a name="setup"></a>
+### Package Management <a name="pkg_mgmt"></a>
+#### Importing Libraries <a name="import_libs"></a>
+*Author: Daniel*
+
+When you need to import/install a new library, please use either `npm install --save <YourLibrary>` or `npm install --save-dev <YourLibrary>`. The former will add it to the dependencies list in package.json while the latter adds it to the devDependencies list.
+
+There are two other commands which can import libraries but which should not be used. Namely, they are `npx expo install <YourLibrary>` and `yarn add <YourLibrary>`. These commands do not properly save the libraries in package.json and use a different package manager. While expo can handle having both the npm and yarn package managers, it can create some conflicts with jest and requires that you import every library twice.
+
+### Running The Program <a name="run_program"></a>
+#### Starting Expo Go <a name="start_expo"></a>
+*Author: Daniel*
+
+Start Expo Go by executing `npx expo start` from a command line at the root directory of the repo.
+#### Starting The Test Suite <a name="start_tests"></a>
+*Author: Daniel*
+
+Start the full test suite by executing `npm test` from a command line at the root directory of the repo.
+
+To run only a specific test fil, execute `npm test -- BillingDetails.test.jsx` from a command line at the root directory of the repo. Since this file is in \_\_tests\_\_ which is in the root directory, a directory is not necessary in the command.
+
+If you want to update the snapshots, you can execute either `npm run updateTestSnapshots` or `npm test -- -u BillingDetails.test.jsx` from a command line at the root directory of the repo.
 
 ## Maintenance Tasks <a name="maint"></a>
 ### Adding a New Page <a name="add_page"></a>
