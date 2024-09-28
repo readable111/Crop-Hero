@@ -1,5 +1,11 @@
-{/*McKenna Beard for IT Capstone 2024  UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 4_30_2024*/ }
-{/*This  page is meant to keep track of what was done that day for future reference if needed*/ }
+/****
+ * @author McKenna Beard
+ * @reviewer Daniel Moreno
+ * @tester 
+ * 
+ * UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 4_30_2024
+ * This  page is meant to keep track of what was done that day for future reference if needed
+ ***/
 
 import { React, useState } from 'react';
 import {
@@ -12,7 +18,7 @@ import {
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
-import Colors from '../assets/Color.js'
+import Colors from '../assets/Color'
 import AppButton from '../assets/AppButton.jsx'
 import { Input } from 'react-native-elements'
 import DropDownPicker from 'react-native-dropdown-picker'

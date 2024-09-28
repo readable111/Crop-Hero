@@ -1,63 +1,242 @@
-import { useCallBack } from 'react';
-import { StyleSheet, View, Text, Scrollable, TextInput, FlatList, Image, Button } from 'react-native'
+/****
+ * @author Tyler Bowen, Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester 
+ * 
+ * Secondary Author (Daniel) added general weather forecast info, dark mode, and new carousel for ambient weather display
+ ***/
+
+import { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity, StatusBar, Appearance } from 'react-native'
 import { useFonts } from 'expo-font'
-import { Link } from 'expo-router'
-import Colors from '../assets/Color.js'
-import HomeCarousel from '../src/components/carousel.jsx'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Colors from '../assets/Color'
 import CropCarousel from '../src/components/cropCarousel.jsx'
 import SearchInput from '../assets/SearchFeature.jsx'
 import NavBar from '../assets/NavBar.jsx'
-import LoginButton from './login.jsx';
+import ZipLookup from '../assets/zip_codes.js';
+import { getWeatherIcon } from '../assets/WeatherTypes.tsx';
+import icons from '../assets/icons/Icons.js';
+import { WeatherSlider } from '../src/components/WeatherSlider';
 
+//eventually transfer this to account creation pages so that it can be cached in the database
+async function getGridpoints(zipcode) {
+	if (!(zipcode in ZipLookup)) {
+		return {
+			status: 406, //invalid zip code
+			gridpoint: ''
+		};
+	}
 
+	let coords = ZipLookup[zipcode]
+	let lat = coords[0]
+	let long = coords[1]
+  
+	try {
+		const response = await fetch(
+			`https://api.weather.gov/points/${lat},${long}`
+		).then((res) => res.json());
 
+		forecastURL = response.properties.forecast
+		urlParts = forecastURL.split('/')
+		gridpoint = urlParts[4] + '/' + urlParts[5]
+	
+		return {
+			status: 200,
+			gridpoint: gridpoint
+		};
+	} catch (error) {
+		return {
+			status: 500,
+			gridpoint: ''
+		};
+	}
+}
 
-const Home = () =>{
-
-	//ignore for now, was messing around with weather apis
-//		const getWeather = async () =>{	
-//		const params = {
-//			"latitude": 33.20,
-//			"longitude": -97.15,
-//			"daily": ["temperature_2m_max", "temperature_2m_min", "uv_index_clear_sky_max", "precipitation_sum", "showers_sum", "snowfall_sum"],
-//			"temperature_unit": "fahrenheit",
-//			"wind_speed_unit": "mph",
-//			"precipitation_unit": "inch"
-//		};
-//		const url = "https://api.open-meteo.com/v1/forecast";
-//		const forecast = await fetch(url, params)
-//		const response = forecast[0];
-//		const daily = response.daily();
-//		
-//		const weatherData = {
-//	
-//			daily: {
-//				time: range(Number(daily.time()), Number(daily.timeEnd()), daily.interval()).map(
-//					(t) => new Date((t + utcOffsetSeconds) * 1000)
-//				),
-//				temperature2mMax: daily.variables(0).valuesArray(),
-//				temperature2mMin: daily.variables(1).valuesArray(),
-//				uvIndexClearSkyMax: daily.variables(2).valuesArray(),
-//				precipitationSum: daily.variables(3).valuesArray(),
-//				showersSum: daily.variables(4).valuesArray(),
-//				snowfallSum: daily.variables(5).valuesArray(),
-//			},
-//	
-//		};
 //
-//	for (let i = 0; i < weatherData.daily.time.length; i++) {
-//		console.log(
-//			weatherData.daily.time[i].toISOString(),
-//			weatherData.daily.temperature2mMax[i],
-//			weatherData.daily.temperature2mMin[i],
-//			weatherData.daily.uvIndexClearSkyMax[i],
-//			weatherData.daily.precipitationSum[i],
-//			weatherData.daily.showersSum[i],
-//			weatherData.daily.snowfallSum[i]
-//		);
-//	}
-//		return weatherData;
-//	}
+const WeatherIcon = ({ forecastVal="clear", day="Mon" , isDarkMode=false}) => {
+	//get the proper weather icon based on the forecast value
+	weatherIconDetails = getWeatherIcon(forecastVal)
+	image_url = weatherIconDetails[0]
+	prob_val = weatherIconDetails[1]
+
+	currentStyle = null
+	onlyPossible = false
+	if (prob_val == "None") {
+		currentStyle = styles.noneProb
+		onlyPossible = false
+	}
+	else if (prob_val == "Slight") {
+		currentStyle = styles.slightProb
+		onlyPossible = true
+	}
+	else if (prob_val == "Chance") {
+		currentStyle = styles.chanceProb
+		onlyPossible = true
+	}
+	else if (prob_val == "Likely") {
+		currentStyle = styles.likelyProb
+		onlyPossible = true
+	}
+
+	return (
+		<TouchableOpacity activeOpacity={1} style={styles.weatherIconContainer}>
+			<Image 
+				style={[styles.weatherIcon, currentStyle]}
+				source={image_url}
+			/>
+			{onlyPossible && <Image 
+				source={isDarkMode ? icons.percent_white : icons.percent_black}
+				style={styles.percentImg}
+			/> }
+			<Text style={[styles.weatherDayLabel, isDarkMode && styles.weatherDayLabelDark]}>{day}</Text>
+		</TouchableOpacity>
+	)
+}
+
+const todayDayLookup = {
+	"Monday": "Sunday",
+	"Tuesday": "Monday",
+	"Wednesday": "Tuesday",
+	"Thursday": "Wednesday",
+	"Friday": "Thursday",
+	"Saturday": "Friday",
+	"Sunday": "Saturday",
+}
+
+const test_data = [
+	{
+	  key: '1',
+	  image: icons.thermometer_santa_gray,
+	  line1Label: 'Temperature',
+	  line1: '70°F',
+	  line2Label: 'Feels Like',
+	  line2: '80°F',
+	},
+	{
+	  key: '2',
+	  image: icons.rainfall_black,
+	  line1Label: 'Wind Speed',
+	  line1: '10mph',
+	  line2Label: 'Rainfall',
+	  line2: ' 50%',
+	},
+	{
+	  key: '3',
+	  image: icons.humidity_santa_gray,
+	  line1Label: 'Humidity',
+	  line1: '50%',
+	  line2Label: 'Soil Moisture',
+	  line2: ' 0.2wfv',
+	}
+];
+
+const Home = () =>{ 
+	const [forecastDataDay1, setforecastDataDay1] = useState(null);
+	const [dayName1, setDayName1] = useState(null);
+	const [forecastDataDay2, setforecastDataDay2] = useState(null);
+	const [dayName2, setDayName2] = useState(null);
+	const [forecastDataDay3, setforecastDataDay3] = useState(null);
+	const [dayName3, setDayName3] = useState(null);
+	const [forecastDataDay4, setforecastDataDay4] = useState(null);
+	const [dayName4, setDayName4] = useState(null);
+	const [forecastDataDay5, setforecastDataDay5] = useState(null);
+	const [dayName5, setDayName5] = useState(null);
+	const [forecastDataDay6, setforecastDataDay6] = useState(null);
+	const [dayName6, setDayName6] = useState(null);
+	const [forecastDataDay7, setforecastDataDay7] = useState(null);
+	const [dayName7, setDayName7] = useState(null);
+
+	useEffect(() => {
+		// declare the async data fetching function
+		const fetchData = async () => {
+		  // get the data from the api
+		  const data = await getGridpoints('76131');
+		  // convert the data to json
+		  if (data.status == 200) {
+			const response = await fetch(
+				`https://api.weather.gov/gridpoints/${data.gridpoint}/forecast`
+			).then((res) => res.json());
+			forecast = response.properties.periods
+			//get the short weather forecast for today unless it is already night and then the next few days
+			//ignore the night-time forecast
+			if (forecast[0].name === "Tonight") {
+				//Based on tomorrow's name, figure out today's name
+				todayName = todayDayLookup[forecast[3].name]
+				setDayName1(todayName.substring(0,3))
+				setDayName2(forecast[3].name.substring(0,3))
+				setDayName3(forecast[5].name.substring(0,3))
+				setDayName4(forecast[7].name.substring(0,3))
+				setDayName5(forecast[9].name.substring(0,3))
+				setDayName6(forecast[11].name.substring(0,3))
+				setDayName7(forecast[13].name.substring(0,3))
+
+				setforecastDataDay1(forecast[1].shortForecast)
+				setforecastDataDay2(forecast[3].shortForecast)
+				setforecastDataDay3(forecast[5].shortForecast)
+				setforecastDataDay4(forecast[7].shortForecast)
+				setforecastDataDay5(forecast[9].shortForecast)
+				setforecastDataDay6(forecast[11].shortForecast)
+				setforecastDataDay7(forecast[13].shortForecast)
+			}
+			else {
+				//Based on tomorrow's name, figure out today's name
+				todayName = todayDayLookup[forecast[2].name]
+				setDayName1(todayName.substring(0,3))
+				setDayName2(forecast[2].name.substring(0,3))
+				setDayName3(forecast[4].name.substring(0,3))
+				setDayName4(forecast[6].name.substring(0,3))
+				setDayName5(forecast[8].name.substring(0,3))
+				setDayName6(forecast[10].name.substring(0,3))
+				setDayName7(forecast[12].name.substring(0,3))
+
+				setforecastDataDay1(forecast[0].shortForecast)
+				setforecastDataDay2(forecast[2].shortForecast)
+				setforecastDataDay3(forecast[4].shortForecast)
+				setforecastDataDay4(forecast[6].shortForecast)
+				setforecastDataDay5(forecast[8].shortForecast)
+				setforecastDataDay6(forecast[10].shortForecast)
+				setforecastDataDay7(forecast[12].shortForecast)
+			}
+			
+		  }
+		  else {
+			console.log("bad")
+		  }
+		}
+	  
+		// call the function
+		fetchData()
+		  // make sure to catch any error
+		  .catch(console.error);
+	}, [])
+
+	const [isDarkMode, setIsDarkMode] = useState(false)
+    useEffect(() => {
+		// declare the async data fetching function
+		const fetchDarkModeSetting = async () => {
+			const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
+			let result = null
+    		if (JSON_VALUE) {
+				result = JSON.parse(JSON_VALUE)
+                console.log("Async: " + result)
+			} else {
+				colorScheme = Appearance.getColorScheme()
+				if (colorScheme == 'dark') {
+					result = true
+				} else {
+					result = false
+				}
+                console.log("colorScheme: " + result)
+			}
+			setIsDarkMode(result)
+		}
+	  
+		// call the function
+		fetchDarkModeSetting()
+		  	// make sure to catch any error
+		  	.catch(console.error);
+	}, [])
 
 	const [fontsLoaded, fontError] = useFonts({
 	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
@@ -84,63 +263,25 @@ const Home = () =>{
 
 
 	return(
-	<View style = {styles.container}>	
-		<View style = {styles.weatherContainer}>
-			<FlatList
-					data = {weather}
-					horizontal
-					renderItem = {({item}) =>{
-						switch(item.weather){
-							case "rainy":
-							return(
-								<View style ={styles.weatherItem}>
-									<Image source = {require('../assets/icons/icon _rain_.png')} style = {styles.image}/>
-									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
-								</View>
-								)	
-							case "sunny":
-							return(
-								<View style ={styles.weatherItem}>
-									<Image source = {require('../assets/icons/icon _day sunny_.png')} style = {styles.image}/>
-									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
-								</View>
-								)
-								
-							case "cloudy":
-							return(
-								<View style ={styles.weatherItem}>
-									<Image source = {require('../assets/icons/icon_cloudy.png')} style = {styles.image}/>
-									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
-								</View>
-								)
-							case "pcloudy":
-							return(
-								<View style ={styles.weatherItem}>
-									<Image source = {require('../assets/icons/icon _day sunny overcast_.png')} style = {styles.image}/>
-									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
-								</View>
-								)
-							case "snow":
-							return(
-								<View style ={styles.weatherItem}>
-									<Image source = {require('../assets/icons/interface-weather-snow-flake--winter-freeze-snow-freezing-ice-cold-weather-snowflake.png')} style = {styles.image}/>
-									<Text style = {{fontFamily: 'Domine-Regular', fontSize: 15, alignSelf: 'center'}}>{item.day}</Text>
-								</View>
-								)
-							}
-						}
-					}
-					keyExtractor={(item) => item.id}/>
-		</View>		
+	<View style = {[styles.container, isDarkMode && styles.containerDark]}>	
+		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
+		<View style = {[styles.weatherContainer, isDarkMode && styles.weatherContainerDark]}>
+			<WeatherIcon forecastVal={forecastDataDay1} day={dayName1} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay2} day={dayName2} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay3} day={dayName3} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay4} day={dayName4} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay5} day={dayName5} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay6} day={dayName6} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay7} day={dayName7} isDarkMode={isDarkMode}/>
+		</View>
 		<View style = {styles.weatherCarousel}>
-			<HomeCarousel data={temp}/>
+			<WeatherSlider intro_data={test_data} isDarkMode={isDarkMode}/>
 		</View>
 		<View style = {styles.Search}>
-			<SearchInput/>
+			<SearchInput isDarkMode={isDarkMode}/>
 		</View>
-		<LoginButton/>		
-		<CropCarousel crops = {crops} style = {styles.cropCarousel}/>
-		<NavBar homeSelected/>
+			<CropCarousel crops = {crops} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
+		<NavBar homeSelected darkMode={isDarkMode}/>
 	</View>)
 };
 
@@ -152,6 +293,9 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		justifyContent: 'flex-start',
 	},
+	containerDark: {
+		backgroundColor: Colors.BALTIC_SEA,
+	},
 	homeTitle: {
 		backgroundColor: Colors.ALMOND_TAN,
 		justifyContent: 'center',
@@ -161,13 +305,17 @@ const styles = StyleSheet.create({
 	},
 	weatherContainer: {
 		backgroundColor: Colors.SCOTCH_MIST_TAN,
-		height: 55,
+		height: 60,
 		width: '100%',
-		borderRadius: 5,
+		borderRadius: 12,
 		flexDirection: 'row',
+		marginTop: 25,
 		marginBottom: 20,
 		alignContent: 'flex-start',
 		justifyContent: 'center'
+	},
+	weatherContainerDark: {
+		backgroundColor: Colors.IRIDIUM,
 	},
 	weatherItem:{
 		justifyContent:'center',
@@ -200,17 +348,65 @@ const styles = StyleSheet.create({
 	weatherCarousel:{
 		marginVertical:10,
 		flex:1,
+		alignSelf: 'center',
+		marginBottom: 0,
+		paddingBottom: 0,
+		height: 100,
+	},
+	weatherIconContainer:{
+		height: 50,
+		flexDirection: 'column',
+		marginLeft: 11,
+		marginRight: 11,
+		marginTop: 8,
+		alignContent: 'flex-start',
+		justifyContent: 'center'
+	},
+	weatherIcon:{
+		justifyContent: 'center',
+		alignItems: 'center',
+		width: 30,
+		height: 25,
+		marginBottom: -20,
+	},
+	weatherDayLabel:{
+		fontFamily: 'Domine-Regular',
+		fontSize: 15,
+		alignSelf: 'center',
+		justifyContent: 'center',
+		marginTop: 25,
+		color: Colors.ALMOST_BLACK,
+	},
+	weatherDayLabelDark:{
+		color: Colors.WHITE_SMOKE,
+	},
+	noneProb: {
+		opacity: 1,
+	},
+	slightProb: {
+		opacity: 0.4,
+	},
+	chanceProb: {
+		opacity: 0.7,
+	},
+	likelyProb: {
+		opacity: 1,
+	},
+	percentImg: {
+		marginBottom:-22,
+		marginTop: 10,
+		marginLeft: 18,
+		height: 13,
+		width: 13,
 	},
 	Search:{
 		flex:1,
 		marginBottom: 10,
-		zIndex: 9999
 	},
 	cropCarousel:{
 		flex:1,
 		marginVertical: 5,
-	}
-
+	},
 })
 
 export default Home;

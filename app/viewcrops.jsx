@@ -1,8 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View, ScrollView, Image, TextInput, FlatList, TouchableOpacity} from 'react-native';
-import { router } from 'expo-router';
+/****
+ * @author Isaac Boodt
+ * @reviewer Daniel Moreno
+ * @tester 
+ ***/
+
+import React, { useEffect, useState } from 'react';
+import { Pressable, StyleSheet, StatusBar, Text, View, ScrollView, Image, TextInput, FlatList, TouchableOpacity, Alert} from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Input, colors } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppButton from '../assets/AppButton.jsx';
 import Icons from '../assets/icons/Icons.js';
 import Colors from '../assets/Color';
@@ -10,7 +16,7 @@ import { useFonts } from 'expo-font'
 
 
 
-const viewcrops = () => {
+const viewCrops = () => {
         {/* Array of objects, used to differentiate picked items */}
         const [selectedItem, setItem] = useState(null);
 
@@ -21,13 +27,69 @@ const viewcrops = () => {
                 'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
         });
 
+        if(!fontsLoaded && !fontError){
+                return null;
+        }
+        const [isDark, setIsDarkMode] = useState(false)
+        useEffect(() => {
+                const fetchDarkModeSetting = async () => {
+                        const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
+                        let result = null
+                        if(JSON_VALUE && JSON_VALUE !== "")
+                        {
+                                result = JSON.parse(JSON_VALUE)
+                                //console.log("Async: " + result)
+                        }
+                        else
+                        {
+                                useColorScheme.Appearence.getColorScheme()
+                                if(colorScheme == 'dark')
+                                {
+                                        result = true;
+                                }
+                                else
+                                {
+                                        result = false;
+                                }
+                                console.log("colorScheme: " + result)
+                        }
+                        setIsDarkMode(result)
+                }
+                fetchDarkModeSetting()
+                .catch(console.error);
+        }, [])
+
         {/* Dummy Data, for picker use */}
-        const crops = [
-                { label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', datePlanted: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '193242', visible:'visible', yield:'none'},
-                { label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', datePlanted: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' , medium: 'Hugel Mound', hrfNum: '945304', visible:'not visible', yield:'large'},
-                { label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", datePlanted: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard', medium: 'Hugel Mound', hrfNum: '835242', visible:'visible', yield:'medium' },
-                { label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' }
-        ]
+        const [crops, setCrops] = useState([
+                {label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', datePlanted: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '193242', visible:'visible', yield:'none'},
+                {label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', datePlanted: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' , medium: 'Hugel Mound', hrfNum: '945304', visible:'not visible', yield:'large'},
+                {label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", datePlanted: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard', medium: 'Hugel Mound', hrfNum: '835242', visible:'visible', yield:'medium' },
+                {label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato2', name: "Tomato2", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato3', name: "Tomato3", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato4', name: "Tomato4", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato5', name: "Tomato5", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato6', name: "Tomato6", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato7', name: "Tomato7", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato8', name: "Tomato8", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+        
+        
+        ]);
+        const { newCrop } = useLocalSearchParams();
+
+        useEffect(() => {
+                //Alert.alert("Test");
+                if(newCrop)
+                        {
+                               // Alert.alert("Test2");
+                                const crop = JSON.parse(newCrop);
+                                //Alert.alert("Crop Recieved: " + crop.name);
+                                console.log(JSON.stringify(crops))
+                                setCrops((prevCrops)=>[...prevCrops, crop]);
+                        }
+        }, [newCrop]);
+        console.log(crops);
+               
         {/* Was testing something, leaving for now
         const handleChange = (itemValue, itemIndex) =>
         {
@@ -42,7 +104,7 @@ const viewcrops = () => {
         const renderItem = ({ item }) => 
         (
                 <TouchableOpacity onPress={() => handlePress(item)}>
-                        <View style={styles.button}>
+                        <View style={[ styles.button, isDark && styles.buttonDark ]}>
                                 <Text style={styles.buttonText}>{item.name}</Text>
                         </View>
                 </TouchableOpacity>
@@ -54,29 +116,34 @@ const viewcrops = () => {
                 router.push({pathname: '/cropspage', params: item})
         }
         return (
-                <View>
-                        <Text style={styles.title}>View Crops</Text>
-                        <View style={styles.container}>
+                <View style={styles.wrapper}>
+                        <View style={[ styles.title, isDark && styles.titleDark ]}>
+                                <Text style = {[styles.titleText, isDark && styles.darkTitleText]}>View Crops</Text>
+                        </View>
+                        <View style={[styles.container, isDark && styles.containerDark]}>
                                 <View style={styles.back}>
-                                        <AppButton title="" icon={Icons.arrow_tail_left_black} onPress={() => router.back()}/>
+                                        <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.push('/crops')}/>
                                 </View>
                                 <FlatList
                                         data={crops}
                                         renderItem={renderItem}
-                                        keyExtractor={ item => item.label}
+                                        keyExtractor={ item => item.hrfNum }
                                 />
-
                         </View>
                 </View>
         )
 }
 
-export default viewcrops;
+export default viewCrops;
 
 const styles = StyleSheet.create({
         container: {
           height: "100%",
+          flex: 1,
           backgroundColor: Colors.SANTA_GRAY,
+        },
+        containerDark:{
+                backgroundColor: Colors.BALTIC_SEA
         },
         title:{
                 backgroundColor: Colors.ALMOND_TAN,
@@ -86,13 +153,25 @@ const styles = StyleSheet.create({
                 textAlign: 'right',
                 fontSize: 42,
         },
+        titleDark:{
+                backgroundColor: Colors.CHARCOAL
+        },
+        titleText:{
+                textAlign: 'right',
+                fontSize: 42,
+                fontFamily: 'Domine-Medium',
+                alignContent: 'center'
+        },
+        darkTitleText:{
+                color: Colors.WHITE_SMOKE
+        },
         save:{
                 marginTop: 10,
                 marginLeft: 370,
                 width: 40,
                 height: 40,
                 borderRadius: 40/2,
-                backgroundColor: "lime",
+                backgroundColor: Colors.MALACHITE,
                 justifyContent: "center",
                 alignItems: "center",
         },
@@ -103,53 +182,30 @@ const styles = StyleSheet.create({
                 justifyContent: "center",
                 alignItems: "center",
         },
-        textBox:{
-                marginTop: -10,
-                backgroundColor: "#FFFFFF",
-                borderColor: "#20232a",
-                overflow: 'hidden',
-                borderWidth: 2,
-                borderBottomWidth: 2,
-                marginLeft: 20,
-                marginRight: 30,
-                width: 350,
-                height: 40,
-                borderRadius: 12,
-                paddingLeft: 10,
-        },
-        label:{
-                marginTop: -12,
-		marginLeft: 47,
-		alignSelf: 'flex-start',
-		backgroundColor: 'white',
-		zIndex: 10,
-		fontSize: 16,
-		borderWidth: 3,
-		borderRadius: 7,
-		borderColor: 'white',
-        },
-        dropdownBox: {
-                width: 200, 
-                height: 40, 
-                borderWidth: 1, 
-                borderColor: "#ccc",
-                borderRadius: 5,
-        },
         button:{
                 backgroundColor: Colors.SCOTCH_MIST_TAN,
                 textAlign: 'center',
                 padding: 20,
+                marginBottom: 20,
                 fontSize: 38,
-                marginTop: 20,
                 marginHorizontal: 20,
                 borderColor: '#20232a',
                 borderWidth: 2,
                 borderRadius: 8,
+        },
+        buttonDark:{
+                backgroundColor: Colors.LICHEN,
         },
         buttonText:{
                 fontSize: 24,
                 fontFamily: 'Domine-Regular',
                 textAlign: 'center',
 
+        },
+        spacer:{
+                marginTop: 20,
+        },
+        wrapper:{
+                flex:1
         }
 });

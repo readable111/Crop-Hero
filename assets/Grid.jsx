@@ -1,5 +1,11 @@
-{/*can be used to establish a grid on a page*/}
-{/*design inspired by Bootstrap's 12 column grid with similar purpose of ensuring responsive design*/}
+/****
+ * @author Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester 
+ * 
+ * Can be used to establish a grid on a page
+ * Design inspired by Bootstrap's 12 column grid with similar purpose of ensuring responsive design
+ ***/
 
 import { React } from 'react';
 import { 
@@ -10,12 +16,12 @@ import {
 
 
 {/*define special tags for my grid layout*/}
-const Column = ({ relativeColsCovered, children, alignItems='flex-start'}) => {
+const Column = ({ testID, relativeColsCovered=1, children=[], alignItems='flex-start'}) => {
 	return  (
 		<View style={[styles[`${relativeColsCovered}col`], styles.baseCol, alignItems && {alignItems}]}>{children}</View>
 	)
 }
-const RowTag = ({ children, height, specifiedStyle }) => (
+const RowTag = ({ testID, height=50, children=[], specifiedStyle=null  }) => (
 	<View style={[styles.row, specifiedStyle, height && {height}]}>{children}</View>
 )
 
