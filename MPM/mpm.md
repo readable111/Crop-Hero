@@ -719,6 +719,9 @@ First, I will discuss how I determined the length of the common prefix. A for lo
 
 Second, I will discuss how I determined the length of the common suffix. This function uses a while loop to assess the strings. The while loop has two conditions. The first condition ensures that the found suffix length is less than the length of the shortest string. The second condition compares two characters, one from each string. The character’s index is equal to the string’s length minus 1 and minus the found suffix length, meaning that the while loop starts at the end when the found suffix length is 0 and moves forward. I multiply the final found suffix length by –1 as I need a negative length to properly slice up the strings. 
 
+### Notebook Page <a name="notebook_page"></a>
+*Author: McKenna*
+
 ## Installation & Setup <a name="setup"></a>
 ### Package Management <a name="pkg_mgmt"></a>
 #### Importing Libraries <a name="import_libs"></a>
