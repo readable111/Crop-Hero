@@ -50,7 +50,8 @@
         1. [First and Last Letter Section](#1st_last_letter)
         1. [Syllable Counting](#syllables)
         1. [Common Prefix and Suffix](#common_prefix_suffix)
-    1. [Notebook Page](#notebook_page)  
+    1. [Notebook Page](#notebook_page)
+        1. [Background](#notebook_background)
        
 1. [Installation & Setup](#setup)
     1. [Package Management](#pkg_mgmt)
