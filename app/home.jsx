@@ -18,6 +18,7 @@ import ZipLookup from '../assets/zip_codes.js';
 import { getWeatherIcon } from '../assets/WeatherTypes.tsx';
 import icons from '../assets/icons/Icons.js';
 import { WeatherSlider } from '../src/components/WeatherSlider';
+import Login from "./login.jsx"
 
 //eventually transfer this to account creation pages so that it can be cached in the database
 async function getGridpoints(zipcode) {
@@ -281,6 +282,7 @@ const Home = () =>{
 			<SearchInput isDarkMode={isDarkMode}/>
 		</View>
 			<CropCarousel crops = {crops} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
+			<Login/>
 		<NavBar homeSelected darkMode={isDarkMode}/>
 	</View>)
 };
