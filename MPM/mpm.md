@@ -722,6 +722,10 @@ Second, I will discuss how I determined the length of the common suffix. This fu
 
 ### Notebook Page <a name="notebook_page"></a>
 *Author: McKenna*
+#### Background <a name="notebook_background"></a>
+*Author: McKenna*
+
+The intended purpose of the notebook page is for the user to be able to document daily procedings as to what has been happening that day on the farm. The user will add in entries via a pop-up modal and will be able to sort entries by month and year. 
 
 ## Installation & Setup <a name="setup"></a>
 ### Package Management <a name="pkg_mgmt"></a>
