@@ -180,7 +180,7 @@ All of that code allowed my other group members to simply enter `<SearchInput re
 
 This was my first version of the searchFunction and is the reason why I needed to use a class component.  
 
-~~~
+~~~jsx
 searchFunction = (text) => {  
   //clean up the text based on whether or not it is a number 
   var cleanedTxt = "" 
@@ -212,7 +212,7 @@ Looking back, I can see a lot of issues with this function. However, I want to s
 
 Let's take a look at the initial version of the compareStrings function.  
 
-~~~
+~~~jsx
 function compareStrings(s, t) { 
   //get the Sørensen-Dice Coefficient value 
   sdc = sorensenDiceCoefficient(s.toUpperCase(),t.toUpperCase()) 
@@ -237,7 +237,7 @@ Based on that, I decided to create my own test cases. First, I found a list of c
 
 Since this semester kept me very busy and the program didn't need to be perfect, I just threw it together in about 30 minutes. As an example it has been included here. 
 
-~~~
+~~~python
 import json 
 import random 
 from datetime import datetime, timedelta 
@@ -470,7 +470,7 @@ with open('testCropData.json', 'w') as f:
 
 When I ran this program, I got 584 JSON entries in the following format; more than enough for my needs.
 
-~~~
+~~~json
 [ 
     { 
         "label": "Abaca", 
@@ -764,7 +764,7 @@ Once the `npm install` command is finished running, we can start a local instanc
 
 If you want to write your own custom API endpoints to handle user data, to add new queries to the database, or handle some data/function on the server side, you will need to use the following syntax and add it to the server.js file.
 
-~~~
+~~~node
 app.(get/post)('/path_for_callback', (req, res) =>{
     //do some dta function here
 })
@@ -807,7 +807,7 @@ Maintenance Type: Perfective Maintenance Task
 
 Ah, so you wish to add Dark Mode to your new page. To begin, please add the following imports to the top of your file. 
 
-~~~
+~~~jsx
 import { useState, useEffect } from 'react'; 
 import { Appearance } from 'react-native'; 
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
@@ -815,7 +815,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 I will assume that you are using a functional component. As such, you can use the useState and useEffect hooks to fetch the current Dark Mode setting. 
 
-~~~
+~~~jsx
 const [isDarkMode, setIsDarkMode] = useState(false) 
 
 useEffect(() => { 
@@ -851,7 +851,7 @@ AsyncStorage is a [community-made version](https://react-native-async-storage.gi
 
 After the previous useEffect hook, you can use the `isDarkMode` state variable and the traditional conditional rendering techniques to change your page’s styling based on whether the user has enabled Dark Mode. For example, `style={[styles.container, isDarkMode && styles.containerDark]}` will always apply `styles.container` and will only apply `styles.containerDark` if `isDarkMode` is true. In this situation, you would want to define most of your styling in `styles.container`, including the color scheme for light mode. Then, use `styles.containerDark` to only define the color scheme. The order in the list ensures that `styles.containerDark` overrides whatever colors are defined in `styles.container`. This works because the style will only be applied if it is true. The style on its own is always true, which is why `styles.container` will be applied. However, `styles.containerDark` will only be applied when both it and `isDarkMode` are true, which is done with the AND operator. If you want one value for light mode and a separate value for dark mode without any overlap, you should use the ternary operator like in `icon={isDarkMode ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black}`. The ternary operator is especially useful when you are using a library component that already has light and dark mode themes but requires you to pass a string rather than a boolean like with `theme={isDarkMode ? 'DARK' : 'LIGHT'}`. Of course, you can combine these two techniques, especially if you have a second boolean state variable that needs to be considered too. In the following example, a ternary operator is used to assign the base light mode style for this text block based on whether `hasNotificationsEnabled` is true. Then, this example code overwrites the text color when `isDarkMode` is true. 
 
-~~~
+~~~jsx
 <Text style={[(hasNotificationsEnabled) ? { 
   fontFamily: 'WorkSans-Regular', 
   fontSize: 14, 
@@ -870,7 +870,7 @@ After the previous useEffect hook, you can use the `isDarkMode` state variable a
 
 To provide some extra help, here is the code for adding dark mode to the status bar and navbar as they are two components frequently reused throughout the program. The navbar is especially easy since it takes a boolean, just keep in mind that this navbar example is meant for the profile page. Don't forget to the change the selected page to your page.
 
-~~~
+~~~jsx
 <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/> 
 <NavBar profileSelected darkMode={isDarkMode}/> 
 ~~~
@@ -967,7 +967,7 @@ An alternate solution involves installing yarn and then executing `yarn add expo
 1. Create a component with the same name in the same file as the old component that is triggering errors
     - Make sure to rename your old component
 1. In the new component, return a single Text component and a console.log like in the example code
-~~~
+~~~jsx
 const YourComponent = () => {
     console.log("Component Imported Successfully!")
     return (
@@ -985,7 +985,7 @@ When the issue is resolved, rename your test component and give your original co
 *Author: Daniel*
 
 Your error code will probably look something like this, though the same principles apply if you are trying to determine why your new test file isn't being detected.
-~~~
+~~~bash
 No tests found, exiting with code 1
 Run with `--passWithNoTests` to exit with code 0
 In <Your Repo's File Path Here>
@@ -1040,7 +1040,7 @@ This error often comes with a message like "placeholder: <>" or is associated wi
 *Author: Daniel*
 
 If you ended up in this section, you likely encountered the following text in the .snap file.
-~~~
+~~~jsx
 exports[`<YourComponent/> renders correctly 1`] = `<YourComponent />`;
 ~~~
 
@@ -1052,7 +1052,7 @@ If you see any of that, you are having an import issue. Check the import stateme
 *Author: Daniel*
 
 This is a long error message which makes it difficult to parse. Here is the important part:
-~~~
+~~~bash
 Expected a string (for built-in components) or a class/function (for composite components) but got: undefined. 
 You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports
 ~~~
@@ -1063,7 +1063,7 @@ This is going to come down to one of two issues: circular imports or named/defau
 *Author: Daniel*
 
 You are probably getting an error or warning along the following lines:
-~~~
+~~~jsx
 When testing, code that causes React state updates should be wrapped into act(...):
      
      act(() => {
@@ -1084,7 +1084,7 @@ You can encounter this issue if the component being tested uses setTimeout or se
 
 ##### Case 3: Premature Exit
 In this case, the error can occur when the test prematurely exits before the components finish rendering or updating. This generally occurs when there is a Loading state or a REST fetch. Basically, the test exits before the loading state finishes and data is retrieved. To fix it, just wait for the rendering and updates to be done with `waitFor` or `waitForElementToBeRemoved`.
-~~~
+~~~jsx
 expect(getByText("Loading ...")).toBeInTheDocument();
 await waitFor(() => {
     expect(queryByText("Loading ...")).not.toBeInTheDocument();
@@ -1113,7 +1113,7 @@ The distinction between js and ts is far more significant. The js(x) files repre
 
 All React Native components fit one of these two categories. Class components extend the React Component class and are considered JavaScript ES2015/ES6 classes. In comparison, functional/stateless/pure components are defined as functions saved as a constant. The official documentation recommends that functional components should be used where possible as they are easier to read, test, and maintain. 
 
-~~~
+~~~jsx
 class ClassComp extends Component { 
     render () { 
         return ( 
@@ -1139,7 +1139,7 @@ If you want to use that component as a tag in other files, make sure that the fi
 *Author: Daniel*
 
 In React Native, there are 2 kinds of imports: named and default. Multiple named exports can be made in the same file, but only one default export can occur in each file. Named exports must be imported with curly braces while importing a default export with curly braces would trigger an error. Here is what named exports and imports would look like:
-~~~
+~~~jsx
 export const Component2 = () => {
     return (<></>)
 }
@@ -1151,7 +1151,7 @@ import { Component1, Component2 } from "./MyModule"
 ~~~
 
 In contrast, a default export and import would look like this:
-~~~
+~~~jsx
 const Component = () => {
     return <></>
 }
@@ -1165,7 +1165,7 @@ import Component from "./MyModule"
 
 The CropAlly app uses the [expo-router library](https://docs.expo.dev/router/navigating-pages/) and the index.js file. The index.js file determines the default page when a user opens up the app for the first time. To specify the page, import the page component and then call the component in the Page function’s return statement. For example, the following code in index.js makes the Home page into the default page. 
 
-~~~
+~~~jsx
 import Home from './home.jsx' 
 
 export default function Page() { 
