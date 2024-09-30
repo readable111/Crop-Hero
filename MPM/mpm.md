@@ -54,6 +54,8 @@
         1. [First and Last Letter Section](#1st_last_letter)
         1. [Syllable Counting](#syllables)
         1. [Common Prefix and Suffix](#common_prefix_suffix)
+   1.[Backend Services](#backend_overview) 
+        1. [Database](#database_overview)
 1. [Installation & Setup](#setup)
     1. [Package Management](#pkg_mgmt)
         1. [Importing Libraries](#import_libs)
@@ -730,6 +732,45 @@ As part of my scoring, I remove any common prefix and suffix between the two str
 First, I will discuss how I determined the length of the common prefix. A for loop iterates through a number of characters equal to the length of the shortest string. Then, the for loop increments a counter until the two strings no longer match at the current index. 
 
 Second, I will discuss how I determined the length of the common suffix. This function uses a while loop to assess the strings. The while loop has two conditions. The first condition ensures that the found suffix length is less than the length of the shortest string. The second condition compares two characters, one from each string. The character’s index is equal to the string’s length minus 1 and minus the found suffix length, meaning that the while loop starts at the end when the found suffix length is 0 and moves forward. I multiply the final found suffix length by –1 as I need a negative length to properly slice up the strings. 
+
+### Backend Services <a name="backend_overview"/>
+#### Database <a name="database_overview"/>
+*Author: Tyler*
+
+The database is deployed on Azure MySQL flexible server. Connecting to the database can be done either through MySQL's command line tools, ot it can be done through Azure portal. Once we have set up the database connected to the clients account, you can handle maintenace tasks using the Azure Portal. These tasks include log monitoring, and read write monitoring. As well as viewing the database in PowerBI.
+
+The database is connected to the app using a Node.JS express server, that will also be deployed on the Azure Portal, using the App Services. The Database consists of 11 tables, each having their own primary keys. If you wish to see more on the Database structure, please see the Project Plan Document. If you wish to alter these tables, please run the ALTER TABLE SQL query, if you wish to insert custom values or fields into the database, run the CREATE TABLE query, and be sure to add the fld_s_<tableletter>_subscriberID_pk to the table if it needs another primary key to ensure unique values. 
+
+If you wish to add your own custom endpoints to the backend, we have our backend deployed using Azure App services CI/CD pipeline. It is set up to track a github for pushes to the master branch, and then build and deploy the app to Azure app services. If you wish to write a custom endpoint, please clone the repository using git, and add the endpoin that you wish. Please remember to pass the <user> object to the backend when you call the endpoint, as we use the user object to structure the SQL queries needed in order to fetch data. 
+
+#### Backend Server 
+*Author: Tyler*
+
+Our backend interacts with 2 key services, the database, and our user authentication service, Auth0. 
+
+Auth0 is a thrid party user Authentication service that is built on the Oauth architecture. Oauth simply allows for apps and services to host user management and authentication on their platform. Users can sign in through many providers, including google, microsoft, facebook, and other similar social media sites. This simplifies the user authentication process.
+
+to get the backend code, Contact me to be added as a contributor, and then clone the repo using git clone `tjb0264@<repository address>`this will clone the repository that contains the backend code.
+
+This is also a node.js project, so please run the `npm install` command to download the dependencies described in package.json. 
+
+Once the `npm install` command is finished running, we can start a local instance of the server using either `npm start` or `npm run dev`. It is important to note that this instance is local, and changes to your local files do not effect the actual server.
+
+#### Writing Endpoints
+*Author: Tyler*
+
+If you want to write your own custom API endpoints to either handle user data, write a custom query to the database, or handle some data/function on the server side, you will need to use the following syntax and add it to the server.js file.
+
+~~~
+app.(get/post)('/path_for_callback', (req, res) =>{
+    //do some dta function here
+})
+
+~~~
+we can see that we are declaring the method of the endpoint, whether that is a get method from the client requesting data, or it is a post methid from the user pushing data to an entity. We then declare the second parameter as a callback function, with parameters request, containing the request information., and the responce, which is what we will eventually send to the client with the desired data.
+#### Pushing to the github
+
+To push your changes to the server, use either the git cli, or the git GUI that can be downloaded. Add your modified files to be commited, run the `git commit` command, and then push to the remote branch desired using `git push origin <branch>`
 
 ## Installation & Setup <a name="setup"></a>
 ### Package Management <a name="pkg_mgmt"></a>
