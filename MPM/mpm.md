@@ -50,6 +50,11 @@
         1. [First and Last Letter Section](#1st_last_letter)
         1. [Syllable Counting](#syllables)
         1. [Common Prefix and Suffix](#common_prefix_suffix)
+    1. [Notebook Page](#notebook_page)
+        1. [Background](#notebook_background)
+    1. [To-Do Page](#todo_page)
+        1. [Background](#todo_background)
+       
 1. [Installation & Setup](#setup)
     1. [Package Management](#pkg_mgmt)
         1. [Importing Libraries](#import_libs)
@@ -716,6 +721,13 @@ As part of my scoring, I remove any common prefix and suffix between the two str
 First, I will discuss how I determined the length of the common prefix. A for loop iterates through a number of characters equal to the length of the shortest string. Then, the for loop increments a counter until the two strings no longer match at the current index. 
 
 Second, I will discuss how I determined the length of the common suffix. This function uses a while loop to assess the strings. The while loop has two conditions. The first condition ensures that the found suffix length is less than the length of the shortest string. The second condition compares two characters, one from each string. The character’s index is equal to the string’s length minus 1 and minus the found suffix length, meaning that the while loop starts at the end when the found suffix length is 0 and moves forward. I multiply the final found suffix length by –1 as I need a negative length to properly slice up the strings. 
+
+### Notebook Page <a name="notebook_page"></a>
+*Author: McKenna*
+#### Background <a name="notebook_background"></a>
+*Author: McKenna*
+
+The intended purpose of the notebook page is for the user to be able to document daily procedings as to what has been happening that day on the farm. The user will add in entries via a pop-up modal and will be able to sort entries by month and year. 
 
 ## Installation & Setup <a name="setup"></a>
 ### Package Management <a name="pkg_mgmt"></a>

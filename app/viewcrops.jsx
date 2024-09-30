@@ -4,11 +4,11 @@
  * @tester 
  ***/
 
-import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View, ScrollView, Image, TextInput, FlatList, TouchableOpacity, Alert} from 'react-native';
+import { Pressable, StyleSheet, StatusBar, Text, View, ScrollView, Image, TextInput, FlatList, TouchableOpacity, Alert} from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input, colors } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppButton from '../assets/AppButton.jsx';
 import Icons from '../assets/icons/Icons.js';
 import Colors from '../assets/Color';
@@ -26,6 +26,38 @@ const viewCrops = () => {
                 'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
                 'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
         });
+
+        if(!fontsLoaded && !fontError){
+                return null;
+        }
+        const [isDark, setIsDarkMode] = useState(false)
+        useEffect(() => {
+                const fetchDarkModeSetting = async () => {
+                        const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
+                        let result = null
+                        if(JSON_VALUE && JSON_VALUE !== "")
+                        {
+                                result = JSON.parse(JSON_VALUE)
+                                //console.log("Async: " + result)
+                        }
+                        else
+                        {
+                                useColorScheme.Appearence.getColorScheme()
+                                if(colorScheme == 'dark')
+                                {
+                                        result = true;
+                                }
+                                else
+                                {
+                                        result = false;
+                                }
+                                console.log("colorScheme: " + result)
+                        }
+                        setIsDarkMode(result)
+                }
+                fetchDarkModeSetting()
+                .catch(console.error);
+        }, [])
 
         {/* Dummy Data, for picker use */}
         const [crops, setCrops] = useState([
@@ -72,7 +104,7 @@ const viewCrops = () => {
         const renderItem = ({ item }) => 
         (
                 <TouchableOpacity onPress={() => handlePress(item)}>
-                        <View style={styles.button}>
+                        <View style={[ styles.button, isDark && styles.buttonDark ]}>
                                 <Text style={styles.buttonText}>{item.name}</Text>
                         </View>
                 </TouchableOpacity>
@@ -85,19 +117,18 @@ const viewCrops = () => {
         }
         return (
                 <View style={styles.wrapper}>
-                        <Text style={styles.title}>View Crops</Text>
-                        <View style={styles.container}>
+                        <View style={[ styles.title, isDark && styles.titleDark ]}>
+                                <Text style = {[styles.titleText, isDark && styles.darkTitleText]}>View Crops</Text>
+                        </View>
+                        <View style={[styles.container, isDark && styles.containerDark]}>
                                 <View style={styles.back}>
-                                        <AppButton title="" icon={Icons.arrow_tail_left_black} onPress={() => router.push('/crops')}/>
+                                        <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.push('/crops')}/>
                                 </View>
                                 <FlatList
                                         data={crops}
                                         renderItem={renderItem}
-                                        keyExtractor={ item => item.hrfNum}
-                                        contentContainerStyle={{paddingBottom:20}}
-                                        style={styles.list}
+                                        keyExtractor={ item => item.hrfNum }
                                 />
-
                         </View>
                 </View>
         )
@@ -108,7 +139,11 @@ export default viewCrops;
 const styles = StyleSheet.create({
         container: {
           height: "100%",
+          flex: 1,
           backgroundColor: Colors.SANTA_GRAY,
+        },
+        containerDark:{
+                backgroundColor: Colors.BALTIC_SEA
         },
         title:{
                 backgroundColor: Colors.ALMOND_TAN,
@@ -118,13 +153,25 @@ const styles = StyleSheet.create({
                 textAlign: 'right',
                 fontSize: 42,
         },
+        titleDark:{
+                backgroundColor: Colors.CHARCOAL
+        },
+        titleText:{
+                textAlign: 'right',
+                fontSize: 42,
+                fontFamily: 'Domine-Medium',
+                alignContent: 'center'
+        },
+        darkTitleText:{
+                color: Colors.WHITE_SMOKE
+        },
         save:{
                 marginTop: 10,
                 marginLeft: 370,
                 width: 40,
                 height: 40,
                 borderRadius: 40/2,
-                backgroundColor: "lime",
+                backgroundColor: Colors.MALACHITE,
                 justifyContent: "center",
                 alignItems: "center",
         },
@@ -135,48 +182,19 @@ const styles = StyleSheet.create({
                 justifyContent: "center",
                 alignItems: "center",
         },
-        textBox:{
-                marginTop: -10,
-                backgroundColor: "#FFFFFF",
-                borderColor: "#20232a",
-                overflow: 'hidden',
-                borderWidth: 2,
-                borderBottomWidth: 2,
-                marginLeft: 20,
-                marginRight: 30,
-                width: 350,
-                height: 40,
-                borderRadius: 12,
-                paddingLeft: 10,
-        },
-        label:{
-                marginTop: -12,
-		marginLeft: 47,
-		alignSelf: 'flex-start',
-		backgroundColor: 'white',
-		zIndex: 10,
-		fontSize: 16,
-		borderWidth: 3,
-		borderRadius: 7,
-		borderColor: 'white',
-        },
-        dropdownBox: {
-                width: 200, 
-                height: 40, 
-                borderWidth: 1, 
-                borderColor: "#ccc",
-                borderRadius: 5,
-        },
         button:{
                 backgroundColor: Colors.SCOTCH_MIST_TAN,
                 textAlign: 'center',
                 padding: 20,
+                marginBottom: 20,
                 fontSize: 38,
-                marginTop: 20,
                 marginHorizontal: 20,
                 borderColor: '#20232a',
                 borderWidth: 2,
                 borderRadius: 8,
+        },
+        buttonDark:{
+                backgroundColor: Colors.LICHEN,
         },
         buttonText:{
                 fontSize: 24,
@@ -184,8 +202,8 @@ const styles = StyleSheet.create({
                 textAlign: 'center',
 
         },
-        list:{
-                flex:1,
+        spacer:{
+                marginTop: 20,
         },
         wrapper:{
                 flex:1
