@@ -582,7 +582,7 @@ lev(i,j)=\left\{\begin{matrix}
 {\color{Red}\left| a\right|} & {\color{Red}\textrm{if} \left| b\right| = 0}  \\
 {\color{Red}\left| b\right|} &  {\color{Red}\textrm{if} \left| a\right| = 0} \\
 min\left\{\begin{matrix}
-{\color{Blue} lev_{a,b}(0,2)}+1=2+1=3 \\
+{\color{CornflowerBlue} lev_{a,b}(0,2)}+1=2+1=3 \\
 {\color{Green} lev_{a,b}(1,1)}+1=1+1=2 \\
 {\color{Magenta} lev_{a,b}(0,1)}+1_{a_{i}\neq b_{j}}=1+1=2
 \end{matrix}\right. & =2 \\
