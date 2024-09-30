@@ -29,6 +29,10 @@
 1. [In-Depth System Overview](#indepth_overview)
     1. [Home Page](#indepth_home)
         1. [General Weather Forecast](#weather_forecast)
+    1. [Notebook Page](#notebook_page)
+        1. [Background](#notebook_background)
+    1. [To-Do Page](#todo_page)
+        1. [Background](#todo_background)
     1. [Components & Assets](#components_n_assets)
         1. [Rows & Columns](#grid)
         1. [AppButton Component](#appbutton)
@@ -50,11 +54,6 @@
         1. [First and Last Letter Section](#1st_last_letter)
         1. [Syllable Counting](#syllables)
         1. [Common Prefix and Suffix](#common_prefix_suffix)
-    1. [Notebook Page](#notebook_page)
-        1. [Background](#notebook_background)
-    1. [To-Do Page](#todo_page)
-        1. [Background](#todo_background)
-       
 1. [Installation & Setup](#setup)
     1. [Package Management](#pkg_mgmt)
         1. [Importing Libraries](#import_libs)
@@ -124,6 +123,16 @@ At the top of the Home page is a bar with 7 icons on it and an abbreviated day o
 Afterwards, I pass the gridpoints to the NWS API and fetch the weather forecast based on that. If the first forecast date is labelled as This Afternoon, then I store the forecast information for today and the next 6 days in 7 state variables. If the first forecast date is labelled as Tonight, I store the forecast information for 7 days, starting with the next day. Since this is a farming app, this process will always ignore night-time forecasts. 
 
 At render, the forecast information and day name are passed to 7 WeatherIcon components. The forecast information gets passed to a function in WeatherTypes.jsx. The function takes the shortened forecast, gets rid of anything after the “then” as that is in the future, and evaluates the text. Unfortunately, the NWS API has never established a standardized list of potential values, much to the annoyance of a lot of people. As such, substantial research was done by Group 7 to determine the general terms that they use and to condense them down into 10 categories: Clear (0-10% cloud coverage), a Few Clouds (10-30% cloud coverage), Partly Cloudy (30-60% cloud coverage), Mostly Cloudy (60-90% cloud coverage), Overcast (90-100% cloud coverage), Rainy, Stormy, Snowy (includes sleet and hail), Misty (includes drizzling and foggy), and Dusty. The terms are combined into enumerations that are treated as regex to evaluate the forecast. This passes the image’s URI from the Icons constant list. Additional details are added to the evaluated result if the forecast includes the terms Slight Chance (0-30% chance), Chance (30-60% chance), or Likely (60-80%). Slight Chance is given an opacity of 0.4 and Chance is given an opacity of 0.7. If any of the chance indicators are found, a black/white percent sign (based on dark mode setting) is added to the forecast icon, and styling is used to ensure that it overlaps with the forecast icon. 
+
+### Notebook Page <a name="notebook_page"></a>
+#### Background <a name="notebook_background"></a>
+*Author: McKenna*
+
+The intended purpose of the notebook page is for the user to be able to document daily proceedings as to what has been happening that day on the farm. The user will add in entries via a pop-up modal and will be able to sort entries by month and year. 
+
+### To-Do Page <a name="todo_page"></a>
+#### Background <a name="todo_background"></a>
+*Author: McKenna* 
 
 ### Components & Assets <a name="components_n_assets"></a>
 #### Rows & Columns <a name="grid"></a>
@@ -721,13 +730,6 @@ As part of my scoring, I remove any common prefix and suffix between the two str
 First, I will discuss how I determined the length of the common prefix. A for loop iterates through a number of characters equal to the length of the shortest string. Then, the for loop increments a counter until the two strings no longer match at the current index. 
 
 Second, I will discuss how I determined the length of the common suffix. This function uses a while loop to assess the strings. The while loop has two conditions. The first condition ensures that the found suffix length is less than the length of the shortest string. The second condition compares two characters, one from each string. The character’s index is equal to the string’s length minus 1 and minus the found suffix length, meaning that the while loop starts at the end when the found suffix length is 0 and moves forward. I multiply the final found suffix length by –1 as I need a negative length to properly slice up the strings. 
-
-### Notebook Page <a name="notebook_page"></a>
-*Author: McKenna*
-#### Background <a name="notebook_background"></a>
-*Author: McKenna*
-
-The intended purpose of the notebook page is for the user to be able to document daily procedings as to what has been happening that day on the farm. The user will add in entries via a pop-up modal and will be able to sort entries by month and year. 
 
 ## Installation & Setup <a name="setup"></a>
 ### Package Management <a name="pkg_mgmt"></a>
