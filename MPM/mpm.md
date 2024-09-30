@@ -29,6 +29,10 @@
 1. [In-Depth System Overview](#indepth_overview)
     1. [Home Page](#indepth_home)
         1. [General Weather Forecast](#weather_forecast)
+    1. [Notebook Page](#notebook_page)
+        1. [Background](#notebook_background)
+    1. [To-Do Page](#todo_page)
+        1. [Background](#todo_background)
     1. [Components & Assets](#components_n_assets)
         1. [Rows & Columns](#grid)
         1. [AppButton Component](#appbutton)
@@ -50,11 +54,11 @@
         1. [First and Last Letter Section](#1st_last_letter)
         1. [Syllable Counting](#syllables)
         1. [Common Prefix and Suffix](#common_prefix_suffix)
-    1. [Notebook Page](#notebook_page)
-        1. [Background](#notebook_background)
-    1. [To-Do Page](#todo_page)
-        1. [Background](#todo_background)
-       
+    1. [Backend Services](#backend_overview) 
+        1. [Database](#database_overview)
+        1. [Backend Server](#backend_overview)
+        1. [Writing Endpoints](#writing_endpoints)
+        1. [Pushing to the GitHub](#push_to_github_backend)
 1. [Installation & Setup](#setup)
     1. [Package Management](#pkg_mgmt)
         1. [Importing Libraries](#import_libs)
@@ -124,6 +128,16 @@ At the top of the Home page is a bar with 7 icons on it and an abbreviated day o
 Afterwards, I pass the gridpoints to the NWS API and fetch the weather forecast based on that. If the first forecast date is labelled as This Afternoon, then I store the forecast information for today and the next 6 days in 7 state variables. If the first forecast date is labelled as Tonight, I store the forecast information for 7 days, starting with the next day. Since this is a farming app, this process will always ignore night-time forecasts. 
 
 At render, the forecast information and day name are passed to 7 WeatherIcon components. The forecast information gets passed to a function in WeatherTypes.jsx. The function takes the shortened forecast, gets rid of anything after the “then” as that is in the future, and evaluates the text. Unfortunately, the NWS API has never established a standardized list of potential values, much to the annoyance of a lot of people. As such, substantial research was done by Group 7 to determine the general terms that they use and to condense them down into 10 categories: Clear (0-10% cloud coverage), a Few Clouds (10-30% cloud coverage), Partly Cloudy (30-60% cloud coverage), Mostly Cloudy (60-90% cloud coverage), Overcast (90-100% cloud coverage), Rainy, Stormy, Snowy (includes sleet and hail), Misty (includes drizzling and foggy), and Dusty. The terms are combined into enumerations that are treated as regex to evaluate the forecast. This passes the image’s URI from the Icons constant list. Additional details are added to the evaluated result if the forecast includes the terms Slight Chance (0-30% chance), Chance (30-60% chance), or Likely (60-80%). Slight Chance is given an opacity of 0.4 and Chance is given an opacity of 0.7. If any of the chance indicators are found, a black/white percent sign (based on dark mode setting) is added to the forecast icon, and styling is used to ensure that it overlaps with the forecast icon. 
+
+### Notebook Page <a name="notebook_page"></a>
+#### Background <a name="notebook_background"></a>
+*Author: McKenna*
+
+The intended purpose of the notebook page is for the user to be able to document daily proceedings as to what has been happening that day on the farm. The user will add in entries via a pop-up modal and will be able to sort entries by month and year. 
+
+### To-Do Page <a name="todo_page"></a>
+#### Background <a name="todo_background"></a>
+*Author: McKenna* 
 
 ### Components & Assets <a name="components_n_assets"></a>
 #### Rows & Columns <a name="grid"></a>
@@ -722,12 +736,45 @@ First, I will discuss how I determined the length of the common prefix. A for lo
 
 Second, I will discuss how I determined the length of the common suffix. This function uses a while loop to assess the strings. The while loop has two conditions. The first condition ensures that the found suffix length is less than the length of the shortest string. The second condition compares two characters, one from each string. The character’s index is equal to the string’s length minus 1 and minus the found suffix length, meaning that the while loop starts at the end when the found suffix length is 0 and moves forward. I multiply the final found suffix length by –1 as I need a negative length to properly slice up the strings. 
 
-### Notebook Page <a name="notebook_page"></a>
-*Author: McKenna*
-#### Background <a name="notebook_background"></a>
-*Author: McKenna*
+### Backend Services <a name="backend_overview"></a>
+#### Database <a name="database_overview"></a>
+*Author: Tyler*
 
-The intended purpose of the notebook page is for the user to be able to document daily procedings as to what has been happening that day on the farm. The user will add in entries via a pop-up modal and will be able to sort entries by month and year. 
+The database is deployed on Azure MySQL flexible server. Connecting to the database can be done either through MySQL's command line tools, or it can be done through the Azure portal. Once we have set up the database connected to the client's account, you can handle maintenance tasks using the Azure Portal. These tasks include log and read-write monitoring, as well as viewing the database in PowerBI.
+
+The database is connected to the app using a Node.JS Express server backend which will also be deployed on the Azure Portal through the App Services. The database consists of 11 tables, each having their own primary keys. If you wish to see more on the Database structure, please see the Project Plan Document or Design Document. If you wish to alter these tables, please run `ALTER TABLE SQL` query. If you wish to insert custom values or fields into the database, run the `CREATE TABLE` query, and be sure to add the `fld_s_<tableletter>_subscriberID_pk` to the table if it needs another primary key to ensure unique values. 
+
+If you wish to add your own custom endpoints to the backend, we have our backend deployed using Azure App services CI/CD pipeline. It is set up to track a GitHub repo for pushes to the master branch, and then build and deploy the app to Azure App Services. If you wish to write a custom endpoint, please clone the repository using git, and then add your new endpoint. Please remember to pass the `<user>` object to the backend when you call the endpoint, as we use the user object to structure the SQL queries needed to fetch data. 
+
+#### Backend Server <a name="backend_overview"></a>
+*Author: Tyler*
+
+Our backend interacts with 2 key services: the database and our user authentication service, Auth0. 
+
+Auth0 is a third-party user authentication service that is built on the Oauth architecture. Oauth simply allows apps and services to host user management and authentication on their platform. Users can sign in through many providers, including Google, Microsoft, Facebook, and other similar social media sites. This simplifies the user authentication process.
+
+To get the backend code, contact me (Tyler Bowen) to be added as a contributor, and then clone the repo using git clone `tjb0264@<repository address>`. This will clone the repository that contains the backend code.
+
+This is also a node.js project, so please run the `npm install` command to download the dependencies described in package.json. 
+
+Once the `npm install` command is finished running, we can start a local instance of the server using either `npm start` or `npm run dev`. It is important to note that this instance is local, and changes to your local files do not affect the actual server.
+
+#### Writing Endpoints <a name="writing_endpoints"></a>
+*Author: Tyler*
+
+If you want to write your own custom API endpoints to handle user data, to add new queries to the database, or handle some data/function on the server side, you will need to use the following syntax and add it to the server.js file.
+
+~~~
+app.(get/post)('/path_for_callback', (req, res) =>{
+    //do some dta function here
+})
+~~~
+
+We are declaring the method of the endpoint, whether that is a GET method from the client requesting data, or it is a POST methid from the user pushing data to an entity. We then declare the second parameter as a callback function with two parameters: request, containing the request information, and the response, which is what we will eventually send to the client with the desired data.
+#### Pushing to the GitHub <a name="push_to_github_backend"></a>
+*Author: Tyler*
+
+To push your changes to the server, use either the git cli, or the git GUI that can be downloaded. Add your modified files to be commited, run the `git commit` command, and then push to the remote branch desired using `git push origin <branch>`
 
 ## Installation & Setup <a name="setup"></a>
 ### Package Management <a name="pkg_mgmt"></a>
