@@ -27,7 +27,7 @@ const crops = () => {
       
       <View style={styles.background}>
         <View style={styles.button}>
-          <Pressable onPress={() => router.push("/addcrops")}>
+          <Pressable testID = "addCrops" onPress={() => router.push("/addcrops")}>
             <Text style={styles.buttonText}>Add Crop</Text>
           </Pressable>
         </View>

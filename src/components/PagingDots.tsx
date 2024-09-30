@@ -39,6 +39,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export type { Props as ScalingDotProps };
-
 export default PagingDots;

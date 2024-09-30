@@ -17,7 +17,7 @@ import { useFonts } from 'expo-font'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Col, Row } from '../Grid.jsx'
 import { DOMStyles } from '../DOMStyles.jsx'
-import Colors from '../Color.js'
+import Colors from '../Color'
 
 const UploadModal = ({
     modalVisible,

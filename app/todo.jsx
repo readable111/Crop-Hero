@@ -20,7 +20,7 @@ import {
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
-import Colors from '../assets/Color.js'
+import Colors from '../assets/Color'
 import AppButton from '../assets/AppButton.jsx'
 import { Input,CheckBox } from 'react-native-elements'
 import { MaterialCommunityIcons } from '@expo/vector-icons'

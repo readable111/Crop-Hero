@@ -1,0 +1,715 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dark Mode <ToS/> renders correctly 1`] = `
+<RCTScrollView
+  style={
+    [
+      {
+        "backgroundColor": "#97A5BF",
+        "height": "100%",
+      },
+      false,
+    ]
+  }
+>
+  <View>
+    <View
+      style={
+        [
+          {
+            "backgroundColor": "#F1DDBF",
+            "flex": 12,
+            "height": 140,
+            "marginBottom": 10,
+            "marginHorizontal": "auto",
+            "marginTop": 0,
+            "width": "100%",
+          },
+          false,
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+            {
+              "height": 120,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "flex": 2,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-end",
+              },
+            ]
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+          >
+            <Image
+              source={1}
+              style={{}}
+            />
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 8,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": "black",
+                  "fontFamily": "Domine-Medium",
+                  "fontSize": 36,
+                  "textAlign": "center",
+                  "textAlignVertical": "center",
+                },
+                false,
+              ]
+            }
+          >
+            Terms & Conditions of Service
+          </Text>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 2,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        />
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "marginLeft": 20,
+          "marginTop": 0,
+          "paddingRight": 15,
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 24,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Your rights to use the CropAlly Service and App
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 18,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Access to the CropAlly Service and App
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam quisque id diam vel quam elementum. Odio eu feugiat pretium nibh ipsum consequat nisl vel. Diam quam nulla porttitor massa id neque aliquam vestibulum. Tristique et egestas quis ipsum suspendisse. Et ultrices neque ornare aenean euismod elementum. Commodo viverra maecenas accumsan lacus vel facilisis volutpat est. Laoreet non curabitur gravida arcu. Sed arcu non odio euismod lacinia. Quam viverra orci sagittis eu volutpat odio facilisis mauris sit.
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        Tincidunt vitae semper quis lectus nulla at volutpat diam ut. Orci phasellus egestas tellus rutrum tellus. Lorem ipsum dolor sit amet consectetur adipiscing. Facilisis volutpat est velit egestas dui id ornare arcu. Ut placerat orci nulla pellentesque dignissim enim sit. Id cursus metus aliquam eleifend. Varius sit amet mattis vulputate enim nulla aliquet. Commodo sed egestas egestas fringilla. Aliquam faucibus purus in massa tempor nec. Odio ut sem nulla pharetra diam sit. In hendrerit gravida rutrum quisque. Ullamcorper eget nulla facilisi etiam dignissim diam quis enim lobortis. Nisi scelerisque eu ultrices vitae auctor eu augue ut. Aliquet enim tortor at auctor urna nunc. Hac habitasse platea dictumst quisque sagittis purus sit. Magna etiam tempor orci eu lobortis. Blandit turpis cursus in hac.
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        Velit euismod in pellentesque massa placerat duis ultricies lacus. Mauris in aliquam sem fringilla ut morbi tincidunt. Aliquam ut porttitor leo a diam sollicitudin tempor. Viverra orci sagittis eu volutpat. Eget nunc lobortis mattis aliquam faucibus purus. Sed risus ultricies tristique nulla. Pretium fusce id velit ut tortor. Amet consectetur adipiscing elit pellentesque. Molestie ac feugiat sed lectus vestibulum mattis. Pulvinar elementum integer enim neque volutpat ac tincidunt. Vestibulum lectus mauris ultrices eros in cursus turpis. Purus semper eget duis at tellus at urna condimentum. Sem viverra aliquet eget sit amet tellus cras. Ultricies lacus sed turpis tincidunt. Sit amet massa vitae tortor condimentum lacinia.
+      </Text>
+    </View>
+  </View>
+</RCTScrollView>
+`;
+
+exports[`Light Mode <ToS/> renders correctly 1`] = `
+<RCTScrollView
+  style={
+    [
+      {
+        "backgroundColor": "#97A5BF",
+        "height": "100%",
+      },
+      false,
+    ]
+  }
+>
+  <View>
+    <View
+      style={
+        [
+          {
+            "backgroundColor": "#F1DDBF",
+            "flex": 12,
+            "height": 140,
+            "marginBottom": 10,
+            "marginHorizontal": "auto",
+            "marginTop": 0,
+            "width": "100%",
+          },
+          false,
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+            {
+              "height": 120,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "flex": 2,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-end",
+              },
+            ]
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+          >
+            <Image
+              source={1}
+              style={{}}
+            />
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 8,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": "black",
+                  "fontFamily": "Domine-Medium",
+                  "fontSize": 36,
+                  "textAlign": "center",
+                  "textAlignVertical": "center",
+                },
+                false,
+              ]
+            }
+          >
+            Terms & Conditions of Service
+          </Text>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 2,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        />
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "marginLeft": 20,
+          "marginTop": 0,
+          "paddingRight": 15,
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 24,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Your rights to use the CropAlly Service and App
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 18,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Access to the CropAlly Service and App
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam quisque id diam vel quam elementum. Odio eu feugiat pretium nibh ipsum consequat nisl vel. Diam quam nulla porttitor massa id neque aliquam vestibulum. Tristique et egestas quis ipsum suspendisse. Et ultrices neque ornare aenean euismod elementum. Commodo viverra maecenas accumsan lacus vel facilisis volutpat est. Laoreet non curabitur gravida arcu. Sed arcu non odio euismod lacinia. Quam viverra orci sagittis eu volutpat odio facilisis mauris sit.
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        Tincidunt vitae semper quis lectus nulla at volutpat diam ut. Orci phasellus egestas tellus rutrum tellus. Lorem ipsum dolor sit amet consectetur adipiscing. Facilisis volutpat est velit egestas dui id ornare arcu. Ut placerat orci nulla pellentesque dignissim enim sit. Id cursus metus aliquam eleifend. Varius sit amet mattis vulputate enim nulla aliquet. Commodo sed egestas egestas fringilla. Aliquam faucibus purus in massa tempor nec. Odio ut sem nulla pharetra diam sit. In hendrerit gravida rutrum quisque. Ullamcorper eget nulla facilisi etiam dignissim diam quis enim lobortis. Nisi scelerisque eu ultrices vitae auctor eu augue ut. Aliquet enim tortor at auctor urna nunc. Hac habitasse platea dictumst quisque sagittis purus sit. Magna etiam tempor orci eu lobortis. Blandit turpis cursus in hac.
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        Velit euismod in pellentesque massa placerat duis ultricies lacus. Mauris in aliquam sem fringilla ut morbi tincidunt. Aliquam ut porttitor leo a diam sollicitudin tempor. Viverra orci sagittis eu volutpat. Eget nunc lobortis mattis aliquam faucibus purus. Sed risus ultricies tristique nulla. Pretium fusce id velit ut tortor. Amet consectetur adipiscing elit pellentesque. Molestie ac feugiat sed lectus vestibulum mattis. Pulvinar elementum integer enim neque volutpat ac tincidunt. Vestibulum lectus mauris ultrices eros in cursus turpis. Purus semper eget duis at tellus at urna condimentum. Sem viverra aliquet eget sit amet tellus cras. Ultricies lacus sed turpis tincidunt. Sit amet massa vitae tortor condimentum lacinia.
+      </Text>
+    </View>
+  </View>
+</RCTScrollView>
+`;
+
+exports[`No Async <ToS/> renders correctly 1`] = `
+<RCTScrollView
+  style={
+    [
+      {
+        "backgroundColor": "#97A5BF",
+        "height": "100%",
+      },
+      false,
+    ]
+  }
+>
+  <View>
+    <View
+      style={
+        [
+          {
+            "backgroundColor": "#F1DDBF",
+            "flex": 12,
+            "height": 140,
+            "marginBottom": 10,
+            "marginHorizontal": "auto",
+            "marginTop": 0,
+            "width": "100%",
+          },
+          false,
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+            {
+              "height": 120,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "flex": 2,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-end",
+              },
+            ]
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+          >
+            <Image
+              source={1}
+              style={{}}
+            />
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 8,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": "black",
+                  "fontFamily": "Domine-Medium",
+                  "fontSize": 36,
+                  "textAlign": "center",
+                  "textAlignVertical": "center",
+                },
+                false,
+              ]
+            }
+          >
+            Terms & Conditions of Service
+          </Text>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 2,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        />
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "marginLeft": 20,
+          "marginTop": 0,
+          "paddingRight": 15,
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 24,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Your rights to use the CropAlly Service and App
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 18,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Access to the CropAlly Service and App
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam quisque id diam vel quam elementum. Odio eu feugiat pretium nibh ipsum consequat nisl vel. Diam quam nulla porttitor massa id neque aliquam vestibulum. Tristique et egestas quis ipsum suspendisse. Et ultrices neque ornare aenean euismod elementum. Commodo viverra maecenas accumsan lacus vel facilisis volutpat est. Laoreet non curabitur gravida arcu. Sed arcu non odio euismod lacinia. Quam viverra orci sagittis eu volutpat odio facilisis mauris sit.
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        Tincidunt vitae semper quis lectus nulla at volutpat diam ut. Orci phasellus egestas tellus rutrum tellus. Lorem ipsum dolor sit amet consectetur adipiscing. Facilisis volutpat est velit egestas dui id ornare arcu. Ut placerat orci nulla pellentesque dignissim enim sit. Id cursus metus aliquam eleifend. Varius sit amet mattis vulputate enim nulla aliquet. Commodo sed egestas egestas fringilla. Aliquam faucibus purus in massa tempor nec. Odio ut sem nulla pharetra diam sit. In hendrerit gravida rutrum quisque. Ullamcorper eget nulla facilisi etiam dignissim diam quis enim lobortis. Nisi scelerisque eu ultrices vitae auctor eu augue ut. Aliquet enim tortor at auctor urna nunc. Hac habitasse platea dictumst quisque sagittis purus sit. Magna etiam tempor orci eu lobortis. Blandit turpis cursus in hac.
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        Velit euismod in pellentesque massa placerat duis ultricies lacus. Mauris in aliquam sem fringilla ut morbi tincidunt. Aliquam ut porttitor leo a diam sollicitudin tempor. Viverra orci sagittis eu volutpat. Eget nunc lobortis mattis aliquam faucibus purus. Sed risus ultricies tristique nulla. Pretium fusce id velit ut tortor. Amet consectetur adipiscing elit pellentesque. Molestie ac feugiat sed lectus vestibulum mattis. Pulvinar elementum integer enim neque volutpat ac tincidunt. Vestibulum lectus mauris ultrices eros in cursus turpis. Purus semper eget duis at tellus at urna condimentum. Sem viverra aliquet eget sit amet tellus cras. Ultricies lacus sed turpis tincidunt. Sit amet massa vitae tortor condimentum lacinia.
+      </Text>
+    </View>
+  </View>
+</RCTScrollView>
+`;
