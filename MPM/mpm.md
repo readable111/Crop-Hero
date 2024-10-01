@@ -959,6 +959,12 @@ An alternate solution involves installing yarn and then executing `yarn add expo
 1. Find all instances of the useState() and useEffect() functions
 1. Move all instances of the useState() and useEffect() functions before any conditional returns. You may need to move other hooks too, but these are the most common sources of issues.
 
+#### Infinite Number of Rerenders <a name="infinite_rerenders"></a>
+*Author: Daniel*
+
+1. Check this page's functional components for a setState hook outside of another hook or the return statement.
+    - If the setState hook is outside of those, the hook is called multiple times every time that React Native rerenders the page.
+
 ### Jest Errors <a name="jest_errors"></a>
 
 #### General Troubleshooting Advice For Jest <a name="general_ts_advice"></a>
