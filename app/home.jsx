@@ -133,6 +133,29 @@ const test_data = [
 ];
 
 const Home = () =>{ 
+
+	const userCrops = fetch('//home page API endpoint here').then(data=>data.json())
+	let content
+	const callAmbient = () => {
+		//call ambient weather API
+	}
+	if(userCrops["fld_s_HasAmbient"]==1){
+		//ambient weather component here
+	}
+	else{
+		//NOTE: create ambient weather component based off of API doncumentation
+		content = (		//Ambient weather component here
+		<View style = {[styles.weatherContainer, isDarkMode && styles.weatherContainerDark]}>
+			<WeatherIcon forecastVal={forecastDataDay1} day={dayName1} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay2} day={dayName2} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay3} day={dayName3} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay4} day={dayName4} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay5} day={dayName5} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay6} day={dayName6} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay7} day={dayName7} isDarkMode={isDarkMode}/>
+		</View>)
+		}
+
 	const [forecastDataDay1, setforecastDataDay1] = useState(null);
 	const [dayName1, setDayName1] = useState(null);
 	const [forecastDataDay2, setforecastDataDay2] = useState(null);
@@ -148,7 +171,7 @@ const Home = () =>{
 	const [forecastDataDay7, setforecastDataDay7] = useState(null);
 	const [dayName7, setDayName7] = useState(null);
 
-	useEffect(() => {
+	useEffect(() =>	{
 		// declare the async data fetching function
 		const fetchData = async () => {
 		  // get the data from the api
@@ -266,15 +289,7 @@ const Home = () =>{
 	return(
 	<View style = {[styles.container, isDarkMode && styles.containerDark]}>	
 		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
-		<View style = {[styles.weatherContainer, isDarkMode && styles.weatherContainerDark]}>
-			<WeatherIcon forecastVal={forecastDataDay1} day={dayName1} isDarkMode={isDarkMode}/>
-			<WeatherIcon forecastVal={forecastDataDay2} day={dayName2} isDarkMode={isDarkMode}/>
-			<WeatherIcon forecastVal={forecastDataDay3} day={dayName3} isDarkMode={isDarkMode}/>
-			<WeatherIcon forecastVal={forecastDataDay4} day={dayName4} isDarkMode={isDarkMode}/>
-			<WeatherIcon forecastVal={forecastDataDay5} day={dayName5} isDarkMode={isDarkMode}/>
-			<WeatherIcon forecastVal={forecastDataDay6} day={dayName6} isDarkMode={isDarkMode}/>
-			<WeatherIcon forecastVal={forecastDataDay7} day={dayName7} isDarkMode={isDarkMode}/>
-		</View>
+		{content}
 		<View style = {styles.weatherCarousel}>
 			<WeatherSlider intro_data={test_data} isDarkMode={isDarkMode}/>
 		</View>
