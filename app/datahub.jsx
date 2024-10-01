@@ -13,6 +13,8 @@ import SearchInput from '../assets/SearchFeature.jsx';
 import { LineChart } from 'react-native-chart-kit';
 
 const screenWidth = Dimensions.get("window").width; // from react-native
+const DEFAULT_VALUES = [ { label: 'temp', name: 'default crop', hrfNum: '000', active: 'NaN', location: 'Lorem Ipsum', variety: 'Test', source: 'The store', date: '00/00/1001', comments: 'Who knows', indoors: 'Maybe', type:'Default'} ]
+
 
 const chartConfig = {
   backgroundColor: "#ffffff",
@@ -38,6 +40,8 @@ const DataHub = () => {
   const [isOpen1, setIsOpen1] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
   const [isOpen3, setIsOpen3] = useState(false);
+  const [selectedCrop, setSelectedCrop] = useState({});
+  
 
   if (!fontsLoaded) {
     return null; // Show nothing while fonts are loading
@@ -49,7 +53,8 @@ const DataHub = () => {
       <ScrollView style={styles.scrollArea}>
             <Text style={styles.title}>Data Hub</Text>
         <View style={styles.searchContainer}>
-          <SearchInput resultDisplayMode={"dropdown"}/>
+          <SearchInput resultDisplayMode={"dropdown"} handlePress={(crop)=>{console.log(crop); setSelectedCrop(crop)}}/>
+          <Text>Crop Name: {selectedCrop.name ? selectedCrop.name : "____"}</Text>
         </View>
         <View style={styles.collapsiblesContainer}>
           <Collapsible

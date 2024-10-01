@@ -275,7 +275,7 @@ const Home = () =>{
 			<WeatherSlider intro_data={test_data} isDarkMode={isDarkMode}/>
 		</View>
 		<View style = {styles.Search}>
-			<SearchInput isDarkMode={isDarkMode}/>
+			<SearchInput isDarkMode={isDarkMode} />
 		</View>
 			<CropCarousel crops = {crops} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
 		<NavBar homeSelected darkMode={isDarkMode}/>
