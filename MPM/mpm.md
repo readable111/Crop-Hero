@@ -171,9 +171,9 @@ The idea of placing the Search Bar section under the Components and Assets secti
 
 Before I can discuss how I wrote the search code, I need to briefly cover how React Native works and how I created the search bar component. Technically, React Native is an open-source, client-side UI framework for TypeScript that can be translated into code which works on most mobile devices. Basically, React Native allows you to combine HTML-like tags or components, CSS-like styling, and JavaScript-like functionality. If you want, you can create custom components with either arrow functions or classes that extend React.Component. Each component has props or properties which can be edited like an HTML attribute. 
 
-In accordance with object-oriented principles, I wanted to create a separate component for the search bar that other group members could import. Depending on their page, they either needed the search results to display in a dropdown below the search bar or on a separate page. I chose to implement the separate page option as a modal that opens and covers the view. However, I will leave that discussion here as it is not the primary focus of this post. Also, some of them were using ScrollView which prevented me from using the premade solutions for display, like FlatList. I ended up using the .slice() function instead. 
+In accordance with object-oriented principles, I wanted to create a separate component for the search bar that other group members could import. Depending on their page, they either needed the search results to display in a dropdown below the search bar or on a separate page. I chose to implement the separate page option as a modal that opens and covers the view. However, I will leave that discussion here as it is not the primary focus of this post. Also, some pages use ScrollView which prevented me from using the premade solutions for display, like FlatList. I ended up using the .slice() function instead. Also, I initially planned to use the onPress prop but that overrode a pre-existing prop, causing a variety of annoying bugs. A custom handlePress prop was much easier.
 
-All of that code allowed my other group members to simply enter `<SearchInput resultDisplayMode={"dropdown"}/>` in their own code. Before moving on, I do want to briefly mention a few details about this code. The `searchValue` prop is extremely important. If it is not updated, the search bar will allow the user to enter text but will wipe it away the moment that they stop typing as it will not be saved. Secondly, the `onChangeText` prop is passed the search function which takes the contents of the search bar as a string and is called every time that the text is changed in any way. 
+To use the search bar component, simply enter `<SearchInput resultDisplayMode={"dropdown"}/>` in your code. If you want to use the modal option, pass "modal" to the resultDisplayMode prop. By default, the search bar will reroute the user to the View Crop page for the selected crop. If that is not the desired result, please pass a handlePress prop like `<SearchInput resultDisplayMode={"dropdown"} handlePress={(crop)=>{console.log(crop); setSelectedCrop(crop)}}/>`. In this example, it will log to  console the full crop JSON object and set a state variable called selectedCrop equal to that crop object.
 
 #### Search Function <a name="search_func"></a>
 *Author: Daniel*
@@ -958,6 +958,12 @@ An alternate solution involves installing yarn and then executing `yarn add expo
 1. Find all return/render statements within an if-else block or a loop (called conditional returns)
 1. Find all instances of the useState() and useEffect() functions
 1. Move all instances of the useState() and useEffect() functions before any conditional returns. You may need to move other hooks too, but these are the most common sources of issues.
+
+#### Infinite Number of Rerenders <a name="infinite_rerenders"></a>
+*Author: Daniel*
+
+1. Check this page's functional components for a setState hook outside of another hook or the return statement.
+    - If the setState hook is outside of those, the hook is called multiple times every time that React Native rerenders the page.
 
 ### Jest Errors <a name="jest_errors"></a>
 
