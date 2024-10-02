@@ -1,4 +1,3 @@
-//modal for journal entries
 import { React, Component, useState } from 'react';
 import {
 	StyleSheet,
@@ -32,6 +31,9 @@ const notebookModal = ({
 }) => {
 
 	const [searchBarTxt, setSearchBarTxt] = useState(searchValue);
+	
+	const [open, setOpen] = useState(false);
+	const [value, setValue] = useState('january'); {/*must initialize with string of value from items list to assign a default option*/ }
 
 	const [fontsLoaded, fontError] = useFonts({
 		'Domine-Regular': require('./fonts/Domine-Regular.ttf'),
@@ -41,11 +43,12 @@ const notebookModal = ({
 	if (!fontsLoaded && !fontError) {
 		return null;
 	}
+	{/*https://reactnativetips.com/open-modal-on-button-click-in-react-native/ */ }
 
 	
 
 	return (
-		<Modal animationType='slide' visible={modalVisible} transparent={true} onRequestClose={onBackPress}>
+		<Modal animationType='slide' visible={modalVisible} transparent={false} onRequestClose={onBackPress}>
 			{/*create the dark grey box around it and ability to close modal by clicking*/}
 			<Pressable style={styles.modalContainer} onPress={onBackPress}>
 				{isLoading && <ActivityIndicator size={70} color={Colors.MEDIUM_TAUPE} />}
@@ -54,6 +57,7 @@ const notebookModal = ({
 					<View style={[styles.modalView, { backgroundColor: Colors.SANTA_GRAY }]} >
 						{/*Display the search bar which looks identical to the dropdown search bar but works slightly differents*/}
 						<View style={styles.fstContainer}>
+
 							<Input
 								inputContainerStyle={styles.inputBox}
 								inputStyle={styles.inputBoxStyle}
