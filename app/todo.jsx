@@ -21,6 +21,11 @@ import NavBar from '../assets/NavBar.jsx'
 const todo = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
 	//const [expanded, setExpanded] = useState(false); // for accordian expansion
+// blocks are as follows
+//last completed
+//due soon
+//rest
+//filters by: crop type, task type(icon correlation), farmer assigned, date, complete/not complete
 	
 	{/*Constants for icon drop down menu*/ }
 	const [items, setItems] = useState([ //potential subscription model stuff
@@ -493,6 +498,10 @@ const styles = StyleSheet.create({
 })
 
 export default todo;
+
+
+
+
 
 
 
