@@ -1,10 +1,15 @@
+/****
+ * @author Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester 
+ ***/
+
 import { React, useState, useEffect } from 'react';
 import { 
 	StyleSheet, 
 	View, 
 	Text, 
 	StatusBar, 
-	Image, 
 	Alert,
 	Appearance
 } from 'react-native'
@@ -12,30 +17,19 @@ import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Col, Row } from '../assets/Grid.jsx'
-import Colors from '../assets/Color.js'
+import Colors from '../assets/Color'
 import AppButton from '../assets/AppButton.jsx'
 import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
 import NavBar from '../assets/NavBar.jsx'
 
 const Profile = () =>{ 
-	{/*load in all fonts used for this page*/}
-	const [fontsLoaded, fontError] = useFonts({
-	'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
-	'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
-	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
-	});
-	{/*return an error if the fonts fail to load*/}
-	if (!fontsLoaded && !fontError) {
-		return null;
-	}
-
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
 		// declare the async data fetching function
 		const fetchDarkModeSetting = async () => {
 			const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
 			let result = null
-    		if (JSON_VALUE) {
+    		if (JSON_VALUE && JSON_VALUE !== "") {
 				result = JSON.parse(JSON_VALUE)
                 console.log("Async: " + result)
 			} else {
@@ -55,6 +49,18 @@ const Profile = () =>{
 		  	// make sure to catch any error
 		  	.catch(console.error);
 	}, [])
+
+	{/*load in all fonts used for this page*/}
+	const [fontsLoaded, fontError] = useFonts({
+		'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
+		'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
+		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+	});
+	{/*return an error if the fonts fail to load*/}
+	if (!fontsLoaded && !fontError) {
+		return null;
+	}
+
 	{/*return the page view with all of its contents*/}
 	return(
 	<View style = {[styles.topContainer, isDarkMode && styles.topContainerDark]}>

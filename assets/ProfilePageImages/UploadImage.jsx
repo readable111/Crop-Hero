@@ -1,3 +1,9 @@
+/****
+ * @author Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester 
+ ***/
+
 import React, { useState } from 'react';
 import { 
     Image, 
@@ -5,7 +11,7 @@ import {
     StyleSheet,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker'
-import Colors from '../Color.js'
+import Colors from '../Color'
 import AppButton from '../AppButton.jsx'
 import UploadModal from './UploadModal.jsx'
 import imgPlaceholder from "./AvatarPlaceholder.png"

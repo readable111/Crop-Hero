@@ -1,15 +1,23 @@
-import { useCallBack, useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Scrollable, TextInput, FlatList, Image, TouchableOpacity } from 'react-native'
+/****
+ * @author Tyler Bowen, Daniel Moreno
+ * @reviewer Daniel Moreno
+ * @tester 
+ * 
+ * Secondary Author (Daniel) added general weather forecast info, dark mode, and new carousel for ambient weather display
+ ***/
+
+import { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity, StatusBar, Appearance } from 'react-native'
 import { useFonts } from 'expo-font'
-import { Link } from 'expo-router'
-import Colors from '../assets/Color.js'
-import HomeCarousel from '../src/components/carousel.jsx'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Colors from '../assets/Color'
 import CropCarousel from '../src/components/cropCarousel.jsx'
 import SearchInput from '../assets/SearchFeature.jsx'
 import NavBar from '../assets/NavBar.jsx'
 import ZipLookup from '../assets/zip_codes.js';
 import { getWeatherIcon } from '../assets/WeatherTypes.tsx';
 import icons from '../assets/icons/Icons.js';
+import { WeatherSlider } from '../src/components/WeatherSlider';
 
 //eventually transfer this to account creation pages so that it can be cached in the database
 async function getGridpoints(zipcode) {
@@ -46,7 +54,7 @@ async function getGridpoints(zipcode) {
 }
 
 //
-const WeatherIcon = ({ forecastVal="clear", day="Mon" }) => {
+const WeatherIcon = ({ forecastVal="clear", day="Mon" , isDarkMode=false}) => {
 	//get the proper weather icon based on the forecast value
 	weatherIconDetails = getWeatherIcon(forecastVal)
 	image_url = weatherIconDetails[0]
@@ -72,17 +80,17 @@ const WeatherIcon = ({ forecastVal="clear", day="Mon" }) => {
 	}
 
 	return (
-		<View style={styles.weatherIconContainer}>
+		<TouchableOpacity activeOpacity={1} style={styles.weatherIconContainer}>
 			<Image 
 				style={[styles.weatherIcon, currentStyle]}
 				source={image_url}
 			/>
 			{onlyPossible && <Image 
-				source={icons.percent_black}
+				source={isDarkMode ? icons.percent_white : icons.percent_black}
 				style={styles.percentImg}
 			/> }
-			<Text style={styles.weatherDayLabel}>{day}</Text>
-		</View>
+			<Text style={[styles.weatherDayLabel, isDarkMode && styles.weatherDayLabelDark]}>{day}</Text>
+		</TouchableOpacity>
 	)
 }
 
@@ -95,6 +103,33 @@ const todayDayLookup = {
 	"Saturday": "Friday",
 	"Sunday": "Saturday",
 }
+
+const test_data = [
+	{
+	  key: '1',
+	  image: icons.thermometer_santa_gray,
+	  line1Label: 'Temperature',
+	  line1: '70°F',
+	  line2Label: 'Feels Like',
+	  line2: '80°F',
+	},
+	{
+	  key: '2',
+	  image: icons.rainfall_black,
+	  line1Label: 'Wind Speed',
+	  line1: '10mph',
+	  line2Label: 'Rainfall',
+	  line2: ' 50%',
+	},
+	{
+	  key: '3',
+	  image: icons.humidity_santa_gray,
+	  line1Label: 'Humidity',
+	  line1: '50%',
+	  line2Label: 'Soil Moisture',
+	  line2: ' 0.2wfv',
+	}
+];
 
 const Home = () =>{ 
 	const [forecastDataDay1, setforecastDataDay1] = useState(null);
@@ -176,6 +211,33 @@ const Home = () =>{
 		  .catch(console.error);
 	}, [])
 
+	const [isDarkMode, setIsDarkMode] = useState(false)
+    useEffect(() => {
+		// declare the async data fetching function
+		const fetchDarkModeSetting = async () => {
+			const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
+			let result = null
+    		if (JSON_VALUE) {
+				result = JSON.parse(JSON_VALUE)
+                console.log("Async: " + result)
+			} else {
+				colorScheme = Appearance.getColorScheme()
+				if (colorScheme == 'dark') {
+					result = true
+				} else {
+					result = false
+				}
+                console.log("colorScheme: " + result)
+			}
+			setIsDarkMode(result)
+		}
+	  
+		// call the function
+		fetchDarkModeSetting()
+		  	// make sure to catch any error
+		  	.catch(console.error);
+	}, [])
+
 	const [fontsLoaded, fontError] = useFonts({
 	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
 	'Domine-Bold': require('../assets/fonts/Domine-Bold.ttf')
@@ -198,24 +260,25 @@ const Home = () =>{
 	const temp = [{temp: 70, perc: 80},{temp: 68, perc:68}, {temp: 70, perc: 72}]
 	
 	return(
-	<View style = {styles.container}>	
-		<View style = {styles.weatherContainer}>
-			<WeatherIcon forecastVal={forecastDataDay1} day={dayName1}/>
-			<WeatherIcon forecastVal={forecastDataDay2} day={dayName2}/>
-			<WeatherIcon forecastVal={forecastDataDay3} day={dayName3}/>
-			<WeatherIcon forecastVal={forecastDataDay4} day={dayName4}/>
-			<WeatherIcon forecastVal={forecastDataDay5} day={dayName5}/>
-			<WeatherIcon forecastVal={forecastDataDay6} day={dayName6}/>
-			<WeatherIcon forecastVal={forecastDataDay7} day={dayName7}/>
+	<View style = {[styles.container, isDarkMode && styles.containerDark]}>	
+		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
+		<View style = {[styles.weatherContainer, isDarkMode && styles.weatherContainerDark]}>
+			<WeatherIcon forecastVal={forecastDataDay1} day={dayName1} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay2} day={dayName2} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay3} day={dayName3} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay4} day={dayName4} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay5} day={dayName5} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay6} day={dayName6} isDarkMode={isDarkMode}/>
+			<WeatherIcon forecastVal={forecastDataDay7} day={dayName7} isDarkMode={isDarkMode}/>
 		</View>
 		<View style = {styles.weatherCarousel}>
-			<HomeCarousel data={temp}/>
+			<WeatherSlider intro_data={test_data} isDarkMode={isDarkMode}/>
 		</View>
 		<View style = {styles.Search}>
-			<SearchInput/>
+			<SearchInput isDarkMode={isDarkMode} />
 		</View>
-			<CropCarousel crops = {crops} style = {styles.cropCarousel}/>
-		<NavBar homeSelected/>
+			<CropCarousel crops = {crops} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
+		<NavBar homeSelected darkMode={isDarkMode}/>
 	</View>)
 };
 
@@ -226,6 +289,9 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'column',
 		justifyContent: 'flex-start',
+	},
+	containerDark: {
+		backgroundColor: Colors.BALTIC_SEA,
 	},
 	homeTitle: {
 		backgroundColor: Colors.ALMOND_TAN,
@@ -238,11 +304,15 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.SCOTCH_MIST_TAN,
 		height: 60,
 		width: '100%',
-		borderRadius: 5,
+		borderRadius: 12,
 		flexDirection: 'row',
+		marginTop: 25,
 		marginBottom: 20,
 		alignContent: 'flex-start',
 		justifyContent: 'center'
+	},
+	weatherContainerDark: {
+		backgroundColor: Colors.IRIDIUM,
 	},
 	weatherItem:{
 		justifyContent:'center',
@@ -275,10 +345,12 @@ const styles = StyleSheet.create({
 	weatherCarousel:{
 		marginVertical:10,
 		flex:1,
-		alignSelf: 'flex-start'
+		alignSelf: 'center',
+		marginBottom: 0,
+		paddingBottom: 0,
+		height: 100,
 	},
 	weatherIconContainer:{
-		backgroundColor: Colors.SCOTCH_MIST_TAN,
 		height: 50,
 		flexDirection: 'column',
 		marginLeft: 11,
@@ -300,6 +372,10 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 		justifyContent: 'center',
 		marginTop: 25,
+		color: Colors.ALMOST_BLACK,
+	},
+	weatherDayLabelDark:{
+		color: Colors.WHITE_SMOKE,
 	},
 	noneProb: {
 		opacity: 1,
@@ -323,7 +399,6 @@ const styles = StyleSheet.create({
 	Search:{
 		flex:1,
 		marginBottom: 10,
-		zIndex: 9999
 	},
 	cropCarousel:{
 		flex:1,

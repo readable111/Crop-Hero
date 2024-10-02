@@ -1,3 +1,12 @@
+/****
+ * @author McKenna Beard
+ * @reviewer Daniel Moreno
+ * @tester 
+ * 
+ * UNT To-do Page as apart of the notebook tab on the nav bar
+ * This page can only be accessed after clicking on the notebook page from the main nav bar
+ ***/
+
 {/*McKenna Beard for IT Capstone 2024  UNT To-do Page as apart of the notebook tab on the nav bar*/ }
 {/*This page can only be accessed after clicking on the notebook page from the main nav bar*/ }
 import { React, useState } from 'react';
@@ -11,7 +20,7 @@ import {
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
-import Colors from '../assets/Color.js'
+import Colors from '../assets/Color'
 import AppButton from '../assets/AppButton.jsx'
 import { Input,CheckBox } from 'react-native-elements'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
