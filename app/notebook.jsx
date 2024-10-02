@@ -21,8 +21,7 @@ import notebookModal from '.../assets/NotebookModals/JournalEntryModal'
 import { SpeedDial } from '@rneui/themed';
 
 const Notebook = () => {
-	{/*constants for date input*/ }
-	//const mask = '[00]{-}[00]{-}[0000]'
+	
 	// date constants --months
 	const [items, setItems] = useState([ 
 		{ label: 'Jan', value: 'january' },  
@@ -82,7 +81,7 @@ const Notebook = () => {
 			</View>
 					{/*Month selector for notebook entries (to be connected to database)-----------------------------------------------------*/}
 					<View style={styles.btnGridContainerDate}>
-						{/*row for profile settings*/}
+						{/*row for date selector*/}
 						<Row height={20}>
 							<Col relativeColsCovered={2} alignItems='left'>
 								{/* <Text style={styles.pageTitle}>Settings</Text>*/}
@@ -148,21 +147,26 @@ const Notebook = () => {
 								{/*Hold space for year selector for semester 2 --*/ }
 							</Col>
 							<Col relativeColsCovered={2} alignItems='right'> {/* Section for RNE speedDIAL button to add entry/Delete*/ }
-								<AppButton title="Add Entry" specifiedStyle={styles.oval} onPress={() => router.replace('/notebook')} /> {/* Edit this to fix style issue to rectangle with border radius and opening of modal*/ }
+								{/*https://reactnativeelements.com/docs/components/speeddial#props */ }
 								<SpeedDial
-									isOpen={open}
-									icon={{ name: 'edit', color: '#fff' }}
+									isOpen={open} {/* Initial State*/ }
+									icon={{ name: 'edit', color: '#fff' }} //color is color for text
 									openIcon={{ name: 'close', color: '#fff' }}
 									onOpen={() => setOpen(!open)}
 									onClose={() => setOpen(!open)}
 								>
-								<SpeedDial.Action
-									icon={{ name: 'add', color: '#fff' }}
+								<SpeedDial.Action //add
+									icon={{ name: 'add', color: '#fff' }} //color is color of text
 									title="Add"
 									onPress={() => setModalVisible(true)}
 								/>
-								<SpeedDial.Action
-									icon={{ name: 'delete', color: '#fff' }}
+								<SpeedDial.Action //delete
+									icon={{ name: 'delete', color: '#fff' }} // color is for color of text
+									title="Delete"
+									onPress={() => console.log('Delete Something')}
+								/>
+								<SpeedDial.Action //export
+									icon={{ name: 'delete', color: '#fff' }} // color is for color of text
 									title="Delete"
 									onPress={() => console.log('Delete Something')}
 								/>
@@ -196,7 +200,7 @@ const Notebook = () => {
 						multiline={true}
 						textAlign="flex-start"
 					/>
-					<AppButton specifiedStyle={{ marginTop: -5, zIndex: 1, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
+					
 				</View>
 				
 			</ScrollView>
@@ -306,6 +310,10 @@ const styles = StyleSheet.create({
 
 export default Notebook;
 
+
+
+				
+				
 
 
 				
