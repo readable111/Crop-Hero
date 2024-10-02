@@ -1,4 +1,4 @@
-{/*McKenna Beard for IT Capstone 2024  UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 10_2_2024*/ }
+{/*McKenna Beard for IT Capstone 2024  UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 4_30_2024*/ }
 {/*This  page is meant to keep track of what was done that day for future reference if needed*/ }
 
 import { React, useState } from 'react';
@@ -17,7 +17,8 @@ import AppButton from '../assets/AppButton.jsx'
 import { Input } from 'react-native-elements'
 import DropDownPicker from 'react-native-dropdown-picker'
 import NavBar from '../assets/NavBar'
-import taskModal from '.../assets/NotebookModals/JournalEntryModal'
+import notebookModal from '.../assets/NotebookModals/JournalEntryModal'
+import { SpeedDial } from '@rneui/themed';
 
 const Notebook = () => {
 	{/*constants for date input*/ }
@@ -143,8 +144,29 @@ const Notebook = () => {
 								/>
 
 							</Col>
-							<Col relativeColsCovered={2} alignItems='left'>
+							<Col relativeColsCovered={2} alignItems='center'>
 								{/*Hold space for year selector for semester 2 --*/ }
+							</Col>
+							<Col relativeColsCovered={2} alignItems='right'> {/* Section for RNE speedDIAL button to add entry/Delete*/ }
+								<AppButton title="Add Entry" specifiedStyle={styles.oval} onPress={() => router.replace('/notebook')} /> {/* Edit this to fix style issue to rectangle with border radius and opening of modal*/ }
+								<SpeedDial
+									isOpen={open}
+									icon={{ name: 'edit', color: '#fff' }}
+									openIcon={{ name: 'close', color: '#fff' }}
+									onOpen={() => setOpen(!open)}
+									onClose={() => setOpen(!open)}
+								>
+								<SpeedDial.Action
+									icon={{ name: 'add', color: '#fff' }}
+									title="Add"
+									onPress={() => setModalVisible(true)}
+								/>
+								<SpeedDial.Action
+									icon={{ name: 'delete', color: '#fff' }}
+									title="Delete"
+									onPress={() => console.log('Delete Something')}
+								/>
+								</SpeedDial>
 							</Col>
 						</Row>
 
@@ -283,6 +305,12 @@ const styles = StyleSheet.create({
 })
 
 export default Notebook;
+
+
+
+				
+				
+
 
 
 
