@@ -16,7 +16,8 @@ import Colors from '../assets/Color.js'
 import AppButton from '../assets/AppButton.jsx'
 import { Input } from 'react-native-elements'
 import DropDownPicker from 'react-native-dropdown-picker'
-import NavBar from '../assets/NavBar.jsx'
+import NavBar from '../assets/NavBar'
+import taskModal from '.../assets/NotebookModals/JournalEntryModal'
 
 const Notebook = () => {
 	{/*constants for date input*/ }
@@ -147,75 +148,21 @@ const Notebook = () => {
 							</Col>
 						</Row>
 
+			{/*Modal display*/ }
+			<View>
+					<JournalEntryModal
+						modalVisible={true}
+						//onBackPress={ }
+
+					/>
+
+					
+			</View>
 
 			</View>
 			{/*start of scroll viewing portion to scroll between the entries made for the month-----------------------------------------------------*/ }
 			<ScrollView style={styles.scroll}>
-				<View style={styles.fstContainer}>
-					<Input
-						inputContainerStyle={styles.inputBox}
-						inputStyle={styles.inputBoxStyle}
-						selectionColor={Colors.SANTA_GRAY}
-						placeholder='What happened today?'
-						maxLength={256}
-						multiline={true}
-						textAlign="flex-start"
-					/>
-					{/*edit icon button that will open up the text box in semester 2*/ }
-					<AppButton specifiedStyle={{marginTop: 0, zIndex:5, alignItems: "flex-end"}} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
-				</View>
-				<View style={styles.fstContainer}>
-					<Input
-						inputContainerStyle={styles.inputBox}
-						inputStyle={styles.inputBoxStyle}
-						selectionColor={Colors.SANTA_GRAY}
-						placeholder='Things I did today...'
-						defaultValue={entryTwo}
-						maxLength={256}
-						multiline={true}
-						textAlign="flex-start"
-					/>
-					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
-				</View>
-				<View style={styles.fstContainer}>
-					<Input
-						inputContainerStyle={styles.inputBox}
-						inputStyle={styles.inputBoxStyle}
-						selectionColor={Colors.SANTA_GRAY}
-						placeholder='Things I did today...'
-						defaultValue={entryThree}
-						maxLength={256}
-						multiline={true}
-						textAlign="flex-start"
-					/>
-					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
-				</View>
-				<View style={styles.fstContainer}>
-					<Input
-						inputContainerStyle={styles.inputBox}
-						inputStyle={styles.inputBoxStyle}
-						selectionColor={Colors.SANTA_GRAY}
-						placeholder='Things I did today...'
-						defaultValue={entryFour}
-						maxLength={256}
-						multiline={true}
-						textAlign="flex-start"
-					/>
-					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
-				</View>
-				<View style={styles.fstContainer}>
-					<Input
-						inputContainerStyle={styles.inputBox}
-						inputStyle={styles.inputBoxStyle}
-						selectionColor={Colors.SANTA_GRAY}
-						placeholder='Things I did today...'
-						defaultValue={entryFive}
-						maxLength={256}
-						multiline={true}
-						textAlign="flex-start"
-					/>
-					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
-				</View>
+				
 				<View style={styles.fstContainer}>
 					<Input
 						inputContainerStyle={styles.inputBox}
@@ -229,19 +176,7 @@ const Notebook = () => {
 					/>
 					<AppButton specifiedStyle={{ marginTop: -5, zIndex: 1, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
 				</View>
-				<View style={styles.fstContainer}>
-					<Input
-						inputContainerStyle={styles.inputBox}
-						inputStyle={styles.inputBoxStyle}
-						selectionColor={Colors.SANTA_GRAY}
-						placeholder='Things I did today...'
-						defaultValue={entrySeven}
-						maxLength={256}
-						multiline={true}
-						textAlign="flex-start"
-					/>
-					<AppButton specifiedStyle={{ marginTop: -5, zIndex: 1, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
-				</View>
+				
 			</ScrollView>
 			<NavBar notebookSelected/>
 	</View>
