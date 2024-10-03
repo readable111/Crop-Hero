@@ -16,8 +16,9 @@ When a new version of the app is released, please update the value stored in pac
 
 ## IMPORTANT: Branch Management
 IMPORTANT: After pulling from the main branch for the first time, run npm install in order to install dependencies
-**************BEFORE ADDING A NEW FEATURE/EDITING CODE FROM MAIN BRANCH************
-Please check out a new branch in order to develop your feature, and the push to that branch rather than master. When your feature is complete you can open a pull request to merge your code into the main branch
+
+#### \*\*\*\*\*\*\*\*\*\*\*\*\*\* BEFORE ADDING A NEW FEATURE/EDITING CODE FROM MAIN BRANCH \*\*\*\*\*\*\*\*\*\*\*\*
+Please check out a new branch in order to develop your feature, and then push to that branch rather than to master. When your feature is complete, you can open a pull request to merge your code into the master branch.
 
 ## Running the Emulator
  1. Open a command line in the base Crop-Hero directory
