@@ -262,7 +262,7 @@ const SettingsProfile = () =>{
 							modalAnimationType='fade'
 							searchable={true}
 							searchTextInputProps={{
-								maxLength: 32
+								maxLength: 512
 							}}
 							labelProps={{
 								numberOfLines: 3
