@@ -24,6 +24,7 @@ import Colors from './Color.js'
 import { useRouter, Link, useLocalSearchParams } from 'expo-router'
 import { doubleMetaphone } from 'double-metaphone'
 import { lemmatize } from 'wink-lemmatizer'
+import {cleanText, cleanNumbers} from './sanitizer.jsx'
 import CROPS from '../test_data/testCropData.json'
 
 //initialize to a bunch of weird, random values that will make it obvious if it is used
@@ -87,7 +88,7 @@ const SearchModal = ({
 								showCancel
 								round 
 								value={searchBarTxt} 
-								onChangeText={(text) => {searchFunction(text, originalData); setSearchBarTxt(text)}}  //call the search function and set searchBarTxt to whatever has been entered
+								onChangeText={(text) => {searchFunction(text, originalData, searchBarTxt); setSearchBarTxt(text)}}  //call the search function and set searchBarTxt to whatever has been entered
 								autoCorrect={true} 
 								keyboardType='default'
 								style={ isDarkMode ? {
@@ -146,7 +147,7 @@ const SearchModal = ({
 								showCancel
 								round 
 								value={searchBarTxt} 
-								onChangeText={(text) => {searchFunction(text, originalData); setSearchBarTxt(text)}}  //call the search function and set searchBarTxt to whatever has been entered
+								onChangeText={(text) => {searchFunction(text, originalData, searchBarTxt); setSearchBarTxt(text)}}  //call the search function and set searchBarTxt to whatever has been entered
 								autoCorrect={true} 
 								keyboardType='default'
 								style={ isDarkMode ? {
@@ -204,18 +205,24 @@ var dmTime = 0
 
 
 //the search function specifically for the modal version of the search bar
-searchFunction = (text, arr) => { 
+searchFunction = (text, arr, searchBarTxt) => { 
 	//clean up the text based on whether or not it is a number
 	var cleanedTxt = ""
 	var updatedData = []
 	if (isNumeric(text)) {
-		cleanedTxt = text.cleanNumForSearch();
+		cleanedTxt = cleanNumbers(text, decimalsAllowed=false, negativesAllowed=false)
+		if (cleanedTxt === cleanNumbers(searchBarTxt, noStopwords=true, noSQL=true, textOnly=true)) {
+			return
+		}
 		//sort array in descending order (find highest value) based on DLED
 		updatedData = arr.sort(function(a,b){ 
 			return compareStrings(b.hrfNum,cleanedTxt) - compareStrings(a.hrfNum,cleanedTxt); 
 		});
 	} else {
-		cleanedTxt = text.cleanTextForSearch();
+		cleanedTxt = cleanText(text, noStopwords=true, noSQL=true)
+		if (cleanedTxt === cleanText(searchBarTxt, noStopwords=true, noSQL=true)) {
+			return
+		}
 		updatedData = arr.sort(function(a,b){ 
 			return compareStrings(b.name,cleanedTxt) - compareStrings(a.name,cleanedTxt); 
 		});
@@ -933,13 +940,35 @@ class SearchInput extends Component {
 			//if the first character is a number, assume that the user wants to enter a number
 			let firstChar = text.charAt(0)
 			if (firstChar <= '9' && firstChar >= '0') {
-				cleanedTxt = text.cleanNumForSearch();
+				cleanStartTime = performance.now()
+				cleanedTxt = cleanNumbers(text, decimalsAllowed=false, negativesAllowed=false)
+				cleanEndTime = performance.now()
+				console.log("Cleaning time   : " + (cleanEndTime - cleanStartTime) + "ms")
+				//early return if no change
+				if (cleanedTxt === cleanNumbers(this.state.searchValue, noStopwords=true, noSQL=true, textOnly=true)) {
+					this.setState({ searchValue: text }); 
+					let searchEndTime = performance.now()
+					console.log("Sort Time       : " + (searchEndTime - searchStartTime) + "ms")
+					searchStartTime = searchEndTime = 0
+					return
+				}
 				//sort array in descending order (find highest value) based on DLED
 				updatedData = this.arrayholder.sort(function(a,b){ 
 					return compareStrings(b.hrfNum,cleanedTxt) - compareStrings(a.hrfNum,cleanedTxt); 
 				});
 			} else {
-				cleanedTxt = text.cleanTextForSearch();
+				cleanStartTime = performance.now()
+				cleanedTxt = cleanText(text, noStopwords=true, noSQL=true, textOnly=true)
+				cleanEndTime = performance.now()
+				console.log("Cleaning time   : " + (cleanEndTime - cleanStartTime) + "ms")
+				//early return if no change
+				if (cleanedTxt === cleanText(this.state.searchValue, noStopwords=true, noSQL=true, textOnly=true)) {
+					this.setState({ searchValue: text }); 
+					let searchEndTime = performance.now()
+					console.log("Sort Time       : " + (searchEndTime - searchStartTime) + "ms")
+					searchStartTime = searchEndTime = 0
+					return
+				}
 				//sort array in descending order (find highest value) based on DLED
 				updatedData = this.arrayholder.sort(function(a,b){ 
 					return compareStrings(b.name,cleanedTxt) - compareStrings(a.name,cleanedTxt); 
