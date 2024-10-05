@@ -12,11 +12,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppButton from '../assets/AppButton.jsx';
 import Icons from '../assets/icons/Icons.js';
 import Colors from '../assets/Color';
+import {useAuth} from 'react-native-auth0'
 import { useFonts } from 'expo-font'
 
 
 
-const viewCrops = () => {
+const viewCrops = (user) => {
         {/* Array of objects, used to differentiate picked items */}
         const [selectedItem, setItem] = useState(null);
 
@@ -60,7 +61,7 @@ const viewCrops = () => {
         }, [])
 
         {/* Dummy Data, for picker use */}
-        const [crops, setCrops] = useState([
+        /*const [crops, setCrops] = useState([
                 {label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', datePlanted: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '193242', visible:'visible', yield:'none'},
                 {label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', datePlanted: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' , medium: 'Hugel Mound', hrfNum: '945304', visible:'not visible', yield:'large'},
                 {label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", datePlanted: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard', medium: 'Hugel Mound', hrfNum: '835242', visible:'visible', yield:'medium' },
@@ -74,7 +75,20 @@ const viewCrops = () => {
                 {label: 'Tomato8', name: "Tomato8", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
         
         
-        ]);
+        ]);*/
+        const [crops, setCrops] = useState([])
+        useEffect(() =>{
+
+                 fetch('apiendpoint goes here', {
+                        method:'POST',
+                        headers:{
+                                'Content-Type': 'application/json',
+                        },
+                        body: user
+                 }).then(res=>res.json()).then(data=>setCrops(data))
+        },[])
+
+
         const { newCrop } = useLocalSearchParams();
 
         useEffect(() => {

@@ -58,6 +58,7 @@ const addCrops = () => {
         //on save, alert for save push to view crops and add to list
         const handleSave = () =>{
                 Alert.alert(cropData.name + " saved");
+                fetch('url',{method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(cropData)})
                 router.push({pathname: '/viewcrops', params: {newCrop: JSON.stringify(cropData)}});
         };
         //Handle old unused print checker
