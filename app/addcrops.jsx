@@ -17,7 +17,7 @@ import { StyleSheet,
         Alert } from 'react-native';
         
 import Colors from '../assets/Color';
-import { useFonts, useLocalSeachParams } from 'expo-font';
+import { useFonts } from 'expo-font';
 import { router } from 'expo-router';
 import { Input } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
@@ -137,6 +137,7 @@ const addCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = "name"
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength = {128}
                                         onChangeText={(text) => handleChange('name', text)}
                                         testID="name-input"
@@ -145,6 +146,7 @@ const addCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Variety'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         onChangeText={(text) => handleChange('variety', text)}
                                 />
@@ -152,6 +154,7 @@ const addCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Source'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         onChangeText={(text) => handleChange('source', text)}
                                 />
@@ -159,6 +162,7 @@ const addCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Date Planted'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={10}
                                         onChangeText={(text) => handleChange('datePlanted', text)}
                                 />
@@ -166,6 +170,7 @@ const addCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Location'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         onChangeText={(text) => handleChange('location', text)}
                                 />
@@ -173,6 +178,7 @@ const addCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Comments'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={1024}
                                         onChangeText={(text) => handleChange('comments', text)}
                                 />
@@ -180,6 +186,7 @@ const addCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Indoors? (Y/N)'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={3}
                                         onChangeText={(text) => handleChange('indoors', text)}
 
@@ -188,6 +195,7 @@ const addCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Active'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={3}
                                         onChangeText={(text) => handleChange('active', text)}
 
@@ -196,6 +204,7 @@ const addCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Type'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         onChangeText={(text) => handleChange('type', text)}
 
@@ -204,6 +213,7 @@ const addCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Medium'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         onChangeText={(text) => handleChange('medium', text)}
 
@@ -212,6 +222,7 @@ const addCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' HRF Number'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         onChangeText={(text) => handleChange('hrfNum', text)}
 
@@ -220,6 +231,7 @@ const addCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Yield'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         onChangeText={(text) => handleChange('yield', text)}
 
@@ -228,6 +240,7 @@ const addCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Visibility'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         onChangeText={(text) => handleChange('visible', text)}
 
@@ -340,6 +353,9 @@ const styles = StyleSheet.create({
         },
         inputText:{
                 fontSize: 16,
+        },
+        inputTextDark:{
+                  color: Colors.WHITE_SMOKE
         },
         icon:{
 
