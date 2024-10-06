@@ -8,6 +8,7 @@ import { View, Text } from 'react-native'
 import { useAuth0, Auth0Provider} from 'react-native-auth0'
 import { Button } from 'react-native-elements';
 import  Login  from './login.jsx'
+import { router } from 'expo-router'
 
 
 
@@ -28,14 +29,35 @@ export default function Page() {
     )
   }*/
 
-    const [ isAuthenticated, setIsAuthenticated ]
+    const [ isAuthenticated, setIsAuthenticated ] = useState(false)
+
     const handleLogin = async () => {
         try {
-            const credentials = await authorize();
+            await authorize();
         } catch (e) {
             console.log(e);
         }
     };
+
+    useEffect(()=>{
+      if(isAuthenticated){
+       router.push('/home') 
+      }
+    })
+
+    return(
+      <Auth0Provider domain="">
+        <View style={styles.container}>
+          <View style={styles.messageContainer}>
+            <Text style={styles.title}>Welcome</Text>
+            <Button title="Login" onPress={handleLogin} />
+          </View>
+        </View>
+      </Auth0Provider>
+
+      );
+
+
   
 }
 

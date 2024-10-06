@@ -132,18 +132,26 @@ const test_data = [
 	}
 ];
 
-const Home = () =>{ 
+const Home = (/*user*/ ) =>{ 
+	/*
+	subscriberID = fetch("/", {
+		method: "POST",
+		headers\:{
+		'Content-Type': 'application/json'
+		},
+		body: user
+	})	
+	*/
 
 	//const {user, error} = useAuth0()
 	const [ crops, setCrops] = useState([])
         useEffect(() =>{
 
-                 fetch('apiendpoint goes here', {
-                        method:'POST',
+                 fetch( '/home/'+string(subscriberID), {
+                        method:'GET',
                         headers:{
                                 'Content-Type': 'application/json',
-                        },
-                        body: "userobject here"
+                        }
                  }).then(res=>res.json()).then(data=>setCrops(data))
         },[])
 

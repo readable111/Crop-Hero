@@ -17,7 +17,7 @@ import { useFonts } from 'expo-font'
 
 
 
-const viewCrops = (user) => {
+const viewCrops = /*(userl)*/() => {
         {/* Array of objects, used to differentiate picked items */}
         const [selectedItem, setItem] = useState(null);
 
@@ -84,7 +84,7 @@ const viewCrops = (user) => {
                         headers:{
                                 'Content-Type': 'application/json',
                         },
-                        body: user
+                        body: "some user info here"//user
                  }).then(res=>res.json()).then(data=>setCrops(data))
         },[])
 
@@ -99,6 +99,13 @@ const viewCrops = (user) => {
                                 const crop = JSON.parse(newCrop);
                                 //Alert.alert("Crop Recieved: " + crop.name);
                                 console.log(JSON.stringify(crops))
+                                fetch(url, {
+                                        method: 'POST',
+                                        headers: {
+                                                'Content-Type': 'application/json'
+                                        },
+                                        body: user
+                                })
                                 setCrops((prevCrops)=>[...prevCrops, crop]);
                         }
         }, [newCrop]);
