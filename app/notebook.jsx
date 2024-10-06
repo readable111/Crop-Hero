@@ -24,24 +24,79 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import JournalEntryModal from './JournalEntryModal'; // Adjust the path if necessary
 const Notebook = () => {
 	
-	// date constants --months
-	const [items, setItems] = useState([ 
-		{ label: 'Jan', value: 'january' },  
-		{ label: 'Feb', value: 'feburary' }, 
-		{ label: 'March', value: 'march' },  
-		{ label: 'April', value: 'april' }, 
-		{ label: 'May', value: 'may' },  
-		{ label: 'June', value: 'june' }, 
-		{ label: 'July', value: 'july' }, 
-		{ label: 'Aug', value: 'august' }, 
-		{ label: 'Sept', value: 'september' }, 
-		{ label: 'Oct', value: 'october' }, 
-		{ label: 'Nov', value: 'november' }, 
-		{ label: 'Dec', value: 'december' }, 
-	]);
-	const [open, setOpen] = useState(false);
-	const [value, setValue] = useState('january'); {/*must initialize with string of value from items list to assign a default option*/ }
-	{/*load in all fonts used for this page*/ }
+const [entries, setEntries] = useState([]); // Store journal entries
+    const [modalVisible, setModalVisible] = useState(false);
+    const [editingEntry, setEditingEntry] = useState(null); // To handle editing entries
+    const [selectedMonth, setSelectedMonth] = useState("All"); // State for month filter
+    const [selectedYear, setSelectedYear] = useState("All"); // State for year filter
+    const [open, setOpen] = useState(false); // State for SpeedDial
+
+    const handleSaveEntry = (entryID, jsonData) => {
+        const entry = JSON.parse(jsonData);
+        if (entryID) {
+            // Update existing entry
+            setEntries(prevEntries => 
+                prevEntries.map(item => item.EntryID === entryID ? entry : item)
+            );
+        } else {
+            // Add new entry
+            entry.EntryID = entries.length > 0 ? Math.max(...entries.map(e => e.EntryID)) + 1 : 1; // Increment EntryID
+            setEntries(prevEntries => [...prevEntries, entry]);
+        }
+    };
+
+    const openModalForEdit = (entry) => {
+        setEditingEntry(entry);
+        setModalVisible(true);
+    };
+
+    // Function to filter entries based on month and year
+    const filteredEntries = () => {
+        return entries.filter(entry => {
+            const [month, year] = entry.EntryDate.split('');
+            const monthMatch = selectedMonth === "All" || month === selectedMonth;
+            const yearMatch = selectedYear === "All" || year === selectedYear;
+
+            return monthMatch && yearMatch;
+        });
+    };
+
+    // Sort entries from newest to oldest
+    const sortedEntries = () => {
+        return filteredEntries().sort((a, b) => b.EntryID - a.EntryID);
+    };
+
+    const renderItem = ({ item }) => (
+        <View style={styles.entryContainer}>
+            <Text style={styles.entryText}>Entry ID: {item.EntryID}</Text>
+            <Text style={styles.entryText}>Date: {item.EntryDate}</Text>
+            <Text style={styles.entryText}>Contents: {item.Contents}</Text>
+            <Button title="Edit" onPress={() => openModalForEdit(item)} />
+        </View>
+    );
+
+    const handleExport = () => {
+        // Implement your export logic here
+        console.log("Exporting entries:", entries);
+    };
+
+    const handleDelete = (entryID) => {
+        // Alert the user for confirmation before deleting
+        Alert.alert(
+            "Delete Entry",
+            "Are you sure you want to delete this entry?",
+            [
+                { text: "Cancel", style: "cancel" },
+                {
+                    text: "OK", onPress: () => {
+                        // Delete the entry
+                        setEntries(prevEntries => prevEntries.filter(item => item.EntryID !== entryID));
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+    };
 	const [fontsLoaded, fontError] = useFonts({
 		'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
 		'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
@@ -53,15 +108,7 @@ const Notebook = () => {
 	if (!fontsLoaded && !fontError) {
 		return null;
 	}
-	//place holder variables for notebook entries
-	entryTwo = "2. Had a delivery of fertilizer, it was placed to the right of the hugel mound. This will be great for spring refresh."
-	entryThree = "3. Was able to complete list of todo items for the upcoming week. Will be looking into new crops to plant in the upcoming season."
-	entryFour = "4. Updated storage on seed packets, will locate them in building next to the chicken coop. May need to build new organization options."
-	entryFive = "5. Made plans for new storage space for upcoming plants. Will begin to assemble task list for upcoming weeks to complete tasks needed."
-	entrySix = "6. Created an entire new building today with the C&C machine (test specials)"
-	entrySeven = "7. Today was cold. The greenhouses remained at around 70 degrees upon checking. Went through upcoming crops that need planting."
-	
-	
+
 	{/*TODO: add dark mode*/ }
 	{/*return the page view with all of its contents*/ }
 	return (
