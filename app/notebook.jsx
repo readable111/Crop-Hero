@@ -16,12 +16,12 @@ import AppButton from '../assets/AppButton.jsx'
 import { Input } from 'react-native-elements'
 import DropDownPicker from 'react-native-dropdown-picker'
 import NavBar from '../assets/NavBar'
-import notebookModal from '.../assets/NotebookModals/JournalEntryModal'
+import JournalEntryModal from '.../assets/NotebookModals/JournalEntryModal'
 import { SpeedDial } from '@rneui/themed';
 import { View, Text, FlatList, Button, StyleSheet, Picker, Alert, ScrollView } from 'react-native';
 import { SpeedDial } from 'react-native-elements';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import JournalEntryModal from './JournalEntryModal'; // Adjust the path if necessary
+
 const Notebook = () => {
 	
 const [entries, setEntries] = useState([]); // Store journal entries
