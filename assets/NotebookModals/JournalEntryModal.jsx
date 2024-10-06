@@ -1,93 +1,146 @@
-import { React, Component, useState } from 'react';
-import {
-	StyleSheet,
-	View,
-	Text,
-	Modal,
-	Platform,
-	TouchableOpacity,
-	Pressable,
-	ActivityIndicator,
-	Dimensions,
-	Alert
-} from 'react-native';
+// Journal Entry Modal
+import React, { useState } from 'react';
+import { Modal, View, Text, TextInput, Button, StyleSheet, Picker } from 'react-native';
+import Colors from '../assets/Color'
 import { useFonts } from 'expo-font'
-import { SearchBar } from '@rneui/themed';
-import unidecode from 'unidecode';
-import Colors from './Color.js'
-import { useRouter, Link, useLocalSearchParams } from 'expo-router'
-import { doubleMetaphone } from 'double-metaphone'
-import { lemmatize } from 'wink-lemmatizer'
-import CROPS from '../test_data/testCropData.json'
+import { router } from 'expo-router'
 
 
 
+const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
+    const [entryID, setEntryID] = useState(journalEntry ? journalEntry.EntryID : null);
+    const [contents, setContents] = useState(journalEntry ? journalEntry.Contents : '');
+    const [day, setDay] = useState(journalEntry ? journalEntry.EntryDate.slice(2, 4) : '01'); // Get day from EntryDate
+    const [month, setMonth] = useState(journalEntry ? journalEntry.EntryDate.slice(0, 2) : '01'); // Get month from EntryDate
+    const [year, setYear] = useState(journalEntry ? journalEntry.EntryDate.slice(4) : new Date().getFullYear().toString()); // Get year from EntryDate
 
-const notebookModal = ({
-	modalVisible,
-	onBackPress,
-	isLoading = false,
-	originalData
-}) => {
+    const handleSave = () => {
+        const entryDate = `${month}${day}${year}`; // Combine to MMDDYYYY
+        const entryData = {
+            EntryID: entryID,
+            Contents: contents,
+            EntryDate: entryDate,
+        };
 
-	const [searchBarTxt, setSearchBarTxt] = useState(searchValue);
-	
-	const [open, setOpen] = useState(false);
-	const [value, setValue] = useState('january'); {/*must initialize with string of value from items list to assign a default option*/ }
+        // Convert entryData to JSON format
+        const jsonData = JSON.stringify(entryData);
 
-	const [fontsLoaded, fontError] = useFonts({
-		'Domine-Regular': require('./fonts/Domine-Regular.ttf'),
-		'WorkSans-Regular': require('./fonts/WorkSans-Regular.ttf'),
-	});
+        // You can now send jsonData to your database or use it as needed
+        onSave(entryID, jsonData); // Pass EntryID and JSON string for saving or editing
+        onClose();
+    };
 
-	if (!fontsLoaded && !fontError) {
-		return null;
-	}
-	{/*https://reactnativetips.com/open-modal-on-button-click-in-react-native/ */ }
+    return (
+        <Modal visible={visible} animationType="slide">
+            <View style={styles.modalContainer}>
+                <Text style={styles.title}>Journal Entry</Text>
 
-	
+                <View style={styles.dateContainer}>
+                    <Text>Entry Date:</Text>
+                    <View style={styles.datePicker}>
+                        <Picker
+                            selectedValue={month}
+                            style={styles.picker}
+                            onValueChange={(itemValue) => setMonth(itemValue)}
+                        >
+                            {/* Populate months */}
+                            {[...Array(12).keys()].map((i) => (
+                                <Picker.Item key={i} label={(i + 1).toString().padStart(2, '0')} value={(i + 1).toString().padStart(2, '0')} />
+                            ))}
+                        </Picker>
 
-	return (
-		<Modal animationType='slide' visible={modalVisible} transparent={false} onRequestClose={onBackPress}>
-			{/*create the dark grey box around it and ability to close modal by clicking*/}
-			<Pressable style={styles.modalContainer} onPress={onBackPress}>
-				{isLoading && <ActivityIndicator size={70} color={Colors.MEDIUM_TAUPE} />}
+                        <Picker
+                            selectedValue={day}
+                            style={styles.picker}
+                            onValueChange={(itemValue) => setDay(itemValue)}
+                        >
+                            {/* Populate days */}
+                            {[...Array(31).keys()].map((i) => (
+                                <Picker.Item key={i} label={(i + 1).toString()} value={(i + 1).toString()} />
+                            ))}
+                        </Picker>
 
-				{!isLoading && (
-					<View style={[styles.modalView, { backgroundColor: Colors.SANTA_GRAY }]} >
-						{/*Display the search bar which looks identical to the dropdown search bar but works slightly differents*/}
-						<View style={styles.fstContainer}>
+                        <Picker
+                            selectedValue={year}
+                            style={styles.picker}
+                            onValueChange={(itemValue) => setYear(itemValue)}
+                        >
+                            {/* Populate years */}
+                            {Array.from({ length: 10 }, (_, i) => (
+                                <Picker.Item key={i} label={(new Date().getFullYear() + i).toString()} value={(new Date().getFullYear() + i).toString()} />
+                            ))}
+                        </Picker>
+                    </View>
+                </View>
 
-							<Input
-								inputContainerStyle={styles.inputBox}
-								inputStyle={styles.inputBoxStyle}
-								selectionColor={Colors.SANTA_GRAY}
-								placeholder='Things I did today...'
-								defaultValue={entryTwo}
-								maxLength={256}
-								multiline={true}
-								textAlign="flex-start"
-							/>
-							<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
-						</View>
-					</View>	
-				)}
-			</Pressable>
-		</Modal>
-	);
+                <Text>Contents:</Text>
+                <TextInput
+                    style={[styles.input, styles.textArea]}
+                    value={contents}
+                    onChangeText={setContents}
+                    multiline
+                    textAlignVertical="top" // Align text to top
+                />
+
+                <View style={styles.buttonContainer}>
+                    <Button title="Save" onPress={handleSave} />
+                    <Button title="Cancel" onPress={onClose} />
+                </View>
+            </View>
+        </Modal>
+    );
 };
 
 const styles = StyleSheet.create({
-	fstContainer: {
-		width: '90%',
-		backgroundColor: Colors.SCOTCH_MIST_TAN,
-		padding: 5,
-		marginBottom: 27,
-		marginTop: 20,
-		border: 'black',
-		borderWidth: 1,
-		borderRadius: 5,
-		alignSelf: 'center'
-	},
+    modalContainer: {
+        flex: 1,
+        padding: 20,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        borderRadius: 20,
+        backgroundColor: '#fff',
+        margin: 20,
+        elevation: 10, // Shadow for Android
+        shadowColor: '#000', // Shadow for iOS
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+    },
+    title: {
+        fontSize: 24,
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    dateContainer: {
+        alignSelf: 'flex-start', // Align to the left
+        marginBottom: 15,
+    },
+    datePicker: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+    },
+    picker: {
+        width: 100,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        padding: 10,
+        marginBottom: 15,
+        width: '100%',
+        borderRadius: 10,
+    },
+    textArea: {
+        height: 100,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginTop: 20,
+    },
+});
 
-})
+export default JournalEntryModal;
