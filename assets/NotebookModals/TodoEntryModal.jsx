@@ -10,6 +10,11 @@ import {
     Picker,
     ScrollView,
 } from 'react-native';
+import CROPS from '../test_data/testCropData.json'
+import unidecode from 'unidecode';
+import Colors from './Color.js'
+import { useFonts } from 'expo-font'
+
 
 const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, crops, taskTypes }) => {
     const [taskData, setTaskData] = useState({
