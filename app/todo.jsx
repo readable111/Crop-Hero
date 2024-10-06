@@ -9,23 +9,29 @@
 
 {/*McKenna Beard for IT Capstone 2024  UNT To-do Page as apart of the notebook tab on the nav bar*/ }
 {/*This page can only be accessed after clicking on the notebook page from the main nav bar*/ }
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import {
 	StyleSheet,
 	View,
 	StatusBar,
 	Alert,
 	ScrollView,
+	FlatList,
+	TouchableOpacity,
+	Button,
+	Text
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color'
 import AppButton from '../assets/AppButton.jsx'
-import { Input,CheckBox } from 'react-native-elements'
+import { Input,CheckBox,SpeedDial } from 'react-native-elements'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import DropDownPicker from 'react-native-dropdown-picker'
 import NavBar from '../assets/NavBar.jsx'
+import { fetchTasks, updateTaskInDatabase } from './database'; // Import your database functions
+import TodoModalEntry from '../assets/NotebookModals/TodoEntryModal';
 
 const todo = () => {
 	const [index, setIndex] = useState(0); //constant for tabs
@@ -34,7 +40,8 @@ const todo = () => {
 //last completed
 //due soon
 //rest
-//filters by: crop type, task type(icon correlation), farmer assigned, date, complete/not complete
+//filters by: crop type, task type, farmer assigned, date, complete/not complete
+// need to use bitmask stored in string, with check boxes, first digit is filter 1, 10000
 	
 	{/*Constants for icon drop down menu*/ }
 	const [items, setItems] = useState([ //potential subscription model stuff
@@ -66,19 +73,76 @@ const todo = () => {
 	if (!fontsLoaded && !fontError) {
 		return null;
 	}
-	//place holder variables for todo tasks when testing
-	initialFirstName = ""
-	givenDate = ''
-	taskOne = ""
-	taskTwo = ""
-	taskThree = ""
-	taskTitle = ""
-	//givenDate=""
-	{/*TODO: add dark mode*/ }
-	{/*return the page view with all of its contents*/ }
+	const [tasks, setTasks] = useState([]);
+	const [filteredTasks, setFilteredTasks] = useState([]);
+	const [modalVisible, setModalVisible] = useState(false);
+	const [currentTaskID, setCurrentTaskID] = useState(null);
+	const [filter, setFilter] = useState('all'); // 'all', 'completed', 'notCompleted'
 
-		//const listItemProps = {};
-		//const renderRow = ({ item }: { item }) => {
+	useEffect(() => {
+		const loadTasks = async () => {
+			const fetchedTasks = await fetchTasks(); // Fetch tasks from database
+			setTasks(fetchedTasks);
+			setFilteredTasks(fetchedTasks);
+		};
+
+		loadTasks();
+	}, []);
+
+	const handleCheckboxChange = async (taskID) => {
+		const updatedTasks = tasks.map(task => {
+			if (task.TaskID === taskID) {
+				const now = new Date();
+				const month = String(now.getMonth() + 1).padStart(2, '0');
+				const day = String(now.getDate()).padStart(2, '0');
+				const year = now.getFullYear();
+				const currentDate = `${month}/${day}/${year}`;
+
+				return {
+					...task,
+					IsCompleted: true,
+					DateCompleted: currentDate
+				};
+			}
+			return task;
+		});
+
+		setTasks(updatedTasks);
+		setFilteredTasks(updatedTasks.filter(task => filter === 'completed' ? task.IsCompleted : !task.IsCompleted));
+
+		// Update database
+		await updateTaskInDatabase(taskID, { IsCompleted: true, DateCompleted: currentDate });
+	};
+
+	const handleFilterChange = (newFilter) => {
+		setFilter(newFilter);
+		if (newFilter === 'completed') {
+			setFilteredTasks(tasks.filter(task => task.IsCompleted));
+		} else if (newFilter === 'notCompleted') {
+			setFilteredTasks(tasks.filter(task => !task.IsCompleted));
+		} else {
+			setFilteredTasks(tasks);
+		}
+	};
+
+	const handleAddTask = () => {
+		setCurrentTaskID(null); // Set to null for creating new task
+		setModalVisible(true);
+	};
+
+	const handleEditTask = (taskID) => {
+		setCurrentTaskID(taskID); // Set task ID for editing
+		setModalVisible(true);
+	};
+
+	const handleDeleteTask = async (taskID) => {
+		const updatedTasks = tasks.filter(task => task.TaskID !== taskID);
+		setTasks(updatedTasks);
+		setFilteredTasks(updatedTasks);
+
+		// Also delete from database
+		// await deleteTaskFromDatabase(taskID);
+	};
 	return (
 		<View style={styles.topContainer}>
 			{/*create the default phone status bar at the top of the screen-------------------------------------*/}
@@ -103,244 +167,56 @@ const todo = () => {
 
 			</View>
 			{/*start of scrolling section of the page---------------------------------------------------------------------------------*/ }
-			<ScrollView style={styles.scroll}>
-				<View style={styles.fstTryContainer}>
-						{/**trying this-dropdown picker for icon selection*/}
-						<DropDownPicker
-							open={open}
-							value={value}
-							items={items}
-							setOpen={setOpen}
-							setValue={setValue}
-							setItems={setItems}
-							disableBorderRadius={true}
-							listMode='SCROLLVIEW'
-							backgroundColor={Colors.SCOTCH_MIST_TAN }
-							dropDownDirection='BOTTOM'
-							showTickIcon={false}
-							
-							props={{
-								activeOpacity: 1,
-							}}
-							scrollViewProps={{
-								nestedScrollEnabled: true,
-								borderColor: 'clear',
-								zIndex: 1000,
-							}}
-							labelStyle={{
-								fontFamily: 'WorkSans-Regular',
-								fontSize: 16,
-							}}
-							listItemLabelStyle={{
-								fontFamily: 'WorkSans-Regular',
-								fontSize: 16,
-							}}
-							containerStyle={{
-								width: '20%',
-								zIndex: 900,
-								marginBottom: -80,
-								alignSelf: 'flex-end',
-								marginHorizontal: 20,
-								backgroundColor: Colors.SCOTCH_MIST_TAN,
-								borderColor: 'clear'
-							}}
-							dropDownContainerStyle={{
-								borderWidth: 0,
-								zIndex: 900,
-								backgroundColor: Colors.SCOTCH_MIST_TAN,
-								borderColor: 'clear',
-								
-							}}
-							style={{
-								borderWidth: 0,
-								backgroundColor: Colors.SCOTCH_MIST_TAN,
-								borderColor: 'clear',
-							}}
-						/>
-						<Input
-							inputContainerStyle={styles.inputBox}
-							inputStyle={styles.inputBoxStyle}
-							selectionColor={Colors.SANTA_GRAY}
-							placeholder='Things to do'
-							defaultValue={taskTitle}
-							maxLength={256}
-							multiline={true}
-							textAlign="flex-start"
-						/>
-						
-					{/* checkboxes for to-do list*/}
-					<View style={styles.checkBoxFormat}>
-						<Row height={100}>
-							<Col relativeColsCovered={1} alignItems='left'>
-								{/* <Text style={styles.pageTitle}>Settings</Text>*/}
-								{/*Button to switch to To-do page*/}
-								<CheckBox
-									checked={check1}
-									onPress={() => setCheck1(!check1)}
-									iconType="material-community"
-									checkedIcon="checkbox-outline"
-									uncheckedIcon={'checkbox-blank-outline'}
-									checkedColor={Colors.IRISH_GREEN}
-									uncheckedColor='black'
-									backgroundColor='clear'
-									containerStyle={styles.checkBoxContainer }
-								/>
+			<View style={styles.container}>
+				<View style={styles.filterContainer}>
+					<Button title="All" onPress={() => handleFilterChange('all')} />
+					<Button title="Completed" onPress={() => handleFilterChange('completed')} />
+					<Button title="Not Completed" onPress={() => handleFilterChange('notCompleted')} />
+				</View>
 
-							</Col>
-							<Col relativeColsCovered={3} alignItems='center'>
-								<Input
-									inputContainerStyle={styles.inputBoxCheck}
-									inputStyle={styles.inputBoxStyleTry}
-									selectionColor={Colors.SANTA_GRAY}
-									placeholder='Things to schedule'
-									defaultValue={taskOne}
-									autoComplete='name'
-									maxLength={256}
-									multiline={true}
-									textAlign="flex-start"
-								/>
-							</Col>
-						</Row>
-						<Row height={100}>
+				<ScrollView>
+					<FlatList
+						data={filteredTasks}
+						keyExtractor={item => item.TaskID.toString()}
+						renderItem={({ item }) => (
+							<View style={styles.taskContainer}>
+								<Text>Assigned Farmer ID: {item.AssignedFarmerID}</Text>
+								<Text>Task Type: {item.TaskType}</Text>
+								<Text>Location ID: {item.LocationID}</Text>
+								<Text>Crop ID: {item.CropID}</Text>
+								<Text>Comments: {item.Comments}</Text>
+								<Text>Due Date: {item.DueDate}</Text>
+								<TouchableOpacity onPress={() => handleCheckboxChange(item.TaskID)}>
+									<Text style={{ color: item.IsCompleted ? 'green' : 'red' }}>
+										{item.IsCompleted ? 'Completed' : 'Not Completed'}
+									</Text>
+								</TouchableOpacity>
+								<Button title="Edit" onPress={() => handleEditTask(item.TaskID)} />
+								<Button title="Delete" onPress={() => handleDeleteTask(item.TaskID)} />
+							</View>
+						)}
+					/>
+				</ScrollView>
 
-							<Col relativeColsCovered={1} alignItems='left'>
-								{/* <Text style={styles.pageTitle}>Settings</Text>*/}
-								{/*Button to switch to To-do page*/}
-								<CheckBox
-									checked={check2}
-									onPress={() => setCheck2(!check2)}
-									iconType="material-community"
-									checkedIcon="checkbox-outline"
-									uncheckedIcon={'checkbox-blank-outline'}
-									checkedColor={Colors.IRISH_GREEN}
-									uncheckedColor='black'
-									backgroundColor='clear'
-									containerStyle={styles.checkBoxContainer}
-								/>
+				<SpeedDial
+					isOpen={modalVisible}
+					icon={{ name: 'edit', color: 'white' }}
+					openIcon={{ name: 'close', color: 'white' }}
+					onOpen={() => setModalVisible(true)}
+					onClose={() => setModalVisible(false)}
+					buttonStyle={styles.speedDial}
+				>
+					<SpeedDial.Action
+						icon={{ name: 'add', color: 'white' }}
+						title="Add Task"
+						onPress={handleAddTask}
+					/>
+					{/* Additional actions can be added here */}
+				</SpeedDial>
 
-							</Col>
-							<Col relativeColsCovered={3} alignItems='center'>
-								<Input
-									inputContainerStyle={styles.inputBoxCheck}
-									inputStyle={styles.inputBoxStyleTry}
-									selectionColor={Colors.SANTA_GRAY}
-									placeholder='Things to schedule'
-									defaultValue={taskTwo}
-									autoComplete='name'
-									maxLength={256}
-									multiline={true}
-									textAlign="flex-start"
-								/>
-							</Col>
-						</Row>
-						<Row height={100}>
-							<Col relativeColsCovered={1} alignItems='left'>
-								{/* <Text style={styles.pageTitle}>Settings</Text>*/}
-								{/*Button to switch to To-do page*/}
-								<CheckBox
-									checked={check3}
-									onPress={() => setCheck3(!check3)}
-									iconType="material-community"
-									checkedIcon="checkbox-outline"
-									uncheckedIcon={'checkbox-blank-outline'}
-									checkedColor={Colors.IRISH_GREEN}
-									uncheckedColor='black'
-									backgroundColor='clear'
-									containerStyle={styles.checkBoxContainer}
-								/>
-
-							</Col>
-							<Col relativeColsCovered={3} alignItems='left'>
-								<Input
-									inputContainerStyle={styles.inputBoxCheck}
-									inputStyle={styles.inputBoxStyleTry}
-									selectionColor={Colors.SANTA_GRAY}
-									placeholder='Things to schedule'
-									defaultValue={taskThree}
-									autoComplete='name'
-									maxLength={256}
-									multiline={true}
-									textAlign="flex-start"
-								/>
-							</Col>
-						</Row>
-					</View>
-					{/* Button below is the edit icon which will open up the text input features in semester 2*/ }
-					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
-				</View>
-				{/*Will be try to use rows and coloumns to organize box 2x2-----------------------------------------------------------------------------*/}
-				<View style={styles.fstContainer}>
-					<Input
-						//rightIcon={<AntDesign name="edit" size={24} color="black" />}
-						inputContainerStyle={styles.inputBox}
-						inputStyle={styles.inputBoxStyle}
-						selectionColor={Colors.SANTA_GRAY}
-						placeholder='Things to do'
-						defaultValue={initialFirstName}
-						autoComplete='name'
-						maxLength={256}
-						multiline={true}
-						textAlign="flex-start"
-					/>
-					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
-				</View>
-				<View style={styles.fstContainer}>
-					<Input
-						inputContainerStyle={styles.inputBox}
-						inputStyle={styles.inputBoxStyle}
-						selectionColor={Colors.SANTA_GRAY}
-						placeholder='Things to do'
-						defaultValue={initialFirstName}
-						autoComplete='name'
-						maxLength={256}
-						multiline={true}
-						textAlign="flex-start"
-					/>
-					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
-				</View>
-				<View style={styles.fstContainer}>
-					<Input
-						inputContainerStyle={styles.inputBox}
-						inputStyle={styles.inputBoxStyle}
-						selectionColor={Colors.SANTA_GRAY}
-						placeholder='Things to do'
-						defaultValue={initialFirstName}
-						autoComplete='name'
-						maxLength={256}
-						multiline={true}
-						textAlign="flex-start"
-					/>
-					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
-				</View>
-				<View style={styles.fstContainer}>
-					<Input
-						inputContainerStyle={styles.inputBox}
-						inputStyle={styles.inputBoxStyle}
-						selectionColor={Colors.SANTA_GRAY}
-						placeholder='Things to do'
-						defaultValue={initialFirstName}
-						autoComplete='name'
-						maxLength={256}
-						multiline={true}
-						textAlign="flex-start"
-					/>
-					<AppButton specifiedStyle={{ marginTop: 0, zIndex: 5, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
-				</View>
-				<View style={styles.fstContainer}>
-					<Input
-						inputContainerStyle={styles.inputBox}
-						inputStyle={styles.inputBoxStyle}
-						selectionColor={Colors.SANTA_GRAY}
-						placeholder='Things to do'
-						defaultValue={initialFirstName}
-						autoComplete='name'
-						maxLength={256}
-						multiline={true}
-						textAlign="flex-start"
-					/>
-					<AppButton specifiedStyle={{ marginTop: -5, zIndex: 1, alignItems: "flex-end" }} title="" ad="edit" adSize={24} adColor="black" onPress={() => Alert.alert('Icon Button pressed')} />
-				</View>
-			</ScrollView>
+				{/* TaskModal component to be rendered here */}
+				{modalVisible && <TaskModal taskID={currentTaskID} onClose={() => setModalVisible(false)} />}
+			</View>
 			<NavBar notebookSelected/>
 		</View>
 	)
@@ -348,48 +224,30 @@ const todo = () => {
 
 {/*define all of the custom styles for this page*/ }
 const styles = StyleSheet.create({
-	checkBoxContainer: {
-		backgroundColor: Colors.SCOTCH_MIST_TAN,
-		paddingBottom: 30,
-    },
-	fstContainer: {
-		width: '90%',
-		backgroundColor: Colors.SCOTCH_MIST_TAN,
-		padding: 5,
-		marginBottom: 27,
-		marginTop: 20,
-		border: 'black',
-		borderWidth: 1,
-		borderRadius: 5,
-		alignSelf: 'center',
+	container: {
+		flex: 1,
+		padding: 16,
+		backgroundColor: '#fff',
 	},
-	fstTryContainer: {
-		width: '90%',
-		backgroundColor: Colors.SCOTCH_MIST_TAN,
-		padding: 5,
-		marginBottom: 5,
-		marginTop: 10,
-		border: 'black',
+	filterContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		marginBottom: 16,
+	},
+	taskContainer: {
+		padding: 10,
+		marginVertical: 8,
+		backgroundColor: '#f9f9f9',
+		borderColor: '#ddd',
 		borderWidth: 1,
 		borderRadius: 5,
-		alignSelf: 'center',
-		height: 'auto'
-    },
-	gridContainerInput: {
-		flex: 2,
-		backgroundColor: Colors.SCOTCH_MIST_TAN,
-		border: 2,
-		borderRadius: 5,
-		borderColor: 'black',
-		width: '90%',
-		alignSelf: 'center'
-    },
-	checkBoxFormat: {
-		width: '90%',
-		border: 1,
-		borderRadius: 5,
-		backgroundColor: Colors.SCOTCH_MIST_TAN,
-  },
+	},
+	speedDial: {
+		position: 'absolute',
+		bottom: 20,
+		right: 20,
+	},
+	
 	scroll: {
 		width: '100%',
 		height: '100%'
@@ -402,64 +260,7 @@ const styles = StyleSheet.create({
 		zIndex: -1,
 		height: 20
 	},
-	inputBox: {
-		backgroundColor: "white",
-		borderWidth: 2,
-		borderRadius: 5,
-		borderColor: 'black',
-		overflow: 'hidden',
-		borderBottomWidth: 2,
-		fontFamily: 'WorkSans-Regular',
-		fontSize: 16,
-		zIndex: 5,
-		flex: 3,
-		marginTop: 35,
-		marginBottom: -15, 
-		width: '70%',
-		paddingLeft: 5,
-	},
-	inputDateStyle: {
-		paddingBottom: 20,
-	},
-	inputBoxStyleTry: {
-		fontFamily: 'WorkSans-Regular',
-		fontSize: 16,
-		color: 'black',
-		paddingLeft: 1,
-		height: '80%',
-		padding: 2,
-	},
-	inputBoxStyleCheck: {
-		fontFamily: 'WorkSans-Regular',
-		fontSize: 16,
-		color: 'black',
-		height: '80%',
-		width: '50%',
-	},
-	inputBoxStyleTry: {
-		fontFamily: 'WorkSans-Regular',
-		fontSize: 16,
-		color: 'black',
-		paddingLeft: 1,
-		height: '80%',
-		padding: 2
-	},
-	inputBoxStyleCheck: {
-		fontFamily: 'WorkSans-Regular',
-		fontSize: 16,
-		color: 'black',
-		height: '80%',
-		width: '50%',
-		borderColor: 'black'
-	},
-	inputBoxStyle: {
-		fontFamily: 'WorkSans-Regular',
-		fontSize: 16,
-		color: 'black',
-		paddingLeft: 1,
-		padding: 2,
-		height: '80%',
-	},
+
 	oval: {
 		backgroundColor: Colors.IRISH_GREEN,
 		width: 180,
@@ -482,17 +283,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		fontFamily: 'Domine-Regular',
 	},
-	profileName: {
-		color: 'white',
-		fontSize: 36,
-		fontFamily: 'Domine-Medium',
-	},
-	editProfileBtn: {
-		fontSize: 16,
-		color: "black",
-		alignSelf: "center",
-		fontFamily: 'Domine-Regular',
-	},
+	
 	//style for the grid layout
 	btnGridContainer: {
 		//flex: -1, // # of columns
