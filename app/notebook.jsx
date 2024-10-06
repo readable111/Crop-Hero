@@ -8,13 +8,6 @@
  ***/
 
 import { React, useState } from 'react';
-import {
-	StyleSheet,
-	View,
-	StatusBar,
-	Alert,
-	ScrollView,
-} from 'react-native'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
@@ -25,7 +18,10 @@ import DropDownPicker from 'react-native-dropdown-picker'
 import NavBar from '../assets/NavBar'
 import notebookModal from '.../assets/NotebookModals/JournalEntryModal'
 import { SpeedDial } from '@rneui/themed';
-
+import { View, Text, FlatList, Button, StyleSheet, Picker, Alert, ScrollView } from 'react-native';
+import { SpeedDial } from 'react-native-elements';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import JournalEntryModal from './JournalEntryModal'; // Adjust the path if necessary
 const Notebook = () => {
 	
 	// date constants --months
