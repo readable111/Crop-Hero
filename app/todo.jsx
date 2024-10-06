@@ -30,7 +30,7 @@ import { SpeedDial } from 'react-native-elements';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import NavBar from '../assets/NavBar.jsx';
-import { fetchTasks, updateTaskInDatabase, insertTaskIntoDatabase } from './database'; // Import your database functions
+//import { fetchTasks, updateTaskInDatabase, insertTaskIntoDatabase } from './database'; // Import your database functions
 import TodoModalEntry from '../assets/NotebookModals/TodoEntryModal';
 
 const todo = () => {
