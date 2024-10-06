@@ -33,7 +33,8 @@ export default function Page() {
 
     const handleLogin = async () => {
         try {
-            await authorize();
+            const user = await authorize();
+            setIsAuthenticated(true)
         } catch (e) {
             console.log(e);
         }
@@ -41,7 +42,10 @@ export default function Page() {
 
     useEffect(()=>{
       if(isAuthenticated){
-       router.push('/home') 
+       router.push({
+          pathname: "/home",
+          params:{id: user.email() }
+       }) 
       }
     })
 
