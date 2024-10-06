@@ -4,7 +4,7 @@ import { Modal, View, Text, TextInput, Button, StyleSheet, Picker } from 'react-
 import Colors from '../assets/Color'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
-
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 
 const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
