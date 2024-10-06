@@ -1,7 +1,7 @@
 // Journal Entry Modal
 import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, Button, StyleSheet, Picker } from 'react-native';
-import Colors from '../assets/Color'
+import Colors from '../Color'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
