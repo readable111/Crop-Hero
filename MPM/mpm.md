@@ -60,6 +60,11 @@
         1. [Writing Endpoints](#writing_endpoints)
         1. [Pushing to the GitHub](#push_to_github_backend)
 1. [Installation & Setup](#setup)
+    1. [Preparing The Development Environment](#prep_dev_environ)
+        1. [Installing Android Studio](#install_android_studio)
+        1. [Set Up an Android Emulator](#setup_emulator)
+        1. [Installing NPM](#install_npm)
+        1. [Installing Expo](#install_expo)
     1. [Package Management](#pkg_mgmt)
         1. [Importing Libraries](#import_libs)
     1. [Running The Program](#run_program)
@@ -76,6 +81,7 @@
         1. [Emulator Says "The system UI isn't responding"](#ui_not_responding)
         1. [Emulator Says "Something went wrong. Can't connect to Internet."](#no_internet)
         1. [Emulator Reloads When I Try to Type 'R' Into an Input Field](#reloads_on_r)
+        1. [VT-X/AMD-V is Disabled](#vt-x_disabled)
     1. [Expo Errors](#expo_errors)
         1. [Expo-CLI is Deprecated / Legacy Expo-CLI](#cli_deprecated)
     1. [Common React Native Compilation Errors](#rn_compilation_err)
@@ -777,6 +783,61 @@ We are declaring the method of the endpoint, whether that is a GET method from t
 To push your changes to the server, use either the git cli, or the git GUI that can be downloaded. Add your modified files to be commited, run the `git commit` command, and then push to the remote branch desired using `git push origin <branch>`
 
 ## Installation & Setup <a name="setup"></a>
+### Preparing The Development Environment <a name="prep_dev_environ"></a>
+#### Installing Android Studio <a name="install_android_studio"></a>
+*Author: Daniel*
+
+This guide will assume that you are using a Windows environment.
+1. Go to the [Android Developer page for Android Studio](https://developer.android.com/studio)
+1. Download the latest version as an .exe file
+1. Open Android Studio Setup. Under Select components to install, select Android Studio and Android Virtual Device and then click Next
+1. In the Android Studio Setup Wizard, under Install Type, select Standard and click Next
+1. The Android Studio Setup Wizard will ask you to verify the settings, such as the version of Android SDK, platform-tools, and so on. Click Next after you have verified
+1. Accept licenses for all available components
+1. Configure the `ANDROID_HOME` environment variable
+    1. Go to Windows Control Panel > User Accounts > User Accounts (again) > Change my environment variables
+    1. Click `New` to create a new `ANDROID_HOME` user variable
+    1. Enter path to your Android SDK like `C:\Users\Home\AppData\Local\Android\Sdk`
+        * To find it, the default path is `%LOCALAPPDATA%\Android\Sdk`
+        * Alternatively, go into Android Studio and Settings > Languages & Frameworks > Android SDK
+1. Configure the `Path` environment variable
+    1. Go to Windows Control Panel > User Accounts > User Accounts (again) > Change my environment variables
+    1. Select `Path` in `User Variables`
+    1. Click Edit to open a dialog box
+    1. Select New
+    1. Enter path to your platform tools like `C:\Users\Home\AppData\Local\Android\Sdk\platform-tools`
+1. Verify that you can run adb by executing `adb --version` in the command line
+
+#### Set Up an Android Emulator <a name="setup_emulator"></a>
+*Author: Daniel*
+
+1. On the Android Studio main screen, click More Actions
+1. Select Virtual Device Manager in the dropdown
+1. Click the Create device button
+1. Under Select Hardware, choose the type of hardware you'd like to emulate
+    * Which you select will depend on your needs. I recommend the newest Pixel device as a good default.
+1. Select an OS version to load on the emulator & download the image by pressing the Download button
+1. Click the Next button
+1. Keep the rest of the defaults and press Finish
+
+#### Installing NPM  <a name="install_npm"></a>
+*Author: Daniel*
+
+1. Check if you already have npm and node installed as they are often used for many different applications
+    * Check with `npm -v` and `node -v`
+1. Select the proper options on the [Node.js page](https://nodejs.org/en/download/package-manager)
+1. Use the commands or download and execute the installer to get node and npm
+1. Use `npm -v` and `node -v` again to verify a successful installation
+1. Execute `npm install -g npx` to install npx within npm
+
+#### Installing Expo  <a name="install_expo"></a>
+*Author: Daniel*
+
+1. Try the auto-install option with `npx install-expo-modules@latest`
+1. Check it with `npx expo -v`
+1. If that didn't work, start the manual installation with `npm install expo`
+1. Since you are maintaining a pre-existing project, there are no further steps for the manual installation
+
 ### Package Management <a name="pkg_mgmt"></a>
 #### Importing Libraries <a name="import_libs"></a>
 *Author: Daniel*
@@ -940,6 +1001,22 @@ Assumes that you are using a Windows OS
 1. Go back to that page
 1. Type in the values more slowly or use the emulator's keyboard.
     - If you type with the keyboard too quickly, the emulator can't register it as an input so the value gets sent to the command line which interprets it as a reload command
+
+#### VT-X/AMD-V is Disabled <a name="vt-x_disabled"></a>
+*Author: Daniel*
+
+1. Get into your BIOS/UEFI screen
+    1. Click Start and then select Settings
+    1. Click Update & Security
+    1. On the left side, click Recovery
+    1. Under Advanced start-up, click Restart Now
+    1. Click Troubleshoot
+    1. Click Advanced options
+    1. Select UEFI Firmware Settings
+    1. Click Restart to restart the computer and enter BIOS/UEFI
+1. Check the CPU Configurations, System Configurations, Advanced, and Security tabs for a setting labeled Virtualization Technology or Intel Virtualization Technology
+1. Enable the option
+1. Save the new config and boot into your OS
 
 ### Expo Errors <a name="expo_errors"></a>
 
