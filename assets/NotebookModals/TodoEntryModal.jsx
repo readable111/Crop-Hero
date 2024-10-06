@@ -10,9 +10,9 @@ import {
     Picker,
     ScrollView,
 } from 'react-native';
-import CROPS from '../test_data/testCropData.json'
+import CROPS from '../../testCropData.json'
 import unidecode from 'unidecode';
-import Colors from './Color.js'
+import Colors from '../Color'
 import { useFonts } from 'expo-font'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
