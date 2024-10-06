@@ -128,131 +128,105 @@ const [entries, setEntries] = useState([]); // Store journal entries
 					</Col>
 				</Row>
 			</View>
-					{/*Month selector for notebook entries (to be connected to database)-----------------------------------------------------*/}
-					<View style={styles.btnGridContainerDate}>
-						{/*row for date selector*/}
-						<Row height={20}>
-							<Col relativeColsCovered={2} alignItems='left'>
-								{/* <Text style={styles.pageTitle}>Settings</Text>*/}
-								<DropDownPicker
-									open={open}
-									value={value}
-									items={items}
-									setOpen={setOpen}
-									setValue={setValue}
-									setItems={setItems}
-									disableBorderRadius={true}
-									listMode='SCROLLVIEW'
-									backgroundColor={Colors.SCOTCH_MIST_TAN}
-									dropDownDirection='BOTTOM'
-									props={{
-										activeOpacity: 1,
-									}}
-									scrollViewProps={{
-										nestedScrollEnabled: false,
-										borderColor: 'black',
-										zIndex: 800
-									}}
-									labelStyle={{
-										fontFamily: 'WorkSans-Regular',
-										fontSize: 16,
-									}}
-									listItemLabelStyle={{
-										fontFamily: 'WorkSans-Regular',
-										fontSize: 16,
-									}}
-									containerStyle={{
-										zIndex: 900,
-										marginBottom: 50, // height away from top of container
-										marginTop: 10,
-										alignSelf: 'flex-start',
-										backgroundColor: Colors.SCOTCH_MIST_TAN,
-										borderColor: 'black',
-										border:1
-										
-									}}
-									dropDownContainerStyle={{
-										borderWidth: 1,
-										zIndex: 1000,
-										backgroundColor: 'white',
-										borderColor: 'black',
-										width: 150
+			 <View style={styles.container}>
+            <View style={styles.filterContainer}>
+                <Picker
+                    selectedValue={selectedMonth}
+                    style={styles.picker}
+                    onValueChange={(itemValue) => setSelectedMonth(itemValue)}
+                >
+                    <Picker.Item label="All" value="All" />
+                    <Picker.Item label="01" value="01" />
+                    <Picker.Item label="02" value="02" />
+                    <Picker.Item label="03" value="03" />
+                    <Picker.Item label="04" value="04" />
+                    <Picker.Item label="05" value="05" />
+                    <Picker.Item label="06" value="06" />
+                    <Picker.Item label="07" value="07" />
+                    <Picker.Item label="08" value="08" />
+                    <Picker.Item label="09" value="09" />
+                    <Picker.Item label="10" value="10" />
+                    <Picker.Item label="11" value="11" />
+                    <Picker.Item label="12" value="12" />
+                </Picker>
 
-									}}
-									style={{
-										borderWidth: 1,
-										borderRadius: 5,
-										height: 40,
-										backgroundColor: Colors.SCOTCH_MIST_TAN,
-										borderColor: 'clear',
-										width: 150,
-										marginTop: 20,
-										zIndex: 900
-									}}
-								/>
+                <Picker
+                    selectedValue={selectedYear}
+                    style={styles.picker}
+                    onValueChange={(itemValue) => setSelectedYear(itemValue)}
+                >
+                    <Picker.Item label="All" value="All" />
+                    <Picker.Item label="2023" value="2023" />
+                    <Picker.Item label="2024" value="2024" />
+                    {/* Add more years as needed */}
+                </Picker>
+            </View>
 
-							</Col>
-							<Col relativeColsCovered={2} alignItems='center'>
-								{/*Hold space for year selector for semester 2 --*/ }
-							</Col>
-							<Col relativeColsCovered={2} alignItems='right'> {/* Section for RNE speedDIAL button to add entry/Delete*/ }
-								{/*https://reactnativeelements.com/docs/components/speeddial#props */ }
-								<SpeedDial
-									isOpen={open} {/* Initial State*/ }
-									icon={{ name: 'edit', color: '#fff' }} //color is color for text
-									openIcon={{ name: 'close', color: '#fff' }}
-									onOpen={() => setOpen(!open)}
-									onClose={() => setOpen(!open)}
-								>
-								<SpeedDial.Action //add
-									icon={{ name: 'add', color: '#fff' }} //color is color of text
-									title="Add"
-									onPress={() => setModalVisible(true)}
-								/>
-								<SpeedDial.Action //delete
-									icon={{ name: 'delete', color: '#fff' }} // color is for color of text
-									title="Delete"
-									onPress={() => console.log('Delete Something')}
-								/>
-								<SpeedDial.Action //export
-									icon={{ name: 'delete', color: '#fff' }} // color is for color of text
-									title="Delete"
-									onPress={() => console.log('Delete Something')}
-								/>
-								</SpeedDial>
-							</Col>
-						</Row>
+            <ScrollView style={styles.scrollContainer}>
+                {sortedEntries().map(item => (
+                    <View key={item.EntryID} style={styles.entryContainer}>
+                        <Text style={styles.entryText}>Entry ID: {item.EntryID}</Text>
+                        <Text style={styles.entryText}>Date: {item.EntryDate}</Text>
+                        <Text style={styles.entryText}>Contents: {item.Contents}</Text>
+                        <Button title="Edit" onPress={() => openModalForEdit(item)} />
+                    </View>
+                ))}
+            </ScrollView>
 
-			{/*Modal display*/ }
-			<View>
-					<JournalEntryModal
-						modalVisible={true}
-						//onBackPress={ }
+            {/* Journal Entry Modal */}
+            <JournalEntryModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onSave={handleSaveEntry}
+                journalEntry={editingEntry} // Pass entry to edit
+            />
 
-					/>
-
-					
-			</View>
-
-			</View>
-			{/*start of scroll viewing portion to scroll between the entries made for the month-----------------------------------------------------*/ }
-			<ScrollView style={styles.scroll}>
-				
-				<View style={styles.fstContainer}>
-					<Input
-						inputContainerStyle={styles.inputBox}
-						inputStyle={styles.inputBoxStyle}
-						selectionColor={Colors.SANTA_GRAY}
-						placeholder='Things I did today...'
-						defaultValue={entrySix}
-						maxLength={256}
-						multiline={true}
-						textAlign="flex-start"
-					/>
-					
-				</View>
-				
-			</ScrollView>
+            {/* Speed Dial */}
+            <SpeedDial
+                isOpen={open}
+                icon={{ name: 'pencil', color: 'white' }}
+                openIcon={{ name: 'close', color: 'white' }}
+                onOpen={() => setOpen(!open)}
+                onClose={() => setOpen(false)}
+                style={styles.speedDial}
+            >
+                <SpeedDial.Action
+                    icon={<MaterialCommunityIcons name="plus" size={24} color="white" />} // Add icon
+                    title="Add"
+                    onPress={() => {
+                        setEditingEntry(null); // Clear editing entry
+                        setModalVisible(true); // Open modal to add new entry
+                    }}
+                />
+                <SpeedDial.Action
+                    icon={<MaterialCommunityIcons name="export" size={24} color="white" />} // Export icon
+                    title="Export"
+                    onPress={handleExport}
+                />
+                <SpeedDial.Action
+                    icon={<MaterialCommunityIcons name="pencil" size={24} color="white" />} // Edit icon
+                    title="Edit"
+                    onPress={() => {
+                        if (editingEntry) {
+                            openModalForEdit(editingEntry); // Reopen modal for editing
+                        } else {
+                            Alert.alert("Select an entry to edit."); // Alert if no entry selected
+                        }
+                    }}
+                />
+                <SpeedDial.Action
+                    icon={<MaterialCommunityIcons name="delete" size={24} color="white" />} // Delete icon
+                    title="Delete"
+                    onPress={() => {
+                        if (editingEntry) {
+                            handleDelete(editingEntry.EntryID); // Trigger delete function
+                        } else {
+                            Alert.alert("Select an entry to delete."); // Alert if no entry selected
+                        }
+                    }}
+                />
+            </SpeedDial>
+        </View>	
 			<NavBar notebookSelected/>
 	</View>
 	)
@@ -260,6 +234,41 @@ const [entries, setEntries] = useState([]); // Store journal entries
 
 {/*define all of the custom styles for this page*/ }
 const styles = StyleSheet.create({
+	 container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#fff',
+    },
+    filterContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+    },
+    picker: {
+        height: 50,
+        width: 100,
+        borderColor: 'gray',
+        borderWidth: 1,
+    },
+    scrollContainer: {
+        flex: 1,
+    },
+    entryContainer: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 20, // Rounded corners
+        padding: 15,
+        marginBottom: 10,
+        backgroundColor: '#f9f9f9',
+    },
+    entryText: {
+        marginBottom: 5,
+    },
+    speedDial: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+    },
 	fstContainer: {
 		width: '90%',
 		backgroundColor: Colors.SCOTCH_MIST_TAN,
@@ -287,31 +296,7 @@ const styles = StyleSheet.create({
 		zIndex: -1,
 		height:20
 	},
-	inputBox: {
-		backgroundColor: "white",
-		borderWidth: 2,
-		borderRadius: 5,
-		borderColor: 'black',
-		overflow: 'hidden',
-		borderBottomWidth: 2,
-		fontFamily: 'WorkSans-Regular',
-		fontSize: 16,
-		paddingLeft: 5,
-		zIndex: 5,
-		flex: 3,
-		marginTop: 35,
-		marginBottom: -15
-	},
-	inputDateStyle: {
-		paddingBottom: 20,
-    },
-	inputBoxStyle: {
-		fontFamily: 'WorkSans-Regular',
-		fontSize: 16,
-		color: 'black',
-		paddingLeft: 1,
-		padding:2
-	},
+	
 	oval: {
 		backgroundColor: Colors.IRISH_GREEN,
 		width: 180,
@@ -334,27 +319,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		fontFamily: 'Domine-Regular',
 	},
-	profileName: {
-		color: 'white',
-		fontSize: 36,
-		fontFamily: 'Domine-Medium',
-	},
-	editProfileBtn: {
-		fontSize: 16,
-		color: "black",
-		alignSelf: "center",
-		fontFamily: 'Domine-Regular',
-	},
-	//style for the grid layout
-	btnGridContainer: {
-		marginHorizontal: "auto",
-		width: '100%',
-		backgroundColor: Colors.ALMOND_TAN,
-		borderRadius: 5,
-		borderColor: 'black',
-		borderWidth: 1,
-		height:'13%'
-	}
+	
 })
 
 export default Notebook;
