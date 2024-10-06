@@ -119,7 +119,10 @@ const addCrops = () => {
                         <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={ isDark ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
                         {/* Header */}
                         <View style={[styles.titleCard, isDark && styles.titleCarddark]}>
-                                <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>Add Crop</Text>
+                                <View style={styles.titleContainer}>
+                                        <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>Add Crop</Text>
+                                        <View style={styles.semicircle}></View>
+                                </View>
                         </View>
                         {/* Body (Scrollable inputs)*/}
                         <View>
@@ -272,6 +275,22 @@ const styles = StyleSheet.create({
         spacer:{
                 marginTop: 20,
         },
+        semicircle:{
+                position: 'absolute',
+                top: -19,
+                left: 0,
+                width: 140,
+                height: 70,
+                backgroundColor: Colors.MALACHITE,
+                borderBottomLeftRadius: 140,
+                borderBottomRightRadius: 140,
+                overflow: 'hidden',
+        },
+        titleContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                position: 'relative', 
+        },
         titleCard:{
                 backgroundColor: Colors.ALMOND_TAN,
                 borderColor: Colors.CHARCOAL,
@@ -285,7 +304,8 @@ const styles = StyleSheet.create({
                 textAlign: 'right',
                 fontSize: 42,
                 fontFamily: 'Domine-Medium',
-                alignContent: 'center'
+                alignContent: 'center',
+                flex: 1
         },
         save:{
                 position: 'absolute',

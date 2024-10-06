@@ -118,7 +118,10 @@ const viewCrops = () => {
         return (
                 <View style={styles.wrapper}>
                         <View style={[ styles.title, isDark && styles.titleDark ]}>
-                                <Text style = {[styles.titleText, isDark && styles.darkTitleText]}>View Crops</Text>
+                                <View style={styles.titleContainer}>
+                                        <Text style = {[styles.titleText, isDark && styles.darkTitleText]}>View Crops</Text>
+                                        <View style={styles.semicircle}></View>
+                                </View>
                         </View>
                         <View style={[styles.container, isDark && styles.containerDark]}>
                                 <View style={styles.back}>
@@ -145,6 +148,22 @@ const styles = StyleSheet.create({
         containerDark:{
                 backgroundColor: Colors.BALTIC_SEA
         },
+        semicircle:{
+                position: 'absolute',
+                top: -19,
+                left: 0,
+                width: 140,
+                height: 70,
+                backgroundColor: Colors.MALACHITE,
+                borderBottomLeftRadius: 140,
+                borderBottomRightRadius: 140,
+                overflow: 'hidden',
+        },
+        titleContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                position: 'relative', 
+        },
         title:{
                 backgroundColor: Colors.ALMOND_TAN,
                 borderColor: '#20232a',
@@ -160,7 +179,8 @@ const styles = StyleSheet.create({
                 textAlign: 'right',
                 fontSize: 42,
                 fontFamily: 'Domine-Medium',
-                alignContent: 'center'
+                alignContent: 'center',
+                flex: 1,
         },
         darkTitleText:{
                 color: Colors.WHITE_SMOKE

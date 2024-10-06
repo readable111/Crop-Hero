@@ -50,7 +50,10 @@ const [isDark, setIsDarkMode] = useState(false)
   return (
     <View style={[ styles.container, isDark && styles.containerDark]}>
       <View style={[styles.titleCard, isDark && styles.titleCarddark]}>
-        <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>My Crops</Text>
+        <View style={styles.titleContainer}>
+          <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>My Crops</Text>
+          <View style={styles.semicircle}></View>
+        </View>
       </View>
       {/*<View style={styles.circle}></View>*/} 
         <View style={ [ styles.button, isDark && styles.buttonDark ] }>
@@ -79,11 +82,21 @@ const styles = StyleSheet.create({
   containerDark:{
     backgroundColor: Colors.BALTIC_SEA
 },
-  circleBlock:{
-    backgroundColor: 'white',
+  semicircle:{
     position: 'absolute',
-    marginTop: -20,
-
+    top: -19,
+    left: 0,
+    width: 140,
+    height: 70,
+    backgroundColor: Colors.MALACHITE,
+    borderBottomLeftRadius: 140,
+    borderBottomRightRadius: 140,
+    overflow: 'hidden',
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative', 
   },
   titleCard:{
     backgroundColor: Colors.ALMOND_TAN,
@@ -98,7 +111,8 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     fontSize: 42,
     fontFamily: 'Domine-Medium',
-    alignContent: 'center'
+    alignContent: 'center',
+    flex: 1,
   },
   backdrop:{
     flex: 10,
