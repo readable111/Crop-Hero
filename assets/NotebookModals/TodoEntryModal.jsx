@@ -14,7 +14,7 @@ import CROPS from '../test_data/testCropData.json'
 import unidecode from 'unidecode';
 import Colors from './Color.js'
 import { useFonts } from 'expo-font'
-
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, crops, taskTypes }) => {
     const [taskData, setTaskData] = useState({
