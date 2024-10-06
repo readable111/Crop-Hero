@@ -100,6 +100,28 @@ const todo = () => {
         // await deleteTaskFromDatabase(taskID);
     };
 
+    const handleCheckboxChange = async (taskID) => {
+        // Find the task to update
+        const taskToUpdate = tasks.find(task => task.TaskID === taskID);
+
+        // Toggle the IsCompleted status
+        const updatedTask = {
+            ...taskToUpdate,
+            IsCompleted: !taskToUpdate.IsCompleted,
+        };
+
+        // Update the task in the database
+        await updateTaskInDatabase(taskID, updatedTask);
+
+        // Update local state
+        const updatedTasks = tasks.map(task =>
+            task.TaskID === taskID ? updatedTask : task
+        );
+
+        setTasks(updatedTasks);
+        setFilteredTasks(updatedTasks);
+    };
+
     const updateTask = async (task) => {
         if (task.TaskID) {
             // Update existing task logic
@@ -243,7 +265,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Domine-Regular',
     },
     ovals: {
-        backgroundColor: Colors.ALMOND_TAN,
+        backgroundColor: Colors.LIGHT_GOLD,
         width: 180,
         height: 180,
         borderRadius: 180 / 2,
@@ -253,22 +275,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Domine-Regular',
     },
-    btnGridContainer: {
-        marginHorizontal: "auto",
-        width: '100%',
-        backgroundColor: Colors.ALMOND_TAN,
-        borderRadius: 5,
-        borderColor: 'black',
-        borderWidth: 1,
-        height: '13%',
-    },
 });
 
 export default todo;
-
-
-
-
-
-
-
