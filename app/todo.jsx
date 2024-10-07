@@ -41,27 +41,15 @@ const todo = () =>  {
     const [currentTaskID, setCurrentTaskID] = useState(null);
     const [filter, setFilter] = useState('all'); // 'all', 'completed', 'notCompleted'
 
-    // Load fonts
-    const [fontsLoaded, fontError] = useFonts({
-        'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
-        'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
-        'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
-        'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
-    });
-
-    if (!fontsLoaded && !fontError) {
-        return null;
-    }
-
-    useEffect(() => {
-        /*const loadTasks = async () => {
+    /*useEffect(() => {
+        const loadTasks = async () => {
             const fetchedTasks = await fetchTasks(); // Fetch tasks from database
             setTasks(fetchedTasks);
             setFilteredTasks(fetchedTasks);
         };
 
-        loadTasks();*/
-    }, []);
+        loadTasks();
+    }, []);*/
 
     const handleAddTask = () => {
         // Find the maximum TaskID
@@ -136,6 +124,18 @@ const todo = () =>  {
         setTasks(updatedTasks);
         setFilteredTasks(updatedTasks);
     };
+
+    // Load fonts
+    const [fontsLoaded, fontError] = useFonts({
+        'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
+        'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
+        'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
+        'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+    });
+
+    if (!fontsLoaded && !fontError) {
+        return null;
+    }
 
     return (
         <View style={styles.topContainer}>

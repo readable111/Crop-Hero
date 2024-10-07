@@ -8,18 +8,17 @@
  ***/
 
 import { React, useState } from 'react';
+import { View, Text, FlatList, Button, StyleSheet, Alert, ScrollView,StatusBar } from 'react-native';
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Col, Row } from '../assets/Grid.jsx'
 import Colors from '../assets/Color'
 import AppButton from '../assets/AppButton.jsx'
 import { Input } from 'react-native-elements'
-import DropDownPicker from 'react-native-dropdown-picker'
 import NavBar from '../assets/NavBar'
 import JournalEntryModal from '../assets/NotebookModals/JournalEntryModal'
 import { SpeedDial } from '@rneui/themed';
-import { Picker } from 'react-native-picker'
-import { View, Text, FlatList, Button, StyleSheet, Alert, ScrollView,StatusBar } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -185,7 +184,7 @@ const [entries, setEntries] = useState([]); // Store journal entries
             {/* Speed Dial */}
             <SpeedDial
                 isOpen={open}
-                icon={{ name: 'pencil', color: 'white' }}
+                icon={{ name: 'edit', color: 'white' }}
                 openIcon={{ name: 'close', color: 'white' }}
                 onOpen={() => setOpen(!open)}
                 onClose={() => setOpen(false)}

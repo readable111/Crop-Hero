@@ -7,11 +7,10 @@ import {
     TextInput,
     Button,
     StyleSheet,
-    Picker,
     ScrollView,
 } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import CROPS from '../../test_data/testCropData.json'
-import unidecode from 'unidecode';
 import Colors from '../Color'
 import { useFonts } from 'expo-font'
 import { MaterialCommunityIcons } from '@expo/vector-icons'

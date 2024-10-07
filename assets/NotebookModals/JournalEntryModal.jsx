@@ -1,6 +1,7 @@
 // Journal Entry Modal
 import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, Button, StyleSheet, Picker } from 'react-native';
+import { Modal, View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import Colors from '../Color'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
@@ -12,6 +13,7 @@ const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
     const [contents, setContents] = useState(journalEntry ? journalEntry.Contents : '');
     const [day, setDay] = useState(journalEntry ? journalEntry.EntryDate.slice(2, 4) : '01'); // Get day from EntryDate
     const [month, setMonth] = useState(journalEntry ? journalEntry.EntryDate.slice(0, 2) : '01'); // Get month from EntryDate
+    const [year, setYear] = useState('2024'); //placeholder so to prevent errors
     //const [year, setYear] = useState(journalEntry ? journalEntry.EntryDate.slice(4) : new Date().getFullYear().toString()); // Get year from EntryDate
 
     const handleSave = () => {
