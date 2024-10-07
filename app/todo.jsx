@@ -33,7 +33,7 @@ import NavBar from '../assets/NavBar.jsx';
 //import { fetchTasks, updateTaskInDatabase, insertTaskIntoDatabase } from './database'; // Import your database functions
 import TodoModalEntry from '../assets/NotebookModals/TodoEntryModal';
 
-const todo = () => {
+const todo = () =>  {
     const [index, setIndex] = useState(0);
     const [tasks, setTasks] = useState([]);
     const [filteredTasks, setFilteredTasks] = useState([]);
@@ -54,13 +54,13 @@ const todo = () => {
     }
 
     useEffect(() => {
-        const loadTasks = async () => {
+        /*const loadTasks = async () => {
             const fetchedTasks = await fetchTasks(); // Fetch tasks from database
             setTasks(fetchedTasks);
             setFilteredTasks(fetchedTasks);
         };
 
-        loadTasks();
+        loadTasks();*/
     }, []);
 
     const handleAddTask = () => {
@@ -93,7 +93,7 @@ const todo = () => {
 
     const handleDeleteTask = async (taskID) => {
         const updatedTasks = tasks.filter(task => task.TaskID !== taskID);
-        setTasks(updatedTasks);
+        //setTasks(updatedTasks);
         setFilteredTasks(updatedTasks);
 
         // Also delete from database
@@ -207,14 +207,14 @@ const todo = () => {
                     />
                 </SpeedDial>
 
-                {/* TaskModal component to be rendered here */}
-                {modalVisible && 
+                {/* TaskModal component to be rendered here 
+               modalVisible &&
                     <TodoModalEntry 
                         taskID={currentTaskID} 
                         onClose={() => setModalVisible(false)} 
                         onUpdate={updateTask} // Pass update function to modal
                     />
-                }
+                */}
             </View>
             <NavBar notebookSelected />
         </View>

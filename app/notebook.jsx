@@ -18,7 +18,8 @@ import DropDownPicker from 'react-native-dropdown-picker'
 import NavBar from '../assets/NavBar'
 import JournalEntryModal from '../assets/NotebookModals/JournalEntryModal'
 import { SpeedDial } from '@rneui/themed';
-import { View, Text, FlatList, Button, StyleSheet, Picker, Alert, ScrollView } from 'react-native';
+import { Picker } from 'react-native-picker'
+import { View, Text, FlatList, Button, StyleSheet, Alert, ScrollView,StatusBar } from 'react-native';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 

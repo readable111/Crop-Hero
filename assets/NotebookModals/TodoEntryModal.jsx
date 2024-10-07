@@ -10,7 +10,7 @@ import {
     Picker,
     ScrollView,
 } from 'react-native';
-import CROPS from '../../testCropData.json'
+import CROPS from '../../test_data/testCropData.json'
 import unidecode from 'unidecode';
 import Colors from '../Color'
 import { useFonts } from 'expo-font'
@@ -31,13 +31,13 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, 
         CompletedDate: '',   // Added CompletedDate field
     });
 
-    // Fetch existing task data if taskID is provided
-    useEffect(() => {
-        if (taskID) {
+    // Fetch existing task data if taskID is provideud
+//  useEffect(() => {
+        /*if (taskID) {
             const existingTask = {}; // Fetch the task from the database using the taskID
             setTaskData(existingTask);
         }
-    }, [taskID]);
+//    }, [taskID]);},[])*/
 
     // Function to handle input changes
     const handleChange = (name, value) => {
