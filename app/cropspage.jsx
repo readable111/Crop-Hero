@@ -7,7 +7,7 @@
 import { StatusBar } from 'expo-status-bar';
 import Colors from '../assets/Color'
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
+import { Pressable, StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
@@ -70,7 +70,11 @@ const cropsPage = () => {
         {
                 Alert.alert('Save pressed');
                 console.log(cropData);
-        }
+        };
+        const toggleRead = () =>
+        {
+                setReadOnly(!readOnly);
+        };
 
         return (
                 <View style={[styles.container, isDark && styles.containerDark]}>
@@ -189,6 +193,11 @@ const cropsPage = () => {
 
                                 />
                         </ScrollView>
+                        <View style={styles.spacer}/>
+                        <View style={styles.spacer}/>
+                        <Pressable style={styles.editButton} onPress={ toggleRead }>
+                                <Text style={styles.buttonText}>{readOnly ? "Enable Edit" : "Disable Edit"}</Text>
+                        </Pressable>
                 </View>
                 
         )
@@ -295,6 +304,22 @@ const styles = StyleSheet.create({
               },
               inputTextDark:{
                         color: Colors.WHITE_SMOKE
+              },
+              editButton: {
+                position: 'absolute',
+                bottom: 20,
+                left: '30%',
+                right: '30%',
+                backgroundColor: Colors.MALACHITE,
+                padding: 15,
+                borderRadius: 10,
+                alignItems: 'center',
+
+              },
+              buttonText: {
+                color: 'white',
+                fontSize: 16,
+                fontWeight: 'bold',
               },
               icon:{
       
