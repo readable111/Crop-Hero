@@ -1,5 +1,5 @@
 /****
- * @author Matthew Bustamente
+ * @author Matthew Bustamente, Tyler Bowen
  * @reviewer Daniel Moreno
  * @tester 
  ***/
@@ -32,6 +32,7 @@ const chartConfig = {
 };
 
 const DataHub = () => {
+  const {user} = useAuth0()
   const [fontsLoaded] = useFonts({
     'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
   });
@@ -42,6 +43,16 @@ const DataHub = () => {
   if (!fontsLoaded) {
     return null; // Show nothing while fonts are loading
   }
+  //call url endpoint like domainname/cropspage/user_id
+  const [cropData, setCropData] = useState()
+  useEffect(()=>{
+    fetch(url,{
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>res.json()).then(data=>setCropData(data))
+})
 
   return (
     <SafeAreaView style={styles.safeArea}>

@@ -17,12 +17,14 @@ import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Col, Row } from '../assets/Grid.jsx'
+import {useAuth0} from 'react-native-auth0'
 import Colors from '../assets/Color'
 import AppButton from '../assets/AppButton.jsx'
 import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
 import NavBar from '../assets/NavBar.jsx'
 
 const Profile = () =>{ 
+	const {user} = useAuth0()
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
 		// declare the async data fetching function

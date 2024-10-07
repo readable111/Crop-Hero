@@ -5,7 +5,7 @@
 import React, {useState} from 'react'
 import Home from './home.jsx'
 import { View, Text } from 'react-native'
-import { useAuth0, Auth0Provider} from 'react-native-auth0'
+import { useAuth0, Auth0Provider } from 'react-native-auth0'
 import { Button } from 'react-native-elements';
 import  Login  from './login.jsx'
 import { router } from 'expo-router'
@@ -14,7 +14,8 @@ import { router } from 'expo-router'
 
 
 export default function Page() {
-  //const [user, error] = useAuth0()
+  const { loginWithRedirect, isAuthenticated } = useAuth0()
+
   /*user = false
   if(user){
   return (
@@ -29,25 +30,17 @@ export default function Page() {
     )
   }*/
 
-    const [ isAuthenticated, setIsAuthenticated ] = useState(false)
+    const handleLogin = async () =>{
+      await loginWithRedirect()
+    }
 
-    const handleLogin = async () => {
-        try {
-            const user = await authorize();
-            setIsAuthenticated(true)
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    useEffect(()=>{
+    
+    const loggedIn = user !== undefuined && user !==null;
+    useEffect(() => {
       if(isAuthenticated){
-       router.push({
-          pathname: "/home",
-          params:{id: user.email() }
-       }) 
+        router.push('/home') 
       }
-    })
+    }, [isAuthenticated]);
 
     return(
       <Auth0Provider domain="">
@@ -58,11 +51,7 @@ export default function Page() {
           </View>
         </View>
       </Auth0Provider>
-
-      );
-
-
-  
+   );
 }
 
     const styles = StyleSheet.create({

@@ -11,6 +11,7 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, StatusBar, Appearance 
 import { useFonts } from 'expo-font'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Colors from '../assets/Color'
+import { useLocalSearchParams } from 'expo-router'
 import CropCarousel from '../src/components/cropCarousel.jsx'
 import SearchInput from '../assets/SearchFeature.jsx'
 import NavBar from '../assets/NavBar.jsx'
@@ -143,11 +144,13 @@ const Home = (/*user*/ ) =>{
 	})	
 	*/
 
-	//const {user, error} = useAuth0()
-	const [ crops, setCrops] = useState([])
-        useEffect(() =>{
+	const {user, error} = useAuth0()
 
-                 fetch( '/home/'+string(subscriberID), {
+	const [ crops, setCrops] = useState([])
+
+	
+        useEffect(() =>{
+                 fetch( '/home/'+string(user.user_id), {
                         method:'GET',
                         headers:{
                                 'Content-Type': 'application/json',

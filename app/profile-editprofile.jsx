@@ -24,9 +24,11 @@ import Colors from '../assets/Color'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
 import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
+import { useAuth0 } from 'react-native-auth0'
 
 
 const EditProfile = () =>{ 
+	//const { user } = useAuth0()
 	const [fontsLoaded, fontError] = useFonts({
 	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
 	'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
@@ -67,6 +69,14 @@ const EditProfile = () =>{
 	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
 	initialFirstName = "Zina"
 	initialLastName = "Townley"
+
+//call with url 'domainname.com/editprofile/user_id'
+	const user = fetch(url,{
+		method:'GET', 
+		headers: {
+		'Content-Type': 'application/json',
+		}
+	})
 
 	return(
 	<ScrollView style = {styles.container}>
@@ -117,7 +127,7 @@ const EditProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					placeholder='Doe'
-					defaultValue={initialLastName}
+					value={initialLastName}
 					autoComplete='name'
 					maxLength={256}
 				/>
