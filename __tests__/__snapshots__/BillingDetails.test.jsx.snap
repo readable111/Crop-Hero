@@ -81,6 +81,7 @@ exports[`Dark Mode <BillingDetailsProfile/> 1`] = `
               "opacity": 1,
             }
           }
+          testID=""
         >
           <Image
             source={1}
@@ -153,6 +154,7 @@ exports[`Dark Mode <BillingDetailsProfile/> 1`] = `
               "opacity": 1,
             }
           }
+          testID=""
         >
           <Text
             allowFontScaling={false}
@@ -941,6 +943,7 @@ exports[`Light Mode <BillingDetailsProfile/> 1`] = `
               "opacity": 1,
             }
           }
+          testID=""
         >
           <Image
             source={1}
@@ -1013,6 +1016,7 @@ exports[`Light Mode <BillingDetailsProfile/> 1`] = `
               "opacity": 1,
             }
           }
+          testID=""
         >
           <Text
             allowFontScaling={false}
@@ -1801,6 +1805,7 @@ exports[`No Async <BillingDetailsProfile/> 1`] = `
               "opacity": 1,
             }
           }
+          testID=""
         >
           <Image
             source={1}
@@ -1873,6 +1878,7 @@ exports[`No Async <BillingDetailsProfile/> 1`] = `
               "opacity": 1,
             }
           }
+          testID=""
         >
           <Text
             allowFontScaling={false}

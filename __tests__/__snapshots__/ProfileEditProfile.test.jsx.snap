@@ -82,6 +82,7 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Image
               source={1}
@@ -154,6 +155,7 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Text
               allowFontScaling={false}
@@ -289,6 +291,7 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                 "width": 50,
               }
             }
+            testID=""
           >
             <Text
               allowFontScaling={false}
@@ -955,6 +958,7 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Image
               source={1}
@@ -1027,6 +1031,7 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Text
               allowFontScaling={false}
@@ -1162,6 +1167,7 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
                 "width": 50,
               }
             }
+            testID=""
           >
             <Text
               allowFontScaling={false}
@@ -1828,6 +1834,7 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Image
               source={1}
@@ -1900,6 +1907,7 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Text
               allowFontScaling={false}
@@ -2035,6 +2043,7 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
                 "width": 50,
               }
             }
+            testID=""
           >
             <Text
               allowFontScaling={false}

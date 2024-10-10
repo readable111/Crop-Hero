@@ -1,7 +1,7 @@
 /****
  * @author Tyler Bowen, Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester 
+ * @tester Daniel Moreno
  * 
  * Secondary Author (Daniel) added general weather forecast info, dark mode, and new carousel for ambient weather display
  ***/
@@ -20,7 +20,7 @@ import icons from '../assets/icons/Icons.js';
 import { WeatherSlider } from '../src/components/WeatherSlider';
 
 //eventually transfer this to account creation pages so that it can be cached in the database
-async function getGridpoints(zipcode) {
+export async function getGridpoints(zipcode) {
 	if (!(zipcode in ZipLookup)) {
 		return {
 			status: 406, //invalid zip code
@@ -54,7 +54,7 @@ async function getGridpoints(zipcode) {
 }
 
 //
-const WeatherIcon = ({ forecastVal="clear", day="Mon" , isDarkMode=false}) => {
+export const WeatherIcon = ({ forecastVal="clear", day="Mon" , isDarkMode=false}) => {
 	//get the proper weather icon based on the forecast value
 	weatherIconDetails = getWeatherIcon(forecastVal)
 	image_url = weatherIconDetails[0]
@@ -131,7 +131,7 @@ const test_data = [
 	}
 ];
 
-const Home = () =>{ 
+export const Home = () =>{ 
 	const [forecastDataDay1, setforecastDataDay1] = useState(null);
 	const [dayName1, setDayName1] = useState(null);
 	const [forecastDataDay2, setforecastDataDay2] = useState(null);
@@ -405,5 +405,3 @@ const styles = StyleSheet.create({
 		marginVertical: 5,
 	},
 })
-
-export default Home;

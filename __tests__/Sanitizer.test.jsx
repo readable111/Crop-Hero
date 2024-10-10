@@ -35,7 +35,7 @@ describe('cleanText', () => {
     })
 
     test('John mail', ()=> {
-        txt = "john@mail' OR '1' = '1"
+        txt = "john@mail' OR '1' = '1 --"
         expect(cleanText(txt, noStopwords=true)).toMatch("johnmail 1 1") 
         expect(cleanText(txt, noSQL=true)).toMatch("johnmail 1 1") 
         expect(cleanText(txt, noSQL=true, noStopwords=true)).toMatch("johnmail 1 1") 

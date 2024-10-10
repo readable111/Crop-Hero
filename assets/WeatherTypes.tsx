@@ -2,7 +2,7 @@ import icons from "./icons/Icons"
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester 
+ * @tester Daniel Moreno
  * 
  * NWS hopes to create proper codes eventually, they just haven't yet
  * Possibly based on WMO codes: https://www.nodc.noaa.gov/archive/arc0021/0002199/1.1/data/0-data/HTML/WMO-CODE/WMO4677.HTM

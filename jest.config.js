@@ -12,9 +12,15 @@ module.exports = {
     collectCoverageFrom: [
       "app/**/*.tsx",
       "app/**/*.jsx",
+      "app/**/*.ts",
+      "app/**/*.js",
       "assets/**/*.tsx",
       "assets/**/*.jsx",
+      "assets/**/*.ts",
+      "assets/**/*.js",
       "src/components/*.tsx",
-      "src/components/*.jsx"
+      "src/components/*.jsx",
+      "src/components/*.ts",
+      "src/components/*.js",
     ]
 }

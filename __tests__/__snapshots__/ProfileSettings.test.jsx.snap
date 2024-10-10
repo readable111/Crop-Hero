@@ -87,6 +87,7 @@ exports[`Dark Mode <SettingsProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Image
               source={1}
@@ -975,6 +976,7 @@ exports[`Dark Mode <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
+              testID=""
             >
               <Image
                 source={1}
@@ -1101,6 +1103,7 @@ exports[`Dark Mode <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
+              testID=""
             >
               <Image
                 source={1}
@@ -1216,6 +1219,7 @@ exports[`Dark Mode <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
+              testID=""
             >
               <Image
                 source={1}
@@ -1404,6 +1408,7 @@ exports[`Font Loading Error <SettingsProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Image
               source={1}
@@ -2292,6 +2297,7 @@ exports[`Font Loading Error <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
+              testID=""
             >
               <Image
                 source={1}
@@ -2418,6 +2424,7 @@ exports[`Font Loading Error <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
+              testID=""
             >
               <Image
                 source={1}
@@ -2533,6 +2540,7 @@ exports[`Font Loading Error <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
+              testID=""
             >
               <Image
                 source={1}
@@ -2721,6 +2729,7 @@ exports[`Light Mode <SettingsProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Image
               source={1}
@@ -3609,6 +3618,7 @@ exports[`Light Mode <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
+              testID=""
             >
               <Image
                 source={1}
@@ -3735,6 +3745,7 @@ exports[`Light Mode <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
+              testID=""
             >
               <Image
                 source={1}
@@ -3850,6 +3861,7 @@ exports[`Light Mode <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
+              testID=""
             >
               <Image
                 source={1}
@@ -4038,6 +4050,7 @@ exports[`No Async <SettingsProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Image
               source={1}
@@ -4926,6 +4939,7 @@ exports[`No Async <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
+              testID=""
             >
               <Image
                 source={1}
@@ -5052,6 +5066,7 @@ exports[`No Async <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
+              testID=""
             >
               <Image
                 source={1}
@@ -5167,6 +5182,7 @@ exports[`No Async <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
+              testID=""
             >
               <Image
                 source={1}
