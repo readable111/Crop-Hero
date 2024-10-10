@@ -7,7 +7,8 @@ jest.mock('@rneui/themed', () => ({
   AirbnbRating: jest.fn(),
   Input: jest.fn(() => <MockInput />),
   Icon: jest.fn(() => <></>),
-  CheckBox: jest.fn(() => null)
+  CheckBox: jest.fn(() => null),
+  SearchBar: jest.fn(() => <></>)
 }))
 
 
@@ -22,12 +23,9 @@ jest.mock("react-native-pager-view", () => {
   const View = require("react-native").View;
 
   return class ViewPager extends React.Component {
-    // *********************
-    // THIS WAS MISSING
     setPage() {}
     setPageWithoutAnimation() {}
     setScrollEnabled() {}
-    // *********************
 
     render() {
       const {

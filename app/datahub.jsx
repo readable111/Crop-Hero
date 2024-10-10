@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, StatusBar, ScrollView, TouchableOpacity, SafeAr
 import { LineChart } from 'react-native-chart-kit';
 import Colors from '../assets/Color';
 import NavBar from '../assets/NavBar.jsx';
-import SearchInput from '../assets/SearchFeature.jsx';
+import {SearchInput} from '../assets/SearchFeature.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 

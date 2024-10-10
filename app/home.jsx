@@ -12,7 +12,7 @@ import { useFonts } from 'expo-font'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Colors from '../assets/Color'
 import CropCarousel from '../src/components/cropCarousel.jsx'
-import SearchInput from '../assets/SearchFeature.jsx'
+import {SearchInput} from '../assets/SearchFeature.jsx'
 import NavBar from '../assets/NavBar.jsx'
 import ZipLookup from '../assets/zip_codes.js';
 import { getWeatherIcon } from '../assets/WeatherTypes.tsx';

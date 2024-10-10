@@ -14,7 +14,7 @@ export function cleanText(textToClean, noStopwords=false, noSQL=false, textOnly=
     whitelistVal = lowerVal.replace(/[^a-z1-9'. ]/g, "");
 
     if (noStopwords) {
-        whitelistVal = whitelistVal.replace(/[^a-z1-9'. ]/g, "");
+        whitelistVal = whitelistVal.replace(/[^a-z1-9 ]/g, "");
         //remove stopwords and words that are too short
         //precompile regex to save time
         let stopWordRegex = new RegExp(`\\b(${STOP_WORDS.join('|')})\\b`, 'gi')
@@ -77,52 +77,3 @@ export function cleanNumbers(inputNumber, decimalsAllowed=true, negativesAllowed
     
 	  return newVal;
 }
-
-
-
-/*Example tests
-txt = "about an anteater a o'brian -- test"
-console.log(cleanText(txt, noStopwords=false))  //about an anteater a o'brian  test
-txt = "about an anteater a o'brian -- test"
-console.log(cleanText(txt, noStopwords=true))  //anteater obrian test
-txt = "ALALTERTER"
-console.log(cleanText(txt, noStopwords=true))  //alalterter
-txt = "ALALTERTER"
-console.log(cleanText(txt, noStopwords=false, noSQL=true))  //[nothing]
-txt = "' OR 1=1"
-console.log(cleanText(txt, noStopwords=true))  //11
-txt = "john@mail' OR '1' = '1"
-console.log(cleanText(txt, noStopwords=true))  //johnmail 1 1
-txt = "john@mail' OR '1' = '1"
-console.log(cleanText(txt, noSQL=true))  //johnmail 1 1
-console.log(cleanText(txt, noSQL=true, noStopwords=true))  //johnmail  1  1
-*/
-
-/*Example Number tests
-test = "056834"
-console.log(cleanNumbers(test))  //056834
-test = "abcd056834abcd"
-console.log(cleanNumbers(test))  //056834
-test = "56.834"
-console.log(cleanNumbers(test))  //56.834
-test = "56.834"
-console.log(cleanNumbers(test, decimalsAllowed=false))  //56834
-test = "56."
-console.log(cleanNumbers(test))  //56
-test = ".834"
-console.log(cleanNumbers(test))  //834
-test = "-56834"
-console.log(cleanNumbers(test))  //-56834
-test = "--56834"
-console.log(cleanNumbers(test))  //56834
-test = "---56834"
-console.log(cleanNumbers(test))  //-56834
-test = "5------68--34"
-console.log(cleanNumbers(test))  //56834
-test = "568---34"
-console.log(cleanNumbers(test))  //56834
-test = "-568---34"
-console.log(cleanNumbers(test))  //-56834
-test = "-568--34"
-console.log(cleanNumbers(test, decimalsAllowed=true, negativesAllowed=false))  //56834
-*/

@@ -5,6 +5,9 @@ module.exports = {
     transform: {
         "^.+\\.(js||jsx)$": "babel-jest"
     },
+    "transformIgnorePatterns": [
+      "node_modules/(?!@ngrx|(?!deck.gl)|ng-dynamic|(?!double-metaphone))"
+    ],
     collectCoverage: true,
     collectCoverageFrom: [
       "app/**/*.tsx",

@@ -38,7 +38,7 @@ var damerauLevenshteinDistance_cache = {}
 var euclideanDistance_cache = {}
 var jaroWinklerSimilarity_cache = {}
 var doubleMetaphone_cache = {}
-this["genCacheKey"] = function(funcName, firstArg, ...args) {
+function genCacheKey(funcName, firstArg, ...args) {
 	cacheKey = `${funcName}:${firstArg}:`
 	for (const arg of args) {
 		cacheKey += String(arg)
@@ -49,7 +49,7 @@ this["genCacheKey"] = function(funcName, firstArg, ...args) {
 
 
 
-const SearchModal = ({
+export const SearchModal = ({
     modalVisible,
     onBackPress,
     isLoading = false,
@@ -205,7 +205,7 @@ var dmTime = 0
 
 
 //the search function specifically for the modal version of the search bar
-searchFunction = (text, arr, searchBarTxt) => { 
+export const searchFunction = (text, arr, searchBarTxt) => { 
 	//clean up the text based on whether or not it is a number
 	var cleanedTxt = ""
 	var updatedData = []
@@ -324,7 +324,7 @@ function FloydWirth_kth(arr, length, kTHvalue, compare = defaultCompare) {
 }
 
 //Function that takes two strings and outputs value reflecting similarity; High score = good
-this["compareStrings"] = function(s, t) {
+export function compareStrings(s, t) {
 	let startTime = performance.now()
 	//remove diacretics and other unicodes by turning them into ASCII-equivalent
 	sASCII = unidecode(s)
@@ -335,11 +335,13 @@ this["compareStrings"] = function(s, t) {
 
 	compareStringsCacheKey = genCacheKey("compareStrings", s, t)
 	if (compareStringsCacheKey in compareStrings_cache) {
+		console.log("Early return for cache")
 		return compareStrings_cache[compareStringsCacheKey]
 	}
 
 	//if exact match, return highest possible score
 	if (matchExact(sUpper,tUpper)) {
+		console.log("Early return for exact match")
 		compareStrings_cache[compareStringsCacheKey] = 1000
 		return 1000
 	}
@@ -388,6 +390,7 @@ this["compareStrings"] = function(s, t) {
 	startTime = performance.now()
 	matchScore += customRound(sorensenDiceCoefficient(sUpper,tUpper) * 100)	
 	if (matchScore < 30) {
+		console.log("Early return for low SDC score")
 		compareStrings_cache[compareStringsCacheKey] = matchScore
 		return matchScore
 	}
@@ -411,6 +414,7 @@ this["compareStrings"] = function(s, t) {
 	startTime = performance.now()
 	matchScore -= (damerauLevenshteinDistance(sShortened,tShortened, 5) * 3)
 	if (matchScore < 40) {
+		console.log("Early return for low DLED score")
 		compareStrings_cache[compareStringsCacheKey] = matchScore
 		return matchScore
 	}
@@ -422,6 +426,7 @@ this["compareStrings"] = function(s, t) {
 	jws = jaroWinklerSimilarity(sUpper, tUpper)
 	matchScore += (jws * 15)
 	if (matchScore < 50) {
+		console.log("Early return for low JWS score")
 		compareStrings_cache[compareStringsCacheKey] = matchScore
 		return matchScore
 	}
@@ -476,7 +481,7 @@ this["compareStrings"] = function(s, t) {
 	return matchScore
 }
 
-this["matchExact"] = function(s, t) {
+function matchExact(s, t) {
 	//ensure that s and t are defined and the same length
 	if (typeof(s) === 'undefined' || typeof(t) === 'undefined') {
 		return false
@@ -495,7 +500,7 @@ this["matchExact"] = function(s, t) {
 	return match && t === match[0];
 }
 
-this["syllableCount"] = function(s) {
+function syllableCount(s) {
 	//ensure that s is defined and has a length
 	if (typeof(s) === 'undefined' || s.length === 0) {
 		return 0
@@ -532,7 +537,7 @@ this["syllableCount"] = function(s) {
 
 //Function that is a Javascript translation of Miguel Serrano's C-based version and Lars Garshol's Java-based version of the Jaro-Winkler Similarity algorithm to achieve O(len(s)*len(a)) time complexity
 //returns a value between 0 and 1 with 0 being no match and 1 being exact match
-this["jaroWinklerSimilarity"] = function(s, a, p_val=0.16, min_score=0.7) {
+function jaroWinklerSimilarity(s, a, p_val=0.16, min_score=0.7) {
 	//return early if either are undefined
 	if (typeof(s) === 'undefined' || typeof(a) === 'undefined') {
 		return 0.0
@@ -614,26 +619,26 @@ this["jaroWinklerSimilarity"] = function(s, a, p_val=0.16, min_score=0.7) {
 }
 
 //write some custom math functions to speed stuff up
-this["customMax"] = function(x, y) {
+function customMax(x, y) {
 	return x > y ? x : y
 }
-this["customMin"] = function(x, y) {
+function customMin(x, y) {
 	return x < y ? x : y
 }
-this["customRound"] = function(x) {
+function customRound(x) {
 	return (x + (x>0?0.5:-0.5)) << 0;
 }
-this["customAbs"] = function(x) {
+function customAbs(x) {
 	return (x + (x >> 31)) ^ (x >> 31);
 }
-this["customSqrt"] = function(x) {
+function customSqrt(x) {
 	return x ** 0.5;
 }
 
 //Function that uses Ka-Weihe Fast Sorensen-Dice Coefficient (SDC) algorithm to quickly calculate value in nearly O(len(s) + len(t)) time complexity
 //Returns value in range of [0, 1] with 1 being a perfect match
 //This function was copied in rather than being imported from the library due to issues with outdated npm; comments are mine; original at www.npmjs.com/package/fast-dice-coefficient
-this["sorensenDiceCoefficient"] = function(s, t, ngram_len=2) {
+function sorensenDiceCoefficient(s, t, ngram_len=2) {
 	//if a variable is undefined, just return 0
 	if (typeof(s) === 'undefined' || typeof(t) === 'undefined') {
 		return 0;
@@ -723,7 +728,7 @@ keyboardCartesianCoords = {
     'M': {'y': 3, 'x': 7.25},
 }
 //based the keyboardCartesianCoords, it will output a value of 0 or a decimal between 1 and 9 (inclusive)
-this["euclideanDistance"] = function(a, b, maxDistance=50) {
+function euclideanDistance(a, b, maxDistance=50) {
 	if (typeof(a) === 'undefined' || typeof(b) === 'undefined') {
 		return maxDistance
 	}
@@ -749,7 +754,7 @@ this["euclideanDistance"] = function(a, b, maxDistance=50) {
 //Also applies Euclidean Distance between keys on a QWERTY keyboard to penalize certain combinations
 //Stored using this[] to improve size compression during compilation without it getting shrunk down to nothingness
 //Returns distance in range of [0, maxDistance]
-this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
+function damerauLevenshteinDistance(s, t, maxDistance=50) {
 	//Step 0: test to see if it should exit prematurely
 	//if a variable is undefined, just return maxDistance
 	if (typeof(s) === 'undefined' || typeof(t) === 'undefined') {
@@ -864,7 +869,7 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
 };
 
 //Return modified strings with the common prefixes and suffixes between them removed
-this["getCommonPrefix"] = function(first, last) {
+function getCommonPrefix(first, last) {
 	let prefix_len = 0
     for(let i = 0; i < customMin(first.length,last.length); i++){
         if(first[i] != last[i]){
@@ -874,7 +879,7 @@ this["getCommonPrefix"] = function(first, last) {
     }
 	return prefix_len
 }
-this["getCommonSuffix"] = function(first, last) {
+function getCommonSuffix(first, last) {
 	let suffix_len = 0;
     while (suffix_len < customMin(first.length,last.length) && first[first.length - 1 - suffix_len] === last[last.length - 1 - suffix_len]) {
         suffix_len++;
@@ -882,7 +887,7 @@ this["getCommonSuffix"] = function(first, last) {
     suffix_len = -1 * suffix_len;
 	return suffix_len
 }
-this["removeCommonPrefixAndSuffix"] = function(first, last) {
+function removeCommonPrefixAndSuffix(first, last) {
 	cacheKey = genCacheKey("removeCommonPrefixAndSuffix", first, last)
 	if (cacheKey in removeCommonPrefixAndSuffix_cache) {
 		return removeCommonPrefixAndSuffix_cache[cacheKey]
@@ -901,21 +906,7 @@ this["removeCommonPrefixAndSuffix"] = function(first, last) {
 //check if input is numeric
 const isNumeric = (num) => (typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num);
 
-//clean up input specifically for search function
-//list of stopwords for InnoDB with space following it to ensure it only hits words
-const StopWords = ['a ', 'about ', 'an ', 'are ', 'as ', 'at ', 'be ', 'by ', 'com ', 'de ', 'en ', 'for ', 'from ', 'how ', 'i ', 'in ', 'is ', 'it ', 'la ', 'of ', 'on ', 'or ', 'that ', 'the ', 'this ', 'to ', 'was ', 'what ', 'when ', 'where ', 'who ', 'will ', 'with ', 'und ', 'the ', 'www ']
-String.prototype.cleanTextForSearch = function(){
-	newVal = this.toUpperCase() //make all characters uppercase
-	newVal = newVal.replace(/[^A-Z ]/g, ""); //remove all characters that aren't a letter or space
-	let regex = new RegExp("\\b"+StopWords.join('|')+"\\b","gi") //remove all stopwords
-	return newVal.replace(regex, '');
-}
-String.prototype.cleanNumForSearch = function(){
-	newVal = this.replace(/[^0-9]/g, ""); //remove all characters that aren't a letter or space
-	return newVal;
-}
-
-class SearchInput extends Component { 
+export class SearchInput extends Component { 
 	constructor(props) { 
 		super(props); 
 		this.state = { 
@@ -1257,6 +1248,3 @@ const styles = StyleSheet.create({
         borderRadius: 25,
     },
 });
-
-
-export default SearchInput;
