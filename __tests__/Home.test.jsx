@@ -11,7 +11,8 @@ import {
     screen,
     fireEvent,
 } from "@testing-library/react-native";
-import {Home, WeatherIcon, getGridpoints} from "../app/home"
+import Home from "../app/home"
+import {WeatherIcon, getGridpoints} from "../assets/HomeWeatherFunctions"
 import Colors from "../assets/Color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import renderer from "react-test-renderer";

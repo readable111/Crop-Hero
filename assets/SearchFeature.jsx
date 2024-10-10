@@ -335,13 +335,11 @@ export function compareStrings(s, t) {
 
 	compareStringsCacheKey = genCacheKey("compareStrings", s, t)
 	if (compareStringsCacheKey in compareStrings_cache) {
-		console.log("Early return for cache")
 		return compareStrings_cache[compareStringsCacheKey]
 	}
 
 	//if exact match, return highest possible score
 	if (matchExact(sUpper,tUpper)) {
-		console.log("Early return for exact match")
 		compareStrings_cache[compareStringsCacheKey] = 1000
 		return 1000
 	}
@@ -390,7 +388,6 @@ export function compareStrings(s, t) {
 	startTime = performance.now()
 	matchScore += customRound(sorensenDiceCoefficient(sUpper,tUpper) * 100)	
 	if (matchScore < 30) {
-		console.log("Early return for low SDC score")
 		compareStrings_cache[compareStringsCacheKey] = matchScore
 		return matchScore
 	}
@@ -414,7 +411,6 @@ export function compareStrings(s, t) {
 	startTime = performance.now()
 	matchScore -= (damerauLevenshteinDistance(sShortened,tShortened, 5) * 3)
 	if (matchScore < 40) {
-		console.log("Early return for low DLED score")
 		compareStrings_cache[compareStringsCacheKey] = matchScore
 		return matchScore
 	}
@@ -426,7 +422,6 @@ export function compareStrings(s, t) {
 	jws = jaroWinklerSimilarity(sUpper, tUpper)
 	matchScore += (jws * 15)
 	if (matchScore < 50) {
-		console.log("Early return for low JWS score")
 		compareStrings_cache[compareStringsCacheKey] = matchScore
 		return matchScore
 	}

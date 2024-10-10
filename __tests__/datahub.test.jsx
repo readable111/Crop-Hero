@@ -13,10 +13,11 @@ import {
     screen,
     fireEvent,
 } from "@testing-library/react-native";
-import { DataHub,
-        CollapsibleSection,
-        chartConfig
-} from "../app/datahub.jsx";
+import DataHub from "../app/datahub.jsx";
+import {
+  CollapsibleSection,
+  chartConfig
+} from "../assets/DataHubCollapsibles"
 import Colors from "../assets/Color";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import renderer from "react-test-renderer";

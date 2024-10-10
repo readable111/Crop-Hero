@@ -1,5 +1,5 @@
 /****
- * @author Isaac Boodt
+ * @author Matthew Bustamente
  * @reviewer Daniel Moreno
  * @tester Matthew Bustamente
  ***/
@@ -11,22 +11,12 @@ import Colors from '../assets/Color';
 import NavBar from '../assets/NavBar.jsx';
 import {SearchInput} from '../assets/SearchFeature.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CollapsibleSection, chartConfig} from '../assets/DataHubCollapsibles'
 
-
-export const chartConfig = {
-  backgroundColor: "#ffffff",
-  backgroundGradientFrom: "#ffffff",
-  backgroundGradientTo: "#ffffff",
-  decimalPlaces: 0,
-  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-  style: { borderRadius: 16 },
-  propsForDots: { r: "6", strokeWidth: "2", stroke: "#000000" },
-};
 
 const screenWidth = Dimensions.get("window").width;
 
-export const DataHub = () => {
+const DataHub = () => {
   const activeCropsData = require('../test_data/activeCrops.json');
   const currentCropsData = require('../test_data/currentCrops.json');
   const pastCropsData = require('../test_data/pastCrops.json');
@@ -87,68 +77,6 @@ export const DataHub = () => {
       </ScrollView>
       <NavBar dataHubSelected darkMode={isDark} />
     </SafeAreaView>
-  );
-};
-
-export const CollapsibleSection = ({ title, chartData, chartConfig, isDark }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <View style={[styles.collapsibleContainer, isDark && styles.collapsibleContainerDark]}>
-      <TouchableOpacity onPress={() => setIsOpen(!isOpen)} style={[styles.header, isDark && styles.headerDark]}>
-        <Text style={[styles.headerText, isDark && styles.headerTextDark]}>{title}</Text>
-        <Text style={[styles.triangle, isDark && styles.triangleDark]}>{isOpen ? '▲' : '▼'}</Text>
-      </TouchableOpacity>
-
-      {isOpen && chartData && (
-        <ChartComponent chartData={chartData} chartConfig={chartConfig} isDark={isDark} />
-      )}
-    </View>
-  );
-};
-
-const ChartComponent = ({ chartData, isDark }) => {
-  const darkChartConfig = {
-    backgroundColor: "#000000",
-    backgroundGradientFrom: "#333333",
-    backgroundGradientTo: "#000000",
-    decimalPlaces: 0,
-    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    style: { borderRadius: 16 },
-    propsForDots: {
-      r: "6",
-      strokeWidth: "2",
-      stroke: Colors.MALACHITE,
-    },
-  };
-
-  const lightChartConfig = {
-    backgroundColor: "#ffffff",
-    backgroundGradientFrom: "#ffffff",
-    backgroundGradientTo: "#ffffff",
-    decimalPlaces: 0,
-    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    style: { borderRadius: 16 },
-    propsForDots: {
-      r: "6",
-      strokeWidth: "2",
-      stroke: Colors.IRIDIUM,
-    },
-  };
-
-  return (
-    <View style={[styles.collapsibleContent, isDark && styles.collapsibleContentDark]}>
-      <LineChart
-        data={chartData}
-        width={screenWidth - 80}
-        height={220}
-        yAxisInterval={4}
-        chartConfig={isDark ? darkChartConfig : lightChartConfig}
-        bezier
-        style={[styles.chartStyle, isDark && styles.chartStyleDark]}
-      />
-    </View>
   );
 };
 
@@ -250,3 +178,5 @@ const styles = StyleSheet.create({
     borderColor: Colors.CHARCOAL,
   },
 });
+
+export default DataHub;

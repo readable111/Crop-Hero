@@ -7,92 +7,16 @@
  ***/
 
 import { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, StatusBar, Appearance } from 'react-native'
+import { StyleSheet, View, StatusBar, Appearance } from 'react-native'
 import { useFonts } from 'expo-font'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Colors from '../assets/Color'
 import CropCarousel from '../src/components/cropCarousel.jsx'
 import {SearchInput} from '../assets/SearchFeature.jsx'
 import NavBar from '../assets/NavBar.jsx'
-import ZipLookup from '../assets/zip_codes.js';
-import { getWeatherIcon } from '../assets/WeatherTypes.tsx';
 import icons from '../assets/icons/Icons.js';
 import { WeatherSlider } from '../src/components/WeatherSlider';
-
-//eventually transfer this to account creation pages so that it can be cached in the database
-export async function getGridpoints(zipcode) {
-	if (!(zipcode in ZipLookup)) {
-		return {
-			status: 406, //invalid zip code
-			gridpoint: ''
-		};
-	}
-
-	let coords = ZipLookup[zipcode]
-	let lat = coords[0]
-	let long = coords[1]
-  
-	try {
-		const response = await fetch(
-			`https://api.weather.gov/points/${lat},${long}`
-		).then((res) => res.json());
-
-		forecastURL = response.properties.forecast
-		urlParts = forecastURL.split('/')
-		gridpoint = urlParts[4] + '/' + urlParts[5]
-	
-		return {
-			status: 200,
-			gridpoint: gridpoint
-		};
-	} catch (error) {
-		return {
-			status: 500,
-			gridpoint: ''
-		};
-	}
-}
-
-//
-export const WeatherIcon = ({ forecastVal="clear", day="Mon" , isDarkMode=false}) => {
-	//get the proper weather icon based on the forecast value
-	weatherIconDetails = getWeatherIcon(forecastVal)
-	image_url = weatherIconDetails[0]
-	prob_val = weatherIconDetails[1]
-
-	currentStyle = null
-	onlyPossible = false
-	if (prob_val == "None") {
-		currentStyle = styles.noneProb
-		onlyPossible = false
-	}
-	else if (prob_val == "Slight") {
-		currentStyle = styles.slightProb
-		onlyPossible = true
-	}
-	else if (prob_val == "Chance") {
-		currentStyle = styles.chanceProb
-		onlyPossible = true
-	}
-	else if (prob_val == "Likely") {
-		currentStyle = styles.likelyProb
-		onlyPossible = true
-	}
-
-	return (
-		<TouchableOpacity activeOpacity={1} style={styles.weatherIconContainer}>
-			<Image 
-				style={[styles.weatherIcon, currentStyle]}
-				source={image_url}
-			/>
-			{onlyPossible && <Image 
-				source={isDarkMode ? icons.percent_white : icons.percent_black}
-				style={styles.percentImg}
-			/> }
-			<Text style={[styles.weatherDayLabel, isDarkMode && styles.weatherDayLabelDark]}>{day}</Text>
-		</TouchableOpacity>
-	)
-}
+import {getGridpoints, WeatherIcon} from '../assets/HomeWeatherFunctions'
 
 const todayDayLookup = {
 	"Monday": "Sunday",
@@ -131,7 +55,7 @@ const test_data = [
 	}
 ];
 
-export const Home = () =>{ 
+const Home = () =>{ 
 	const [forecastDataDay1, setforecastDataDay1] = useState(null);
 	const [dayName1, setDayName1] = useState(null);
 	const [forecastDataDay2, setforecastDataDay2] = useState(null);
@@ -405,3 +329,5 @@ const styles = StyleSheet.create({
 		marginVertical: 5,
 	},
 })
+
+export default Home
