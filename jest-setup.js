@@ -4,9 +4,10 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 
 const MockInput = () => (<View />)
 jest.mock('@rneui/themed', () => ({
-  // AirbnbRating: jest.fn()
+  AirbnbRating: jest.fn(),
   Input: jest.fn(() => <MockInput />),
-  Icon: jest.fn(() => <></>)
+  Icon: jest.fn(() => <></>),
+  CheckBox: jest.fn(() => null)
 }))
 
 
