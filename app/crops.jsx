@@ -1,7 +1,7 @@
 /****
  * @author Isaac Boodt
  * @reviewer Daniel Moreno
- * @tester 
+ * @tester Isaac Boodt
  ***/
 
 import { StatusBar } from 'expo-status-bar';

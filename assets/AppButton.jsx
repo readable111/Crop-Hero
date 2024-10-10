@@ -1,7 +1,7 @@
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester  Tyler Bowen
+ * @tester
  * 
  * creates a custom button that changes opacity when touched, allows user to specify text style & background color
  * refer to https://icons.expo.fyi/Index with filters at AntDesign and MaterialCommunityIcons

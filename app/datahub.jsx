@@ -1,3 +1,9 @@
+/****
+ * @author Isaac Boodt
+ * @reviewer Daniel Moreno
+ * @tester Matthew Bustamente
+ ***/
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, StatusBar, ScrollView, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
@@ -7,7 +13,7 @@ import {SearchInput} from '../assets/SearchFeature.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const chartConfig = {
+export const chartConfig = {
   backgroundColor: "#ffffff",
   backgroundGradientFrom: "#ffffff",
   backgroundGradientTo: "#ffffff",
@@ -20,7 +26,7 @@ const chartConfig = {
 
 const screenWidth = Dimensions.get("window").width;
 
-const DataHub = () => {
+export const DataHub = () => {
   const activeCropsData = require('../test_data/activeCrops.json');
   const currentCropsData = require('../test_data/currentCrops.json');
   const pastCropsData = require('../test_data/pastCrops.json');
@@ -84,7 +90,7 @@ const DataHub = () => {
   );
 };
 
-const CollapsibleSection = ({ title, chartData, chartConfig, isDark }) => {
+export const CollapsibleSection = ({ title, chartData, chartConfig, isDark }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <View style={[styles.collapsibleContainer, isDark && styles.collapsibleContainerDark]}>
@@ -244,5 +250,3 @@ const styles = StyleSheet.create({
     borderColor: Colors.CHARCOAL,
   },
 });
-
-export default DataHub;

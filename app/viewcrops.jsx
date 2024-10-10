@@ -1,7 +1,7 @@
 /****
  * @author Isaac Boodt
  * @reviewer Daniel Moreno
- * @tester 
+ * @tester Isaac Boodt
  ***/
 
 import React, { useEffect, useState } from 'react';

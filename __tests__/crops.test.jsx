@@ -1,3 +1,9 @@
+/****
+ * @author Isaac Boodt
+ * @reviewer
+ * @tester 
+ ***/
+
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import AppButton from '../assets/AppButton.jsx';

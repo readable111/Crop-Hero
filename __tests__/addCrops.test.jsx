@@ -1,3 +1,9 @@
+/****
+ * @author Isaac Boodt
+ * @reviewer 
+ * @tester 
+ ***/
+
 import { render, fireEvent, screen} from '@testing-library/react-native'
 import { Input } from 'react-native'
 import addCrops from '../app/addcrops'
