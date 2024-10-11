@@ -5,7 +5,7 @@
  ***/
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, StatusBar, ScrollView, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, ScrollView, TouchableOpacity, SafeAreaView, Dimensions, Appearance } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import Colors from '../assets/Color';
 import NavBar from '../assets/NavBar.jsx';
@@ -31,8 +31,12 @@ const DataHub = () => {
       if (JSON_VALUE && JSON_VALUE !== "") {
         result = JSON.parse(JSON_VALUE);
       } else {
-        const colorScheme = useColorScheme();
-        result = (colorScheme === 'dark');
+        colorScheme = Appearance.getColorScheme()
+				if (colorScheme == 'dark') {
+					result = true
+				} else {
+					result = false
+				}
       }
       setIsDarkMode(result);
     };
