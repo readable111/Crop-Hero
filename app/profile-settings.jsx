@@ -196,7 +196,7 @@ const SettingsProfile = () =>{
 							checked={hasTaskNotificationsEnabled}
 							onIconPress={hasNotificationsEnabled ? () => setHasTaskNotificationsEnabled(!hasTaskNotificationsEnabled) : handleDisabledEvent}
 							size={25}
-							uncheckedColor={Colors.SANTA_GRAY}
+							uncheckedColor={isDarkMode ? Colors.PERIWINKLE_GRAY : Colors.SANTA_GRAY}
 							checkedColor={isDarkMode ? Colors.HOT_GREEN : Colors.IRISH_GREEN}
 							containerStyle={isDarkMode ? {backgroundColor: Colors.LICHEN} : {backgroundColor: Colors.SCOTCH_MIST_TAN}}
 						/>
