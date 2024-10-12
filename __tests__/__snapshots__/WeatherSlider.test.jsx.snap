@@ -1,7 +1,444 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<WeatherSlider/> renders correctly 1`] = `
-<h1>
-  Let’s work together
-</h1>
+<RCTSafeAreaView
+  style={
+    [
+      {
+        "backgroundColor": "#F1DDBF",
+        "borderRadius": 12,
+        "flex": 1,
+        "width": 600,
+      },
+      false,
+    ]
+  }
+>
+  <View
+    initialPage={0}
+    onPageScroll={[Function]}
+    style={
+      {
+        "flex": 1,
+      }
+    }
+  >
+    <View>
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+            {
+              "height": 80,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "flex": 3,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-end",
+              },
+            ]
+          }
+        >
+          <Image
+            source={1}
+            style={
+              {
+                "width": 32,
+              }
+            }
+          />
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 6,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#0A0A0A",
+              }
+            }
+          >
+            Temperature
+            : 
+            70°F
+          </Text>
+          <Text
+            style={
+              {
+                "color": "#0A0A0A",
+              }
+            }
+          >
+            Feels Like
+            : 
+            80°F
+          </Text>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 3,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-start",
+              },
+            ]
+          }
+        />
+      </View>
+    </View>
+    <View>
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+            {
+              "height": 80,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "flex": 3,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-end",
+              },
+            ]
+          }
+        >
+          <Image
+            source={1}
+            style={
+              {
+                "width": 32,
+              }
+            }
+          />
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 6,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#0A0A0A",
+              }
+            }
+          >
+            Wind Speed
+            : 
+            10mph
+          </Text>
+          <Text
+            style={
+              {
+                "color": "#0A0A0A",
+              }
+            }
+          >
+            Rainfall
+            : 
+             50%
+          </Text>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 3,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-start",
+              },
+            ]
+          }
+        />
+      </View>
+    </View>
+    <View>
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+            {
+              "height": 80,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "flex": 3,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-end",
+              },
+            ]
+          }
+        >
+          <Image
+            source={1}
+            style={
+              {
+                "width": 32,
+              }
+            }
+          />
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 6,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#0A0A0A",
+              }
+            }
+          >
+            Humidity
+            : 
+            50%
+          </Text>
+          <Text
+            style={
+              {
+                "color": "#0A0A0A",
+              }
+            }
+          >
+            Soil Moisture
+            : 
+             0.2wfv
+          </Text>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 3,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-start",
+              },
+            ]
+          }
+        />
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "flex": 1,
+        "justifyContent": "space-evenly",
+        "marginTop": -75,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignSelf": "center",
+          "justifyContent": "center",
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "alignSelf": "center",
+              "bottom": 20,
+              "flexDirection": "row",
+              "position": "absolute",
+            },
+            {
+              "top": 30,
+            },
+          ]
+        }
+      >
+        <View
+          collapsable={false}
+          jestAnimatedStyle={
+            {
+              "value": {
+                "backgroundColor": "rgba(0, 220, 64, 1)",
+                "opacity": 1,
+                "transform": [
+                  {
+                    "scale": 1.4,
+                  },
+                ],
+              },
+            }
+          }
+          style={
+            {
+              "backgroundColor": "rgba(0, 220, 64, 1)",
+              "borderRadius": 5,
+              "height": 7,
+              "marginHorizontal": 5,
+              "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1.4,
+                },
+              ],
+              "width": 7,
+            }
+          }
+        />
+        <View
+          collapsable={false}
+          jestAnimatedStyle={
+            {
+              "value": {
+                "backgroundColor": "rgba(0, 175, 51, 1)",
+                "opacity": 0.8,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              },
+            }
+          }
+          style={
+            {
+              "backgroundColor": "rgba(0, 175, 51, 1)",
+              "borderRadius": 5,
+              "height": 7,
+              "marginHorizontal": 5,
+              "opacity": 0.8,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+              "width": 7,
+            }
+          }
+        />
+        <View
+          collapsable={false}
+          jestAnimatedStyle={
+            {
+              "value": {
+                "backgroundColor": "rgba(0, 175, 51, 1)",
+                "opacity": 0.8,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              },
+            }
+          }
+          style={
+            {
+              "backgroundColor": "rgba(0, 175, 51, 1)",
+              "borderRadius": 5,
+              "height": 7,
+              "marginHorizontal": 5,
+              "opacity": 0.8,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+              "width": 7,
+            }
+          }
+        />
+      </View>
+    </View>
+  </View>
+</RCTSafeAreaView>
 `;

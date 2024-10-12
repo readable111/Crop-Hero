@@ -91,6 +91,7 @@ exports[`Dark Mode <ToS/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Image
               source={1}
@@ -329,6 +330,7 @@ exports[`Light Mode <ToS/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Image
               source={1}
@@ -567,6 +569,7 @@ exports[`No Async <ToS/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Image
               source={1}

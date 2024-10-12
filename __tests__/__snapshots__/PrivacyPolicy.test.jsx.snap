@@ -90,6 +90,7 @@ exports[`Dark Mode <PrivacyPolicy/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Image
               source={1}
@@ -352,6 +353,7 @@ exports[`Light Mode <PrivacyPolicy/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Image
               source={1}
@@ -614,6 +616,7 @@ exports[`No Async <PrivacyPolicy/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID=""
           >
             <Image
               source={1}

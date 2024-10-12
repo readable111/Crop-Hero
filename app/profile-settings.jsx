@@ -1,7 +1,7 @@
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester 
+ * @tester Daniel Moreno
  ***/
 
 import { useState, useEffect } from 'react';
@@ -17,13 +17,14 @@ import {
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
 import { Switch } from 'react-native-elements'
-import  {CheckBox}  from '@rneui/themed'
+import { CheckBox } from '@rneui/themed';
 import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Col, Row} from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
+
 
 
 const SettingsProfile = () =>{ 
@@ -195,7 +196,7 @@ const SettingsProfile = () =>{
 							checked={hasTaskNotificationsEnabled}
 							onIconPress={hasNotificationsEnabled ? () => setHasTaskNotificationsEnabled(!hasTaskNotificationsEnabled) : handleDisabledEvent}
 							size={25}
-							uncheckedColor={Colors.SANTA_GRAY}
+							uncheckedColor={isDarkMode ? Colors.PERIWINKLE_GRAY : Colors.SANTA_GRAY}
 							checkedColor={isDarkMode ? Colors.HOT_GREEN : Colors.IRISH_GREEN}
 							containerStyle={isDarkMode ? {backgroundColor: Colors.LICHEN} : {backgroundColor: Colors.SCOTCH_MIST_TAN}}
 						/>

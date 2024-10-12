@@ -1,7 +1,7 @@
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester 
+ * @tester Daniel Moreno
  ***/
 
 import { useState, useEffect } from 'react';
@@ -19,22 +19,17 @@ import { router } from 'expo-router'
 import { Input } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Col, Row } from '../assets/Grid.jsx'
+import { Col, Row } from '../assets/Grid'
 import Colors from '../assets/Color'
-import Icons from '../assets/icons/Icons.js'
-import AppButton from '../assets/AppButton.jsx'
-import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
+import Icons from '../assets/icons/Icons'
+import AppButton from '../assets/AppButton'
+import UploadImage from '../assets/ProfilePageImages/UploadImage'
+import {cleanText, cleanNumbers} from '../assets/sanitizer'
 
 
 const EditProfile = () =>{ 
-	const [fontsLoaded, fontError] = useFonts({
-	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
-	'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
-	});
-
-	if (!fontsLoaded && !fontError) {
-		return null;
-	}
+	const [first, setFirst] = useState("Zina")
+	const [last, setLast] = useState("Townley")
 
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
@@ -65,8 +60,16 @@ const EditProfile = () =>{
 		
 	{/*TODO: retrieve data from local storage or database*/}
 	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
-	initialFirstName = "Zina"
-	initialLastName = "Townley"
+
+
+	const [fontsLoaded, fontError] = useFonts({
+		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+		'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
+	});
+
+	if (!fontsLoaded && !fontError) {
+		return null;
+	}
 
 	return(
 	<ScrollView style = {styles.container}>
@@ -105,9 +108,10 @@ const EditProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					placeholder='John'
-					defaultValue={initialFirstName}
+					defaultValue={first}
 					autoComplete='name'
 					maxLength={256}
+					onChangeText={value => {setFirst(cleanText(value, noStopwords=false, noSQL=true, textOnly=true));}}
 				/>
 				{/*last name input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Last Name</Text>
@@ -117,9 +121,10 @@ const EditProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					placeholder='Doe'
-					defaultValue={initialLastName}
+					defaultValue={last}
 					autoComplete='name'
 					maxLength={256}
+					onChangeText={value => {setLast(cleanText(value, noStopwords=false, noSQL=true, textOnly=true));}}
 				/>
 				{/*new password input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Change Password</Text>

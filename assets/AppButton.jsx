@@ -1,7 +1,7 @@
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester  Tyler Bowen
+ * @tester
  * 
  * creates a custom button that changes opacity when touched, allows user to specify text style & background color
  * refer to https://icons.expo.fyi/Index with filters at AntDesign and MaterialCommunityIcons
@@ -16,7 +16,7 @@ import {
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 
 
-const AppButton = ({ onPress, title='Press me', icon='', specifiedStyle={}, backgroundColor='', mci='', mciSize='', mciColor='', ad='', adSize='', adColor='', opacity=0.5, testID}) => {
+const AppButton = ({ onPress, title='Press me', icon='', specifiedStyle={}, backgroundColor='', mci='', mciSize='', mciColor='', ad='', adSize='', adColor='', opacity=0.5, testID=""}) => {
 	{/*containerless button with/without title and without icon*/}
 	if (!backgroundColor && !icon && title) {
 		return  (

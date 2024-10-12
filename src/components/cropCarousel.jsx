@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   item: {
     width: 151,
     height: 232,
-    backgroundColor: Colors.ALMOND_TAN,
+    backgroundColor: Colors.SCOTCH_MIST_TAN,
     borderRadius: 10,
     marginLeft: 10,
     marginRight: 10,
