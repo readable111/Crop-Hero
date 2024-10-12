@@ -20,11 +20,12 @@ import { Input } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons'
 import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Col, Row } from '../assets/Grid.jsx'
+import { Col, Row } from '../assets/Grid'
 import Colors from '../assets/Color'
-import Icons from '../assets/icons/Icons.js'
-import AppButton from '../assets/AppButton.jsx'
-import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
+import Icons from '../assets/icons/Icons'
+import AppButton from '../assets/AppButton'
+import UploadImage from '../assets/ProfilePageImages/UploadImage'
+import {cleanText, cleanNumbers} from '../assets/sanitizer'
 
 
 const BillingDetailsProfile = () =>{ 
@@ -39,6 +40,11 @@ const BillingDetailsProfile = () =>{
   	]);
 	const [open, setOpen] = useState(false);
   	const [value, setValue] = useState('family'); {/*must initialize with string of value from items list to assign a default option; TODO: retrieve option from database*/}
+	const [email, setEmail] = useState('test@example.com');
+	const [phoneNum, setPhoneNum] = useState('+1 (012) 345-6789');
+	const [zipCode, setZipCode] = useState('02914');
+	const [state, setState] = useState('Rhode Island');
+
 
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
@@ -69,10 +75,6 @@ const BillingDetailsProfile = () =>{
 
 	{/*TODO: retrieve data from local storage or database*/}
 	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
-	initialEmail = "test@example.com"
-	initialPhoneNum = "+1 (012) 345-6789"
-	initialZipCode = "02914"
-	initialState = "Rhode Island"
 
 	const [fontsLoaded, fontError] = useFonts({
 		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
@@ -167,10 +169,11 @@ const BillingDetailsProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					placeholder='test@example.com'
-					defaultValue={initialEmail}
+					defaultValue={email}
 					autoComplete='email'
 					keyboardType='email-address'
 					maxLength={384}
+					onChangeText={value => {setEmail(cleanText(value, noStopwords=false, noSQL=true));}}
 				/>
 				{/*phone number input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Phone No.</Text>
@@ -180,10 +183,11 @@ const BillingDetailsProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					placeholder='+1 (012) 345-6789'
-					defaultValue={initialPhoneNum}
+					defaultValue={phoneNum}
 					autoComplete='tel'
 					keyboardType='phone-pad'
 					maxLength={32}
+					onChangeText={value => {setPhoneNum(cleanNumbers(value, decimalsAllowed=false, negativesAllowed=false, phone=true));}}
 				/>
 				{/*zip code input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Zip Code</Text>
@@ -193,10 +197,11 @@ const BillingDetailsProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					placeholder='01234'
-					defaultValue={initialZipCode}
+					defaultValue={zipCode}
 					autoComplete='postal-code'
 					keyboardType='numeric'
 					maxLength={16}
+					onChangeText={value => {setZipCode(cleanNumbers(value, decimalsAllowed=false, negativesAllowed=false));}}
 				/>
 				{/*state input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>State</Text>
@@ -206,10 +211,11 @@ const BillingDetailsProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					placeholder='Texas'
-					defaultValue={initialState}
+					defaultValue={state}
 					autoComplete='address-line1'
 					keyboardType='default'
 					maxLength={64}
+					onChangeText={value => {setState(cleanText(value, noStopwords=false, noSQL=true, textOnly=true));}}
 				/>
 			</View>
         </View>

@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   flex: {
     flex: 1,
     width: width * 0.8,
-    backgroundColor: Colors.ALMOND_TAN,
+    backgroundColor: Colors.SCOTCH_MIST_TAN,
     borderRadius: 12,
   },
   flexDark: {
