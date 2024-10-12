@@ -185,7 +185,7 @@ const Home = () =>{
 	
 	return(
 	<View style = {[styles.container, isDarkMode && styles.containerDark]}>	
-		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
+		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE} data-testid="weather"/>
 		<View style = {[styles.weatherContainer, isDarkMode && styles.weatherContainerDark]}>
 			<WeatherIcon forecastVal={forecastDataDay1} day={dayName1} isDarkMode={isDarkMode}/>
 			<WeatherIcon forecastVal={forecastDataDay2} day={dayName2} isDarkMode={isDarkMode}/>
