@@ -5,7 +5,7 @@ exports[`<WeatherSlider/> renders correctly 1`] = `
   style={
     [
       {
-        "backgroundColor": "#F1DDBF",
+        "backgroundColor": "#FFFADA",
         "borderRadius": 12,
         "flex": 1,
         "width": 600,

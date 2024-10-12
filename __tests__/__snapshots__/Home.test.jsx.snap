@@ -568,7 +568,7 @@ exports[`Dark Mode <Home/> renders correctly 1`] = `
       style={
         [
           {
-            "backgroundColor": "#F1DDBF",
+            "backgroundColor": "#FFFADA",
             "borderRadius": 12,
             "flex": 1,
             "width": 600,
@@ -1165,7 +1165,7 @@ exports[`Dark Mode <Home/> renders correctly 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#F1DDBF",
+                  "backgroundColor": "#FFFADA",
                   "borderRadius": 10,
                   "height": 232,
                   "justifyContent": "center",
@@ -1247,7 +1247,7 @@ exports[`Dark Mode <Home/> renders correctly 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#F1DDBF",
+                  "backgroundColor": "#FFFADA",
                   "borderRadius": 10,
                   "height": 232,
                   "justifyContent": "center",
@@ -1329,7 +1329,7 @@ exports[`Dark Mode <Home/> renders correctly 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#F1DDBF",
+                  "backgroundColor": "#FFFADA",
                   "borderRadius": 10,
                   "height": 232,
                   "justifyContent": "center",
@@ -1411,7 +1411,7 @@ exports[`Dark Mode <Home/> renders correctly 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#F1DDBF",
+                  "backgroundColor": "#FFFADA",
                   "borderRadius": 10,
                   "height": 232,
                   "justifyContent": "center",
@@ -2900,7 +2900,7 @@ exports[`Light Mode <Home/> renders correctly 1`] = `
       style={
         [
           {
-            "backgroundColor": "#F1DDBF",
+            "backgroundColor": "#FFFADA",
             "borderRadius": 12,
             "flex": 1,
             "width": 600,
@@ -3497,7 +3497,7 @@ exports[`Light Mode <Home/> renders correctly 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#F1DDBF",
+                  "backgroundColor": "#FFFADA",
                   "borderRadius": 10,
                   "height": 232,
                   "justifyContent": "center",
@@ -3579,7 +3579,7 @@ exports[`Light Mode <Home/> renders correctly 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#F1DDBF",
+                  "backgroundColor": "#FFFADA",
                   "borderRadius": 10,
                   "height": 232,
                   "justifyContent": "center",
@@ -3661,7 +3661,7 @@ exports[`Light Mode <Home/> renders correctly 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#F1DDBF",
+                  "backgroundColor": "#FFFADA",
                   "borderRadius": 10,
                   "height": 232,
                   "justifyContent": "center",
@@ -3743,7 +3743,7 @@ exports[`Light Mode <Home/> renders correctly 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#F1DDBF",
+                  "backgroundColor": "#FFFADA",
                   "borderRadius": 10,
                   "height": 232,
                   "justifyContent": "center",
@@ -5232,7 +5232,7 @@ exports[`No Async <Home/> renders correctly 1`] = `
       style={
         [
           {
-            "backgroundColor": "#F1DDBF",
+            "backgroundColor": "#FFFADA",
             "borderRadius": 12,
             "flex": 1,
             "width": 600,
@@ -5829,7 +5829,7 @@ exports[`No Async <Home/> renders correctly 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#F1DDBF",
+                  "backgroundColor": "#FFFADA",
                   "borderRadius": 10,
                   "height": 232,
                   "justifyContent": "center",
@@ -5911,7 +5911,7 @@ exports[`No Async <Home/> renders correctly 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#F1DDBF",
+                  "backgroundColor": "#FFFADA",
                   "borderRadius": 10,
                   "height": 232,
                   "justifyContent": "center",
@@ -5993,7 +5993,7 @@ exports[`No Async <Home/> renders correctly 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#F1DDBF",
+                  "backgroundColor": "#FFFADA",
                   "borderRadius": 10,
                   "height": 232,
                   "justifyContent": "center",
@@ -6075,7 +6075,7 @@ exports[`No Async <Home/> renders correctly 1`] = `
               [
                 {
                   "alignItems": "center",
-                  "backgroundColor": "#F1DDBF",
+                  "backgroundColor": "#FFFADA",
                   "borderRadius": 10,
                   "height": 232,
                   "justifyContent": "center",

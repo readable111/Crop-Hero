@@ -18,6 +18,7 @@ export function cleanText(textToClean, noStopwords=false, noSQL=false, textOnly=
     asciiVal = unidecode(textToClean)
     lowerVal = asciiVal.toLowerCase() 
     whitelistVal = lowerVal.replace(/[^a-z0-9'.@+()\- ]/g, "");
+    whitelistVal = whitelistVal.replace(/\-\-/g, "");
 
     if (noStopwords) {
         whitelistVal = whitelistVal.replace(/[^a-z0-9 ]/g, "");
@@ -48,7 +49,7 @@ export function cleanText(textToClean, noStopwords=false, noSQL=false, textOnly=
     }
 
     if (textOnly) {
-        whitelistVal = lowerVal.replace(/[^a-z'. ]/g, "");
+        whitelistVal = lowerVal.replace(/[^a-z@. ]/g, "");
     }
     
 	return whitelistVal
