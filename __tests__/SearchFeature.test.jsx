@@ -41,7 +41,7 @@ describe('Light Mode <SearchInput/>', () =>{
         const tree = render(<SearchInput isDarkMode={false} />).toJSON();
         expect(tree).toMatchSnapshot();
     })
-
+ 
     test('renders correctly', () =>{
         const tree = render(<SearchInput isDarkMode={false} resultDisplayMode={"modal"} />).toJSON();
         expect(tree).toMatchSnapshot();
