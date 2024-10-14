@@ -1,4 +1,5 @@
-// Journal Entry Modal
+// journal Entry Modal
+// McKenna Beard
 import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
