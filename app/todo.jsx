@@ -18,7 +18,6 @@ import {
     ScrollView,
     FlatList,
     TouchableOpacity,
-    Button,
     Text
 } from 'react-native';
 import { useFonts } from 'expo-font';
@@ -30,36 +29,39 @@ import { SpeedDial } from 'react-native-elements';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import NavBar from '../assets/NavBar.jsx';
-//import { fetchTasks, updateTaskInDatabase, insertTaskIntoDatabase } from './database'; // Import your database functions
-import TodoModalEntry from '../assets/NotebookModals/TodoEntryModal';
+import TodoEntryModal from '../assets/NotebookModals/TodoEntryModal';
 
-const todo = () =>  {
+
+const todo = () => {
     const [index, setIndex] = useState(0);
     const [tasks, setTasks] = useState([]);
     const [filteredTasks, setFilteredTasks] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentTaskID, setCurrentTaskID] = useState(null);
     const [filter, setFilter] = useState('all'); // 'all', 'completed', 'notCompleted'
+    const [isSpeedDialOpen, setIsSpeedDialOpen] = useState(false);  // For Speed Dial state
+    const [currentTask, setCurrentTask] = useState(null);  // To store the selected task for the modal
+    const [isCompleted, setIsCompleted] = useState(false);
+    const [farmers, setFarmers] = useState([]);  // Assuming you have these arrays
+    const [locations, setLocations] = useState([]);
+    const [taskTypes, setTaskTypes] = useState([]);
+    const [crops, setCrops] = useState([]);
 
-    /*useEffect(() => {
-        const loadTasks = async () => {
-            const fetchedTasks = await fetchTasks(); // Fetch tasks from database
-            setTasks(fetchedTasks);
-            setFilteredTasks(fetchedTasks);
-        };
-
-        loadTasks();
-    }, []);*/
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState('all');
+    const [items, setItems] = useState([
+        { label: 'All', value: 'all' },
+        { label: 'Completed', value: 'completed' },
+        { label: 'Not Completed', value: 'notCompleted' },
+        { label: 'Last 3 Entries', value: 'last3Entries' }
+    ]);
 
     const handleAddTask = () => {
-        // Find the maximum TaskID
         const maxTaskID = tasks.length > 0 ? Math.max(...tasks.map(task => task.TaskID)) : 0;
-
-        // Create a new task object
-        const newTaskID = maxTaskID + 1; // Increment TaskID
+        const newTaskID = maxTaskID + 1;
         const newTask = {
             TaskID: newTaskID,
-            AssignedFarmerID: '', // Set these to default or user input
+            AssignedFarmerID: '',
             TaskType: '',
             LocationID: '',
             CropID: '',
@@ -69,39 +71,103 @@ const todo = () =>  {
             DateCompleted: null,
         };
 
-        // Open the modal with the new task data for editing
         setCurrentTaskID(newTaskID);
+        setCurrentTask(null);
         setModalVisible(true);
     };
 
-    const handleEditTask = (taskID) => {
-        setCurrentTaskID(taskID); // Set task ID for editing
+
+
+
+    // Function to save or update a task
+    const handleSaveTask = (taskData) => {
+        if (currentTaskID) {
+            // Update an existing task by matching TaskID
+            const updatedTasks = tasks.map(task =>
+                task.TaskID === currentTaskID ? taskData : task
+            );
+            setTasks(updatedTasks);
+        } else {
+            // Add a new task
+            setTasks([...tasks, { ...taskData, TaskID: tasks.length + 1 }]);
+        }
+
+        setModalVisible(false);  // Close the modal after saving
+    };
+
+
+
+    // Function to handle long press on a task (opens Speed Dial)
+    const handleLongPressTask = (task) => {
+        setCurrentTask(task);  // Set the current task for Speed Dial options
+        setCurrentTaskID(task.TaskID);  // Track the task ID
+        setIsSpeedDialOpen(true);  // Open the Speed Dial
+    };
+
+    // Function to handle when Edit option is clicked in Speed Dial
+    const handleEditTask = () => {
+        if (currentTask) {
+            setModalVisible(true);  // Open the modal with the selected task
+        }
+        setIsSpeedDialOpen(false);  // Close the Speed Dial
+    };
+
+    useEffect(() => {
+        switch (value) {
+            case 'last3Entries':
+                setFilteredTasks(tasks.slice(-3));
+                break;
+            case 'completed':
+                setFilteredTasks(tasks.filter(task => task.IsCompleted));
+                break;
+            case 'notCompleted':
+                setFilteredTasks(tasks.filter(task => !task.IsCompleted));
+                break;
+            default:
+                setFilteredTasks(tasks);
+                break;
+        }
+    }, [value, tasks]);
+
+    const handleTaskTap = (task) => {
+        setCurrentTask(task);
         setModalVisible(true);
     };
 
-    const handleDeleteTask = async (taskID) => {
-        const updatedTasks = tasks.filter(task => task.TaskID !== taskID);
-        //setTasks(updatedTasks);
+    const handleSave = (updatedTask) => {
+        const updatedTasks = tasks.map(task =>
+            task.TaskID === updatedTask.TaskID ? updatedTask : task
+        );
+        setTasks(updatedTasks);
         setFilteredTasks(updatedTasks);
+        setModalVisible(false);
+    };
 
-        // Also delete from database
-        // await deleteTaskFromDatabase(taskID);
+    const handleDeleteTask = (taskID) => {
+        Alert.alert(
+            'Confirm Delete',
+            'Are you sure you want to delete this task?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Delete', onPress: () => {
+                        const updatedTasks = tasks.filter(task => task.TaskID !== taskID);
+                        setTasks(updatedTasks);
+                        setFilteredTasks(updatedTasks);
+                    }
+                }
+            ],
+            { cancelable: true }
+        );
     };
 
     const handleCheckboxChange = async (taskID) => {
-        // Find the task to update
         const taskToUpdate = tasks.find(task => task.TaskID === taskID);
-
-        // Toggle the IsCompleted status
         const updatedTask = {
             ...taskToUpdate,
             IsCompleted: !taskToUpdate.IsCompleted,
         };
 
-        // Update the task in the database
-        await updateTaskInDatabase(taskID, updatedTask);
-
-        // Update local state
         const updatedTasks = tasks.map(task =>
             task.TaskID === taskID ? updatedTask : task
         );
@@ -110,22 +176,11 @@ const todo = () =>  {
         setFilteredTasks(updatedTasks);
     };
 
-    const updateTask = async (task) => {
-        if (task.TaskID) {
-            // Update existing task logic
-            await updateTaskInDatabase(task.TaskID, task);
-        } else {
-            // Create new task
-            await insertTaskIntoDatabase(task);
-        }
-
-        // Update local state
-        const updatedTasks = [...tasks.filter(t => t.TaskID !== task.TaskID), task]; // Replace the task if it exists
-        setTasks(updatedTasks);
-        setFilteredTasks(updatedTasks);
+    const handleTaskLongPress = (task) => {
+        setCurrentTask(task);
+        setIsSpeedDialOpen(true);
     };
 
-    // Load fonts
     const [fontsLoaded, fontError] = useFonts({
         'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
         'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
@@ -150,114 +205,143 @@ const todo = () =>  {
                     </Col>
                 </Row>
             </View>
-
             <View style={styles.container}>
-                <View style={styles.filterContainer}>
-                    <Button title="All" onPress={() => setFilter('all')} />
-                    <Button title="Completed" onPress={() => setFilter('completed')} />
-                    <Button title="Not Completed" onPress={() => setFilter('notCompleted')} />
-                </View>
-
-                <ScrollView>
-                    <FlatList
-                        data={filteredTasks}
-                        keyExtractor={item => item.TaskID.toString()}
-                        renderItem={({ item }) => (
-                            <View style={styles.taskContainer}>
-                                <Text>Assigned Farmer ID: {item.AssignedFarmerID}</Text>
-                                <Text>Task Type: {item.TaskType}</Text>
-                                <Text>Location ID: {item.LocationID}</Text>
-                                <Text>Crop ID: {item.CropID}</Text>
-                                <Text>Comments: {item.Comments}</Text>
-                                <Text>Due Date: {item.DueDate}</Text>
-                                <TouchableOpacity onPress={() => handleCheckboxChange(item.TaskID)}>
-                                    <Text style={{ color: item.IsCompleted ? 'green' : 'red' }}>
-                                        {item.IsCompleted ? 'Completed' : 'Not Completed'}
-                                    </Text>
-                                </TouchableOpacity>
-                                <Button title="Edit" onPress={() => handleEditTask(item.TaskID)} />
-                                <Button title="Delete" onPress={() => handleDeleteTask(item.TaskID)} />
-                            </View>
-                        )}
-                    />
-                </ScrollView>
-
-                <SpeedDial
-                    isOpen={modalVisible}
-                    icon={{ name: 'edit', color: 'white' }}
-                    openIcon={{ name: 'close', color: 'white' }}
-                    onOpen={() => setModalVisible(true)}
-                    onClose={() => setModalVisible(false)}
-                    buttonStyle={styles.speedDial}
-                >
-                    <SpeedDial.Action
-                        icon={{ name: 'add', color: 'white' }}
-                        title="Add Task"
-                        onPress={handleAddTask}
-                    />
-                    <SpeedDial.Action
-                        icon={{ name: 'edit', color: 'white' }}
-                        title="Edit Task"
-                        onPress={handleEditTask} // Implement selection logic
-                    />
-                    <SpeedDial.Action
-                        icon={{ name: 'delete', color: 'white' }}
-                        title="Delete Task"
-                        onPress={handleDeleteTask} // Implement selection logic
-                    />
-                </SpeedDial>
-
-                {/* TaskModal component to be rendered here 
-               modalVisible &&
-                    <TodoModalEntry 
-                        taskID={currentTaskID} 
-                        onClose={() => setModalVisible(false)} 
-                        onUpdate={updateTask} // Pass update function to modal
-                    />
-                */}
+                <DropDownPicker
+                    open={open}
+                    value={value}
+                    items={items}
+                    setOpen={setOpen}
+                    setValue={setValue}
+                    setItems={setItems}
+                    containerStyle={styles.dropdownContainer}
+                />
             </View>
+
+            <ScrollView style={styles.scroll}>
+                <FlatList
+                    data={filteredTasks}
+                    keyExtractor={item => item.TaskID.toString()}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity
+                            style={styles.taskContainer}
+                            onPress={() => handleTaskTap(item)}
+                            onLongPress={() => handleLongPressTask(item)} // Long press opens Speed Dial
+                        >
+                            <Text>Assigned Farmer ID: {item.AssignedFarmerID}</Text>
+                            <Text>Task Type: {item.TaskType}</Text>
+                            <Text>Location ID: {item.LocationID}</Text>
+                            <Text>Comments: {item.Comments}</Text>
+                            <Text>Due Date: {item.DueDate}</Text>
+                        </TouchableOpacity>
+                    )}
+                />
+            </ScrollView>
+
+            <SpeedDial
+                isOpen={isSpeedDialOpen}
+                icon={{ name: 'edit', color: 'white' }}
+                openIcon={{ name: 'close', color: 'white' }}
+                onOpen={() => setIsSpeedDialOpen(true)}
+                onClose={() => setIsSpeedDialOpen(false)}
+                buttonStyle={{ backgroundColor: 'green' }}
+                style={styles.speedDial}
+            >
+                <SpeedDial.Action
+                    icon={{ name: 'add', color: 'white' }}
+                    title="Add Task"
+                    onPress={handleAddTask}
+                    buttonStyle={{ backgroundColor: 'green' }}
+                />
+                <SpeedDial.Action
+                    icon={{ name: 'edit', color: 'white' }}
+                    title="Edit Task"
+                    onPress={handleEditTask}  // Open the modal to edit the task
+                    buttonStyle={{ backgroundColor: 'green' }}
+                />
+                <SpeedDial.Action
+                    icon={{ name: 'delete', color: 'white' }}
+                    title="Delete Task"
+                    onPress={() => handleDeleteTask(currentTask?.TaskID)}
+                    buttonStyle={{ backgroundColor: 'green' }}
+                />
+            </SpeedDial>
+
+            {/* Modal for adding/editing tasks */}
+            <TodoEntryModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onSave={handleSaveTask}
+                taskID={currentTaskID}
+                farmers={farmers}
+                locations={locations}
+                crops={crops}
+                taskTypes={taskTypes}
+                taskData={currentTask}  // Pass the selected task data to the modal for editing
+            />
+
             <NavBar notebookSelected />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-        backgroundColor: '#fff',
+    belowFilter: {
+        backgroundColor: 'pink',
+        height: '90%',
     },
-    filterContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 16,
+    btnGridContainer: {
+        marginHorizontal: "auto",
+        width: '100%',
+        backgroundColor: Colors.ALMOND_TAN,
+        borderRadius: 5,
+        borderColor: 'black',
+        borderWidth: 1,
+        height: '13%',
     },
-    taskContainer: {
-        padding: 10,
-        marginVertical: 8,
-        backgroundColor: '#f9f9f9',
-        borderColor: '#ddd',
+    scroll: {
+        width: '100%',
+        backgroundColor: 'transparent',
+        height: '80%',
         borderWidth: 1,
         borderRadius: 5,
+        borderColor: 'black',
+    },
+    container: {
+        flexDirection: 'row',
+        backgroundColor: Colors.ALMOND_TAN,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: 'black',
+        padding: 8,
+        zIndex: 1000,
+        marginTop: 5,
+        marginBottom: 3
+    },
+    dropdownContainer: {
+        width: '70%',
+        marginHorizontal: '15%',
+    },
+    taskContainer: {
+        backgroundColor: Colors.WHITE_SMOKE,
+        padding: 15,
+        margin: 10,
+        borderRadius: 8,
+        elevation: 5,
     },
     speedDial: {
         position: 'absolute',
-        bottom: 20,
-        right: 20,
-    },
-    topContainer: {
-        backgroundColor: Colors.SANTA_GRAY,
-        flex: 1,
-        alignItems: 'flex-start',
-        flexDirection: 'column',
-        zIndex: -1,
-        height: 20,
+        bottom: 60,
+        right: 5,
+        //color: Colors.HOT_GREEN,
+        //flex: 5,
+        zIndex: 1000,
+        flexDirection: 'vertical'
     },
     oval: {
         backgroundColor: Colors.IRISH_GREEN,
         width: 180,
         height: 180,
-        borderRadius: 180 / 2,
+        borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
         paddingTop: 120,
         marginTop: -90,
         fontSize: 18,
@@ -265,16 +349,26 @@ const styles = StyleSheet.create({
         fontFamily: 'Domine-Regular',
     },
     ovals: {
-        backgroundColor: Colors.LIGHT_GOLD,
+        backgroundColor: Colors.ALMOND_TAN,
         width: 180,
         height: 180,
-        borderRadius: 180 / 2,
+        borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
         paddingTop: 120,
         marginTop: -90,
         fontSize: 18,
         textAlign: 'center',
         fontFamily: 'Domine-Regular',
     },
+    topContainer: { // overall page container
+        backgroundColor: Colors.PERIWINKLE_GRAY,
+        //backgroundColor:'pink',
+        flex: 1,
+        alignItems: 'flex-start',
+        flexDirection: 'column',
+        //zIndex: -1,
+        height: '90%',
+    },
 });
 
 export default todo;
+
