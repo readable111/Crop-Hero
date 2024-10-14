@@ -1,4 +1,5 @@
 //modal pop for task entry
+// McKenna Beard
 import React, { useEffect, useState } from 'react';
 import {
     Modal,
@@ -9,7 +10,7 @@ import {
     StyleSheet,
     ScrollView,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import CROPS from '../../test_data/testCropData.json'
 import Colors from '../Color'
 import { useFonts } from 'expo-font'
@@ -31,11 +32,11 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, 
     });
 
     // Fetch existing task data if taskID is provideud
-//  useEffect(() => {
-        /*if (taskID) {
-            const existingTask = {}; // Fetch the task from the database using the taskID
-            setTaskData(existingTask);
-        }
+    //  useEffect(() => {
+    /*if (taskID) {
+        const existingTask = {}; // Fetch the task from the database using the taskID
+        setTaskData(existingTask);
+    }
 //    }, [taskID]);},[])*/
 
     // Function to handle input changes
@@ -63,6 +64,8 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, 
     return (
         <Modal visible={visible} animationType="slide">
             <ScrollView contentContainerStyle={styles.modalContainer}>
+                <View style={styles.optionsContainer}>
+                    <View style={styles.attributesContainer }>
                 <Text style={styles.title}>Task Details</Text>
 
                 <Text>Task ID</Text>
@@ -139,7 +142,7 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, 
                     onChangeText={text => handleChange('Comments', text)}
                     style={styles.input}
                 />
-
+                    </View>
                 <Text>Due Date</Text>
                 <View style={styles.dateContainer}>
                     <Picker
@@ -197,6 +200,7 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, 
                 <View style={styles.buttonContainer}>
                     <Button title="Save" onPress={handleSave} />
                     <Button title="Cancel" onPress={onClose} />
+                    </View>
                 </View>
             </ScrollView>
         </Modal>
@@ -204,9 +208,20 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, 
 };
 
 const styles = StyleSheet.create({
+    optionsContainer: {
+        //flexDirection: 'row'
+        backgroundColor: 'pink'
+
+    },
+    attributesContainer: {
+        flexDirection: 'row'
+
+    },
+
     modalContainer: {
         flex: 1,
         padding: 20,
+       // flexDirection: 'row'
     },
     title: {
         fontSize: 24,
@@ -231,6 +246,7 @@ const styles = StyleSheet.create({
     },
     iconPickerContainer: {
         alignItems: 'flex-end', // Aligns the icon picker to the right
+        flexDirection: 'row'
     },
     iconPicker: {
         height: 50,
