@@ -1,0 +1,787 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dark Mode <PrivacyPolicy/> renders correctly 1`] = `
+<RCTScrollView
+  style={
+    [
+      {
+        "backgroundColor": "#97A5BF",
+        "height": "100%",
+      },
+      false,
+    ]
+  }
+>
+  <View>
+    <View
+      style={
+        [
+          {
+            "backgroundColor": "#F1DDBF",
+            "flex": 12,
+            "marginBottom": 10,
+            "marginHorizontal": "auto",
+            "marginTop": 0,
+            "width": "100%",
+          },
+          false,
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+            {
+              "height": 60,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "flex": 2,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-end",
+              },
+            ]
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+          >
+            <Image
+              source={1}
+              style={{}}
+            />
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 8,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": "black",
+                  "fontFamily": "Domine-Medium",
+                  "fontSize": 36,
+                  "textAlign": "center",
+                  "textAlignVertical": "center",
+                },
+                false,
+              ]
+            }
+          >
+            Privacy Policy
+          </Text>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 2,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        />
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "marginLeft": 20,
+          "marginTop": 0,
+          "paddingRight": 15,
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 24,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Interpretation and Definitions
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 18,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Interpretation
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam quisque id diam vel quam elementum. Odio eu feugiat pretium nibh ipsum consequat nisl vel. Diam quam nulla porttitor massa id neque aliquam vestibulum. Tristique et egestas quis ipsum suspendisse. Et ultrices neque ornare aenean euismod elementum. Commodo viverra maecenas accumsan lacus vel facilisis volutpat est. Laoreet non curabitur gravida arcu. Sed arcu non odio euismod lacinia. Quam viverra orci sagittis eu volutpat odio facilisis mauris sit.
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 18,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Definitions
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        For the purposes of this Privacy Policy:
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "paddingLeft": 10,
+            },
+            false,
+          ]
+        }
+      >
+        • 
+        <Text
+          style={
+            {
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Lorem ipsum:
+        </Text>
+         euismod in
+      </Text>
+    </View>
+  </View>
+</RCTScrollView>
+`;
+
+exports[`Light Mode <PrivacyPolicy/> renders correctly 1`] = `
+<RCTScrollView
+  style={
+    [
+      {
+        "backgroundColor": "#97A5BF",
+        "height": "100%",
+      },
+      false,
+    ]
+  }
+>
+  <View>
+    <View
+      style={
+        [
+          {
+            "backgroundColor": "#F1DDBF",
+            "flex": 12,
+            "marginBottom": 10,
+            "marginHorizontal": "auto",
+            "marginTop": 0,
+            "width": "100%",
+          },
+          false,
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+            {
+              "height": 60,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "flex": 2,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-end",
+              },
+            ]
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+          >
+            <Image
+              source={1}
+              style={{}}
+            />
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 8,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": "black",
+                  "fontFamily": "Domine-Medium",
+                  "fontSize": 36,
+                  "textAlign": "center",
+                  "textAlignVertical": "center",
+                },
+                false,
+              ]
+            }
+          >
+            Privacy Policy
+          </Text>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 2,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        />
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "marginLeft": 20,
+          "marginTop": 0,
+          "paddingRight": 15,
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 24,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Interpretation and Definitions
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 18,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Interpretation
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam quisque id diam vel quam elementum. Odio eu feugiat pretium nibh ipsum consequat nisl vel. Diam quam nulla porttitor massa id neque aliquam vestibulum. Tristique et egestas quis ipsum suspendisse. Et ultrices neque ornare aenean euismod elementum. Commodo viverra maecenas accumsan lacus vel facilisis volutpat est. Laoreet non curabitur gravida arcu. Sed arcu non odio euismod lacinia. Quam viverra orci sagittis eu volutpat odio facilisis mauris sit.
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 18,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Definitions
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        For the purposes of this Privacy Policy:
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "paddingLeft": 10,
+            },
+            false,
+          ]
+        }
+      >
+        • 
+        <Text
+          style={
+            {
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Lorem ipsum:
+        </Text>
+         euismod in
+      </Text>
+    </View>
+  </View>
+</RCTScrollView>
+`;
+
+exports[`No Async <PrivacyPolicy/> renders correctly 1`] = `
+<RCTScrollView
+  style={
+    [
+      {
+        "backgroundColor": "#97A5BF",
+        "height": "100%",
+      },
+      false,
+    ]
+  }
+>
+  <View>
+    <View
+      style={
+        [
+          {
+            "backgroundColor": "#F1DDBF",
+            "flex": 12,
+            "marginBottom": 10,
+            "marginHorizontal": "auto",
+            "marginTop": 0,
+            "width": "100%",
+          },
+          false,
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+            {
+              "height": 60,
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "flex": 2,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "flex-end",
+              },
+            ]
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+          >
+            <Image
+              source={1}
+              style={{}}
+            />
+          </View>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 8,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": "black",
+                  "fontFamily": "Domine-Medium",
+                  "fontSize": 36,
+                  "textAlign": "center",
+                  "textAlignVertical": "center",
+                },
+                false,
+              ]
+            }
+          >
+            Privacy Policy
+          </Text>
+        </View>
+        <View
+          style={
+            [
+              {
+                "flex": 2,
+              },
+              {
+                "justifyContent": "center",
+                "paddingLeft": 5,
+              },
+              {
+                "alignItems": "center",
+              },
+            ]
+          }
+        />
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "marginLeft": 20,
+          "marginTop": 0,
+          "paddingRight": 15,
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 24,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Interpretation and Definitions
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 18,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Interpretation
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam quisque id diam vel quam elementum. Odio eu feugiat pretium nibh ipsum consequat nisl vel. Diam quam nulla porttitor massa id neque aliquam vestibulum. Tristique et egestas quis ipsum suspendisse. Et ultrices neque ornare aenean euismod elementum. Commodo viverra maecenas accumsan lacus vel facilisis volutpat est. Laoreet non curabitur gravida arcu. Sed arcu non odio euismod lacinia. Quam viverra orci sagittis eu volutpat odio facilisis mauris sit.
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "Domine-Medium",
+              "fontSize": 18,
+              "marginTop": 10,
+            },
+            false,
+          ]
+        }
+      >
+        Definitions
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "marginTop": 4,
+            },
+            false,
+          ]
+        }
+      >
+        For the purposes of this Privacy Policy:
+      </Text>
+      <Text
+        style={
+          [
+            {
+              "color": "black",
+              "fontFamily": "WorkSans-Regular",
+              "fontSize": 16,
+              "paddingLeft": 10,
+            },
+            false,
+          ]
+        }
+      >
+        • 
+        <Text
+          style={
+            {
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Lorem ipsum:
+        </Text>
+         euismod in
+      </Text>
+    </View>
+  </View>
+</RCTScrollView>
+`;
