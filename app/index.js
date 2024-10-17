@@ -2,19 +2,16 @@
  * @author Tyler Bowen
  * @reviewer Daniel Moreno
  ***/
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Home from './home.jsx'
-import { View, Text } from 'react-native'
-import { useAuth0, Auth0Provider } from 'react-native-auth0'
+import { View, ActivityIndicator} from 'react-native'
+import * as AuthSession from 'expo-auth-session'
 import { Button } from 'react-native-elements';
-import  Login  from './login.jsx'
-import { router } from 'expo-router'
-
-
+import { useRouter } from 'expo-router'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function Page() {
-  const { loginWithRedirect, isAuthenticated } = useAuth0()
 
   /*user = false
   if(user){
@@ -28,52 +25,40 @@ export default function Page() {
         <Login/>
       </Auth0Provider>      
     )
-  }*/
+*/
+  const [accessToken, setAccessToken] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
-    const handleLogin = async () =>{
-      await loginWithRedirect()
-    }
-
-    
-    const loggedIn = user !== undefuined && user !==null;
-    useEffect(() => {
-      if(isAuthenticated){
-        router.push('/home') 
+  // Function to check login status
+  const checkLoginStatus = async () => {
+    try {
+      const token = await AsyncStorage.getItem('accessToken');
+      if (token) {
+        setAccessToken(token);
+        router.replace('/home'); // Redirect to home page if logged in
+      } else {
+        router.replace('/login'); // Redirect to login page if not logged in
       }
-    }, [isAuthenticated]);
+    } catch (error) {
+      console.log('Error checking login status:', error);
+      router.replace('/login');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    return(
-      <Auth0Provider domain="">
-        <View style={styles.container}>
-          <View style={styles.messageContainer}>
-            <Text style={styles.title}>Welcome</Text>
-            <Button title="Login" onPress={handleLogin} />
-          </View>
-        </View>
-      </Auth0Provider>
-   );
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  return <Stack />;
 }
-
-    const styles = StyleSheet.create({
-
-      container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#252A33',
-      },
-      messageContainer: {
-        backgroundColor: '#F1DDBF',
-        width: 200,
-        height: 150,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 20,
-        borderRadius: 10, // Optional: for rounded corners
-      },
-      title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#000', // Black text to contrast with the lighter background
-      },
-    });
