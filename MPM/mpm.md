@@ -29,10 +29,15 @@
 1. [In-Depth System Overview](#indepth_overview)
     1. [Home Page](#indepth_home)
         1. [General Weather Forecast](#weather_forecast)
+        1. [Weather Slider](#weather_slider)
+        1. [Crop Carousel](#crop_carousel)
+    1. [My Crops Page](#my_crops_page)
     1. [Notebook Page](#notebook_page)
         1. [Background](#notebook_background)
     1. [To-Do Page](#todo_page)
         1. [Background](#todo_background)
+    1. [Profile Page](#profile_page)
+    1. [Data Hub Page](#datahub_page)
     1. [Components & Assets](#components_n_assets)
         1. [Rows & Columns](#grid)
         1. [AppButton Component](#appbutton)
@@ -72,6 +77,7 @@
         1. [Starting The Test Suite](#start_tests)
 1. [Maintenance Tasks](#maint)
     1. [Adding a New Page](#add_page)
+        1. [The Status Bar](#status_bar)
         1. [Adding Dark Mode](#add_dark_mode)
         1. [Expanding the Navbar](#expand_navbar)
         1. [Importing the Search Bar](#import_search)
@@ -131,9 +137,27 @@ This maintenance manual is meant to help the client and any future developers on
 
 At the top of the Home page is a bar with 7 icons on it and an abbreviated day of the week underneath each icon. Within the page’s functional component is a useEffect hook, the hook that allows for asynchronous requests. First, I call a getGridpoints function which converts a zipcode into gridpoints that can be understood by the National Weather Service’s API. This function checks the passed zipcode against a dictionary that I created. I found the USPS zipcode database and then used a Python script to create a dictionary of lat-long coordinates with the zipcodes functioning as keys. The lat-long coordinates are sent to the NWS API to receive the gridpoints. 
 
-Afterwards, I pass the gridpoints to the NWS API and fetch the weather forecast based on that. If the first forecast date is labelled as This Afternoon, then I store the forecast information for today and the next 6 days in 7 state variables. If the first forecast date is labelled as Tonight, I store the forecast information for 7 days, starting with the next day. Since this is a farming app, this process will always ignore night-time forecasts. 
+Afterwards, I pass the gridpoints to the NWS API and fetch the weather forecast based on that. If the first forecast date is labelled as This Afternoon, then I store the forecast information for today and the next 6 days in 7 state variables. If the first forecast date is labelled as Tonight, I store the forecast information for 7 days, starting with the next day. Since this is a farming app, this process will always ignore night-time forecasts. Since the API labels the current day as tonight or today, a simple lookup table is used to determine today's name based on tomorrow.
 
-At render, the forecast information and day name are passed to 7 WeatherIcon components. The forecast information gets passed to a function in WeatherTypes.jsx. The function takes the shortened forecast, gets rid of anything after the “then” as that is in the future, and evaluates the text. Unfortunately, the NWS API has never established a standardized list of potential values, much to the annoyance of a lot of people. As such, substantial research was done by Group 7 to determine the general terms that they use and to condense them down into 10 categories: Clear (0-10% cloud coverage), a Few Clouds (10-30% cloud coverage), Partly Cloudy (30-60% cloud coverage), Mostly Cloudy (60-90% cloud coverage), Overcast (90-100% cloud coverage), Rainy, Stormy, Snowy (includes sleet and hail), Misty (includes drizzling and foggy), and Dusty. The terms are combined into enumerations that are treated as regex to evaluate the forecast. This passes the image’s URI from the Icons constant list. Additional details are added to the evaluated result if the forecast includes the terms Slight Chance (0-30% chance), Chance (30-60% chance), or Likely (60-80%). Slight Chance is given an opacity of 0.4 and Chance is given an opacity of 0.7. If any of the chance indicators are found, a black/white percent sign (based on dark mode setting) is added to the forecast icon, and styling is used to ensure that it overlaps with the forecast icon. 
+At render, the forecast information and day name are passed to 7 WeatherIcon components. The forecast information gets passed to a function in WeatherTypes.jsx. The function takes the shortened forecast, gets rid of anything after the “then” as that is in the future, and evaluates the text. Unfortunately, the NWS API has never established a standardized list of potential values, much to the annoyance of a lot of people. As such, substantial research was done by Group 7 to determine the general terms that they use and to condense them down into 10 categories: Clear (0-10% cloud coverage), a Few Clouds (10-30% cloud coverage), Partly Cloudy (30-60% cloud coverage), Mostly Cloudy (60-90% cloud coverage), Overcast (90-100% cloud coverage), Rainy, Stormy, Snowy (includes sleet and hail), Misty (includes drizzling and foggy), and Dusty. The terms are combined into enumerations that are treated as regex to evaluate the forecast. This passes the image’s URI from the Icons constant list. Additional details are added to the evaluated result if the forecast includes the terms Slight Chance (0-30% chance), Chance (30-60% chance), or Likely (60-80%). Slight Chance is given an opacity of 0.4 and Chance is given an opacity of 0.7. If any of the chance indicators are found, a black/white percent sign (based on dark mode setting) is added to the forecast icon, and styling is used to ensure that it overlaps with the forecast icon. All of the display is handled by the WeatherIcon component which is based the forecast, day, and dark mode boolean.
+
+#### Weather Slider <a name="weather_slider"></a>
+*Author: Daniel*
+
+Below the weather forecast bar, there is a carousel or slider which is used to display various information retrieved from the Ambient Weather API. Specifically, the carousel displays the actual temperature, the feels-like temperature, the wind speed, the rainfall, the humidity, and the soil moisture. All of the data is passed to the carousel as a JSON object.
+
+At its core, the WeatherSlider component uses a PagerView from the `react-native-pager-view library`. The PagerView is then animated with the `react-native-reanimated library` and wrapped in a SafeAreaView component. Within the AnimatedPagerView, I use the map function to create multiple pages for each of entries in the JSON. A FlatList might create an error due to nesting different list types, depending on the page that imports the slider. As such, I chose to use the map function instead, just as I did with the search bar. Below the AnimatedPagerView is a component called PagingDots which displays a simple meatball menu at the bottom of the carousel to indicate which item in the list is currently displayed. This is done with an `onPageScroll` prop which triggers a custom handler function. The handler function alters two variables called `positionSharedValue` and `scrollOffsetSharedValue` which are used to calculate a variable called `scrollX`, a variable that is then passed to the PagingDots component. `positionSharedValue` and `scrollOffsetSharedValue` are shared variables from the `react-native-reanimated` library which hold the states for animated values. When calculating `scrollX`, the input range is `[0, intro_data.length]` and the output range is `[0, intro_data.length * width]` where intro_data is the JSON passed to the component and width refers to the window's width. The interpolater sums `positionSharedValue` and `scrollOffsetSharedValue`, maps the sum to a range that corresponds to the total width of the intro_data items, and clamps the input such that if it exceeds the accepted input range, it is mapped to the highest possible output value to prevent `intro_data.length * width` from ever being exceeded.
+
+The custom page scroll handler function is based on a custom function defined in another file called `usePagerScrollHandler`. The handler use the `GeneralHandler` interface and `GeneralHandlers` type as a parameter. It is based on a useEvent hook which automatically optimizes the code as it waits for the scroll event to be triggered. You'll also see the `worklet` directive which defines the function as a worklet, meaning it's optimized to run on the native/UI thread in Reanimated. This makes animations and event handling more efficient. Basically, all of it allows me to define custom events when the page is scrolled.
+
+The `PagingDots` component uses the map function again to create one dot for every item in the lost. Each dot is a ScalingDot component which is passed any props passed to `PagingDots` that it does not already use. These props are defined in as a type so that I could specify which props existed and their type. While the props are copy-pasted from the ScalingDot file, ScalingDot only works properly with default exports so I could not export the props. The ScalingDot component basically just displays an animated circle with the color, opacity, and size changing based on whether it is the currently selected dot. All of the animated restyling is handled by more interpolation and clamping which function just like above. As one note, there are several lines like `inActiveDotColor: inActiveDotColor || '#347af0'`. This line means that the `inActiveDotColor` prop is used normally but allows the line to default to  '#347af0' when the prop is null.
+
+#### Crop Carousel <a name="crop_carousel"></a>
+*Author: Daniel*
+
+The CropCarousel component is far simpler than the WeatherSlider, just calling the Carousel component with a special name and passing over the props. The Carousel component is just a FlatList which renders multiple pressable views, one for each item passed in the JSON object. The Pressable uses the expo-router to push a new page when a user selects a crop.
+
+### My Crops Page <a name="my_crops_page"></a>
 
 ### Notebook Page <a name="notebook_page"></a>
 #### Background <a name="notebook_background"></a>
@@ -144,6 +168,10 @@ The intended purpose of the notebook page is for the user to be able to document
 ### To-Do Page <a name="todo_page"></a>
 #### Background <a name="todo_background"></a>
 *Author: McKenna* 
+
+### Profile Page <a name="profile_page"></a>
+
+### Data Hub Page <a name="datahub_page"></a>
 
 ### Components & Assets <a name="components_n_assets"></a>
 #### Rows & Columns <a name="grid"></a>
@@ -863,6 +891,16 @@ If you want to update the snapshots, you can execute either `npm run updateTestS
 ## Maintenance Tasks <a name="maint"></a>
 ### Adding a New Page <a name="add_page"></a>
 Maintenance Type: Perfective Maintenance Task
+#### The Status Bar <a name="status_bar"></a>
+*Author: Daniel*
+
+At the top of each page, you need to place the StatusBar component. This component ensures that the device's status bar is always displayed, even if you have an element is flush with the top or goes off of the page at the top. As an example of the latter, the Profile page achieves the rounded semicircle at the top by having half of the circle go off of the screen using negative margins. Beyond preventing the status bar from being hidden, this component also ensures that the status bar's theme matches the rest of the page. Here is how to import and use the StatusBar component.
+
+~~~jsx
+import { StatusBar } from 'react-native'
+<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE} />
+~~~
+
 #### Adding Dark Mode <a name="add_dark_mode"></a>
 *Author: Daniel*
 
