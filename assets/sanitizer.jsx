@@ -60,32 +60,38 @@ export function cleanNumbers(inputNumber, decimalsAllowed=true, negativesAllowed
 
     if (phone) {
         newVal = newVal.replace(/[^0-9\-()+ ]/g, "")
+        previousVal = ""
+        //loop until no more changes are applied
+        while (newVal !== previousVal) {
+            previousVal = newVal;
+            newVal = newVal.replace(/--/g, '').trim(); //remove SQL comments 
+        }
         return newVal
     }
 
     if (decimalsAllowed) {
-      newVal = newVal.replace(/[^0-9.-]/g, "")
-      newVal = newVal.replace(/(?<!\d)\.|(?<=\d)\.(?!\d)/g, "") //remove all periods not between two numbers
+        newVal = newVal.replace(/[^0-9.-]/g, "")
+        newVal = newVal.replace(/(?<!\d)\.|(?<=\d)\.(?!\d)/g, "") //remove all periods not between two numbers
     } else {
-      newVal = newVal.replace(/[^0-9-]/g, "") //remove all characters that aren't a number or minus sign
+        newVal = newVal.replace(/[^0-9-]/g, "") //remove all characters that aren't a number or minus sign
     }
     
     if (negativesAllowed) {
-      newVal = newVal.replace(/[^0-9.-]/g, "")
-      let previousVal = ""
-      //loop until no more changes are applied
-      while (newVal !== previousVal) {
-          previousVal = newVal;
-          newVal = newVal.replace(/(?<=\d)-/g, "") 
-      }
-      previousVal = ""
-      //loop until no more changes are applied
-      while (newVal !== previousVal) {
-          previousVal = newVal;
-          newVal = newVal.replace(/--/g, '').trim(); //remove SQL comments 
-      }
+        newVal = newVal.replace(/[^0-9.-]/g, "")
+        let previousVal = ""
+        //loop until no more changes are applied
+        while (newVal !== previousVal) {
+            previousVal = newVal;
+            newVal = newVal.replace(/(?<=\d)-/g, "") 
+        }
+        previousVal = ""
+        //loop until no more changes are applied
+        while (newVal !== previousVal) {
+            previousVal = newVal;
+            newVal = newVal.replace(/--/g, '').trim(); //remove SQL comments 
+        }
     } else {
-      newVal = newVal.replace(/[^0-9.]/g, "") //remove all characters that aren't a number or decimal point
+        newVal = newVal.replace(/[^0-9.]/g, "") //remove all characters that aren't a number or decimal point
     }
     
 	return newVal;

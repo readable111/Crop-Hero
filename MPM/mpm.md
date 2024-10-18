@@ -45,6 +45,7 @@
         1. [Fonts](#fonts)
         1. [Icons](#icons)
         1. [Colors](#colors)
+        1. [Sanitizers](#sanitizers)
     1. [Search Bar](#search_bar)
         1. [Background](#search_bar_bkgd)
         1. [Search Bar Component](#search_bar_component)
@@ -207,6 +208,8 @@ Use the icon prop if you want to specify an image in the Icons folder. Use the m
 
 The NavBar component is used on all of the major pages and allows the user to navigate between the pages. The NavBar is split into 3 rows with 5 columns in each row, 1 column for each major page. The first row is in a separate View component and exists solely to provide the tan circle which juts up from the bar. The second row provides the icons for each page, along with the green circle behind the Home icon. The third and final row provides the text label for each page. Both the icons and the text use the AppButton component to route people to the selected page, preventing issues where the user may click one but not the other.
 
+When the component is called, a prop like `homeSelected` should be specified in it, though it does not require a value. Since these selected props are boolean props, they are automatically set to true if they are specified without a value. That prop tells the component to change the color of the associated page's icon and text.
+
 #### Fonts <a name="fonts"></a>
 *Author: Daniel*
 
@@ -235,6 +238,13 @@ The entire app uses the Icons dictionary to handle any local images. Each named 
 *Author: Daniel*
 
 The entire app uses a single standardized color palette. The color palette is a JavaScript dictionary with named fields for each color. Use a website like [this](https://colors.artyclick.com/color-name-finder/) to determine the name. We generally preferred paint-like names over standard names as it allows for multiple similar colors since you can't have overlapping names. For example, both ALMOST_BLACK, IRIDIUM, and CHARCOAL can be called dark gray but that would have been confusing. Also, IRIDIUM was selected over Dune, a better match according to the tool, because iridium gives you a sense for the color while dune implies a brown. Each named color is assigned a hex code string which can be called as properties when setting colors with style variables.
+
+#### Sanitizers <a name="sanitizers"></a>
+*Author: Daniel*
+
+As of right now, there are two sanitizing functions with the first parameter of each being the string that will be sanitized. They then return the cleaned text string based on the instructions set in the other boolean parameters. Beginning with `cleanText`, this function offers three options: no stopwords, no SQL, and only text. Firstly, it decodes any Unicode characters into their ASCII equivalents before converting it to lowercase to prevent regex issues. Double dashes are always removed, and a whitelist approach is taken to remove any characters other than `[a-z0-9'.@+()\- ]`. If stopwords were removed, then the sanitizer removes any words that are 2 or fewer characters long or are of 35 specific words. Azure MySQL servers use the InnoDB engine which stops any searching attempts when it encounters one of [35 specific stopwords](https://dev.mysql.com/doc/refman/8.4/en/fulltext-stopwords.html). These stopwords are defined in a list and then recursively removed which prevents 'bbye' from causing any issues. If SQL was removed, certain especially problematic SQL keywords are recursively removed to prevent multi-level SQL injection attacks like 'ALTALTERER' which triggers SQL injection if the sanitizer is only applied onced. Finally, the text-only option removes everything except letters, the @ symbol, and the period.
+
+The `cleanNumbers` function also has three optional parameters. By default, decimals are allowed which means that dots are only removed if they are not between two digits. However, this can be disabled. By default, negatives are allowed which means that dashes are only removed if there are two of them, if they do not precede a number, and if they are not the first character in the string. These two removals are performed recursively just like the text sanitizer. Finally, the phone parameter is mutually exclusive with the other two parameters, removing everything except numbers, dashes, parantheses, spaces, and the plus sign.
 
 ### Search Bar <a name="search_bar"></a>
 #### Background <a name="search_bar_bkgd"></a>
