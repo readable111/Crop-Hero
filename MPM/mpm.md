@@ -242,7 +242,7 @@ The entire app uses a single standardized color palette. The color palette is a 
 #### Sanitizers <a name="sanitizers"></a>
 *Author: Daniel*
 
-As of right now, there are two sanitizing functions with the first parameter of each being the string that will be sanitized. They then return the cleaned text string based on the instructions set in the other boolean parameters. Beginning with `cleanText`, this function offers three options: no stopwords, no SQL, and only text. Firstly, it decodes any Unicode characters into their ASCII equivalents before converting it to lowercase to prevent regex issues. Double dashes are always removed, and a whitelist approach is taken to remove any characters other than `[a-z0-9'.@+()\- ]`. If stopwords were removed, then the sanitizer removes any words that are 2 or fewer characters long or are of 35 specific words. Azure MySQL servers use the InnoDB engine which stops any searching attempts when it encounters one of [35 specific stopwords](https://dev.mysql.com/doc/refman/8.4/en/fulltext-stopwords.html). These stopwords are defined in a list and then recursively removed which prevents 'bbye' from causing any issues. If SQL was removed, certain especially problematic SQL keywords are recursively removed to prevent multi-level SQL injection attacks like 'ALTALTERER' which triggers SQL injection if the sanitizer is only applied onced. Finally, the text-only option removes everything except letters, the @ symbol, and the period.
+As of right now, there are two sanitizing functions with the first parameter of each being the string that will be sanitized. They then return the cleaned text string based on the instructions set in the other boolean parameters. Beginning with `cleanText`, this function offers three options: no stopwords, no SQL, and only text. Firstly, it decodes any Unicode characters into their ASCII equivalents before converting it to lowercase to prevent regex issues. Double dashes are always removed, and a whitelist approach is taken to remove any characters other than `[a-z0-9'.@+()\- ]`. If stopwords were removed, then the sanitizer removes any words that are 2 or fewer characters long or are of 35 specific words. Azure MySQL servers use the InnoDB engine which stops any searching attempts when it encounters one of [35 specific stopwords](https://dev.mysql.com/doc/refman/8.4/en/fulltext-stopwords.html). There is also some useful information in [this StackOverflow thread](https://stackoverflow.com/questions/43319480/fulltext-index-match-string-with-period-mysql). These stopwords are defined in a list and then recursively removed which prevents 'bbye' from causing any issues. If SQL was removed, certain especially problematic SQL keywords are recursively removed to prevent multi-level SQL injection attacks like 'ALTALTERER' which triggers SQL injection if the sanitizer is only applied onced. Finally, the text-only option removes everything except letters, the @ symbol, and the period.
 
 The `cleanNumbers` function also has three optional parameters. By default, decimals are allowed which means that dots are only removed if they are not between two digits. However, this can be disabled. By default, negatives are allowed which means that dashes are only removed if there are two of them, if they do not precede a number, and if they are not the first character in the string. These two removals are performed recursively just like the text sanitizer. Finally, the phone parameter is mutually exclusive with the other two parameters, removing everything except numbers, dashes, parantheses, spaces, and the plus sign.
 
@@ -1351,6 +1351,13 @@ await waitForElementToBeRemoved(() => queryByText("Loading ..."));
 Like Case 3, Case 4 is a variant of Case 1. In this case, the test simulates events to change values in form inputs like changing the value in a text input. If the form input is managed by Formik, your test will have a chance to run into this error. Just like Case 1, you can solve it by just waiting for it to complete.
 
 ## Tools & Resources <a name="tools"></a>
+*Author: Daniel*
+
+* Color Blindness Simulator: [https://daltonlens.org/colorblindness-simulator](https://daltonlens.org/colorblindness-simulator)
+* Expo Docs: [https://docs.expo.dev/](https://docs.expo.dev/)
+* Jest Docs: [https://jestjs.io/docs/getting-started](https://jestjs.io/docs/getting-started)
+* Luminance Contrast Ratio Calculator: [https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php](https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php)
+* React Native Docs: [https://reactnative.dev/docs/getting-started](https://reactnative.dev/docs/getting-started)
 
 ## Logs & Records <a name="logs"></a>
 
@@ -1417,7 +1424,7 @@ import Component from "./MyModule"
 #### Inter-Page Routing <a name="routing"></a>
 *Author: Daniel*
 
-The CropAlly app uses the [expo-router library](https://docs.expo.dev/router/navigating-pages/) and the index.js file. The index.js file determines the default page when a user opens up the app for the first time. To specify the page, import the page component and then call the component in the Page function’s return statement. For example, the following code in index.js makes the Home page into the default page. 
+The CropAlly app uses the [expo-router library](https://docs.expo.dev/router/navigating-pages/) and the index.js file. The index.js file determines the default page when a user opens up the app for the first time. To specify the page, import the page component and then call the component in the Page function's return statement. For example, the following code in index.js makes the Home page into the default page. 
 
 ~~~jsx
 import Home from './home.jsx' 
@@ -1429,11 +1436,11 @@ export default function Page() {
 } 
 ~~~
 
-Besides being versatile, this library is bundled with Expo which is also the library that we use to access our emulator. The Link tag exists to navigate between the app’s pages. However, this tag has limited options and can only be implemented in specific situations. As such, I recommend utilizing the router function instead. 
+Besides being versatile, this library is bundled with Expo which is also the library that we use to access our emulator. The Link tag exists to navigate between the app's pages. However, this tag has limited options and can only be implemented in specific situations. As such, I recommend utilizing the router function instead. 
 
 The router object has 6 available functions: navigate, push, replace, back, canGoBack, and setParams. Before describing the functions, I want to quickly mention that Expo Router uses a stack to track all pages that have been loaded or displayed. The navigate function only pushes a new page if the new route is different, ignoring the search parameters and the hash. Otherwise, the current screen rerenders with the new parameters. If you navigate to a route that is in the history, the stack will pop any pages to that route. The push function always pushes the new page on to the top of the stack and displays it. You can push the current route multiple times or with new parameters. The replace function pops the current page before pushing the new page, making it useful for redirects. The back function pops the current page and displays the page below the current one in the stack. The canGoBack function returns true only if a valid page history stack exists and if the current page can be popped. The setParams function can update the query parameters for the currently selected page. 
 
-The Expo Router library will automatically generate statically typed routes for any new files in the app/ folder. As such, you can use a route immediately after creating the page’s file. The route is always the file’s full name, except for the file extension. 
+The Expo Router library will automatically generate statically typed routes for any new files in the app/ folder, provided that the file contains a default export. As such, you can use a route immediately after creating the page's file. The route is always the file's full name, except for the file extension. Once again, just remember that it will recognize a page's existence if it is a default export.
 
 ### Appendix B: Glossary <a name="b_glossary"></a>
 - Adaptive Maintenance: maintenance tasks after a change in the operating environment such as the OS, language, hardware, or compliance requirements; in most cases, this kind of maintenance cannot be scheduled and will not occur on a regular basis
