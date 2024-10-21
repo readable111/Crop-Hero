@@ -9,13 +9,13 @@
 
 {/*McKenna Beard for IT Capstone 2024  UNT To-do Page as apart of the notebook tab on the nav bar*/ }
 {/*This page can only be accessed after clicking on the notebook page from the main nav bar*/ }
+
 import { React, useState, useEffect } from 'react';
 import {
     StyleSheet,
     View,
     StatusBar,
     Alert,
-    ScrollView,
     FlatList,
     TouchableOpacity,
     Text
@@ -26,11 +26,9 @@ import { Col, Row } from '../assets/Grid.jsx';
 import Colors from '../assets/Color';
 import AppButton from '../assets/AppButton.jsx';
 import { SpeedDial } from 'react-native-elements';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import NavBar from '../assets/NavBar.jsx';
 import TodoEntryModal from '../assets/NotebookModals/TodoEntryModal';
-
 
 const todo = () => {
     const [index, setIndex] = useState(0);
@@ -38,11 +36,11 @@ const todo = () => {
     const [filteredTasks, setFilteredTasks] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentTaskID, setCurrentTaskID] = useState(null);
-    const [filter, setFilter] = useState('all'); // 'all', 'completed', 'notCompleted'
-    const [isSpeedDialOpen, setIsSpeedDialOpen] = useState(false);  // For Speed Dial state
-    const [currentTask, setCurrentTask] = useState(null);  // To store the selected task for the modal
+    const [filter, setFilter] = useState('all');
+    const [isSpeedDialOpen, setIsSpeedDialOpen] = useState(false);
+    const [currentTask, setCurrentTask] = useState(null);
     const [isCompleted, setIsCompleted] = useState(false);
-    const [farmers, setFarmers] = useState([]);  // Assuming you have these arrays
+    const [farmers, setFarmers] = useState([]);
     const [locations, setLocations] = useState([]);
     const [taskTypes, setTaskTypes] = useState([]);
     const [crops, setCrops] = useState([]);
@@ -76,40 +74,29 @@ const todo = () => {
         setModalVisible(true);
     };
 
-
-
-
-    // Function to save or update a task
     const handleSaveTask = (taskData) => {
         if (currentTaskID) {
-            // Update an existing task by matching TaskID
             const updatedTasks = tasks.map(task =>
                 task.TaskID === currentTaskID ? taskData : task
             );
             setTasks(updatedTasks);
         } else {
-            // Add a new task
             setTasks([...tasks, { ...taskData, TaskID: tasks.length + 1 }]);
         }
-
-        setModalVisible(false);  // Close the modal after saving
+        setModalVisible(false);
     };
 
-
-
-    // Function to handle long press on a task (opens Speed Dial)
     const handleLongPressTask = (task) => {
-        setCurrentTask(task);  // Set the current task for Speed Dial options
-        setCurrentTaskID(task.TaskID);  // Track the task ID
-        setIsSpeedDialOpen(true);  // Open the Speed Dial
+        setCurrentTask(task);
+        setCurrentTaskID(task.TaskID);
+        setIsSpeedDialOpen(true);
     };
 
-    // Function to handle when Edit option is clicked in Speed Dial
     const handleEditTask = () => {
         if (currentTask) {
-            setModalVisible(true);  // Open the modal with the selected task
+            setModalVisible(true);
         }
-        setIsSpeedDialOpen(false);  // Close the Speed Dial
+        setIsSpeedDialOpen(false);
     };
 
     useEffect(() => {
@@ -217,25 +204,23 @@ const todo = () => {
                 />
             </View>
 
-            <ScrollView style={styles.scroll}>
-                <FlatList
-                    data={filteredTasks}
-                    keyExtractor={item => item.TaskID.toString()}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                            style={styles.taskContainer}
-                            onPress={() => handleTaskTap(item)}
-                            onLongPress={() => handleLongPressTask(item)} // Long press opens Speed Dial
-                        >
-                            <Text>Assigned Farmer ID: {item.AssignedFarmerID}</Text>
-                            <Text>Task Type: {item.TaskType}</Text>
-                            <Text>Location ID: {item.LocationID}</Text>
-                            <Text>Comments: {item.Comments}</Text>
-                            <Text>Due Date: {item.DueDate}</Text>
-                        </TouchableOpacity>
-                    )}
-                />
-            </ScrollView>
+            <FlatList
+                data={filteredTasks}
+                keyExtractor={item => item.TaskID.toString()}
+                renderItem={({ item }) => (
+                    <TouchableOpacity
+                        style={styles.taskContainer}
+                        onPress={() => handleTaskTap(item)}
+                        onLongPress={() => handleLongPressTask(item)}
+                    >
+                        <Text>Assigned Farmer ID: {item.AssignedFarmerID}</Text>
+                        <Text>Task Type: {item.TaskType}</Text>
+                        <Text>Location ID: {item.LocationID}</Text>
+                        <Text>Comments: {item.Comments}</Text>
+                        <Text>Due Date: {item.DueDate}</Text>
+                    </TouchableOpacity>
+                )}
+            />
 
             <SpeedDial
                 isOpen={isSpeedDialOpen}
@@ -255,7 +240,7 @@ const todo = () => {
                 <SpeedDial.Action
                     icon={{ name: 'edit', color: 'white' }}
                     title="Edit Task"
-                    onPress={handleEditTask}  // Open the modal to edit the task
+                    onPress={handleEditTask}
                     buttonStyle={{ backgroundColor: 'green' }}
                 />
                 <SpeedDial.Action
@@ -266,7 +251,6 @@ const todo = () => {
                 />
             </SpeedDial>
 
-            {/* Modal for adding/editing tasks */}
             <TodoEntryModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
@@ -276,7 +260,7 @@ const todo = () => {
                 locations={locations}
                 crops={crops}
                 taskTypes={taskTypes}
-                taskData={currentTask}  // Pass the selected task data to the modal for editing
+                taskData={currentTask}
             />
 
             <NavBar notebookSelected />
@@ -371,4 +355,3 @@ const styles = StyleSheet.create({
 });
 
 export default todo;
-
