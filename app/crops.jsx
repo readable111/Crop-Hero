@@ -6,7 +6,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import { React, useEffect, useState} from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View, Appearance } from 'react-native';
 import { useRouter } from 'expo-router'
 import NavBar from '../assets/NavBar.jsx'
 import Colors from '../assets/Color';
@@ -31,7 +31,7 @@ const [isDark, setIsDarkMode] = useState(false)
                         }
                         else
                         {
-                                useColorScheme.Appearence.getColorScheme()
+                                colorScheme = Appearance.getColorScheme()
                                 if(colorScheme == 'dark')
                                 {
                                         result = true;
