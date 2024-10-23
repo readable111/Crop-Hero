@@ -7,13 +7,13 @@
 import { StatusBar } from 'expo-status-bar';
 import { React, useEffect, useState} from 'react';
 import { Pressable, StyleSheet, Text, View, Appearance } from 'react-native';
-import { useRouter } from 'expo-router'
+import { router, useRouter } from 'expo-router'
 import NavBar from '../assets/NavBar.jsx'
 import Colors from '../assets/Color';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
-const crops = () => {
-  const router = useRouter();
+const Crops = () => {
+  //const router = useRouter();
   const [fontsLoaded, fontError] = useFonts({
     'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
     'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
@@ -72,7 +72,7 @@ const [isDark, setIsDarkMode] = useState(false)
   );
 }
 
-export default crops;
+export default Crops;
 
 const styles = StyleSheet.create({
   container: {

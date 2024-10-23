@@ -1189,7 +1189,7 @@ exports[`Dark Mode <Home/> renders correctly 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Greenhouse
             </Text>
             <Text>
@@ -1271,7 +1271,7 @@ exports[`Dark Mode <Home/> renders correctly 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Outside
             </Text>
             <Text>
@@ -1353,7 +1353,7 @@ exports[`Dark Mode <Home/> renders correctly 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Dump
             </Text>
             <Text>
@@ -1435,7 +1435,7 @@ exports[`Dark Mode <Home/> renders correctly 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Greenhouse #2
             </Text>
             <Text>
@@ -3521,7 +3521,7 @@ exports[`Light Mode <Home/> renders correctly 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Greenhouse
             </Text>
             <Text>
@@ -3603,7 +3603,7 @@ exports[`Light Mode <Home/> renders correctly 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Outside
             </Text>
             <Text>
@@ -3685,7 +3685,7 @@ exports[`Light Mode <Home/> renders correctly 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Dump
             </Text>
             <Text>
@@ -3767,7 +3767,7 @@ exports[`Light Mode <Home/> renders correctly 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Greenhouse #2
             </Text>
             <Text>
@@ -5853,7 +5853,7 @@ exports[`No Async <Home/> renders correctly 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Greenhouse
             </Text>
             <Text>
@@ -5935,7 +5935,7 @@ exports[`No Async <Home/> renders correctly 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Outside
             </Text>
             <Text>
@@ -6017,7 +6017,7 @@ exports[`No Async <Home/> renders correctly 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Dump
             </Text>
             <Text>
@@ -6099,7 +6099,7 @@ exports[`No Async <Home/> renders correctly 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Greenhouse #2
             </Text>
             <Text>
@@ -8185,7 +8185,7 @@ exports[`Test weather forecast fetching renders with daytime weather 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Greenhouse
             </Text>
             <Text>
@@ -8267,7 +8267,7 @@ exports[`Test weather forecast fetching renders with daytime weather 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Outside
             </Text>
             <Text>
@@ -8349,7 +8349,7 @@ exports[`Test weather forecast fetching renders with daytime weather 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Dump
             </Text>
             <Text>
@@ -8431,7 +8431,7 @@ exports[`Test weather forecast fetching renders with daytime weather 1`] = `
                Medium: 
             </Text>
             <Text>
-               Loction: 
+               Location: 
               Greenhouse #2
             </Text>
             <Text>
