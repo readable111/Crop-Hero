@@ -45,6 +45,10 @@ const BillingDetailsProfile = () =>{
 	const [zipCode, setZipCode] = useState('02914');
 	const [state, setState] = useState('Rhode Island');
 
+	const handleSave = () =>{
+		//onChangeText={value => {setEmail(cleanText(email, noStopwords=false, noSQL=true));}}
+		console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Zip: " + cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false) + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
+	};
 
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
@@ -100,8 +104,7 @@ const BillingDetailsProfile = () =>{
 				<Col relativeColsCovered={8}></Col>
 				<Col relativeColsCovered={2}>
 					{/*TODO: link save button to get input field contents and save them to the database*/}
-					{/*TODO: when picture is saved, it is compressed via react-native-compressor library & https://stackoverflow.com/questions/37639360/how-to-optimise-an-image-in-react-native before being put into proper field*/}
-					<AppButton title="" mci="content-save" mciSize={30} mciColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={() => Alert.alert('Save icon button pressed')}/>
+					<AppButton title="" mci="content-save" mciSize={30} mciColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
 				</Col>
 			</Row>
 		</View>
@@ -173,7 +176,7 @@ const BillingDetailsProfile = () =>{
 					autoComplete='email'
 					keyboardType='email-address'
 					maxLength={384}
-					onChangeText={value => {setEmail(cleanText(value, noStopwords=false, noSQL=true));}}
+					onChangeText={value => {setEmail(value);}}
 				/>
 				{/*phone number input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Phone No.</Text>
@@ -187,7 +190,7 @@ const BillingDetailsProfile = () =>{
 					autoComplete='tel'
 					keyboardType='phone-pad'
 					maxLength={32}
-					onChangeText={value => {setPhoneNum(cleanNumbers(value, decimalsAllowed=false, negativesAllowed=false, phone=true));}}
+					onChangeText={value => {setPhoneNum(value);}}
 				/>
 				{/*zip code input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Zip Code</Text>
@@ -201,7 +204,7 @@ const BillingDetailsProfile = () =>{
 					autoComplete='postal-code'
 					keyboardType='numeric'
 					maxLength={16}
-					onChangeText={value => {setZipCode(cleanNumbers(value, decimalsAllowed=false, negativesAllowed=false));}}
+					onChangeText={value => {setZipCode(value);}}
 				/>
 				{/*state input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>State</Text>
@@ -215,7 +218,7 @@ const BillingDetailsProfile = () =>{
 					autoComplete='address-line1'
 					keyboardType='default'
 					maxLength={64}
-					onChangeText={value => {setState(cleanText(value, noStopwords=false, noSQL=true, textOnly=true));}}
+					onChangeText={value => {setState(value);}}
 				/>
 			</View>
         </View>
@@ -327,8 +330,9 @@ const styles = StyleSheet.create({
 	btnGridContainer: {
 		flex: 12, // # of columns
     	marginHorizontal: "auto",
-    	width: '100',
+    	width: '100%',
 		marginTop: 7,
+		marginBottom: 10,
 	}
 })
 

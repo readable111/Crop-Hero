@@ -129,7 +129,7 @@ const addCrops = () => {
                         {/* Body (Scrollable inputs)*/}
                         <View>
                                 <View style={styles.save}>
-                                        <AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={handleSave}/>
+                                        <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
                                 </View>
                                 <View style={styles.back}>
                                         <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
