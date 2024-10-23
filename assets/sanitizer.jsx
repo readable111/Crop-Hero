@@ -39,7 +39,7 @@ export function cleanText(textToClean, noStopwords=false, noSQL=false, textOnly=
     if (noSQL) {
         whitelistVal = whitelistVal.replace(/[']/g, "");
         //precompile regex to save time
-        let sqlRegex = new RegExp(`(${SQL_KEYWORDS.join('|')})`, 'gi');
+        let sqlRegex = new RegExp(`\\b(${SQL_KEYWORDS.join('|')})`, 'gi');
         let previousVal = ""
         //loop until no more changes are applied
         while (whitelistVal !== previousVal) {
@@ -49,7 +49,7 @@ export function cleanText(textToClean, noStopwords=false, noSQL=false, textOnly=
     }
 
     if (textOnly) {
-        whitelistVal = lowerVal.replace(/[^a-z@. ]/g, "");
+        whitelistVal = whitelistVal.replace(/[^a-z@.]/g, "");
     }
     
 	return whitelistVal

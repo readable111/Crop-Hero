@@ -31,6 +31,10 @@ const EditProfile = () =>{
 	const [first, setFirst] = useState("Zina")
 	const [last, setLast] = useState("Townley")
 
+	const handleSave = () =>{
+		console.log("Saved. First: " + cleanText(first, noStopwords=false, noSQL=true, textOnly=true) + "\t Last: " + cleanText(last, noStopwords=false, noSQL=true, textOnly=true));
+	};
+
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
 		// declare the async data fetching function
@@ -87,7 +91,7 @@ const EditProfile = () =>{
 				<Col relativeColsCovered={2}>
 					{/*TODO: link save button to get input field contents and save them to the database*/}
 					{/*TODO: when picture is saved, it is compressed via react-native-compressor library & https://stackoverflow.com/questions/37639360/how-to-optimise-an-image-in-react-native before being put into proper field*/}
-					<AppButton title="" mci="content-save" mciSize={30} mciColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={() => Alert.alert('Save icon button pressed')}/>
+					<AppButton title="" mci="content-save" mciSize={30} mciColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
 				</Col>
 			</Row>
 		</View>
@@ -111,7 +115,7 @@ const EditProfile = () =>{
 					defaultValue={first}
 					autoComplete='name'
 					maxLength={256}
-					onChangeText={value => {setFirst(cleanText(value, noStopwords=false, noSQL=true, textOnly=true));}}
+					onChangeText={value => {setFirst(value);}}
 				/>
 				{/*last name input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Last Name</Text>
@@ -124,7 +128,7 @@ const EditProfile = () =>{
 					defaultValue={last}
 					autoComplete='name'
 					maxLength={256}
-					onChangeText={value => {setLast(cleanText(value, noStopwords=false, noSQL=true, textOnly=true));}}
+					onChangeText={value => {setLast(value);}}
 				/>
 				{/*new password input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Change Password</Text>
@@ -244,9 +248,10 @@ const styles = StyleSheet.create({
 	btnGridContainer: {
 		flex: 12, // # of columns
     	marginHorizontal: "auto",
-    	width: '100',
+    	width: '100%',
 		marginTop: 7,
-	},
+		marginBottom: 10,
+	}
 })
 
 export default EditProfile;

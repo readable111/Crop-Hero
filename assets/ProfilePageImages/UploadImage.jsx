@@ -4,13 +4,14 @@
  * @tester Daniel Moreno
  ***/
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     Image, 
     View, 
     StyleSheet,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Colors from '../Color'
 import AppButton from '../AppButton.jsx'
 import UploadModal from './UploadModal.jsx'
@@ -20,7 +21,24 @@ import imgPlaceholder from "./AvatarPlaceholder.png"
 const UploadImage = ({ style, isEditable=true, cameraMode="selfie", darkMode=false }) => {
     //data storage for later, maybe: https://www.youtube.com/watch?v=B1dWuh3U4O8
 	const [modalVisible, setModalVisible] = useState(false);
-	const [imageURI, setImageURI] = useState();
+	const [imageURI, setImageURI] = useState('');
+
+	useEffect(() => {
+		// declare the async data fetching function
+		const fetchImageURI = async () => {
+			const JSON_VALUE = await AsyncStorage.getItem('profile_uri');
+			let result = null
+    		if (JSON_VALUE && JSON_VALUE !== "") {
+				result = JSON_VALUE
+			}
+			setImageURI(result)
+		}
+	  
+		// call the function
+		fetchImageURI()
+		  	// make sure to catch any error
+		  	.catch(console.error);
+	}, [])
 
 	//lets user upload an image after they take a new picture with their camera
 	const uploadImage = async (mode) => {
@@ -73,7 +91,8 @@ const UploadImage = ({ style, isEditable=true, cameraMode="selfie", darkMode=fal
 	//overwrite the saved image with null
 	const removeImage = async() => {
 		try {
-			saveImage(null)
+			saveImage('')
+			await AsyncStorage.setItem('profile_uri', '')
 		} catch (error) {
 			alert(error)
 			setModalVisible(false)
@@ -82,9 +101,18 @@ const UploadImage = ({ style, isEditable=true, cameraMode="selfie", darkMode=fal
 
 	//save the selected image's URI and close the modal
 	const saveImage = async(image) => {
+		//early return if image is an empty string, like when removeImage is triggered
+		if (image == '') {
+			setImageURI('')
+			setModalVisible(false)
+			return
+		}
+
 		try {
 			setImageURI(image)
 			setModalVisible(false)
+			console.log(image.toString())
+			await AsyncStorage.setItem('profile_uri', image.toString())
 		} catch (error) {
 			throw error;
 		}
