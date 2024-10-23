@@ -6,6 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
+	Alert,
     Image, 
     View, 
     StyleSheet,
@@ -83,7 +84,7 @@ const UploadImage = ({ style, isEditable=true, cameraMode="selfie", darkMode=fal
 				await saveImage(result.assets[0].uri)
 			}
 		} catch (error) {
-			alert("Error uploading image: " + error.message)
+			Alert.alert("Error uploading image: " + error.message)
 			setModalVisible(false)
 		}
 	};
@@ -129,7 +130,7 @@ const UploadImage = ({ style, isEditable=true, cameraMode="selfie", darkMode=fal
 				/>
 	
 				{/*display the edit button; clicking it will display the modal*/}
-				<AppButton title="" mci="image-edit-outline" mciSize={30} mciColor={darkMode ? Colors.WHITE_SMOKE : Colors.ALMOST_BLACK} specifiedStyle={styles.editBtn} onPress={() => setModalVisible(true)}/>
+				<AppButton testID={"open"} title="" mci="image-edit-outline" mciSize={30} mciColor={darkMode ? Colors.WHITE_SMOKE : Colors.ALMOST_BLACK} specifiedStyle={styles.editBtn} onPress={() => setModalVisible(true)}/>
 	
 				{/*render the modal which will appear once the button is pressed*/}
 				<UploadModal modalVisible={modalVisible} 
