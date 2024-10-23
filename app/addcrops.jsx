@@ -28,7 +28,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-const addCrops = () => {
+const AddCrops = () => {
         {/* */}
         //Dummy object that will be filled in later
         const [cropData, setCropData] = useState({
@@ -386,4 +386,4 @@ const styles = StyleSheet.create({
 
 
       });
-      export default addCrops;
+      export default AddCrops;

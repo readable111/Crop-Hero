@@ -14,9 +14,10 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
       style={
         {
           "flex": 12,
+          "marginBottom": 10,
           "marginHorizontal": "auto",
           "marginTop": 7,
-          "width": "100",
+          "width": "100%",
         }
       }
     >
@@ -892,9 +893,10 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
       style={
         {
           "flex": 12,
+          "marginBottom": 10,
           "marginHorizontal": "auto",
           "marginTop": 7,
-          "width": "100",
+          "width": "100%",
         }
       }
     >
@@ -1770,9 +1772,10 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
       style={
         {
           "flex": 12,
+          "marginBottom": 10,
           "marginHorizontal": "auto",
           "marginTop": 7,
-          "width": "100",
+          "width": "100%",
         }
       }
     >

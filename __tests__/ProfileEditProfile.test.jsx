@@ -22,7 +22,7 @@ jest.mock('expo-font', ()=>({
     useFonts: jest.fn(),
     loadAsync: jest.fn().mockResolvedValue(true),
     isLoaded: jest.fn(()=>true)
-  }))
+}))
 
 describe('Light Mode <EditProfile/>', () =>{
     beforeEach(async () => {

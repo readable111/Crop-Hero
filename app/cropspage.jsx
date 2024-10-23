@@ -17,13 +17,14 @@ import Icons from '../assets/icons/Icons.js';
 
 
 
-const cropsPage = () => {
+const CropsPage = () => {
 
         {/* Grabs variable form viewcrops page for use */}
         let crop = useLocalSearchParams();
         //If crop.name couldn't be retrieved, assume that ?param= was used
         if(!crop.name) {
                 console.log("?param passed")
+                console.log(crop.param)
                 crop = JSON.parse(crop.param)
         }
         console.log("CROP: " + crop); //test
@@ -203,7 +204,7 @@ const cropsPage = () => {
         )
 }
 
-export default cropsPage;
+export default CropsPage;
 
 const styles = StyleSheet.create({
         container: {

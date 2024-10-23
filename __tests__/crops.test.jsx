@@ -12,7 +12,7 @@ import { router } from 'expo-router';
 import NavBar from '../assets/NavBar.jsx';
 import Colors from '../assets/Color';
 import * as Font from 'expo-font';
-import crops from '../app/crops'
+import Crops from '../app/crops'
 import { StatusBar } from 'expo-status-bar';
 
 
@@ -30,7 +30,7 @@ jest.mock('expo-font', () => ({
     isLoaded: jest.fn(()=>true)
 }))
 
-describe('<crops/>', () =>{
+describe('<Crops/>', () =>{
     beforeEach(async () => {
         await AsyncStorage.setItem("dark_mode_setting", false);
 
@@ -44,7 +44,7 @@ describe('<crops/>', () =>{
     /*
     it('should go to addCrops page on button press', () => {
         const { getByTestId } = render(
-            <crops/>
+            <Crops/>
         )
         
         const addButton = getByTestId('addCrops');
@@ -54,7 +54,7 @@ describe('<crops/>', () =>{
     })
     */
     test('renders correctly', () =>{
-        const tree = render(<crops/>).toJSON();
+        const tree = render(<Crops/>).toJSON();
         expect(tree).toMatchSnapshot();
     })
 

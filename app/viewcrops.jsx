@@ -16,20 +16,10 @@ import { useFonts } from 'expo-font'
 
 
 
-const viewCrops = () => {
+const ViewCrops = () => {
         {/* Array of objects, used to differentiate picked items */}
         const [selectedItem, setItem] = useState(null);
 
-        //Fonts
-        const [fontsLoaded, fontError] = useFonts({
-                'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
-                'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
-                'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
-        });
-
-        if(!fontsLoaded && !fontError){
-                return null;
-        }
         const [isDark, setIsDarkMode] = useState(false)
         useEffect(() => {
                 const fetchDarkModeSetting = async () => {
@@ -115,6 +105,17 @@ const viewCrops = () => {
                 console.log('Item pressed:');
                 router.push({pathname: '/cropspage', params: item})
         }
+
+        {/*load in all fonts used for this page*/}
+	const [fontsLoaded, fontError] = useFonts({
+		'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
+		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+	});
+	{/*return an error if the fonts fail to load*/}
+	if (!fontsLoaded && !fontError) {
+		return null;
+	}
+
         return (
                 <View style={styles.wrapper}>
                         <View style={[ styles.title, isDark && styles.titleDark ]}>
@@ -137,7 +138,7 @@ const viewCrops = () => {
         )
 }
 
-export default viewCrops;
+export default ViewCrops;
 
 const styles = StyleSheet.create({
         container: {
