@@ -5,7 +5,7 @@
  ***/
 
 import React, { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, StatusBar, Text, View, ScrollView, Image, TextInput, FlatList, TouchableOpacity, Alert} from 'react-native';
+import { Pressable, StyleSheet, StatusBar, Text, View, Appearance, ScrollView, Image, TextInput, FlatList, TouchableOpacity, Alert} from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input, colors } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -42,7 +42,7 @@ const viewCrops = () => {
                         }
                         else
                         {
-                                useColorScheme.Appearence.getColorScheme()
+                                colorScheme = Appearance.getColorScheme()
                                 if(colorScheme == 'dark')
                                 {
                                         result = true;

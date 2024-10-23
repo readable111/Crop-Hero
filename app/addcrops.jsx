@@ -14,7 +14,9 @@ import { StyleSheet,
         Keyboard,
         StatusBar,
         TouchableWithoutFeedback, 
-        Alert } from 'react-native';
+        Alert,
+        Appearance
+} from 'react-native';
         
 import Colors from '../assets/Color';
 import { useFonts } from 'expo-font';
@@ -78,7 +80,7 @@ const addCrops = () => {
                         }
                         else
                         {
-                                useColorScheme.Appearence.getColorScheme()
+                                colorScheme = Appearance.getColorScheme()
                                 if(colorScheme == 'dark')
                                 {
                                         result = true;
