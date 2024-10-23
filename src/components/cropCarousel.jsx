@@ -29,7 +29,7 @@ const Carousel = ({data, isDarkMode=false}) => {
             <Image source = {require("../../assets/icons/cropDefaultImage.png")}/>
             <Text> Name: {item.name}</Text> 
             <Text> Medium: {item.medium}</Text>
-            <Text> Loction: {item.location}</Text>
+            <Text> Location: {item.location}</Text>
             <Text> Start Date: {item.date}</Text>
           </View>
         </Pressable>
