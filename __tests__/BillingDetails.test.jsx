@@ -74,7 +74,7 @@ it('No Async <BillingDetailsProfile/>', async () =>{
     })
 })
 
-describe('Light Mode <Profile/>', () =>{
+describe('Unit Tests <Profile/>', () =>{
     beforeEach(async () => {
         await AsyncStorage.setItem("dark_mode_setting", "false");
         Font.useFonts.mockReturnValue([true, false])

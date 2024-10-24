@@ -23,6 +23,12 @@ jest.mock('expo-font', ()=>({
     loadAsync: jest.fn().mockResolvedValue(true),
     isLoaded: jest.fn(()=>true)
 }))
+jest.mock('expo-router', () => ({
+    router: {
+        back: jest.fn(),
+        push: jest.fn(),
+    }
+}));
 
 
 
@@ -84,4 +90,90 @@ describe('Font Loading Error <SettingsProfile/>', () =>{
         const tree = render(<SettingsProfile/>).toJSON();
         expect(tree).toMatchSnapshot();
     })
+})
+
+
+describe('Unit Tests <Profile/>', () =>{
+    beforeEach(async () => {
+        await AsyncStorage.setItem("dark_mode_setting", "false");
+        Font.useFonts.mockReturnValue([true, false])
+        const [fontsLoaded, fontError] = Font.useFonts()
+        expect(fontsLoaded).toBe(true)
+        expect(fontError).toBe(false)
+    });
+
+    test('can click back arrow', () =>{
+        const { getByTestId } = render(
+            <SettingsProfile/>
+        );
+
+        const button = getByTestId('back-arrow');
+        fireEvent.press(button);
+        expect(require('expo-router').router.back).toHaveBeenCalled();
+    })
+
+    test('can click light/dark switch', () =>{
+        const { getByTestId } = render(
+            <SettingsProfile/>
+        );
+
+        const switchButton = getByTestId('light-dark-switch');
+        fireEvent(switchButton, 'ValueChange', true);
+        expect(switchButton._fiber.pendingProps.value).toBe(false)
+    })
+
+    test('can click visibility switch', () =>{
+        const { getByTestId } = render(
+            <SettingsProfile/>
+        );
+
+        const switchButton = getByTestId('visibility-switch');
+        fireEvent(switchButton, 'ValueChange', true);
+        expect(switchButton._fiber.pendingProps.value).toBe(false)
+    })
+
+    test('can click notif switch', () =>{
+        const { getByTestId } = render(
+            <SettingsProfile/>
+        );
+
+        const switchButton = getByTestId('notif-switch');
+        fireEvent(switchButton, 'ValueChange', true);
+        expect(switchButton._fiber.pendingProps.value).toBe(false)
+    })
+
+    test('can click sync button', () =>{
+        const logSpy = jest.spyOn(console, 'log');
+        const { getByTestId } = render(
+            <SettingsProfile/>
+        );
+
+        const button = getByTestId('sync');
+        fireEvent.press(button);
+        expect(logSpy).toHaveBeenCalledWith("sync");
+    })
+
+    test('should navigate to terms of service', () => {
+        const { getByTestId } = render(
+            <SettingsProfile />
+        );
+
+        const button = getByTestId('tos');
+        fireEvent.press(button);
+
+        // Check that the router.replace function was called with '/home'
+        expect(require('expo-router').router.push).toHaveBeenCalledWith('/termsofservice');
+    });
+
+    test('should navigate to privacy policy', () => {
+        const { getByTestId } = render(
+            <SettingsProfile />
+        );
+
+        const button = getByTestId('privacy');
+        fireEvent.press(button);
+
+        // Check that the router.replace function was called with '/home'
+        expect(require('expo-router').router.push).toHaveBeenCalledWith('/privacypolicy');
+    });
 })
