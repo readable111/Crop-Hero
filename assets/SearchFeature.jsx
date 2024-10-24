@@ -61,15 +61,6 @@ export const SearchModal = ({
 
 	const [searchBarTxt, setSearchBarTxt] = useState(searchValue);
 
-    const [fontsLoaded, fontError] = useFonts({
-        'Domine-Regular': require('./fonts/Domine-Regular.ttf'),
-        'WorkSans-Regular': require('./fonts/WorkSans-Regular.ttf'),
-    });
-    
-    if (!fontsLoaded && !fontError) {
-        return null;
-    }
-
 	//create a copy of the array
 	global.dataArray = JSON.parse(JSON.stringify(originalData))
 
@@ -81,7 +72,7 @@ export const SearchModal = ({
 					{isLoading && <ActivityIndicator size={70} color={Colors.MEDIUM_TAUPE} />}
 
 					{ !isLoading && (
-					<View style={[styles.modalView, isDarkMode ? {backgroundColor: Colors.BALTIC_SEA} : {backgroundColor: Colors.SANTA_GRAY}]} > 
+					<View testID={"modal-view"} style={[styles.modalView, isDarkMode ? {backgroundColor: Colors.BALTIC_SEA} : {backgroundColor: Colors.SANTA_GRAY}]} > 
 							{/*Display the search bar which looks identical to the dropdown search bar but works slightly differents*/}
 							<SearchBar 
 								placeholder="Search Crops..."
@@ -995,7 +986,7 @@ export class SearchInput extends Component {
 			const setIsModalVisible = isModalVisible => this.setState({ isModalVisible });
 			return ( 
 				<View style={styles.container}> 
-					<TouchableOpacity activeOpacity={0.8} onPress={() => setIsModalVisible(true)}>
+					<TouchableOpacity testID={"search-modal"} activeOpacity={0.8} onPress={() => setIsModalVisible(true)}>
 						<SearchBar 
 							placeholder="Search Crops..."
 							round 
