@@ -1,5 +1,5 @@
 /****
- * @author Tyler Bowen
+ * @author Daniel Moreno
  * @reviewer
  * @tester 
  ***/
@@ -40,29 +40,49 @@ describe('<NavBar/>', () => {
         expect(fontError).toBe(false)
     })
 
-    it('should render the NavBar component in light mode', () => {
-        const { getByTestId } = render(
-            <NavBar homeSelected={true} cropsSelected={false} darkMode={false} />
-        );
-        expect(getByTestId('navbar-light')).toBeTruthy()
-    });
+    test('renders correctly in light mode', () =>{
+        tree = render(<NavBar homeSelected darkMode={false} />).toJSON();
+        expect(tree).toMatchSnapshot();
 
-    it('should render the NavBar component in dark mode', () => {
-        const { getByTestId } = render(
-            <NavBar homeSelected={true} cropsSelected={false} darkMode={true} />
-        );
+        tree = render(<NavBar cropsSelected darkMode={false} />).toJSON();
+        expect(tree).toMatchSnapshot();
 
-        // Check that the dark mode navbar is rendered
-        expect(getByTestId('navbar-dark-mode')).toBeTruthy();
-    });
+        tree = render(<NavBar notebookSelected darkMode={false} />).toJSON();
+        expect(tree).toMatchSnapshot();
+
+        tree = render(<NavBar dataHubSelected darkMode={false} />).toJSON();
+        expect(tree).toMatchSnapshot();
+
+        tree = render(<NavBar profileSelected darkMode={false} />).toJSON();
+        expect(tree).toMatchSnapshot();
+    })
+    test('renders correctly in dark mode', () =>{
+        tree = render(<NavBar homeSelected darkMode={true} />).toJSON();
+        expect(tree).toMatchSnapshot();
+
+        tree = render(<NavBar cropsSelected darkMode={true} />).toJSON();
+        expect(tree).toMatchSnapshot();
+
+        tree = render(<NavBar notebookSelected darkMode={true} />).toJSON();
+        expect(tree).toMatchSnapshot();
+
+        tree = render(<NavBar dataHubSelected darkMode={true} />).toJSON();
+        expect(tree).toMatchSnapshot();
+
+        tree = render(<NavBar profileSelected darkMode={true} />).toJSON();
+        expect(tree).toMatchSnapshot();
+    })
 
     it('should navigate to home when home button is clicked', () => {
         const { getByTestId } = render(
             <NavBar homeSelected={false} cropsSelected={false} darkMode={false} />
         );
 
-        const homeButton = getByTestId('home-button');
-        fireEvent.press(homeButton);
+        const button = getByTestId('home-icon');
+        fireEvent.press(button);
+
+        const txtButton = getByTestId('home-txt');
+        fireEvent.press(txtButton);
 
         // Check that the router.replace function was called with '/home'
         expect(require('expo-router').router.replace).toHaveBeenCalledWith('/home');
@@ -70,45 +90,138 @@ describe('<NavBar/>', () => {
 
     it('should navigate to crops when crops button is clicked', () => {
         const { getByTestId } = render(
-            <NavBar homeSelected={false} cropsSelected={true} darkMode={false} />
+            <NavBar homeSelected={false} cropsSelected={false} darkMode={false} />
         );
 
-        const cropsButton = getByTestId('crops');
-        fireEvent.press(cropsButton);
+        const button = getByTestId('crops-icon');
+        fireEvent.press(button);
+
+        const txtButton = getByTestId('crops-txt');
+        fireEvent.press(txtButton);
 
         // Check that the router.replace function was called with '/crops'
         expect(require('expo-router').router.replace).toHaveBeenCalledWith('/crops');
     });
 
-    it('should change button color when homeSelected is true', () => {
+    it('should navigate to todo when todo button is clicked', () => {
         const { getByTestId } = render(
-            <NavBar homeSelected={true} cropsSelected={false} darkMode={false} />
+            <NavBar homeSelected={false} cropsSelected={false} darkMode={false} />
         );
 
-        const homeButton = getByTestId('home-button');
-        const buttonStyle = homeButton.props.style;
+        const button = getByTestId('notebook-icon');
+        fireEvent.press(button);
 
-        // Check that the home button has the selected style (i.e., with MALACHITE color)
-        //expect(buttonStyle.backgroundColor).toBe(Colors.IRISH_GREEN);
-    });
-    it('should change profile when homeSelected is true', () => {
-        const { getByTestId } = render(
-            <NavBar homeSelected={false} cropsSelected={false} darkMode={false} profileSelected={true} />
-        );
-        const profileButton = getByTestId('profile');
-        const buttonColor = profileButton.props.style;
+        const txtButton = getByTestId('notebook-txt');
+        fireEvent.press(txtButton);
 
-        // Check that the profile button has the selected style (i.e., with MALACHITE color)
-        //expect(buttonColor.color).toBe(Colors.MALACHITE);
+        // Check that the router.replace function was called with '/todo'
+        expect(require('expo-router').router.replace).toHaveBeenCalledWith('/todo');
     });
 
-    it('should render correct icons in dark mode', () => {
+    it('should navigate to datahub when datahub button is clicked', () => {
         const { getByTestId } = render(
-            <NavBar homeSelected={false} cropsSelected={true} darkMode={true} />
+            <NavBar homeSelected={false} cropsSelected={false} darkMode={false} />
         );
 
-        // Check that the crops icon in dark mode is rendered
-        const cropsButton = getByTestId('crops');
-        expect(cropsButton).toBeTruthy();
+        const button = getByTestId('datahub-icon');
+        fireEvent.press(button);
+
+        const txtButton = getByTestId('datahub-txt');
+        fireEvent.press(txtButton);
+
+        // Check that the router.replace function was called with '/datahub'
+        expect(require('expo-router').router.replace).toHaveBeenCalledWith('/datahub');
     });
+
+    it('should navigate to profile when profile button is clicked', () => {
+        const { getByTestId } = render(
+            <NavBar homeSelected={false} cropsSelected={false} darkMode={false} />
+        );
+
+        const button = getByTestId('profile-icon');
+        fireEvent.press(button);
+
+        const txtButton = getByTestId('profile-txt');
+        fireEvent.press(txtButton);
+
+        // Check that the router.replace function was called with '/profile'
+        expect(require('expo-router').router.replace).toHaveBeenCalledWith('/profile');
+    });
+
+    
+
+    it('should navigate to home when home button is clicked in dark mode', () => {
+        const { getByTestId } = render(
+            <NavBar homeSelected={false} cropsSelected={false} darkMode={true} />
+        );
+
+        const button = getByTestId('home-icon-dark');
+        fireEvent.press(button);
+
+        const txtButton = getByTestId('home-txt-dark');
+        fireEvent.press(txtButton);
+
+        // Check that the router.replace function was called with '/home'
+        expect(require('expo-router').router.replace).toHaveBeenCalledWith('/home');
+    });
+
+    it('should navigate to crops when crops button is clicked in dark mode', () => {
+        const { getByTestId } = render(
+            <NavBar homeSelected={false} cropsSelected={false} darkMode={true} />
+        );
+
+        const button = getByTestId('crops-icon-dark');
+        fireEvent.press(button);
+
+        const txtButton = getByTestId('crops-txt-dark');
+        fireEvent.press(txtButton);
+
+        // Check that the router.replace function was called with '/crops'
+        expect(require('expo-router').router.replace).toHaveBeenCalledWith('/crops');
+    });
+
+    it('should navigate to todo when todo button is clicked in dark mode', () => {
+        const { getByTestId } = render(
+            <NavBar homeSelected={false} cropsSelected={false} darkMode={true} />
+        );
+
+        const button = getByTestId('notebook-icon-dark');
+        fireEvent.press(button);
+
+        const txtButton = getByTestId('notebook-txt-dark');
+        fireEvent.press(txtButton);
+
+        // Check that the router.replace function was called with '/todo'
+        expect(require('expo-router').router.replace).toHaveBeenCalledWith('/todo');
+    });
+
+    it('should navigate to datahub when datahub button is clicked in dark mode', () => {
+        const { getByTestId } = render(
+            <NavBar homeSelected={false} cropsSelected={false} darkMode={true} />
+        );
+
+        const button = getByTestId('datahub-icon-dark');
+        fireEvent.press(button);
+
+        const txtButton = getByTestId('datahub-txt-dark');
+        fireEvent.press(txtButton);
+
+        // Check that the router.replace function was called with '/datahub'
+        expect(require('expo-router').router.replace).toHaveBeenCalledWith('/datahub');
+    });
+
+    it('should navigate to profile when profile button is clicked in dark mode', () => {
+        const { getByTestId } = render(
+            <NavBar homeSelected={false} cropsSelected={false} darkMode={true} />
+        );
+
+        const button = getByTestId('profile-icon-dark');
+        fireEvent.press(button);
+
+        const txtButton = getByTestId('profile-txt-dark');
+        fireEvent.press(txtButton);
+
+        // Check that the router.replace function was called with '/profile'
+        expect(require('expo-router').router.replace).toHaveBeenCalledWith('/profile');
+    });    
 });
