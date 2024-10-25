@@ -24,7 +24,7 @@ import {Col, Row} from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
-
+import {cleanText} from '../assets/sanitizer'
 
 
 const SettingsProfile = () =>{ 
@@ -89,6 +89,7 @@ const SettingsProfile = () =>{
 		return null;
 	}
 
+	console.log(cleanText(value, noStopwords=false, noSQL=true, textOnly=false))
 	return(
 	<ScrollView style = {[styles.container, isDarkMode && styles.containerDark]}>
 		{/*create the default phone status bar at the top of the screen*/}
