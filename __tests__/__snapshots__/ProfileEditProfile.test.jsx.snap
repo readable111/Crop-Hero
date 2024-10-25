@@ -83,7 +83,7 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="back-arrow"
           >
             <Image
               source={1}
@@ -156,7 +156,7 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="save"
           >
             <Text
               allowFontScaling={false}
@@ -426,7 +426,7 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                   "minHeight": 40,
                 }
               }
-              testID="RNE__Input__text-input"
+              testID="first-name-input"
               underlineColorAndroid="transparent"
             />
           </View>
@@ -549,7 +549,7 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                   "minHeight": 40,
                 }
               }
-              testID="RNE__Input__text-input"
+              testID="last-name-input"
               underlineColorAndroid="transparent"
             />
           </View>
@@ -962,7 +962,7 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="back-arrow"
           >
             <Image
               source={1}
@@ -1035,7 +1035,7 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="save"
           >
             <Text
               allowFontScaling={false}
@@ -1305,7 +1305,7 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
                   "minHeight": 40,
                 }
               }
-              testID="RNE__Input__text-input"
+              testID="first-name-input"
               underlineColorAndroid="transparent"
             />
           </View>
@@ -1428,7 +1428,7 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
                   "minHeight": 40,
                 }
               }
-              testID="RNE__Input__text-input"
+              testID="last-name-input"
               underlineColorAndroid="transparent"
             />
           </View>
@@ -1841,7 +1841,7 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="back-arrow"
           >
             <Image
               source={1}
@@ -1914,7 +1914,7 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="save"
           >
             <Text
               allowFontScaling={false}
@@ -2184,7 +2184,7 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
                   "minHeight": 40,
                 }
               }
-              testID="RNE__Input__text-input"
+              testID="first-name-input"
               underlineColorAndroid="transparent"
             />
           </View>
@@ -2307,7 +2307,7 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
                   "minHeight": 40,
                 }
               }
-              testID="RNE__Input__text-input"
+              testID="last-name-input"
               underlineColorAndroid="transparent"
             />
           </View>

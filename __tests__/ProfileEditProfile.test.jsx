@@ -54,6 +54,11 @@ jest.mock('expo-font', ()=>({
     loadAsync: jest.fn().mockResolvedValue(true),
     isLoaded: jest.fn(()=>true)
 }))
+jest.mock('expo-router', () => ({
+    router: {
+        back: jest.fn(),
+    }
+}));
 
 describe('Light Mode <EditProfile/>', () =>{
     beforeEach(async () => {
@@ -251,6 +256,70 @@ describe('Test <UploadImage/>', () =>{
     })
 })
 
+describe('Unit Tests <Profile/>', () =>{
+    beforeEach(async () => {
+        await AsyncStorage.setItem("dark_mode_setting", "false");
+        Font.useFonts.mockReturnValue([true, false])
+        const [fontsLoaded, fontError] = Font.useFonts()
+        expect(fontsLoaded).toBe(true)
+        expect(fontError).toBe(false)
+    });
+
+    test('can click back arrow', () =>{
+        const { getByTestId } = render(
+            <EditProfile/>
+        );
+
+        const button = getByTestId('back-arrow');
+        fireEvent.press(button);
+        expect(require('expo-router').router.back).toHaveBeenCalled();
+    })
+
+    test('can click save button', () =>{
+        const logSpy = jest.spyOn(console, 'log');
+        const { getByTestId } = render(
+            <EditProfile/>
+        );
+
+        const button = getByTestId('save');
+        fireEvent.press(button);
+        expect(logSpy).toHaveBeenCalledWith(
+            expect.any(String)
+        );
+    })
+
+    test('can type in first name input', async() =>{
+        const { getByTestId } = render(
+            <EditProfile/>
+        );
+
+        const input = getByTestId('first-name-input');
+        fireEvent.changeText(input, {
+            target: {
+                defaultValue: "Daniel"
+            }
+        })
+        await waitFor(() => {
+            expect(input._fiber.alternate.pendingProps.defaultValue.target.defaultValue).toBe("Daniel")
+        })
+    })
+
+    test('can type in last name input', async() =>{
+        const { getByTestId } = render(
+            <EditProfile/>
+        );
+
+        const input = getByTestId('last-name-input');
+        fireEvent.changeText(input, {
+            target: {
+                defaultValue: "Moreno"
+            }
+        })
+        await waitFor(() => {
+            expect(input._fiber.alternate.pendingProps.defaultValue.target.defaultValue).toBe("Moreno")
+        })
+    })
+})
 
 const styles = StyleSheet.create({
 	avatarImage: {
