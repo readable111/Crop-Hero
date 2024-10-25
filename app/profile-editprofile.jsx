@@ -85,13 +85,13 @@ const EditProfile = () =>{
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
 					{/*create the arrow to unwind the stack and go back one page*/}
-					<AppButton title="" icon={isDarkMode ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
+					<AppButton testID={"back-arrow"} title="" icon={isDarkMode ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
 				</Col>
 				<Col relativeColsCovered={8}></Col>
 				<Col relativeColsCovered={2}>
 					{/*TODO: link save button to get input field contents and save them to the database*/}
 					{/*TODO: when picture is saved, it is compressed via react-native-compressor library & https://stackoverflow.com/questions/37639360/how-to-optimise-an-image-in-react-native before being put into proper field*/}
-					<AppButton title="" mci="content-save" mciSize={30} mciColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
+					<AppButton testID={"save"} title="" mci="content-save" mciSize={30} mciColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
 				</Col>
 			</Row>
 		</View>
@@ -107,6 +107,7 @@ const EditProfile = () =>{
 				{/*first name input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>First Name</Text>
 				<Input
+					testID={"first-name-input"}
 					leftIcon={<AntDesign name="user" size={24} color={Colors.SOFT_GREEN}/>}
 					inputContainerStyle={[styles.inputBox, isDarkMode && styles.inputBoxDark]}
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
@@ -120,6 +121,7 @@ const EditProfile = () =>{
 				{/*last name input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Last Name</Text>
 				<Input
+					testID={"last-name-input"}
 					leftIcon={<AntDesign name="user" size={24} color={Colors.SOFT_GREEN}/>}
 					inputContainerStyle={[styles.inputBox, isDarkMode && styles.inputBoxDark]}
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}

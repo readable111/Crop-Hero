@@ -82,44 +82,12 @@ exports[`Dark Mode <SearchInput/> renders correctly 2`] = `
         "opacity": 1,
       }
     }
+    testID="search-modal"
   />
 </View>
 `;
 
-exports[`Light Mode <SearchInput/> renders correctly 1`] = `
-<View
-  style={
-    {
-      "alignContent": "flex-start",
-      "alignSelf": "flex-start",
-      "backgroundColor": "none",
-      "elevation": 0,
-      "justifyContent": "flex-start",
-      "padding": 2,
-      "verticalAlign": "bottom",
-      "width": "100%",
-      "zIndex": 9999,
-    }
-  }
->
-  <View
-    style={
-      {
-        "alignSelf": "center",
-        "backgroundColor": "#F1DDBF",
-        "elevation": 0,
-        "marginTop": 0,
-        "position": "absolute",
-        "top": 65,
-        "width": "86%",
-        "zIndex": 9999,
-      }
-    }
-  />
-</View>
-`;
-
-exports[`Light Mode <SearchInput/> renders correctly 2`] = `
+exports[`Light Mode <SearchInput/> modal mode renders correctly 1`] = `
 <View
   style={
     {
@@ -166,6 +134,40 @@ exports[`Light Mode <SearchInput/> renders correctly 2`] = `
     style={
       {
         "opacity": 1,
+      }
+    }
+    testID="search-modal"
+  />
+</View>
+`;
+
+exports[`Light Mode <SearchInput/> renders correctly 1`] = `
+<View
+  style={
+    {
+      "alignContent": "flex-start",
+      "alignSelf": "flex-start",
+      "backgroundColor": "none",
+      "elevation": 0,
+      "justifyContent": "flex-start",
+      "padding": 2,
+      "verticalAlign": "bottom",
+      "width": "100%",
+      "zIndex": 9999,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignSelf": "center",
+        "backgroundColor": "#F1DDBF",
+        "elevation": 0,
+        "marginTop": 0,
+        "position": "absolute",
+        "top": 65,
+        "width": "86%",
+        "zIndex": 9999,
       }
     }
   />
@@ -235,6 +237,7 @@ exports[`Search Modal <SearchModal /> renders correctly in dark mode 1`] = `
           },
         ]
       }
+      testID="modal-view"
     >
       <View
         style={
@@ -852,6 +855,7 @@ exports[`Search Modal <SearchModal /> renders correctly in light mode 1`] = `
           },
         ]
       }
+      testID="modal-view"
     >
       <View
         style={

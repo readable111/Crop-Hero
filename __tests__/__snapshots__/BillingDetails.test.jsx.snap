@@ -82,7 +82,7 @@ exports[`Dark Mode <BillingDetailsProfile/> 1`] = `
               "opacity": 1,
             }
           }
-          testID=""
+          testID="back-arrow"
         >
           <Image
             source={1}
@@ -155,7 +155,7 @@ exports[`Dark Mode <BillingDetailsProfile/> 1`] = `
               "opacity": 1,
             }
           }
-          testID=""
+          testID="save"
         >
           <Text
             allowFontScaling={false}
@@ -340,6 +340,7 @@ exports[`Dark Mode <BillingDetailsProfile/> 1`] = `
               "zIndex": 5000,
             }
           }
+          testID="submodel-dropdown"
         >
           <Text
             style={
@@ -494,7 +495,7 @@ exports[`Dark Mode <BillingDetailsProfile/> 1`] = `
                 "minHeight": 40,
               }
             }
-            testID="RNE__Input__text-input"
+            testID="email-input"
             underlineColorAndroid="transparent"
           />
         </View>
@@ -624,7 +625,7 @@ exports[`Dark Mode <BillingDetailsProfile/> 1`] = `
                 "minHeight": 40,
               }
             }
-            testID="RNE__Input__text-input"
+            testID="phone-input"
             underlineColorAndroid="transparent"
           />
         </View>
@@ -736,7 +737,7 @@ exports[`Dark Mode <BillingDetailsProfile/> 1`] = `
                 "minHeight": 40,
               }
             }
-            testID="RNE__Input__text-input"
+            testID="zip-input"
             underlineColorAndroid="transparent"
           />
         </View>
@@ -831,7 +832,7 @@ exports[`Dark Mode <BillingDetailsProfile/> 1`] = `
           </View>
           <TextInput
             autoComplete="address-line1"
-            defaultValue="Rhode Island"
+            defaultValue="Texas"
             editable={true}
             keyboardType="default"
             maxLength={64}
@@ -848,7 +849,7 @@ exports[`Dark Mode <BillingDetailsProfile/> 1`] = `
                 "minHeight": 40,
               }
             }
-            testID="RNE__Input__text-input"
+            testID="state-input"
             underlineColorAndroid="transparent"
           />
         </View>
@@ -949,7 +950,7 @@ exports[`Light Mode <BillingDetailsProfile/> 1`] = `
               "opacity": 1,
             }
           }
-          testID=""
+          testID="back-arrow"
         >
           <Image
             source={1}
@@ -1022,7 +1023,7 @@ exports[`Light Mode <BillingDetailsProfile/> 1`] = `
               "opacity": 1,
             }
           }
-          testID=""
+          testID="save"
         >
           <Text
             allowFontScaling={false}
@@ -1207,6 +1208,7 @@ exports[`Light Mode <BillingDetailsProfile/> 1`] = `
               "zIndex": 5000,
             }
           }
+          testID="submodel-dropdown"
         >
           <Text
             style={
@@ -1361,7 +1363,7 @@ exports[`Light Mode <BillingDetailsProfile/> 1`] = `
                 "minHeight": 40,
               }
             }
-            testID="RNE__Input__text-input"
+            testID="email-input"
             underlineColorAndroid="transparent"
           />
         </View>
@@ -1491,7 +1493,7 @@ exports[`Light Mode <BillingDetailsProfile/> 1`] = `
                 "minHeight": 40,
               }
             }
-            testID="RNE__Input__text-input"
+            testID="phone-input"
             underlineColorAndroid="transparent"
           />
         </View>
@@ -1603,7 +1605,7 @@ exports[`Light Mode <BillingDetailsProfile/> 1`] = `
                 "minHeight": 40,
               }
             }
-            testID="RNE__Input__text-input"
+            testID="zip-input"
             underlineColorAndroid="transparent"
           />
         </View>
@@ -1698,7 +1700,7 @@ exports[`Light Mode <BillingDetailsProfile/> 1`] = `
           </View>
           <TextInput
             autoComplete="address-line1"
-            defaultValue="Rhode Island"
+            defaultValue="Texas"
             editable={true}
             keyboardType="default"
             maxLength={64}
@@ -1715,7 +1717,7 @@ exports[`Light Mode <BillingDetailsProfile/> 1`] = `
                 "minHeight": 40,
               }
             }
-            testID="RNE__Input__text-input"
+            testID="state-input"
             underlineColorAndroid="transparent"
           />
         </View>
@@ -1816,7 +1818,7 @@ exports[`No Async <BillingDetailsProfile/> 1`] = `
               "opacity": 1,
             }
           }
-          testID=""
+          testID="back-arrow"
         >
           <Image
             source={1}
@@ -1889,7 +1891,7 @@ exports[`No Async <BillingDetailsProfile/> 1`] = `
               "opacity": 1,
             }
           }
-          testID=""
+          testID="save"
         >
           <Text
             allowFontScaling={false}
@@ -2074,6 +2076,7 @@ exports[`No Async <BillingDetailsProfile/> 1`] = `
               "zIndex": 5000,
             }
           }
+          testID="submodel-dropdown"
         >
           <Text
             style={
@@ -2228,7 +2231,7 @@ exports[`No Async <BillingDetailsProfile/> 1`] = `
                 "minHeight": 40,
               }
             }
-            testID="RNE__Input__text-input"
+            testID="email-input"
             underlineColorAndroid="transparent"
           />
         </View>
@@ -2358,7 +2361,7 @@ exports[`No Async <BillingDetailsProfile/> 1`] = `
                 "minHeight": 40,
               }
             }
-            testID="RNE__Input__text-input"
+            testID="phone-input"
             underlineColorAndroid="transparent"
           />
         </View>
@@ -2470,7 +2473,7 @@ exports[`No Async <BillingDetailsProfile/> 1`] = `
                 "minHeight": 40,
               }
             }
-            testID="RNE__Input__text-input"
+            testID="zip-input"
             underlineColorAndroid="transparent"
           />
         </View>
@@ -2565,7 +2568,7 @@ exports[`No Async <BillingDetailsProfile/> 1`] = `
           </View>
           <TextInput
             autoComplete="address-line1"
-            defaultValue="Rhode Island"
+            defaultValue="Texas"
             editable={true}
             keyboardType="default"
             maxLength={64}
@@ -2582,7 +2585,7 @@ exports[`No Async <BillingDetailsProfile/> 1`] = `
                 "minHeight": 40,
               }
             }
-            testID="RNE__Input__text-input"
+            testID="state-input"
             underlineColorAndroid="transparent"
           />
         </View>
