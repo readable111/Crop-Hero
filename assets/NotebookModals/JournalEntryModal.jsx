@@ -1,5 +1,4 @@
-// journal Entry Modal
-// McKenna Beard
+// Journal Entry Modal
 import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
@@ -12,39 +11,35 @@ const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
     const [month, setMonth] = useState('01');
     const [year, setYear] = useState('2024');
 
-    // Use useEffect to update state when journalEntry changes (for editing mode)
     useEffect(() => {
         if (journalEntry) {
-            // If editing an existing entry, retain the EntryID
-            if (!entryID) {  // Only set EntryID if it is null
+            if (!entryID) {
                 setEntryID(journalEntry.EntryID);
             }
             setContents(journalEntry.Contents);
-            setDay(journalEntry.EntryDate.slice(2, 4));  // Extract day from EntryDate
-            setMonth(journalEntry.EntryDate.slice(0, 2)); // Extract month from EntryDate
-            setYear(journalEntry.EntryDate.slice(4));      // Extract year from EntryDate
+            setDay(journalEntry.EntryDate.slice(2, 4));
+            setMonth(journalEntry.EntryDate.slice(0, 2));
+            setYear(journalEntry.EntryDate.slice(4));
         } else {
-            // If adding a new entry, reset the form
-            setEntryID(null); // Reset EntryID when adding a new entry
-            setContents(null);
+            setEntryID(null);
+            setContents('');
             setDay('01');
             setMonth('01');
             setYear(new Date().getFullYear().toString());
         }
-    }, [journalEntry]);  // Trigger useEffect when journalEntry changes
-
+    }, [journalEntry]);
+   
     const handleSave = () => {
-        const entryDate = `${month}${day}${year}`; // Combine to MMDDYYYY
+        // Create a new Date object
+        const entryDate = new Date(year, month - 1, day); // month is 0-indexed
+
         const entryData = {
             EntryID: entryID,
             Contents: contents,
-            EntryDate: entryDate,
+            EntryDate: entryDate.toISOString(), // Convert to ISO string for consistent formatting
         };
 
-        // Convert entryData to JSON format
         const jsonData = JSON.stringify(entryData);
-
-        // Call onSave to save or edit the entry
         onSave(entryID, jsonData);
         onClose();
     };
@@ -114,14 +109,14 @@ const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
 
 const styles = StyleSheet.create({
     entryContainer: {
-        width: '100%',          // Ensures full width container
-        marginBottom: 15,       // Space below the input
+        width: '100%',
+        marginBottom: 15,
     },
     entryLabel: {
-        alignSelf: 'flex-start', // Aligns label to the left
-        fontSize: 16,            // Adjust the font size as needed
+        alignSelf: 'flex-start',
+        fontSize: 16,
         fontFamily: 'Domine-Regular',
-        marginBottom: 5,         // Space between label and text input
+        marginBottom: 5,
     },
     modalContainer: {
         flex: 1,
@@ -131,12 +126,12 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         backgroundColor: Colors.ALMOND_TAN,
         margin: 20,
-        elevation: 10, // Shadow for Android
-        shadowColor: '#000', // Shadow for iOS
+        elevation: 10,
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 5,
-        shadowColor: Colors.PERIWINKLE_GRAY
+        shadowColor: Colors.PERIWINKLE_GRAY,
     },
     title: {
         fontSize: 24,
@@ -145,7 +140,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Domine-Regular',
     },
     dateContainer: {
-        alignSelf: 'flex-start', // Align to the left
+        alignSelf: 'flex-start',
         marginBottom: 15,
         fontFamily: 'Domine-Regular',
     },
@@ -154,14 +149,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
+        paddingHorizontal: 5, // Reduced padding
         backgroundColor: Colors.PERIWINKLE_GRAY,
         borderRadius: 5,
-        borderWidth: 1,
-        borderColor: 'black',
-        fontFamily: 'Domine-Regular',
     },
     picker: {
-        width: 100,
+        width: 90, // Increased width for better visibility
     },
     input: {
         borderWidth: 1,
@@ -189,13 +182,13 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         borderColor: 'black',
-        borderWidth: 1
+        borderWidth: 1,
     },
     cancelButton: {
-        backgroundColor: Colors.PERIWINKLE_GRAY, // Customize cancel button color
+        backgroundColor: Colors.PERIWINKLE_GRAY,
     },
     saveButton: {
-        backgroundColor: Colors.PERIWINKLE_GRAY, // Customize save button color
+        backgroundColor: Colors.PERIWINKLE_GRAY,
     },
     buttonText: {
         color: 'black',
