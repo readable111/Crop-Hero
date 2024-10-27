@@ -3,7 +3,7 @@
  * @reviewer Daniel Moreno
  * @tester 
  * 
- * UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 10_27_2024
+ * UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 10_6_2024
  * This  page is meant to keep track of what was done that day for future reference if needed
  ***/
 import { React, useState } from 'react';
@@ -27,7 +27,33 @@ const Notebook = () => {
     const [selectedYear, setSelectedYear] = useState("All");
     const [open, setOpen] = useState(false);
     const [selectedEntry, setSelectedEntry] = useState(null);
+    //const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(false)
+    useEffect(() => {
+        // declare the async data fetching function
+        const fetchDarkModeSetting = async () => {
+            const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
+            let result = null
+            if (JSON_VALUE && JSON_VALUE !== "") {
+                result = JSON.parse(JSON_VALUE)
+                console.log("Async: " + result)
+            } else {
+                colorScheme = Appearance.getColorScheme()
+                if (colorScheme == 'dark') {
+                    result = true
+                } else {
+                    result = false
+                }
+                console.log("colorScheme: " + result)
+            }
+            setIsDarkMode(result)
+        }
 
+        // call the function
+        fetchDarkModeSetting()
+            // make sure to catch any error
+            .catch(console.error);
+    }, [])
     const handleSaveEntry = (entryID, jsonData) => {
         const entry = JSON.parse(jsonData);
         // Assume entry contains a date in the format: { month: <month>, day: <day>, year: <year> }
@@ -417,11 +443,3 @@ const styles = StyleSheet.create({
 })
 
 export default Notebook;
-				
-				
-
-
-
-
-				
-				
