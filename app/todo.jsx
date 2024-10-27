@@ -3,7 +3,7 @@
  * @reviewer Daniel Moreno
  * @tester 
  * 
- * UNT To-do Page as apart of the notebook tab on the nav bar-- Last updated 10_27_2024
+ * UNT To-do Page as apart of the notebook tab on the nav bar
  * This page can only be accessed after clicking on the notebook page from the main nav bar
  ***/
 
@@ -54,6 +54,32 @@ const todo = () => {
         { label: 'Not Completed', value: 'notCompleted' },
         { label: 'Last 3 Entries', value: 'last3Entries' }
     ]);
+    const [isDarkMode, setIsDarkMode] = useState(false)
+    useEffect(() => {
+        // declare the async data fetching function
+        const fetchDarkModeSetting = async () => {
+            const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
+            let result = null
+            if (JSON_VALUE && JSON_VALUE !== "") {
+                result = JSON.parse(JSON_VALUE)
+                console.log("Async: " + result)
+            } else {
+                colorScheme = Appearance.getColorScheme()
+                if (colorScheme == 'dark') {
+                    result = true
+                } else {
+                    result = false
+                }
+                console.log("colorScheme: " + result)
+            }
+            setIsDarkMode(result)
+        }
+
+        // call the function
+        fetchDarkModeSetting()
+            // make sure to catch any error
+            .catch(console.error);
+    }, [])
     const handleExport = (task) => {
         if (!task) {
             Alert.alert('No task selected for export');
