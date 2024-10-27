@@ -3,35 +3,37 @@
  * @reviewer Daniel Moreno
  * @tester 
  * 
- * UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 10_6_2024
+ * UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 10_27_2024
  * This  page is meant to keep track of what was done that day for future reference if needed
  ***/
-
 import { React, useState } from 'react';
-import { View, Text, FlatList, Button, StyleSheet, Alert, ScrollView, StatusBar, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Button, StyleSheet, Alert, StatusBar, TouchableOpacity } from 'react-native';
 import { useFonts } from 'expo-font';
 import { router } from 'expo-router';
 import { Col, Row } from '../assets/Grid.jsx';
 import Colors from '../assets/Color';
 import AppButton from '../assets/AppButton.jsx';
-import { Input } from 'react-native-elements';
+import { Picker } from '@react-native-picker/picker';
+import { SpeedDial } from '@rneui/themed';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavBar from '../assets/NavBar';
 import JournalEntryModal from '../assets/NotebookModals/JournalEntryModal';
-import { SpeedDial } from '@rneui/themed';
-import { Picker } from '@react-native-picker/picker';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Notebook = () => {
-    const [entries, setEntries] = useState([]); // Store journal entries
+    const [entries, setEntries] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
-    const [editingEntry, setEditingEntry] = useState(null); // To handle editing entries
-    const [selectedMonth, setSelectedMonth] = useState("All"); // State for month filter
-    const [selectedYear, setSelectedYear] = useState("All"); // State for year filter
-    const [open, setOpen] = useState(false); // State for SpeedDial
-    const [selectedEntry, setSelectedEntry] = useState(null); // To store the currently selected entry
+    const [editingEntry, setEditingEntry] = useState(null);
+    const [selectedMonth, setSelectedMonth] = useState("All");
+    const [selectedYear, setSelectedYear] = useState("All");
+    const [open, setOpen] = useState(false);
+    const [selectedEntry, setSelectedEntry] = useState(null);
 
     const handleSaveEntry = (entryID, jsonData) => {
         const entry = JSON.parse(jsonData);
+        // Assume entry contains a date in the format: { month: <month>, day: <day>, year: <year> }
+        const { month, day, year } = entry; // Adjust according to the structure of the entry
+        entry.EntryDate = new Date(year, month - 1, day); // Create a new date from the user input
+
         if (entryID) {
             // Update existing entry
             setEntries(prevEntries =>
@@ -49,48 +51,56 @@ const Notebook = () => {
         setModalVisible(true);
     };
 
-    // Function to filter entries based on month and year
     const filteredEntries = () => {
         return entries.filter(entry => {
-            const [month, year] = entry.EntryDate.split('');
-            const monthMatch = selectedMonth === "All" || month === selectedMonth;
-            const yearMatch = selectedYear === "All" || year === selectedYear;
+            const entryDate = new Date(entry.EntryDate);
+            const entryMonth = String(entryDate.getMonth() + 1).padStart(2, '0');
+            const entryYear = String(entryDate.getFullYear());
+
+            const monthMatch = selectedMonth === "All" || entryMonth === selectedMonth;
+            const yearMatch = selectedYear === "All" || entryYear === selectedYear;
 
             return monthMatch && yearMatch;
         });
     };
 
-    // Sort entries from newest to oldest
     const sortedEntries = () => {
         return filteredEntries().sort((a, b) => b.EntryID - a.EntryID);
     };
 
-    const renderItem = ({ item }) => (
-        <View style={styles.entryContainer}>
-            <Text style={styles.entryText}>Entry ID: {item.EntryID}</Text>
-            <Text style={styles.entryText}>Date: {item.EntryDate}</Text>
-            <Text style={styles.entryText}>Contents: {item.Contents}</Text>
-        </View>
-    );
+    const renderItem = ({ item }) => {
+        // Extract month, day, year for display
+        const entryDate = new Date(item.EntryDate);
+        const formattedDate = `${entryDate.getMonth() + 1}/${entryDate.getDate()}/${entryDate.getFullYear()}`; // Format: month/day/year
+
+        return (
+            <View style={styles.entryContainer}>
+                <TouchableOpacity
+                    onLongPress={() => {
+                        setSelectedEntry(item);
+                        setOpen(true);
+                    }}
+                    style={styles.entryContainer}
+                >
+                    <Text style={styles.entryText}>Entry ID: {item.EntryID}</Text>
+                    <Text style={styles.entryText}>Date: {formattedDate}</Text>
+                    <Text style={styles.entryText}>Contents: {item.Contents}</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    };
 
     const handleExport = () => {
-        // Implement your export logic here
         console.log("Exporting entries:", entries);
     };
 
     const handleDelete = (entryID) => {
-        // Alert the user for confirmation before deleting
         Alert.alert(
             "Delete Entry",
             "Are you sure you want to delete this entry?",
             [
                 { text: "Cancel", style: "cancel" },
-                {
-                    text: "OK", onPress: () => {
-                        // Delete the entry
-                        setEntries(prevEntries => prevEntries.filter(item => item.EntryID !== entryID));
-                    }
-                }
+                { text: "OK", onPress: () => setEntries(prevEntries => prevEntries.filter(item => item.EntryID !== entryID)) }
             ],
             { cancelable: false }
         );
@@ -99,7 +109,7 @@ const Notebook = () => {
     const [fontsLoaded, fontError] = useFonts({
         'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
         'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
-        'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
+        'Domine-Medium': require('../assets/fonts/WorkSans-Medium.ttf'),
         'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
     });
 
@@ -121,107 +131,93 @@ const Notebook = () => {
                 </Row>
             </View>
 
-            
-            <View style={styles.filterContainer }>
-                    <Picker
-                        selectedValue={selectedMonth}
-                        style={styles.picker}
-                        onValueChange={(itemValue) => setSelectedMonth(itemValue)}
-                    >
-                        <Picker.Item label="Month" value="All" />
-                        {[...Array(12)].map((_, i) => (
-                            <Picker.Item key={i} label={`${i + 1}`.padStart(2, '0')} value={`${i + 1}`.padStart(2, '0')} />
-                        ))}
-                    </Picker>
-
-                    <Picker
-                        selectedValue={selectedYear}
-                        style={styles.picker}
-                        onValueChange={(itemValue) => setSelectedYear(itemValue)}
-                    >
-                        <Picker.Item label="Date" value="All" />
-                        {[2023, 2024].map(year => (
-                            <Picker.Item key={year} label={year.toString()} value={year.toString()} />
-                        ))}
-                    </Picker>
-            </View>
-            
-            
-            <ScrollView style={styles.scrollContainer}>
-                
-                    {sortedEntries().map(item => (
-                        <View style={styles.outsideEntryBox }>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setSelectedEntry(item); // Set the selected entry
-                                    setOpen(true); // Open the Speed Dial
-                                }}
-                                style={styles.entryContainer}
-                            >
-                                <Text style={styles.entryText}>Entry ID: {item.EntryID}</Text>
-                                <Text style={styles.entryText}>Date: {item.EntryDate}</Text>
-                                <Text style={styles.entryText}>Contents: {item.Contents}</Text>
-                            </TouchableOpacity>
-                        </View>
-                    ))}
-                
-            </ScrollView>
-            
-               
-                
-                <SpeedDial
-                    isOpen={open}
-                    icon={{ name: 'edit', color: 'white' }}
-                    openIcon={{ name: 'close', color: 'white' }}
-                    onOpen={() => setOpen(!open)}
-                    onClose={() => setOpen(false)}
-                    buttonStyle={{ backgroundColor: 'green' }}
-                    style={styles.speedDial}
+            <View style={styles.filterContainer}>
+                <Picker
+                    selectedValue={selectedMonth}
+                    style={styles.picker}
+                    onValueChange={(itemValue) => setSelectedMonth(itemValue)}
                 >
-                    <SpeedDial.Action
-                        icon={<MaterialCommunityIcons name="plus" size={24} color="white" />}
-                        title="Add"
-                        buttonStyle={{ backgroundColor: 'green' }}
-                        onPress={() => {
-                            setEditingEntry(null); // Clear editing entry
-                            setModalVisible(true); // Open modal to add new entry
-                        }}
-                    />
-                    <SpeedDial.Action
-                        icon={<MaterialCommunityIcons name="export" size={24} color="white" />}
-                        title="Export"
-                        onPress={handleExport}
-                        buttonStyle={{ backgroundColor: 'green' }}
-                    />
-                    <SpeedDial.Action
-                        icon={<MaterialCommunityIcons name="pencil" size={24} color="white" />}
-                        title="Edit"
-                        buttonStyle={{ backgroundColor: 'green' }}
-                        onPress={() => {
-                            if (selectedEntry) {
-                                openModalForEdit(selectedEntry); // Reopen modal for editing
-                            } else {
-                                Alert.alert("Select an entry to edit."); // Alert if no entry selected
-                            }
-                        }}
-                    />
-                    <SpeedDial.Action
-                        icon={<MaterialCommunityIcons name="delete" size={24} color="white" />}
-                        title="Delete"
-                        buttonStyle={{ backgroundColor: 'green' }}
-                        onPress={() => {
-                            if (editingEntry) {
-                                handleDelete(editingEntry.EntryID); // Trigger delete function
-                            } else {
-                                Alert.alert("Select an entry to delete."); // Alert if no entry selected
-                            }
-                        }}
-                    />
-                    </SpeedDial>
-                
+                    <Picker.Item label="Month" value="All" />
+                    {[...Array(12)].map((_, i) => (
+                        <Picker.Item key={i} label={`${i + 1}`.padStart(2, '0')} value={`${i + 1}`.padStart(2, '0')} />
+                    ))}
+                </Picker>
+
+                <Picker
+                    selectedValue={selectedYear}
+                    style={styles.picker}
+                    onValueChange={(itemValue) => setSelectedYear(itemValue)}
+                >
+                    <Picker.Item label="Year" value="All" />
+                    {[2023, 2024].map(year => (
+                        <Picker.Item key={year} label={year.toString()} value={year.toString()} />
+                    ))}
+                </Picker>
+            </View>
+
+            <FlatList
+                style={styles.scrollContainer}
+                data={sortedEntries()}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.EntryID.toString()}
+            />
+
+            <SpeedDial
+                isOpen={open}
+                icon={{ name: 'edit', color: 'white' }}
+                openIcon={{ name: 'close', color: 'white' }}
+                onOpen={() => setOpen(!open)}
+                onClose={() => setOpen(false)}
+                buttonStyle={{ backgroundColor: 'green' }}
+                style={styles.speedDial}
+            >
+                <SpeedDial.Action
+                    icon={<MaterialCommunityIcons name="plus" size={24} color="white" />}
+                    title="Add"
+                    buttonStyle={{ backgroundColor: 'green' }}
+                    onPress={() => {
+                        setEditingEntry(null); // Reset editingEntry for new entry
+                        setModalVisible(true); // Open modal to add new entry
+                    }}
+                />
+                <SpeedDial.Action
+                    icon={<MaterialCommunityIcons name="export" size={24} color="white" />}
+                    title="Export"
+                    onPress={handleExport}
+                    buttonStyle={{ backgroundColor: 'green' }}
+                />
+                <SpeedDial.Action
+                    icon={<MaterialCommunityIcons name="pencil" size={24} color="white" />}
+                    title="Edit"
+                    buttonStyle={{ backgroundColor: 'green' }}
+                    onPress={() => {
+                        if (selectedEntry) {
+                            openModalForEdit(selectedEntry);
+                        } else {
+                            Alert.alert("Select an entry to edit.");
+                        }
+                    }}
+                />
+                <SpeedDial.Action
+                    icon={<MaterialCommunityIcons name="delete" size={24} color="white" />}
+                    title="Delete"
+                    buttonStyle={{ backgroundColor: 'green' }}
+                    onPress={() => {
+                        if (selectedEntry) {
+                            handleDelete(selectedEntry.EntryID); // Delete the selected entry
+                        } else {
+                            Alert.alert("Select an entry to delete."); // Alert if no entry selected
+                        }
+                    }}
+                />
+            </SpeedDial>
+
             <JournalEntryModal
                 visible={modalVisible}
-                onClose={() => setModalVisible(false)}
+                onClose={() => {
+                    setModalVisible(false);
+                    setEditingEntry(null); // Reset editingEntry when closing the modal
+                }}
                 onSave={handleSaveEntry}
                 journalEntry={editingEntry} // Pass entry to edit
             />
@@ -297,14 +293,15 @@ const styles = StyleSheet.create({
     },
     picker: { // two drop down elements overall contained in filterContainer
         height: '20%',
-        width: 100,
+        width: 200,
         borderColor: 'black',
         borderWidth: 1,
         borderRadius: 5,
         backgroundColor: Colors.ALMOND_TAN,
         //marginBottom: 20,
        // marginTop: 20,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignSelf: 'center'
 
         
     },
@@ -420,7 +417,6 @@ const styles = StyleSheet.create({
 })
 
 export default Notebook;
-
 				
 				
 
