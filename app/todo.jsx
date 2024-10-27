@@ -3,7 +3,7 @@
  * @reviewer Daniel Moreno
  * @tester 
  * 
- * UNT To-do Page as apart of the notebook tab on the nav bar
+ * UNT To-do Page as apart of the notebook tab on the nav bar-- Last updated 10_27_2024
  * This page can only be accessed after clicking on the notebook page from the main nav bar
  ***/
 
@@ -29,6 +29,7 @@ import { SpeedDial } from 'react-native-elements';
 import DropDownPicker from 'react-native-dropdown-picker';
 import NavBar from '../assets/NavBar.jsx';
 import TodoEntryModal from '../assets/NotebookModals/TodoEntryModal';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const todo = () => {
     const [index, setIndex] = useState(0);
@@ -53,7 +54,14 @@ const todo = () => {
         { label: 'Not Completed', value: 'notCompleted' },
         { label: 'Last 3 Entries', value: 'last3Entries' }
     ]);
-
+    const handleExport = (task) => {
+        if (!task) {
+            Alert.alert('No task selected for export');
+            return;
+        }
+        // Implement your export logic here, e.g., save to file, send to server, etc.
+        console.log("Exporting task:", task);
+    };
     const handleAddTask = () => {
         const maxTaskID = tasks.length > 0 ? Math.max(...tasks.map(task => task.TaskID)) : 0;
         const newTaskID = maxTaskID + 1;
@@ -70,14 +78,14 @@ const todo = () => {
         };
 
         setCurrentTaskID(newTaskID);
-        setCurrentTask(null);
+        setCurrentTask(newTask); // Initialize the new task
         setModalVisible(true);
     };
 
     const handleSaveTask = (taskData) => {
         if (currentTaskID) {
             const updatedTasks = tasks.map(task =>
-                task.TaskID === currentTaskID ? taskData : task
+                task.TaskID === currentTaskID ? { ...task, ...taskData } : task
             );
             setTasks(updatedTasks);
         } else {
@@ -86,7 +94,7 @@ const todo = () => {
         setModalVisible(false);
     };
 
-    const handleLongPressTask = (task) => {
+    const handleTaskLongPress = (task) => {
         setCurrentTask(task);
         setCurrentTaskID(task.TaskID);
         setIsSpeedDialOpen(true);
@@ -121,15 +129,6 @@ const todo = () => {
         setModalVisible(true);
     };
 
-    const handleSave = (updatedTask) => {
-        const updatedTasks = tasks.map(task =>
-            task.TaskID === updatedTask.TaskID ? updatedTask : task
-        );
-        setTasks(updatedTasks);
-        setFilteredTasks(updatedTasks);
-        setModalVisible(false);
-    };
-
     const handleDeleteTask = (taskID) => {
         Alert.alert(
             'Confirm Delete',
@@ -161,11 +160,6 @@ const todo = () => {
 
         setTasks(updatedTasks);
         setFilteredTasks(updatedTasks);
-    };
-
-    const handleTaskLongPress = (task) => {
-        setCurrentTask(task);
-        setIsSpeedDialOpen(true);
     };
 
     const [fontsLoaded, fontError] = useFonts({
@@ -203,25 +197,25 @@ const todo = () => {
                     containerStyle={styles.dropdownContainer}
                 />
             </View>
-
-            <FlatList
-                data={filteredTasks}
-                keyExtractor={item => item.TaskID.toString()}
-                renderItem={({ item }) => (
-                    <TouchableOpacity
-                        style={styles.taskContainer}
-                        onPress={() => handleTaskTap(item)}
-                        onLongPress={() => handleLongPressTask(item)}
-                    >
-                        <Text>Assigned Farmer ID: {item.AssignedFarmerID}</Text>
-                        <Text>Task Type: {item.TaskType}</Text>
-                        <Text>Location ID: {item.LocationID}</Text>
-                        <Text>Comments: {item.Comments}</Text>
-                        <Text>Due Date: {item.DueDate}</Text>
-                    </TouchableOpacity>
-                )}
-            />
-
+            <View style={styles.FlatListView}>
+                <FlatList
+                    data={filteredTasks}
+                    keyExtractor={item => item.TaskID.toString()}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity
+                            style={[styles.taskContainer, { opacity: item.IsCompleted ? 0.6 : 1 }]}
+                            onPress={() => handleTaskTap(item)}
+                            onLongPress={() => handleTaskLongPress(item)}
+                        >
+                            <Text>Assigned Farmer ID: {item.AssignedFarmerID}</Text>
+                            <Text>Task Type: {item.TaskType}</Text>
+                            <Text>Location ID: {item.LocationID}</Text>
+                            <Text>Comments: {item.Comments}</Text>
+                            <Text>Due Date: {item.DueDate}</Text>
+                        </TouchableOpacity>
+                    )}
+                />
+            </View>
             <SpeedDial
                 isOpen={isSpeedDialOpen}
                 icon={{ name: 'edit', color: 'white' }}
@@ -232,7 +226,7 @@ const todo = () => {
                 style={styles.speedDial}
             >
                 <SpeedDial.Action
-                    icon={{ name: 'add', color: 'white' }}
+                    icon={<MaterialCommunityIcons name="plus" size={24} color="white" />}
                     title="Add Task"
                     onPress={handleAddTask}
                     buttonStyle={{ backgroundColor: 'green' }}
@@ -241,6 +235,18 @@ const todo = () => {
                     icon={{ name: 'edit', color: 'white' }}
                     title="Edit Task"
                     onPress={handleEditTask}
+                    buttonStyle={{ backgroundColor: 'green' }}
+                />
+                <SpeedDial.Action
+                    icon={{ name: 'check', color: 'white' }}
+                    title="Mark Complete"
+                    onPress={() => handleCheckboxChange(currentTask?.TaskID)}
+                    buttonStyle={{ backgroundColor: 'green' }}
+                />
+                <SpeedDial.Action
+                    icon={<MaterialCommunityIcons name="export" size={24} color="white" />}
+                    title="Export"
+                    onPress={() => handleExport(currentTask)}
                     buttonStyle={{ backgroundColor: 'green' }}
                 />
                 <SpeedDial.Action
@@ -269,6 +275,11 @@ const todo = () => {
 };
 
 const styles = StyleSheet.create({
+    FlatListView: {
+        backgroundColor: 'green',
+        zIndex: 500,
+        width: '100%'
+    },
     belowFilter: {
         backgroundColor: 'pink',
         height: '90%',
