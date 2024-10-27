@@ -65,7 +65,7 @@ exports[`Light Mode Gallery <UploadImage/> renders correctly 1`] = `
         "width": 50,
       }
     }
-    testID=""
+    testID="open"
   >
     <Text
       allowFontScaling={false}
@@ -157,7 +157,7 @@ exports[`Light Mode Gallery <UploadImage/> renders correctly 2`] = `
         "width": 50,
       }
     }
-    testID=""
+    testID="open"
   >
     <Text
       allowFontScaling={false}
@@ -249,7 +249,7 @@ exports[`Light Mode Selfie <UploadImage/> renders correctly 1`] = `
         "width": 50,
       }
     }
-    testID=""
+    testID="open"
   >
     <Text />
   </View>

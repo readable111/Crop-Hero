@@ -32,7 +32,7 @@ const BillingDetailsProfile = () =>{
 	{/*TODO: retrieve current model*/}
 	{/*create the subscription model list*/}
 	const [items, setItems] = useState([ //potential subscription model stuff
-    	{label: 'Free', value: 'free'},                   // 1 farmer,No Ambient Weather, No  Export,   10 Crops
+    	{label: 'Free', value: 'free', testID: 'free'},                   // 1 farmer,No Ambient Weather, No  Export,   10 Crops
     	{label: 'Individual', value: 'individual'},       // 1 farmer,   Ambient Weather, No  Export,   25 Crops
 		{label: 'Couple', value: 'couple'},               // 2 farmers,  Ambient Weather, Can Export,   75 Crops
 		{label: 'Family', value: 'family'},               // 5 farmers,  Ambient Weather, Can Export,  200 Crops
@@ -43,8 +43,12 @@ const BillingDetailsProfile = () =>{
 	const [email, setEmail] = useState('test@example.com');
 	const [phoneNum, setPhoneNum] = useState('+1 (012) 345-6789');
 	const [zipCode, setZipCode] = useState('02914');
-	const [state, setState] = useState('Rhode Island');
+	const [state, setState] = useState('Texas');
 
+	const handleSave = () =>{
+		//onChangeText={value => {setEmail(cleanText(email, noStopwords=false, noSQL=true));}}
+		console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Zip: " + cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false) + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
+	};
 
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
@@ -77,7 +81,6 @@ const BillingDetailsProfile = () =>{
 	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
 
 	const [fontsLoaded, fontError] = useFonts({
-		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
 		'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
 	});
 
@@ -95,13 +98,12 @@ const BillingDetailsProfile = () =>{
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
 					{/*create the arrow to unwind the stack and go back one page*/}
-					<AppButton title="" icon={isDarkMode ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
+					<AppButton testID={"back-arrow"} title="" icon={isDarkMode ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
 				</Col>
 				<Col relativeColsCovered={8}></Col>
 				<Col relativeColsCovered={2}>
 					{/*TODO: link save button to get input field contents and save them to the database*/}
-					{/*TODO: when picture is saved, it is compressed via react-native-compressor library & https://stackoverflow.com/questions/37639360/how-to-optimise-an-image-in-react-native before being put into proper field*/}
-					<AppButton title="" mci="content-save" mciSize={30} mciColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={() => Alert.alert('Save icon button pressed')}/>
+					<AppButton testID={"save"} title="" mci="content-save" mciSize={30} mciColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
 				</Col>
 			</Row>
 		</View>
@@ -116,10 +118,12 @@ const BillingDetailsProfile = () =>{
 				{/*subscription model dropdown box*/}
 				<Text style={[styles.dropdownInputLabel, isDarkMode && styles.dropdownInputLabelDark]}>Subscription Model</Text>
 				<DropDownPicker
+					testID={"submodel-dropdown"}
 					theme={isDarkMode ? 'DARK' : 'LIGHT'}
 					open={open}
 					value={value}
 					items={items}
+					onPress={setOpen}
 					setOpen={setOpen}
 					setValue={setValue}
 					setItems={setItems}
@@ -164,6 +168,7 @@ const BillingDetailsProfile = () =>{
 				{/*email input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Email</Text>
 				<Input
+					testID={"email-input"}
 					leftIcon={<AntDesign name="mail" size={24} color={Colors.SOFT_GREEN}/>}
 					inputContainerStyle={[styles.inputBox, isDarkMode && styles.inputBoxDark]}
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
@@ -173,11 +178,12 @@ const BillingDetailsProfile = () =>{
 					autoComplete='email'
 					keyboardType='email-address'
 					maxLength={384}
-					onChangeText={value => {setEmail(cleanText(value, noStopwords=false, noSQL=true));}}
+					onChangeText={value => {setEmail(value);}}
 				/>
 				{/*phone number input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Phone No.</Text>
 				<Input
+					testID={"phone-input"}
 					leftIcon={<AntDesign name="phone" size={24} color={Colors.SOFT_GREEN} style={{transform: [{rotateY: '180deg'}]}}/>}
 					inputContainerStyle={[styles.inputBox, isDarkMode && styles.inputBoxDark]}
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
@@ -187,11 +193,12 @@ const BillingDetailsProfile = () =>{
 					autoComplete='tel'
 					keyboardType='phone-pad'
 					maxLength={32}
-					onChangeText={value => {setPhoneNum(cleanNumbers(value, decimalsAllowed=false, negativesAllowed=false, phone=true));}}
+					onChangeText={value => {setPhoneNum(value);}}
 				/>
 				{/*zip code input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Zip Code</Text>
 				<Input
+					testID={"zip-input"}
 					leftIcon={<Image source={Icons.zip_mail_green} style={{width: 25, height: 25}}/>}
 					inputContainerStyle={[styles.inputBox, isDarkMode && styles.inputBoxDark]}
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
@@ -201,11 +208,12 @@ const BillingDetailsProfile = () =>{
 					autoComplete='postal-code'
 					keyboardType='numeric'
 					maxLength={16}
-					onChangeText={value => {setZipCode(cleanNumbers(value, decimalsAllowed=false, negativesAllowed=false));}}
+					onChangeText={value => {setZipCode(value);}}
 				/>
 				{/*state input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>State</Text>
 				<Input
+					testID={"state-input"}
 					leftIcon={<Image source={Icons.flag_country_green} style={{width: 25, height: 25}}/>}
 					inputContainerStyle={[styles.inputBox, isDarkMode && styles.inputBoxDark]}
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
@@ -215,7 +223,7 @@ const BillingDetailsProfile = () =>{
 					autoComplete='address-line1'
 					keyboardType='default'
 					maxLength={64}
-					onChangeText={value => {setState(cleanText(value, noStopwords=false, noSQL=true, textOnly=true));}}
+					onChangeText={value => {setState(value);}}
 				/>
 			</View>
         </View>
@@ -327,8 +335,9 @@ const styles = StyleSheet.create({
 	btnGridContainer: {
 		flex: 12, // # of columns
     	marginHorizontal: "auto",
-    	width: '100',
+    	width: '100%',
 		marginTop: 7,
+		marginBottom: 10,
 	}
 })
 

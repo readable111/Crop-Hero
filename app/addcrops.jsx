@@ -14,7 +14,9 @@ import { StyleSheet,
         Keyboard,
         StatusBar,
         TouchableWithoutFeedback, 
-        Alert } from 'react-native';
+        Alert,
+        Appearance
+} from 'react-native';
         
 import Colors from '../assets/Color';
 import { useFonts } from 'expo-font';
@@ -26,7 +28,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-const addCrops = () => {
+const AddCrops = () => {
         {/* */}
         //Dummy object that will be filled in later
         const [cropData, setCropData] = useState({
@@ -78,7 +80,7 @@ const addCrops = () => {
                         }
                         else
                         {
-                                useColorScheme.Appearence.getColorScheme()
+                                colorScheme = Appearance.getColorScheme()
                                 if(colorScheme == 'dark')
                                 {
                                         result = true;
@@ -127,7 +129,7 @@ const addCrops = () => {
                         {/* Body (Scrollable inputs)*/}
                         <View>
                                 <View style={styles.save}>
-                                        <AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={handleSave}/>
+                                        <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
                                 </View>
                                 <View style={styles.back}>
                                         <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
@@ -384,4 +386,4 @@ const styles = StyleSheet.create({
 
 
       });
-      export default addCrops;
+      export default AddCrops;

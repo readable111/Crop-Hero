@@ -7,7 +7,7 @@
 import { StatusBar } from 'expo-status-bar';
 import Colors from '../assets/Color'
 import React, { useState, useEffect } from 'react';
-import { Pressable, StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
+import { Pressable, StyleSheet, Text, View, ScrollView, Alert, Appearance } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
@@ -17,13 +17,14 @@ import Icons from '../assets/icons/Icons.js';
 
 
 
-const cropsPage = () => {
+const CropsPage = () => {
 
         {/* Grabs variable form viewcrops page for use */}
         let crop = useLocalSearchParams();
         //If crop.name couldn't be retrieved, assume that ?param= was used
         if(!crop.name) {
                 console.log("?param passed")
+                console.log(crop.param)
                 crop = JSON.parse(crop.param)
         }
         console.log("CROP: " + crop); //test
@@ -50,7 +51,7 @@ const cropsPage = () => {
                         }
                         else
                         {
-                                useColorScheme.Appearence.getColorScheme()
+                                colorScheme = Appearance.getColorScheme()
                                 if(colorScheme == 'dark')
                                 {
                                         result = true;
@@ -203,7 +204,7 @@ const cropsPage = () => {
         )
 }
 
-export default cropsPage;
+export default CropsPage;
 
 const styles = StyleSheet.create({
         container: {

@@ -29,13 +29,23 @@
 1. [In-Depth System Overview](#indepth_overview)
     1. [Home Page](#indepth_home)
         1. [General Weather Forecast](#weather_forecast)
+        1. [Weather Slider](#weather_slider)
+        1. [Crop Carousel](#crop_carousel)
+    1. [My Crops Page](#my_crops_page)
     1. [Notebook Page](#notebook_page)
         1. [Background](#notebook_background)
     1. [To-Do Page](#todo_page)
         1. [Background](#todo_background)
+    1. [Profile Page](#profile_page)
+    1. [Data Hub Page](#datahub_page)
     1. [Components & Assets](#components_n_assets)
         1. [Rows & Columns](#grid)
         1. [AppButton Component](#appbutton)
+        1. [NavBar Component](#navbar)
+        1. [Fonts](#fonts)
+        1. [Icons](#icons)
+        1. [Colors](#colors)
+        1. [Sanitizers](#sanitizers)
     1. [Search Bar](#search_bar)
         1. [Background](#search_bar_bkgd)
         1. [Search Bar Component](#search_bar_component)
@@ -72,6 +82,7 @@
         1. [Starting The Test Suite](#start_tests)
 1. [Maintenance Tasks](#maint)
     1. [Adding a New Page](#add_page)
+        1. [The Status Bar](#status_bar)
         1. [Adding Dark Mode](#add_dark_mode)
         1. [Expanding the Navbar](#expand_navbar)
         1. [Importing the Search Bar](#import_search)
@@ -82,10 +93,16 @@
         1. [Emulator Says "Something went wrong. Can't connect to Internet."](#no_internet)
         1. [Emulator Reloads When I Try to Type 'R' Into an Input Field](#reloads_on_r)
         1. [VT-X/AMD-V is Disabled](#vt-x_disabled)
+        1. [Emulator Says "Something went wrong. Sorry about that"](#something_went_wrong)
     1. [Expo Errors](#expo_errors)
         1. [Expo-CLI is Deprecated / Legacy Expo-CLI](#cli_deprecated)
+        1. [Expo Keeps Stopping](#expo_stops)
     1. [Common React Native Compilation Errors](#rn_compilation_err)
         1. [Error due to Different Number of Hooks Between Renders](#different_number_hooks)
+        1. [Computer Restarts When Loading App in Emulator](#computer_restarts)
+        1. [Infinite Number of Rerenders](#infinite_rerenders)
+        1. [VirtualizedLists Nested In a ScrollView](#nested_virtualizedlists)
+        1. [Invariant Violation Error](#invariant_violation)
     1. [Jest Errors](#jest_errors)
         1. [General Troubleshooting Advice For Jest](#general_ts_advice)
         1. [No Tests Found](#no_tests)
@@ -131,9 +148,27 @@ This maintenance manual is meant to help the client and any future developers on
 
 At the top of the Home page is a bar with 7 icons on it and an abbreviated day of the week underneath each icon. Within the page’s functional component is a useEffect hook, the hook that allows for asynchronous requests. First, I call a getGridpoints function which converts a zipcode into gridpoints that can be understood by the National Weather Service’s API. This function checks the passed zipcode against a dictionary that I created. I found the USPS zipcode database and then used a Python script to create a dictionary of lat-long coordinates with the zipcodes functioning as keys. The lat-long coordinates are sent to the NWS API to receive the gridpoints. 
 
-Afterwards, I pass the gridpoints to the NWS API and fetch the weather forecast based on that. If the first forecast date is labelled as This Afternoon, then I store the forecast information for today and the next 6 days in 7 state variables. If the first forecast date is labelled as Tonight, I store the forecast information for 7 days, starting with the next day. Since this is a farming app, this process will always ignore night-time forecasts. 
+Afterwards, I pass the gridpoints to the NWS API and fetch the weather forecast based on that. If the first forecast date is labelled as This Afternoon, then I store the forecast information for today and the next 6 days in 7 state variables. If the first forecast date is labelled as Tonight, I store the forecast information for 7 days, starting with the next day. Since this is a farming app, this process will always ignore night-time forecasts. Since the API labels the current day as tonight or today, a simple lookup table is used to determine today's name based on tomorrow.
 
-At render, the forecast information and day name are passed to 7 WeatherIcon components. The forecast information gets passed to a function in WeatherTypes.jsx. The function takes the shortened forecast, gets rid of anything after the “then” as that is in the future, and evaluates the text. Unfortunately, the NWS API has never established a standardized list of potential values, much to the annoyance of a lot of people. As such, substantial research was done by Group 7 to determine the general terms that they use and to condense them down into 10 categories: Clear (0-10% cloud coverage), a Few Clouds (10-30% cloud coverage), Partly Cloudy (30-60% cloud coverage), Mostly Cloudy (60-90% cloud coverage), Overcast (90-100% cloud coverage), Rainy, Stormy, Snowy (includes sleet and hail), Misty (includes drizzling and foggy), and Dusty. The terms are combined into enumerations that are treated as regex to evaluate the forecast. This passes the image’s URI from the Icons constant list. Additional details are added to the evaluated result if the forecast includes the terms Slight Chance (0-30% chance), Chance (30-60% chance), or Likely (60-80%). Slight Chance is given an opacity of 0.4 and Chance is given an opacity of 0.7. If any of the chance indicators are found, a black/white percent sign (based on dark mode setting) is added to the forecast icon, and styling is used to ensure that it overlaps with the forecast icon. 
+At render, the forecast information and day name are passed to 7 WeatherIcon components. The forecast information gets passed to a function in WeatherTypes.jsx. The function takes the shortened forecast, gets rid of anything after the “then” as that is in the future, and evaluates the text. Unfortunately, the NWS API has never established a standardized list of potential values, much to the annoyance of a lot of people. As such, substantial research was done by Group 7 to determine the general terms that they use and to condense them down into 10 categories: Clear (0-10% cloud coverage), a Few Clouds (10-30% cloud coverage), Partly Cloudy (30-60% cloud coverage), Mostly Cloudy (60-90% cloud coverage), Overcast (90-100% cloud coverage), Rainy, Stormy, Snowy (includes sleet and hail), Misty (includes drizzling and foggy), and Dusty. The terms are combined into enumerations that are treated as regex to evaluate the forecast. This passes the image’s URI from the Icons constant list. Additional details are added to the evaluated result if the forecast includes the terms Slight Chance (0-30% chance), Chance (30-60% chance), or Likely (60-80%). Slight Chance is given an opacity of 0.4 and Chance is given an opacity of 0.7. If any of the chance indicators are found, a black/white percent sign (based on dark mode setting) is added to the forecast icon, and styling is used to ensure that it overlaps with the forecast icon. All of the display is handled by the WeatherIcon component which is based the forecast, day, and dark mode boolean.
+
+#### Weather Slider <a name="weather_slider"></a>
+*Author: Daniel*
+
+Below the weather forecast bar, there is a carousel or slider which is used to display various information retrieved from the Ambient Weather API. Specifically, the carousel displays the actual temperature, the feels-like temperature, the wind speed, the rainfall, the humidity, and the soil moisture. All of the data is passed to the carousel as a JSON object.
+
+At its core, the WeatherSlider component uses a PagerView from the `react-native-pager-view library`. The PagerView is then animated with the `react-native-reanimated library` and wrapped in a SafeAreaView component. Within the AnimatedPagerView, I use the map function to create multiple pages for each of entries in the JSON. A FlatList might create an error due to nesting different list types, depending on the page that imports the slider. As such, I chose to use the map function instead, just as I did with the search bar. Below the AnimatedPagerView is a component called PagingDots which displays a simple meatball menu at the bottom of the carousel to indicate which item in the list is currently displayed. This is done with an `onPageScroll` prop which triggers a custom handler function. The handler function alters two variables called `positionSharedValue` and `scrollOffsetSharedValue` which are used to calculate a variable called `scrollX`, a variable that is then passed to the PagingDots component. `positionSharedValue` and `scrollOffsetSharedValue` are shared variables from the `react-native-reanimated` library which hold the states for animated values. When calculating `scrollX`, the input range is `[0, intro_data.length]` and the output range is `[0, intro_data.length * width]` where intro_data is the JSON passed to the component and width refers to the window's width. The interpolater sums `positionSharedValue` and `scrollOffsetSharedValue`, maps the sum to a range that corresponds to the total width of the intro_data items, and clamps the input such that if it exceeds the accepted input range, it is mapped to the highest possible output value to prevent `intro_data.length * width` from ever being exceeded.
+
+The custom page scroll handler function is based on a custom function defined in another file called `usePagerScrollHandler`. The handler use the `GeneralHandler` interface and `GeneralHandlers` type as a parameter. It is based on a useEvent hook which automatically optimizes the code as it waits for the scroll event to be triggered. You'll also see the `worklet` directive which defines the function as a worklet, meaning it's optimized to run on the native/UI thread in Reanimated. This makes animations and event handling more efficient. Basically, all of it allows me to define custom events when the page is scrolled.
+
+The `PagingDots` component uses the map function again to create one dot for every item in the lost. Each dot is a ScalingDot component which is passed any props passed to `PagingDots` that it does not already use. These props are defined in as a type so that I could specify which props existed and their type. While the props are copy-pasted from the ScalingDot file, ScalingDot only works properly with default exports so I could not export the props. The ScalingDot component basically just displays an animated circle with the color, opacity, and size changing based on whether it is the currently selected dot. All of the animated restyling is handled by more interpolation and clamping which function just like above. As one note, there are several lines like `inActiveDotColor: inActiveDotColor || '#347af0'`. This line means that the `inActiveDotColor` prop is used normally but allows the line to default to  '#347af0' when the prop is null.
+
+#### Crop Carousel <a name="crop_carousel"></a>
+*Author: Daniel*
+
+The CropCarousel component is far simpler than the WeatherSlider, just calling the Carousel component with a special name and passing over the props. The Carousel component is just a FlatList which renders multiple pressable views, one for each item passed in the JSON object. The Pressable uses the expo-router to push a new page when a user selects a crop.
+
+### My Crops Page <a name="my_crops_page"></a>
 
 ### Notebook Page <a name="notebook_page"></a>
 #### Background <a name="notebook_background"></a>
@@ -144,6 +179,10 @@ The intended purpose of the notebook page is for the user to be able to document
 ### To-Do Page <a name="todo_page"></a>
 #### Background <a name="todo_background"></a>
 *Author: McKenna* 
+
+### Profile Page <a name="profile_page"></a>
+
+### Data Hub Page <a name="datahub_page"></a>
 
 ### Components & Assets <a name="components_n_assets"></a>
 #### Rows & Columns <a name="grid"></a>
@@ -163,6 +202,49 @@ All columns must be placed into a row. All rows must be placed in a grid contain
 The AppButton component was created to provide a standardized button component for multiple pages that incorporated both text and icons from several possible libraries. An onPress event can be passed to the button as a prop, along with an opacity prop which affects the button's opacity when selected. The specifiedStyle and backgroundColor props affect the button's appearance with the backgroundColor prop creating a colored container around everything else rather than stylizing the text's style.
 
 Use the icon prop if you want to specify an image in the Icons folder. Use the mci prop if you want to specify an icon from MaterialCommunityIcons. Use the ad prop if you want to specify an icon from AntDesign. You can use [this website](https://icons.expo.fyi/Index) to find the icon strings for MaterialCommunityIcons and AntDesign. Use the associated size and color props to specify the pixel size and color code of the icon.
+
+#### NavBar Component <a name="navbar"></a>
+*Author: Daniel*
+
+The NavBar component is used on all of the major pages and allows the user to navigate between the pages. The NavBar is split into 3 rows with 5 columns in each row, 1 column for each major page. The first row is in a separate View component and exists solely to provide the tan circle which juts up from the bar. The second row provides the icons for each page, along with the green circle behind the Home icon. The third and final row provides the text label for each page. Both the icons and the text use the AppButton component to route people to the selected page, preventing issues where the user may click one but not the other.
+
+When the component is called, a prop like `homeSelected` should be specified in it, though it does not require a value. Since these selected props are boolean props, they are automatically set to true if they are specified without a value. That prop tells the component to change the color of the associated page's icon and text.
+
+#### Fonts <a name="fonts"></a>
+*Author: Daniel*
+
+All font files must be in the assets/fonts/ folder. Once you have done this, you can use the expo-fonts library to import and use those fonts. After the font is loaded, the assigned font name can be used for the fontFamily field for styling.
+
+~~~jsx
+const [fontsLoaded, fontError] = useFonts({
+	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf')
+});
+
+if (!fontsLoaded && !fontError) {
+    return null;
+}
+~~~
+
+This code will load the specified fonts with the useFonts hook provided by the expo-fonts library. If the fonts fail to load, the page is not rendered due to the conditional return. Importantly, don't bother to directly load the bold and italic font variants. A font error won't be generated, but a font will not be successfully created which means that the default font will be applied instead. Since the default font is sans-serif, this is easiest to demonstrate with a serif font.
+
+Throughout the CropAlly app, the two standard fonts are Domine (serif) and WorkSans (sans-serif).
+
+#### Icons <a name="icons"></a>
+*Author: Daniel*
+
+The entire app uses the Icons dictionary to handle any local images. Each named image can be called as a property which simplifies accessing and passing it. Without this dictionary, images would need to be called locally with the require function and assigned to a variable for it to share the same functionality.
+
+#### Colors <a name="colors"></a>
+*Author: Daniel*
+
+The entire app uses a single standardized color palette. The color palette is a JavaScript dictionary with named fields for each color. Use a website like [this](https://colors.artyclick.com/color-name-finder/) to determine the name. We generally preferred paint-like names over standard names as it allows for multiple similar colors since you can't have overlapping names. For example, both ALMOST_BLACK, IRIDIUM, and CHARCOAL can be called dark gray but that would have been confusing. Also, IRIDIUM was selected over Dune, a better match according to the tool, because iridium gives you a sense for the color while dune implies a brown. Each named color is assigned a hex code string which can be called as properties when setting colors with style variables.
+
+#### Sanitizers <a name="sanitizers"></a>
+*Author: Daniel*
+
+As of right now, there are two sanitizing functions with the first parameter of each being the string that will be sanitized. They then return the cleaned text string based on the instructions set in the other boolean parameters. Beginning with `cleanText`, this function offers three options: no stopwords, no SQL, and only text. Firstly, it decodes any Unicode characters into their ASCII equivalents before converting it to lowercase to prevent regex issues. Double dashes are always removed, and a whitelist approach is taken to remove any characters other than `[a-z0-9'.@+()\- ]`. If stopwords were removed, then the sanitizer removes any words that are 2 or fewer characters long or are of 35 specific words. Azure MySQL servers use the InnoDB engine which stops any searching attempts when it encounters one of [35 specific stopwords](https://dev.mysql.com/doc/refman/8.4/en/fulltext-stopwords.html). There is also some useful information in [this StackOverflow thread](https://stackoverflow.com/questions/43319480/fulltext-index-match-string-with-period-mysql). These stopwords are defined in a list and then recursively removed which prevents 'bbye' from causing any issues. If SQL was removed, certain especially problematic SQL keywords are recursively removed to prevent multi-level SQL injection attacks like 'ALTALTERER' which triggers SQL injection if the sanitizer is only applied onced. Finally, the text-only option removes everything except letters, the @ symbol, and the period.
+
+The `cleanNumbers` function also has three optional parameters. By default, decimals are allowed which means that dots are only removed if they are not between two digits. However, this can be disabled. By default, negatives are allowed which means that dashes are only removed if there are two of them, if they do not precede a number, and if they are not the first character in the string. These two removals are performed recursively just like the text sanitizer. Finally, the phone parameter is mutually exclusive with the other two parameters, removing everything except numbers, dashes, parantheses, spaces, and the plus sign.
 
 ### Search Bar <a name="search_bar"></a>
 #### Background <a name="search_bar_bkgd"></a>
@@ -863,6 +945,16 @@ If you want to update the snapshots, you can execute either `npm run updateTestS
 ## Maintenance Tasks <a name="maint"></a>
 ### Adding a New Page <a name="add_page"></a>
 Maintenance Type: Perfective Maintenance Task
+#### The Status Bar <a name="status_bar"></a>
+*Author: Daniel*
+
+At the top of each page, you need to place the StatusBar component. This component ensures that the device's status bar is always displayed, even if you have an element is flush with the top or goes off of the page at the top. As an example of the latter, the Profile page achieves the rounded semicircle at the top by having half of the circle go off of the screen using negative margins. Beyond preventing the status bar from being hidden, this component also ensures that the status bar's theme matches the rest of the page. Here is how to import and use the StatusBar component.
+
+~~~jsx
+import { StatusBar } from 'react-native'
+<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE} />
+~~~
+
 #### Adding Dark Mode <a name="add_dark_mode"></a>
 *Author: Daniel*
 
@@ -1018,6 +1110,22 @@ Assumes that you are using a Windows OS
 1. Enable the option
 1. Save the new config and boot into your OS
 
+#### Emulator Says "Something went wrong. Sorry about that" <a name="something_went_wrong"></a>
+*Author: Daniel*
+
+1. Close every instance of Expo on the emulator
+    * Make sure that there aren't any tabs remaining in the background
+1. Go to Settings
+1. Select the Apps button
+1. Select the All Apps button
+1. Select the Expo Go app
+1. Select the Display over other apps button
+1. Toggle Allow display over other apps to On
+1. Return to the Home screen
+1. Enter the Expo Go app like a normal mobile app through the app list or a shortcut on the phone's home screen
+1. Hit 'a' on the command line to open the CropAlly app
+1. Repeat these steps (except for enabling Display over other apps) until it works
+
 ### Expo Errors <a name="expo_errors"></a>
 
 #### Expo-CLI is Deprecated / Legacy Expo-CLI <a name="cli_deprecated"></a>
@@ -1027,20 +1135,83 @@ Assumes that you are using a Windows OS
 
 An alternate solution involves installing yarn and then executing `yarn add expo`. However, the addition of yarn will cause other issues with libraries like jest and with our other package manager, npm.
 
+#### Expo Keeps Stopping <a name="expo_stops"></a>
+*Author: Daniel*
+
+This error is due to a syntax issue with the styling or the imports.
+* If it is a styling issue, look for typos like `"100%;"` instead of `"100%";`
+* If it is an import issue, look for places where you import two different components/functions from the same source on different lines
+    * Like `import { StyleSheet } from 'react-native'; import { TouchableOpacity } from 'react-native';` should be written as `import { StyleSheet, TouchableOpacity } from 'react-native';`
+
 ### Common React Native Compilation Errors <a name="rn_compilation_err"></a>
 
 #### Error due to Different Number of Hooks Between Renders <a name="different_number_hooks"></a>
 *Author: Daniel*
 
-1. Find all return/render statements within an if-else block or a loop (called conditional returns)
+1. Figure out which type of hook triggered the error
+1. Look for instances of that hook
+1. Move that hook before any conditional returns
+1. If the issue persists, find all return/render statements within an if-else block or a loop (called conditional returns)
 1. Find all instances of the useState() and useEffect() functions
 1. Move all instances of the useState() and useEffect() functions before any conditional returns. You may need to move other hooks too, but these are the most common sources of issues.
+
+#### Computer Restarts When Loading App in Emulator <a name="computer_restarts"></a>
+*Author: Daniel*
+
+1. Wait for your computer to reboot
+1. Try to load up the emulator again
+1. If the issue persists, check your code for any instances where hooks might be rerendered in an infinite loop
+1. Try to load up the emulator again
 
 #### Infinite Number of Rerenders <a name="infinite_rerenders"></a>
 *Author: Daniel*
 
 1. Check this page's functional components for a setState hook outside of another hook or the return statement.
     - If the setState hook is outside of those, the hook is called multiple times every time that React Native rerenders the page.
+
+#### VirtualizedLists Nested In a ScrollView <a name="nested_virtualizedlists"></a>
+*Author: Daniel*
+
+This section is useful when you see a warning like "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead." Basically, this happens when you use a VirtualizedList-based component, like FlatList, inside of ScrollView components. This is because the app doesn't know which list is being targeted by a scroll gesture. There are a lot of different solutions to this.
+
+* Use the .map function instead of a VirtualizedList to display the list within the ScrollView
+* Make the ScrollView and VirtualizedList scroll different directions (vertical vs. horizontal)
+* Disable the scrollable feature on either the VirtualizedList or the ScrollView
+* Use a component like VirtualizedScrollView instead of ScrollView
+* Use the FlatList props instead of ScrollView to provide headers, footers,
+
+#### Invariant Violation Error <a name="invariant_violation"></a>
+*Author: Daniel*
+
+This section will be useful if you see an error message like `"Invariant Violation: Picker has been removed from React Native. It can now be installed and imported from '@react-native-picker/picker' instead of 'react-native'"`. However, you will still find it useful for any kind of invariant violation. 
+
+###### Solution 1: The Recommended Way
+1. Install the library specified in the error message
+1. Check all react-native imports in your files for any reference to the component mentioned in the error message, like Picker.
+1. Replace all such imports with imports based on the library specified in the error message
+
+###### Solution 2: The Patchy Way
+1. Install the library specified in the error message like '@react-native-picker/picker'
+1. Open index.js in node_modules/react-native
+1. Replace any instances of the following text
+~~~jsx
+invariant(
+    false,
+    "DatePickerAndroid has been removed from React Native. It can now be installed and imported from '@react-native-community/datetimepicker' instead of 'react-native'. See https://github.com/react-native-datetimepicker/datetimepicker",
+);
+~~~
+OR
+~~~jsx
+invariant(
+    false,
+    ........ DatePicker ..........
+);
+~~~
+with
+~~~jsx
+return require('@react-native-picker/picker') 
+~~~
+1. Run `npx patch-package react-native` to patch up the react-native folder and the index file you just altered
 
 ### Jest Errors <a name="jest_errors"></a>
 
@@ -1180,6 +1351,13 @@ await waitForElementToBeRemoved(() => queryByText("Loading ..."));
 Like Case 3, Case 4 is a variant of Case 1. In this case, the test simulates events to change values in form inputs like changing the value in a text input. If the form input is managed by Formik, your test will have a chance to run into this error. Just like Case 1, you can solve it by just waiting for it to complete.
 
 ## Tools & Resources <a name="tools"></a>
+*Author: Daniel*
+
+* Color Blindness Simulator: [https://daltonlens.org/colorblindness-simulator](https://daltonlens.org/colorblindness-simulator)
+* Expo Docs: [https://docs.expo.dev/](https://docs.expo.dev/)
+* Jest Docs: [https://jestjs.io/docs/getting-started](https://jestjs.io/docs/getting-started)
+* Luminance Contrast Ratio Calculator: [https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php](https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php)
+* React Native Docs: [https://reactnative.dev/docs/getting-started](https://reactnative.dev/docs/getting-started)
 
 ## Logs & Records <a name="logs"></a>
 
@@ -1246,7 +1424,7 @@ import Component from "./MyModule"
 #### Inter-Page Routing <a name="routing"></a>
 *Author: Daniel*
 
-The CropAlly app uses the [expo-router library](https://docs.expo.dev/router/navigating-pages/) and the index.js file. The index.js file determines the default page when a user opens up the app for the first time. To specify the page, import the page component and then call the component in the Page function’s return statement. For example, the following code in index.js makes the Home page into the default page. 
+The CropAlly app uses the [expo-router library](https://docs.expo.dev/router/navigating-pages/) and the index.js file. The index.js file determines the default page when a user opens up the app for the first time. To specify the page, import the page component and then call the component in the Page function's return statement. For example, the following code in index.js makes the Home page into the default page. 
 
 ~~~jsx
 import Home from './home.jsx' 
@@ -1258,11 +1436,11 @@ export default function Page() {
 } 
 ~~~
 
-Besides being versatile, this library is bundled with Expo which is also the library that we use to access our emulator. The Link tag exists to navigate between the app’s pages. However, this tag has limited options and can only be implemented in specific situations. As such, I recommend utilizing the router function instead. 
+Besides being versatile, this library is bundled with Expo which is also the library that we use to access our emulator. The Link tag exists to navigate between the app's pages. However, this tag has limited options and can only be implemented in specific situations. As such, I recommend utilizing the router function instead. 
 
 The router object has 6 available functions: navigate, push, replace, back, canGoBack, and setParams. Before describing the functions, I want to quickly mention that Expo Router uses a stack to track all pages that have been loaded or displayed. The navigate function only pushes a new page if the new route is different, ignoring the search parameters and the hash. Otherwise, the current screen rerenders with the new parameters. If you navigate to a route that is in the history, the stack will pop any pages to that route. The push function always pushes the new page on to the top of the stack and displays it. You can push the current route multiple times or with new parameters. The replace function pops the current page before pushing the new page, making it useful for redirects. The back function pops the current page and displays the page below the current one in the stack. The canGoBack function returns true only if a valid page history stack exists and if the current page can be popped. The setParams function can update the query parameters for the currently selected page. 
 
-The Expo Router library will automatically generate statically typed routes for any new files in the app/ folder. As such, you can use a route immediately after creating the page’s file. The route is always the file’s full name, except for the file extension. 
+The Expo Router library will automatically generate statically typed routes for any new files in the app/ folder, provided that the file contains a default export. As such, you can use a route immediately after creating the page's file. The route is always the file's full name, except for the file extension. Once again, just remember that it will recognize a page's existence if it is a default export.
 
 ### Appendix B: Glossary <a name="b_glossary"></a>
 - Adaptive Maintenance: maintenance tasks after a change in the operating environment such as the OS, language, hardware, or compliance requirements; in most cases, this kind of maintenance cannot be scheduled and will not occur on a regular basis

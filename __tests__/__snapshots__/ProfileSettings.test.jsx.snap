@@ -87,7 +87,7 @@ exports[`Dark Mode <SettingsProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="back-arrow"
           >
             <Image
               source={1}
@@ -280,6 +280,7 @@ exports[`Dark Mode <SettingsProfile/> renders correctly 1`] = `
                   "width": 51,
                 }
               }
+              testID="light-dark-switch"
               thumbTintColor="#00AF33"
               tintColor="#6FCC8A"
               value={false}
@@ -390,6 +391,7 @@ exports[`Dark Mode <SettingsProfile/> renders correctly 1`] = `
                   "width": 51,
                 }
               }
+              testID="visibility-switch"
               thumbTintColor="#00AF33"
               tintColor="#6FCC8A"
               value={false}
@@ -500,6 +502,7 @@ exports[`Dark Mode <SettingsProfile/> renders correctly 1`] = `
                   "width": 51,
                 }
               }
+              testID="notif-switch"
               thumbTintColor="#00AF33"
               tintColor="#6FCC8A"
               value={false}
@@ -976,7 +979,7 @@ exports[`Dark Mode <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
-              testID=""
+              testID="sync"
             >
               <Image
                 source={1}
@@ -1103,7 +1106,7 @@ exports[`Dark Mode <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
-              testID=""
+              testID="tos"
             >
               <Image
                 source={1}
@@ -1219,7 +1222,7 @@ exports[`Dark Mode <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
-              testID=""
+              testID="privacy"
             >
               <Image
                 source={1}
@@ -1408,7 +1411,7 @@ exports[`Font Loading Error <SettingsProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="back-arrow"
           >
             <Image
               source={1}
@@ -1601,6 +1604,7 @@ exports[`Font Loading Error <SettingsProfile/> renders correctly 1`] = `
                   "width": 51,
                 }
               }
+              testID="light-dark-switch"
               thumbTintColor="#00AF33"
               tintColor="#6FCC8A"
               value={false}
@@ -1711,6 +1715,7 @@ exports[`Font Loading Error <SettingsProfile/> renders correctly 1`] = `
                   "width": 51,
                 }
               }
+              testID="visibility-switch"
               thumbTintColor="#00AF33"
               tintColor="#6FCC8A"
               value={false}
@@ -1821,6 +1826,7 @@ exports[`Font Loading Error <SettingsProfile/> renders correctly 1`] = `
                   "width": 51,
                 }
               }
+              testID="notif-switch"
               thumbTintColor="#00AF33"
               tintColor="#6FCC8A"
               value={false}
@@ -2297,7 +2303,7 @@ exports[`Font Loading Error <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
-              testID=""
+              testID="sync"
             >
               <Image
                 source={1}
@@ -2424,7 +2430,7 @@ exports[`Font Loading Error <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
-              testID=""
+              testID="tos"
             >
               <Image
                 source={1}
@@ -2540,7 +2546,7 @@ exports[`Font Loading Error <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
-              testID=""
+              testID="privacy"
             >
               <Image
                 source={1}
@@ -2729,7 +2735,7 @@ exports[`Light Mode <SettingsProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="back-arrow"
           >
             <Image
               source={1}
@@ -2922,6 +2928,7 @@ exports[`Light Mode <SettingsProfile/> renders correctly 1`] = `
                   "width": 51,
                 }
               }
+              testID="light-dark-switch"
               thumbTintColor="#00AF33"
               tintColor="#6FCC8A"
               value={false}
@@ -3032,6 +3039,7 @@ exports[`Light Mode <SettingsProfile/> renders correctly 1`] = `
                   "width": 51,
                 }
               }
+              testID="visibility-switch"
               thumbTintColor="#00AF33"
               tintColor="#6FCC8A"
               value={false}
@@ -3142,6 +3150,7 @@ exports[`Light Mode <SettingsProfile/> renders correctly 1`] = `
                   "width": 51,
                 }
               }
+              testID="notif-switch"
               thumbTintColor="#00AF33"
               tintColor="#6FCC8A"
               value={false}
@@ -3618,7 +3627,7 @@ exports[`Light Mode <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
-              testID=""
+              testID="sync"
             >
               <Image
                 source={1}
@@ -3745,7 +3754,7 @@ exports[`Light Mode <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
-              testID=""
+              testID="tos"
             >
               <Image
                 source={1}
@@ -3861,7 +3870,7 @@ exports[`Light Mode <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
-              testID=""
+              testID="privacy"
             >
               <Image
                 source={1}
@@ -4050,7 +4059,7 @@ exports[`No Async <SettingsProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="back-arrow"
           >
             <Image
               source={1}
@@ -4243,6 +4252,7 @@ exports[`No Async <SettingsProfile/> renders correctly 1`] = `
                   "width": 51,
                 }
               }
+              testID="light-dark-switch"
               thumbTintColor="#00AF33"
               tintColor="#6FCC8A"
               value={false}
@@ -4353,6 +4363,7 @@ exports[`No Async <SettingsProfile/> renders correctly 1`] = `
                   "width": 51,
                 }
               }
+              testID="visibility-switch"
               thumbTintColor="#00AF33"
               tintColor="#6FCC8A"
               value={false}
@@ -4463,6 +4474,7 @@ exports[`No Async <SettingsProfile/> renders correctly 1`] = `
                   "width": 51,
                 }
               }
+              testID="notif-switch"
               thumbTintColor="#00AF33"
               tintColor="#6FCC8A"
               value={false}
@@ -4939,7 +4951,7 @@ exports[`No Async <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
-              testID=""
+              testID="sync"
             >
               <Image
                 source={1}
@@ -5066,7 +5078,7 @@ exports[`No Async <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
-              testID=""
+              testID="tos"
             >
               <Image
                 source={1}
@@ -5182,7 +5194,7 @@ exports[`No Async <SettingsProfile/> renders correctly 1`] = `
                   "opacity": 1,
                 }
               }
-              testID=""
+              testID="privacy"
             >
               <Image
                 source={1}
