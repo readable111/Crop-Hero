@@ -1362,6 +1362,9 @@ Like Case 3, Case 4 is a variant of Case 1. In this case, the test simulates eve
 * Expo Docs: [https://docs.expo.dev/](https://docs.expo.dev/)
 * Jest Docs: [https://jestjs.io/docs/getting-started](https://jestjs.io/docs/getting-started)
 * React Native Docs: [https://reactnative.dev/docs/getting-started](https://reactnative.dev/docs/getting-started)
+* Types of Autocomplete for Input Fields: [https://reactnative.dev/docs/textinput#autocomplete](https://reactnative.dev/docs/textinput#autocomplete)
+* Visual Examples of Input Keyboard Types: [https://www.lefkowitz.me/visual-guide-to-react-native-textinput-keyboardtype-options/](https://www.lefkowitz.me/visual-guide-to-react-native-textinput-keyboardtype-options/)
+    * If an image is not in both columns, it means that keyboard type is not available for the missing column's OS type.
 
 ### Testing Utilities <a name="testing_utilities"></a>
 *Author: Daniel*

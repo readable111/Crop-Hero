@@ -99,7 +99,7 @@ const Home = () =>{
 	const [dayName6, setDayName6] = useState(null);
 	const [forecastDataDay7, setforecastDataDay7] = useState(null);
 	const [dayName7, setDayName7] = useState(null);
-	const [ambientWeatherData, setAmbientWeatherData] = useState(null);
+	const [ambientWeatherData, setAmbientWeatherData] = useState(test_data);
 
 	useEffect(() => {
 		// declare the async data fetching function
@@ -171,6 +171,7 @@ const Home = () =>{
 			apiKey = await AsyncStorage.getItem('aw_api_key');
 			appKey = await AsyncStorage.getItem('aw_app_key');
 			deviceMacAddress = await AsyncStorage.getItem('aw_device_mac');
+			console.log(apiKey, appKey, deviceMacAddress)
 			//ensure that all of those were set
 			if (!apiKey || !apiKey.length || !appKey || !appKey.length || !deviceMacAddress || !deviceMacAddress.length) {
 				setAmbientWeatherData(test_data); 
@@ -204,10 +205,11 @@ const Home = () =>{
 					line2: usefulData.soilmoisture + 'wfv',
 					}
 				];
+				console.log(weatherData)
 				setAmbientWeatherData(weatherData); 
 			}
 		  } catch (error) {
-			console.error('Failed to fetch weather data:', error);
+			console.warn('Failed to fetch weather data:', error);
 		  }
 		};
 	

@@ -33,7 +33,6 @@ const fetchWeatherData = rateLimiter(async (apiKey, appKey, deviceMacAddress) =>
     );
     return response.data;
   } catch (error) {
-    console.error('Error fetching weather data:', error);
     throw error;
   }
 });
