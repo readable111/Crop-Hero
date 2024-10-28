@@ -13,7 +13,7 @@ const SQL_KEYWORDS = ['--', 'select', 'or', 'and', 'not', 'alter', 'delete', 'dr
 
 
 
-export function cleanText(textToClean, noStopwords=false, noSQL=false, textOnly=false) {
+export function cleanText(textToClean, noStopwords=false, noSQL=false, textOnly=false, hexCode=false) {
     if (textToClean !== null && textToClean !== '') {
         //make everything lowercase after converting to ascii
         asciiVal = unidecode(textToClean)
@@ -47,6 +47,10 @@ export function cleanText(textToClean, noStopwords=false, noSQL=false, textOnly=
                 previousVal = whitelistVal;
                 whitelistVal = whitelistVal.replace(sqlRegex, '').trim();
             }
+        }
+
+        if (hexCode) {
+            whitelistVal = whitelistVal.replace(/[^a-f0-9]/g, "");
         }
 
         if (textOnly) {

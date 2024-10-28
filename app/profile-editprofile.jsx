@@ -30,10 +30,34 @@ import {cleanText, cleanNumbers} from '../assets/sanitizer'
 const EditProfile = () =>{ 
 	const [first, setFirst] = useState("Zina")
 	const [last, setLast] = useState("Townley")
+	const [awAPIKey, setAWAPIKey] = useState("")
+	const [awAppKey, setAWAppKey] = useState("")
+	const [awMACAddrKey, setAWMACAddrKey] = useState("")
 
-	const handleSave = () =>{
+	const handleSave = async() =>{
 		console.log("Saved. First: " + cleanText(first, noStopwords=false, noSQL=true, textOnly=true) + "\t Last: " + cleanText(last, noStopwords=false, noSQL=true, textOnly=true));
+		console.log("'" + cleanText(awAPIKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true) + "'\t AppKey: '" + cleanText(awAppKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true) + "'\t MAC: '" + cleanText(awMACAddrKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true) + "'")
+		await AsyncStorage.setItem('aw_api_key', cleanText(awAPIKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true))
+		await AsyncStorage.setItem('aw_app_key', cleanText(awAppKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true))
+		await AsyncStorage.setItem('aw_device_mac', cleanText(awMACAddrKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true))
 	};
+
+	useEffect(() => {
+		// declare the async data fetching function
+		const fetchAmbientWeatherInfo = async () => {
+			const api = await AsyncStorage.getItem('aw_api_key');
+			const app = await AsyncStorage.getItem('aw_app_key');
+			const mac = await AsyncStorage.getItem('aw_device_mac');
+			setAWAPIKey(api)
+			setAWAppKey(app)
+			setAWMACAddrKey(mac)
+		}
+	  
+		// call the function
+		fetchAmbientWeatherInfo()
+		  	// make sure to catch any error
+		  	.catch(console.warn);
+	}, [])
 
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
@@ -132,6 +156,48 @@ const EditProfile = () =>{
 					maxLength={256}
 					onChangeText={value => {setLast(value);}}
 				/>
+				{/*Ambient Weather API key*/}
+				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Ambient Weather API Key</Text>
+				<Input
+					testID={"api-key-input"}
+					leftIcon={<AntDesign name="user" size={24} color={Colors.SOFT_GREEN}/>}
+					inputContainerStyle={[styles.inputBox, isDarkMode && styles.inputBoxDark]}
+					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
+					selectionColor={Colors.SANTA_GRAY}
+					placeholder='API Key: ...ed875ac750daf92e...'
+					defaultValue={awAPIKey}
+					autoComplete='off'  //autoComplete is off because a hex string will just cause issues with any autocomplete algorithms
+					maxLength={256}
+					onChangeText={value => {setAWAPIKey(value);}}
+				/>
+				{/*Ambient Weather App key*/}
+				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Ambient Weather App Key</Text>
+				<Input
+					testID={"app-key-input"}
+					leftIcon={<AntDesign name="user" size={24} color={Colors.SOFT_GREEN}/>}
+					inputContainerStyle={[styles.inputBox, isDarkMode && styles.inputBoxDark]}
+					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
+					selectionColor={Colors.SANTA_GRAY}
+					placeholder='App Key: ...59391b4f41d88b8a...'
+					defaultValue={awAppKey}
+					autoComplete='off'	//autoComplete is off because a hex string will just cause issues with any autocomplete algorithms
+					maxLength={256}
+					onChangeText={value => {setAWAppKey(value);}}
+				/>
+				{/*Ambient Weather MAC Addr*/}
+				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Ambient Weather MAC Addr</Text>
+				<Input
+					testID={"mac-addr-input"}
+					leftIcon={<AntDesign name="user" size={24} color={Colors.SOFT_GREEN}/>}
+					inputContainerStyle={[styles.inputBox, isDarkMode && styles.inputBoxDark]}
+					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
+					selectionColor={Colors.SANTA_GRAY}
+					placeholder='MAC Address: ...3cff8cdbae849a83...'
+					defaultValue={awMACAddrKey}
+					autoComplete='off'	//autoComplete is off because a hex string will just cause issues with any autocomplete algorithms
+					maxLength={256}
+					onChangeText={value => {setAWMACAddrKey(value);}}
+				/>
 				{/*new password input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Change Password</Text>
 				<Input
@@ -141,7 +207,7 @@ const EditProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					secureTextEntry={true}
-					placeholder='•••••••••••• - disabled till Phase 2'
+					placeholder='•••••••••••• - disabled'
 					contextMenuHidden={true}
 					editable={false}
 					readOnly={true}
@@ -155,7 +221,7 @@ const EditProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					secureTextEntry={true}
-					placeholder='•••••••••••• - disabled till Phase 2'
+					placeholder='•••••••••••• - disabled'
 					contextMenuHidden={true}
 					editable={false}
 					readOnly={true}
@@ -193,7 +259,7 @@ const styles = StyleSheet.create({
 	rect: {
 		backgroundColor: Colors.SANTA_GRAY,
 		width: '100%',
-		height: 540,
+		height: '90%',
 		marginTop: -300,
 		alignItems: 'center',
 	},

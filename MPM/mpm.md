@@ -113,6 +113,9 @@
         1. [Expected String or Class/Function But Got Undefined](#undefined_not_string_class)
         1. [Error About Act Wrapping](#act_wrapping)
 1. [Tools & Resources](#tools)
+    1. [General Docs](#general_docs)
+    1. [Testing Utilities](#testing_utilities)
+    1. [Ambient Weather](#ambient_weather)
 1. [Appendices](#appendices)
     1. [Appendix A: Understanding React Native](#react_native)
         1. [File Types](#file_types)
@@ -1353,11 +1356,31 @@ Like Case 3, Case 4 is a variant of Case 1. In this case, the test simulates eve
 ## Tools & Resources <a name="tools"></a>
 *Author: Daniel*
 
-* Color Blindness Simulator: [https://daltonlens.org/colorblindness-simulator](https://daltonlens.org/colorblindness-simulator)
+### General Docs <a name="general_docs"></a>
+*Author: Daniel*
+
 * Expo Docs: [https://docs.expo.dev/](https://docs.expo.dev/)
 * Jest Docs: [https://jestjs.io/docs/getting-started](https://jestjs.io/docs/getting-started)
-* Luminance Contrast Ratio Calculator: [https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php](https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php)
 * React Native Docs: [https://reactnative.dev/docs/getting-started](https://reactnative.dev/docs/getting-started)
+* Types of Autocomplete for Input Fields: [https://reactnative.dev/docs/textinput#autocomplete](https://reactnative.dev/docs/textinput#autocomplete)
+* Visual Examples of Input Keyboard Types: [https://www.lefkowitz.me/visual-guide-to-react-native-textinput-keyboardtype-options/](https://www.lefkowitz.me/visual-guide-to-react-native-textinput-keyboardtype-options/)
+    * If an image is not in both columns, it means that keyboard type is not available for the missing column's OS type.
+
+### Testing Utilities <a name="testing_utilities"></a>
+*Author: Daniel*
+
+* Color Blindness Simulator: [https://daltonlens.org/colorblindness-simulator](https://daltonlens.org/colorblindness-simulator)
+* Luminance Contrast Ratio Calculator: [https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php](https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php)
+
+### Ambient Weather <a name="ambient_weather"></a>
+*Author: Daniel*
+
+* Ambient Weather RESTful API Docs: [https://ambientweather.docs.apiary.io](https://ambientweather.docs.apiary.io)
+* APIB Version of RESTful API Docs: [https://github.com/ambient-weather/api-docs/blob/master/apiary.apib](https://github.com/ambient-weather/api-docs/blob/master/apiary.apib)
+* Sample Station Response from the API for the Tempest App as an Example: [https://github.com/tidbyt/community/blob/main/apps/tempest/sample_station_response.json](https://github.com/tidbyt/community/blob/main/apps/tempest/sample_station_response.json)
+* Example Code using Ambient Weather for a Tidbyt Applet: [https://github.com/tidbyt/community/blob/main/apps/ambientweather/ambient_weather.star](https://github.com/tidbyt/community/blob/main/apps/ambientweather/ambient_weather.star)
+* Node.JS Wrapper Library for Ambient Weather: [https://github.com/owise1/ambient-weather-api](https://github.com/owise1/ambient-weather-api)
+    - This project uses React Native, not Node.JS. As such, the library itself cannot be used, but it can be used as examples of how to access the API and to handle the responses. The src/ and examples/ folders are particularly useful.
 
 ## Logs & Records <a name="logs"></a>
 
