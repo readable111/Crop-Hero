@@ -106,16 +106,24 @@ const todo = () => {
         setCurrentTaskID(newTaskID);
         setCurrentTask(newTask); // Initialize the new task
         setModalVisible(true);
-    };
+        const updatedTasks = [...tasks, newTask];
+       
+        setTasks(updatedTasks);
+        setFilteredTasks(updatedTasks); // Update filtered tasks immediately
 
-    const handleSaveTask = (taskData) => {
+        console.log("updated tasks:", updatedTasks);
+    };
+ 
+    const handleSaveTask = (taskData) => { // bug in this that does not increase taskID for new task creation
         if (currentTaskID) {
             const updatedTasks = tasks.map(task =>
                 task.TaskID === currentTaskID ? { ...task, ...taskData } : task
             );
             setTasks(updatedTasks);
         } else {
-            setTasks([...tasks, { ...taskData, TaskID: tasks.length + 1 }]);
+            setTasks([...tasks, { ...taskData, TaskID: tasks.length + 1 }]); // this is not working to increment taskID
+           // task.TaskID = entries.length > 0 ? Math.max(...entries.map(e => e.EntryID)) + 1 : 1; // Increment EntryID
+           // setTaskID(prevEntries => [...prevEntries, entry]);
         }
         setModalVisible(false);
     };
@@ -224,13 +232,16 @@ const todo = () => {
                 />
             </View>
             <View style={styles.FlatListView}>
+
                 <FlatList
                     data={filteredTasks}
-                    keyExtractor={item => item.TaskID.toString()}
+                   // keyExtractor={item => item.TaskID.toString()}
+                    
                     renderItem={({ item }) => (
+                        //<View style={styles.entryContainer }>
                         <TouchableOpacity
                             style={[styles.taskContainer, { opacity: item.IsCompleted ? 0.6 : 1 }]}
-                            onPress={() => handleTaskTap(item)}
+                           // onPress={() => handleTaskTap(item)}
                             onLongPress={() => handleTaskLongPress(item)}
                         >
                             <Text>Assigned Farmer ID: {item.AssignedFarmerID}</Text>
@@ -239,6 +250,7 @@ const todo = () => {
                             <Text>Comments: {item.Comments}</Text>
                             <Text>Due Date: {item.DueDate}</Text>
                         </TouchableOpacity>
+                           // </View>
                     )}
                 />
             </View>
@@ -301,10 +313,27 @@ const todo = () => {
 };
 
 const styles = StyleSheet.create({
+    entryContainer: {
+        backgroundColor: 'red', // set to a tan color
+        marginBottom: 5,
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: 'black',
+
+
+
+    },
     FlatListView: {
-        backgroundColor: 'green',
+        //backgroundColor: 'green', // set to transparent
+        backgroundColor: 'transparent',
         zIndex: 500,
-        width: '100%'
+        width: '85%',
+        //borderWidth: 1,
+        borderRadius: 5,
+        alignSelf: 'center',
+        marginBottom: 5,
+        height: '60%',
+        marginTop: 2
     },
     belowFilter: {
         backgroundColor: 'pink',
@@ -392,3 +421,4 @@ const styles = StyleSheet.create({
 });
 
 export default todo;
+
