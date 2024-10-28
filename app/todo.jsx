@@ -26,7 +26,6 @@ import { Col, Row } from '../assets/Grid.jsx';
 import Colors from '../assets/Color';
 import AppButton from '../assets/AppButton.jsx';
 import { SpeedDial } from 'react-native-elements';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
 import NavBar from '../assets/NavBar.jsx';
 import TodoEntryModal from '../assets/NotebookModals/TodoEntryModal';
@@ -78,7 +77,7 @@ const todo = () => {
 
         // call the function
         fetchDarkModeSetting()
-            // make sure to catch any error
+           // error catch
             .catch(console.error);
     }, [])
     const handleExport = (task) => {
@@ -86,8 +85,8 @@ const todo = () => {
             Alert.alert('No task selected for export');
             return;
         }
-        // Implement your export logic here, e.g., save to file, send to server, etc.
-        console.log("Exporting task:", task);
+        // export function
+        console.log("Exporting task:", task); // checking for task exit
     };
     const handleAddTask = () => {
         const maxTaskID = tasks.length > 0 ? Math.max(...tasks.map(task => task.TaskID)) : 0;
@@ -176,22 +175,17 @@ const todo = () => {
 
     const handleCheckboxChange = async (taskID) => {
         const taskToUpdate = tasks.find(task => task.TaskID === taskID);
-        if (taskToUpdate){
-            const updatedTask = {
-                ...taskToUpdate,
-                IsCompleted: !taskToUpdate.IsCompleted,
-            };
-    
-            const updatedTasks = tasks.map(task =>
-                task.TaskID === taskID ? updatedTask : task
-            );
-    
-            setTasks(updatedTasks);
-            setFilteredTasks(updatedTasks);
-        } else {
-            Alert.alert('No task selected to mark complete');
-            return;
-        }
+        const updatedTask = {
+            ...taskToUpdate,
+            IsCompleted: !taskToUpdate.IsCompleted,
+        };
+
+        const updatedTasks = tasks.map(task =>
+            task.TaskID === taskID ? updatedTask : task
+        );
+
+        setTasks(updatedTasks);
+        setFilteredTasks(updatedTasks);
     };
 
     const [fontsLoaded, fontError] = useFonts({
