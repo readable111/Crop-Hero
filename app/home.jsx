@@ -17,6 +17,7 @@ import NavBar from '../assets/NavBar.jsx'
 import icons from '../assets/icons/Icons.js';
 import { WeatherSlider } from '../src/components/WeatherSlider';
 import {getGridpoints, WeatherIcon} from '../assets/HomeWeatherFunctions'
+import { fetchWeatherData } from '../src/components/AmbientWeatherService';
 
 const todayDayLookup = {
 	"Monday": "Sunday",
@@ -28,6 +29,8 @@ const todayDayLookup = {
 	"Sunday": "Saturday",
 }
 
+/*
+//Mock data as an example
 const test_data = [
 	{
 	  key: '1',
@@ -53,6 +56,32 @@ const test_data = [
 	  line2Label: 'Soil Moisture',
 	  line2: ' 0.2wfv',
 	}
+];*/
+const test_data = [
+	{
+	  key: '1',
+	  image: icons.hourglass_green,
+	  line1Label: 'Temperature',
+	  line1: 'Loading',
+	  line2Label: 'Feels Like',
+	  line2: 'Loading',
+	},
+	{
+	  key: '2',
+	  image: icons.hourglass_green,
+	  line1Label: 'Wind Speed',
+	  line1: 'Loading',
+	  line2Label: 'Rainfall',
+	  line2: 'Loading',
+	},
+	{
+	  key: '3',
+	  image: icons.hourglass_green,
+	  line1Label: 'Humidity',
+	  line1: 'Loading',
+	  line2Label: 'Soil Moisture',
+	  line2: 'Loading',
+	}
 ];
 
 const Home = () =>{ 
@@ -70,6 +99,7 @@ const Home = () =>{
 	const [dayName6, setDayName6] = useState(null);
 	const [forecastDataDay7, setforecastDataDay7] = useState(null);
 	const [dayName7, setDayName7] = useState(null);
+	const [ambientWeatherData, setAmbientWeatherData] = useState(null);
 
 	useEffect(() => {
 		// declare the async data fetching function
@@ -135,6 +165,55 @@ const Home = () =>{
 		  .catch(console.error);
 	}, [])
 
+	useEffect(() => {
+		const getWeatherData = async () => {
+		  try {
+			apiKey = await AsyncStorage.getItem('aw_api_key');
+			appKey = await AsyncStorage.getItem('aw_app_key');
+			deviceMacAddress = await AsyncStorage.getItem('aw_device_mac');
+			//ensure that all of those were set
+			if (!apiKey || !apiKey.length || !appKey || !appKey.length || !deviceMacAddress || !deviceMacAddress.length) {
+				setAmbientWeatherData(test_data); 
+			} else {
+				const data = await fetchWeatherData(apiKey, appKey, deviceMacAddress);
+				//Assuming the response is an array of weather data entries, sorted with the newest at the start
+				usefulData = data[0]
+				const weatherData = [
+					{
+					key: '1',
+					image: icons.thermometer_santa_gray,
+					line1Label: 'Temperature',
+					line1: usefulData.tempf + '°F',
+					line2Label: 'Feels Like',
+					line2: usefulData.feels_like + '°F',
+					},
+					{
+					key: '2',
+					image: icons.rainfall_black,
+					line1Label: 'Wind Speed',
+					line1: usefulData.windspeedmph + 'mph',
+					line2Label: 'Rainfall',
+					line2: usefulData.dailyrainin + 'in',
+					},
+					{
+					key: '3',
+					image: icons.humidity_santa_gray,
+					line1Label: 'Humidity',
+					line1: usefulData.humidity + '%',
+					line2Label: 'Soil Moisture',
+					line2: usefulData.soilmoisture + 'wfv',
+					}
+				];
+				setAmbientWeatherData(weatherData); 
+			}
+		  } catch (error) {
+			console.error('Failed to fetch weather data:', error);
+		  }
+		};
+	
+		getWeatherData();
+	  }, []);
+
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
 		// declare the async data fetching function
@@ -196,7 +275,7 @@ const Home = () =>{
 			<WeatherIcon forecastVal={forecastDataDay7} day={dayName7} isDarkMode={isDarkMode}/>
 		</View>
 		<View style = {styles.weatherCarousel}>
-			<WeatherSlider intro_data={test_data} isDarkMode={isDarkMode}/>
+			<WeatherSlider intro_data={ambientWeatherData} isDarkMode={isDarkMode}/>
 		</View>
 		<View style = {styles.Search}>
 			<SearchInput isDarkMode={isDarkMode} />
