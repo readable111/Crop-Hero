@@ -26,6 +26,7 @@ import { Col, Row } from '../assets/Grid.jsx';
 import Colors from '../assets/Color';
 import AppButton from '../assets/AppButton.jsx';
 import { SpeedDial } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
 import NavBar from '../assets/NavBar.jsx';
 import TodoEntryModal from '../assets/NotebookModals/TodoEntryModal';
@@ -175,17 +176,22 @@ const todo = () => {
 
     const handleCheckboxChange = async (taskID) => {
         const taskToUpdate = tasks.find(task => task.TaskID === taskID);
-        const updatedTask = {
-            ...taskToUpdate,
-            IsCompleted: !taskToUpdate.IsCompleted,
-        };
-
-        const updatedTasks = tasks.map(task =>
-            task.TaskID === taskID ? updatedTask : task
-        );
-
-        setTasks(updatedTasks);
-        setFilteredTasks(updatedTasks);
+        if (taskToUpdate){
+            const updatedTask = {
+                ...taskToUpdate,
+                IsCompleted: !taskToUpdate.IsCompleted,
+            };
+    
+            const updatedTasks = tasks.map(task =>
+                task.TaskID === taskID ? updatedTask : task
+            );
+    
+            setTasks(updatedTasks);
+            setFilteredTasks(updatedTasks);
+        } else {
+            Alert.alert('No task selected to mark complete');
+            return;
+        }
     };
 
     const [fontsLoaded, fontError] = useFonts({

@@ -6,13 +6,14 @@
  * UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 10_27_2024
  * This  page is meant to keep track of what was done that day for future reference if needed
  ***/
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import { View, Text, FlatList, Button, StyleSheet, Alert, StatusBar, TouchableOpacity } from 'react-native';
 import { useFonts } from 'expo-font';
 import { router } from 'expo-router';
 import { Col, Row } from '../assets/Grid.jsx';
 import Colors from '../assets/Color';
 import AppButton from '../assets/AppButton.jsx';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import { SpeedDial } from '@rneui/themed';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
