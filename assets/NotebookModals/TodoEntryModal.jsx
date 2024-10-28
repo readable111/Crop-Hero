@@ -1,10 +1,4 @@
-//modal pop for task entry
-import React, { useEffect, useState } from 'react';
-import { Picker } from '@react-native-picker/picker';
-import CROPS from '../../test_data/testCropData.json'
-import Colors from '../Color'
-import { useFonts } from 'expo-font'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import React, { useState } from 'react';
 import {
     Modal,
     View,
@@ -16,7 +10,7 @@ import {
     TouchableOpacity
 } from 'react-native';
 import Colors from '../Color';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, crops, taskTypes, icons, onAddNewTaskType }) => {
     const [taskData, setTaskData] = useState({
         TaskID: taskID || null,
@@ -31,7 +25,14 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, 
         IsCompleted: false,
         CompletedDate: '',
     });
-
+    const handleAddTaskType = () => {
+        if (taskData.NewTaskType.trim() !== '') {
+            
+            taskTypes.push({ id: Date.now(), name: taskData.NewTaskType }); 
+            handleChange('TaskType', taskData.NewTaskType); // Set the selected task type to the new one
+            handleChange('NewTaskType', ''); // Clear the new task type input
+        }
+    };
     const handleDateChange = (type, value) => {
         const dateParts = taskData.DueDate.split(' ');
         let newDate = '';
@@ -50,7 +51,7 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, 
     const handleChange = (name, value) => {
         setTaskData(prevData => ({ ...prevData, [name]: value }));
     };
-
+    { /*
     const handleAddTaskType = () => {
         if (taskData.NewTaskType.trim() !== '') {
             // Call the provided function to save the new task type in the database
@@ -60,7 +61,7 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, 
             handleChange('NewTaskType', ''); // Clear the input field
         }
     };
-
+    */}
     const handleSave = () => {
         onSave(taskData);
         onClose();
@@ -74,6 +75,14 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, 
             <Text>{item.name}</Text>
         </TouchableOpacity>
     );
+    const [items, setItems] = useState([ //potential subscription model stuff
+        { label: '', value: 'watering-can', icon: () => <MaterialCommunityIcons name="watering-can" size={40} color="blue" /> },  // watering task
+        { label: '', value: 'calender', icon: () => <MaterialCommunityIcons name="calendar" size={40} color="black" /> }, // planning task tag
+        { label: '', value: 'rake', icon: () => <MaterialCommunityIcons name="rake" size={40} color={Colors.IRISH_GREEN} /> },  // rake task tag icon
+        { label: '', value: 'shovel', icon: () => <MaterialCommunityIcons name="shovel" size={40} color="black" /> },  // shovel for digging task icon
+        { label: '', value: 'tools', icon: () => <MaterialCommunityIcons name="tools" size={40} color="black" /> },   // tool icon tag for needed to build/fix something
+    ]);
+    const [value, setValue] = useState('watering-can'); {/*must initialize with string of value from items list to assign a default option*/ }
 
     return (
         <Modal visible={visible} animationType="slide">
@@ -92,6 +101,7 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, 
                     <Text>Location</Text>
                     <FlatList
                         data={locations}
+                        scrollContainer={true }
                         renderItem={({ item }) => renderListItem(item, 'LocationID')}
                         keyExtractor={item => item.id.toString()}
                     />
@@ -122,7 +132,13 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, 
                     />
                     <Button title="Add Task Type" onPress={handleAddTaskType} />
                 </View>
-
+                <View>
+                    <TextInput
+                        value={taskData.Comments}
+                        onChangeText={text => handleChange('Comments', text)}
+                        style={styles.input}
+                    />
+                </View>
                 {/* Hardcoded date selector */}
                 <View style={styles.dateContainer}>
                     <Text>Due Date</Text>
@@ -130,6 +146,7 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, 
                         <FlatList
                             data={['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']}
                             horizontal
+                            scrollContainer={true }
                             renderItem={({ item }) => (
                                 <TouchableOpacity onPress={() => handleDateChange('month', item)}>
                                     <Text style={styles.dateItem}>{item}</Text>
@@ -164,7 +181,8 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers, locations, 
                 <View style={styles.iconPickerContainer}>
                     <Text>Task Icon</Text>
                     <FlatList
-                        data={icons}
+                        data={items }
+                        //data={icons}
                         horizontal
                         renderItem={({ item }) => (
                             <TouchableOpacity onPress={() => handleChange('TaskIconPath', item.value)}>
@@ -190,13 +208,19 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: 'pink',
         flex: 1,
+        fontFamily: 'Domine-Regular',
     },
     listContainer: {
         marginBottom: 20,
+        backgroundColor: Colors.ALMOND_TAN,
+        borderWidth: 1,
+        borderColor: 'black',
+        borderRadius: 5,
     },
     dateContainer: {
         flexDirection: 'column',
         marginBottom: 20,
+        fontFamily: 'Domine-Regular',
     },
     row: {
         flexDirection: 'row',
@@ -208,7 +232,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         borderRadius: 5,
-        flexDirection: 'column'
+        flexDirection: 'column',
+        fontFamily: 'Domine-Regular',
     },
     iconPickerContainer: {
         marginBottom: 20,
@@ -219,6 +244,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         borderRadius: 5,
+        width: '5%'
     },
     input: {
         padding: 10,
@@ -226,12 +252,15 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'gray',
         borderRadius: 5,
+        fontFamily: 'Domine-Regular',
     },
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        fontFamily: 'Domine-Regular',
     },
 });
 
 export default TodoEntryModal;
+
 
