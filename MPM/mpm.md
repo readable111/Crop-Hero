@@ -1048,6 +1048,49 @@ If you call the `<SearchInput />` tag, this will default to the dropdown mode. T
 ![Search Bar in Dropdown Mode](./images/Screenshot%202024-08-30%20090816.png "Dropdown Mode")
 ![Search Bar in Modal Mode](./images/Screenshot%202024-08-30%20091416.png "Modal Mode")
 
+### Code Validation <a name="a"></a>
+*Author: Daniel*
+
+(basically run test suite, montly)
+
+### App Compatibility Audit <a name="a"></a>
+*Author: Daniel*
+
+(annual, check libs & OS & lang & db, OS updates normally released in 3rd quarter so plan for the same)
+(bare min. as Apple and Google remove apps not updated in past 2-3yrs and that can't handle newer versions after some time)
+
+### Security Validation <a name="a"></a>
+*Author: Daniel*
+
+(vul check, cert check, input validation test, maybe MITM/encryption check, quarterly)
+
+### Performance and Availability Monitoring <a name="a"></a>
+*Author: Daniel*
+
+(quarterly)
+
+### Updating the Design & Enhancing Features <a name="a"></a>
+*Author: Daniel*
+
+(quarterly)
+
+    > start by reading through your app reviews on Google Play and App Store
+    talk to your customer service team and others who directly interface with the people using your app
+    implement a process so your team can save any app feedback that comes through
+    Conducting in-app surveys to gather user feedback directly within the application.
+    Levying user testing sessions, encouraging users to share their app experience and issues.
+    Asking for user ratings and reviews on app stores.
+    Using social media platforms, like Facebook, Instagram and Twitter.
+    Participating in community platforms like Reddit, Discord, and Slack.
+    Implementing feedback forms on your app landing page.
+    Monitoring customer support enquiries for common issues faced by users.
+
+
+### Fixing Bugs & Crashes <a name="a"></a>
+*Author: Daniel*
+
+(daily/weekly)
+
 ## Troubleshooting <a name="trblsht"></a>
 Assumes that you are using a Windows OS
 
