@@ -5,7 +5,7 @@
  ***/
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, StatusBar, ScrollView, TouchableOpacity, SafeAreaView, Dimensions, Appearance } from 'react-native';
+import { View, Platform, Text, StyleSheet, StatusBar, ScrollView, TouchableOpacity, SafeAreaView, Dimensions, Appearance } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import Colors from '../assets/Color';
 import NavBar from '../assets/NavBar.jsx';
@@ -118,6 +118,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.SANTA_GRAY,
     alignItems: 'center',
     marginBottom: 20,
+    zIndex: 9999,
+		elevation: (Platform.OS === 'android') ? 9999 : 0,
   },
   searchContainerDark: {
     backgroundColor: Colors.BALTIC_SEA,

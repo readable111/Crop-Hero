@@ -7,7 +7,7 @@
  ***/
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, StatusBar, ScrollView, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
+import { View, Platform, Text, StyleSheet, StatusBar, ScrollView, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import Colors from './Color.js';
 import NavBar from './NavBar.jsx';
