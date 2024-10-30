@@ -267,6 +267,7 @@ const SettingsProfile = () =>{
 							modalAnimationType='fade'
 							searchable={true}
 							searchTextInputProps={{
+								backgroundColor: Colors.WHITE_SMOKE,
 								maxLength: 512
 							}}
 							labelProps={{
@@ -280,10 +281,17 @@ const SettingsProfile = () =>{
 								fontFamily: 'WorkSans-Regular',
 								fontSize: 16,
 							}}
+							searchContainerStyle={isDarkMode ? {
+								backgroundColor: Colors.BALTIC_SEA,
+							} : {
+								backgroundColor: Colors.ALMOND_TAN,
+							}}
 							searchPlaceholder='Search/Add...'
 							addCustomItem={true}
-							modalContentContainerStyle={isDarkMode && {
-								backgroundColor: Colors.BALTIC_SEA,
+							modalContentContainerStyle={isDarkMode ? {
+								backgroundColor: Colors.IRIDIUM,
+							} : {
+								backgroundColor: Colors.SCOTCH_MIST_TAN,
 							}}
 						/>
 					</Col>
