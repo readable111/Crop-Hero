@@ -24,6 +24,7 @@ export const chartConfig = {
   labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
   style: { borderRadius: 16 },
   propsForDots: { r: "6", strokeWidth: "2", stroke: "#000000" },
+  propsForLabels: {fontSize: 50,},
 };
 
 const screenWidth = Dimensions.get("window").width;
@@ -58,6 +59,7 @@ const ChartComponent = ({ chartData, isDark }) => {
       strokeWidth: "2",
       stroke: Colors.MALACHITE,
     },
+    propsForLabels: {fontSize: 12,},
   };
 
   const lightChartConfig = {
@@ -73,6 +75,7 @@ const ChartComponent = ({ chartData, isDark }) => {
       strokeWidth: "2",
       stroke: Colors.IRIDIUM,
     },
+    propsForLabels: {fontSize: 10,},
   };
 
   return (

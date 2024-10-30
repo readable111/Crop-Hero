@@ -18,6 +18,7 @@ import icons from '../assets/icons/Icons.js';
 import { WeatherSlider } from '../src/components/WeatherSlider';
 import {getGridpoints, WeatherIcon} from '../assets/HomeWeatherFunctions'
 import { fetchWeatherData } from '../src/components/AmbientWeatherService';
+import CROPS from '../test_data/testCropData.json'
 
 const todayDayLookup = {
 	"Monday": "Sunday",
@@ -261,20 +262,12 @@ const Home = () =>{
 
 	if (!fontsLoaded && !fontError) {
 		return null;
-	}
-		
-	const weather = [{id:1, day: "Mo", weather: "rainy"},{id:2,day: "Tu", weather: "pcloudy"},{id:3,day: "We", weather: "cloudy"},{id:4,day: "Th", weather: "sunny"},{id:5,day: "Fr", weather: "sunny"},{id:6,day: "Sat", weather: "rainy"},{id:7,day: "Sun", weather: "snow"}]
-	
+	}	
 
-        const crops = [
-                { label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', date: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard'},
-                { label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', date: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' },
-                { label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", date: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard' },
-                { label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", date: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard' }
-        ]
+	let everyOtherCrop = CROPS.slice(0,21).filter((element, index) => {
+		return index % 2 === 0;
+	})
 
-	const temp = [{temp: 70, perc: 80},{temp: 68, perc:68}, {temp: 70, perc: 72}]
-	
 	return(
 	<View style = {[styles.container, isDarkMode && styles.containerDark]}>	
 		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE} />
@@ -293,7 +286,7 @@ const Home = () =>{
 		<View style = {styles.Search}>
 			<SearchInput isDarkMode={isDarkMode} />
 		</View>
-			<CropCarousel crops = {crops} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
+			<CropCarousel crops = {everyOtherCrop} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
 		<NavBar homeSelected darkMode={isDarkMode}/>
 	</View>)
 };

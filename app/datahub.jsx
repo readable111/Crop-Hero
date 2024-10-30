@@ -12,16 +12,16 @@ import NavBar from '../assets/NavBar.jsx';
 import {SearchInput} from '../assets/SearchFeature.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CollapsibleSection, chartConfig} from '../assets/DataHubCollapsibles'
+import CROPS from '../test_data/testCropData.json'
 
 
 const screenWidth = Dimensions.get("window").width;
 
 const DataHub = () => {
-  const activeCropsData = require('../test_data/activeCrops.json');
   const currentCropsData = require('../test_data/currentCrops.json');
   const pastCropsData = require('../test_data/pastCrops.json');
 
-  const [selectedCrop, setSelectedCrop] = useState({});
+  const [selectedCrop, setSelectedCrop] = useState({"name": ""});
   const [isDark, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -43,6 +43,84 @@ const DataHub = () => {
     fetchDarkModeSetting().catch(console.error);
   }, []);
 
+
+  //TEMP CODE to handle mock data for demos, specifically for the active crops chart
+  let x = CROPS.filter((element, index) => {
+    return index % 2 === 0;
+  })
+  const dateCounts = {};
+  //sum yields by year and month
+  x.forEach(entry => {
+      const [month, day, year] = entry.date.split('/');
+      const monthYear = `${year}-${month.padStart(2, '0')}`; // Format as 'YYYY-MM'
+      dateCounts[monthYear] = (dateCounts[monthYear] || 0) + parseFloat(entry.yield);
+  });
+  let formattedData = {
+    labels: [],
+    datasets: [
+      {
+        data: []
+      }
+    ]
+  };
+  //get the 6 newest entries and convert to necessary format
+  Object.entries(dateCounts)
+  .sort(([dateA], [dateB]) => {
+    const [yearA, monthA] = dateA.split('-').map(Number);
+    const [yearB, monthB] = dateB.split('-').map(Number);
+    return yearB - yearA || monthB - monthA;
+  })
+  .slice(0, 6)
+  .sort(([dateA], [dateB]) => {
+    const [yearA, monthA] = dateA.split('-').map(Number);
+    const [yearB, monthB] = dateB.split('-').map(Number);
+    return yearA - yearB || monthA - monthB;
+  })
+  .forEach(([date, value]) => {
+    formattedData.labels.push(date);
+    formattedData.datasets[0].data.push(parseFloat(value.toFixed(2)));
+  });
+
+
+  //TEMP CODE to handle mock data for demos, specifically for the current crops chart, and is based on search input
+  const selectedCrops = CROPS.filter(crop => crop.name === selectedCrop.name);
+  //sum yields by year and month
+  const selectiveDateCounts = {};
+  selectedCrops.forEach(entry => {
+      const [month, day, year] = entry.date.split('/');
+      const monthYear = `${year}-${month.padStart(2, '0')}`; // Format as 'YYYY-MM'
+      selectiveDateCounts[monthYear] = (selectiveDateCounts[monthYear] || 0) + parseFloat(entry.yield);
+  });
+  formattedSelectiveData = {
+    labels: [],
+    datasets: [
+      {
+        data: []
+      }
+    ]
+  };
+  //get the 6 newest entries and convert to necessary format
+  Object.entries(selectiveDateCounts)
+  .sort(([dateA], [dateB]) => {
+    const [yearA, monthA] = dateA.split('-').map(Number);
+    const [yearB, monthB] = dateB.split('-').map(Number);
+    return yearB - yearA || monthB - monthA;
+  })
+  .slice(0, 6)
+  .sort(([dateA], [dateB]) => {
+    const [yearA, monthA] = dateA.split('-').map(Number);
+    const [yearB, monthB] = dateB.split('-').map(Number);
+    return yearA - yearB || monthA - monthB;
+  })
+  .forEach(([date, value]) => {
+    formattedSelectiveData.labels.push(date);
+    formattedSelectiveData.datasets[0].data.push(parseFloat(value.toFixed(2)));
+  });
+
+
+
+
+
   return (
     <SafeAreaView style={[styles.safeArea, isDark && styles.safeAreaDark]}>
       <StatusBar
@@ -62,13 +140,13 @@ const DataHub = () => {
 
         <CollapsibleSection
           title="Active Crops"
-          chartData={activeCropsData}
+          chartData={formattedData}
           chartConfig={chartConfig}
           isDark={isDark}
         />
         <CollapsibleSection
           title="Current Crops"
-          chartData={currentCropsData}
+          chartData={formattedSelectiveData}
           chartConfig={chartConfig}
           isDark={isDark}
         />
