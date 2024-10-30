@@ -1,12 +1,14 @@
 /****
- * @author Matthew Bustamente
+ * @author Matthew Bustamente, Daniel Moreno
  * @reviewer Daniel Moreno
  * @tester Matthew Bustamente
+ * 
+ * Secondary author primarily hooked up the graphs to the search bar so that they were no longer random mock graphs
+ * Also fixed some bugs
  ***/
 
 import React, { useState, useEffect } from 'react';
 import { View, Platform, Text, StyleSheet, StatusBar, ScrollView, TouchableOpacity, SafeAreaView, Dimensions, Appearance } from 'react-native';
-import { LineChart } from 'react-native-chart-kit';
 import Colors from '../assets/Color';
 import NavBar from '../assets/NavBar.jsx';
 import {SearchInput} from '../assets/SearchFeature.jsx';
@@ -18,9 +20,6 @@ import CROPS from '../test_data/testCropData.json'
 const screenWidth = Dimensions.get("window").width;
 
 const DataHub = () => {
-  const currentCropsData = require('../test_data/currentCrops.json');
-  const pastCropsData = require('../test_data/pastCrops.json');
-
   const [selectedCrop, setSelectedCrop] = useState({"name": ""});
   const [isDark, setIsDarkMode] = useState(false);
 
@@ -44,18 +43,18 @@ const DataHub = () => {
   }, []);
 
 
-  //TEMP CODE to handle mock data for demos, specifically for the active crops chart
-  let x = CROPS.filter((element, index) => {
-    return index % 2 === 0;
-  })
-  const dateCounts = {};
+  const DATE = new Date().getFullYear() + "";
+  //TEMP CODE to handle mock data for demos, specifically for the active crops chart, and is based on search input
+  selectedActiveCrops = CROPS.filter(crop => crop.name === selectedCrop.name);
+  selectedActiveCrops = selectedActiveCrops.filter(crop => crop.active === 'Y');
   //sum yields by year and month
-  x.forEach(entry => {
+  const selectiveActiveDateCounts = {};
+  selectedActiveCrops.forEach(entry => {
       const [month, day, year] = entry.date.split('/');
       const monthYear = `${year}-${month.padStart(2, '0')}`; // Format as 'YYYY-MM'
-      dateCounts[monthYear] = (dateCounts[monthYear] || 0) + parseFloat(entry.yield);
+      selectiveActiveDateCounts[monthYear] = (selectiveActiveDateCounts[monthYear] || 0) + parseFloat(entry.yield);
   });
-  let formattedData = {
+  formattedSelectiveActiveData = {
     labels: [],
     datasets: [
       {
@@ -64,7 +63,7 @@ const DataHub = () => {
     ]
   };
   //get the 6 newest entries and convert to necessary format
-  Object.entries(dateCounts)
+  Object.entries(selectiveActiveDateCounts)
   .sort(([dateA], [dateB]) => {
     const [yearA, monthA] = dateA.split('-').map(Number);
     const [yearB, monthB] = dateB.split('-').map(Number);
@@ -77,21 +76,26 @@ const DataHub = () => {
     return yearA - yearB || monthA - monthB;
   })
   .forEach(([date, value]) => {
-    formattedData.labels.push(date);
-    formattedData.datasets[0].data.push(parseFloat(value.toFixed(2)));
+    formattedSelectiveActiveData.labels.push(date);
+    formattedSelectiveActiveData.datasets[0].data.push(parseFloat(value.toFixed(2)));
   });
 
 
   //TEMP CODE to handle mock data for demos, specifically for the current crops chart, and is based on search input
-  const selectedCrops = CROPS.filter(crop => crop.name === selectedCrop.name);
+  const selectedCurrentCrops = CROPS
+  .filter(crop => crop.name === selectedCrop.name)
+  .filter(crop => {
+    const cropYear = crop.date.split('/')[2];
+    return parseInt(cropYear) >= parseInt(DATE);
+  });
   //sum yields by year and month
-  const selectiveDateCounts = {};
-  selectedCrops.forEach(entry => {
+  const selectiveCurrentDateCounts = {};
+  selectedCurrentCrops.forEach(entry => {
       const [month, day, year] = entry.date.split('/');
       const monthYear = `${year}-${month.padStart(2, '0')}`; // Format as 'YYYY-MM'
-      selectiveDateCounts[monthYear] = (selectiveDateCounts[monthYear] || 0) + parseFloat(entry.yield);
+      selectiveCurrentDateCounts[monthYear] = (selectiveCurrentDateCounts[monthYear] || 0) + parseFloat(entry.yield);
   });
-  formattedSelectiveData = {
+  formattedSelectiveCurrentData = {
     labels: [],
     datasets: [
       {
@@ -100,7 +104,7 @@ const DataHub = () => {
     ]
   };
   //get the 6 newest entries and convert to necessary format
-  Object.entries(selectiveDateCounts)
+  Object.entries(selectiveCurrentDateCounts)
   .sort(([dateA], [dateB]) => {
     const [yearA, monthA] = dateA.split('-').map(Number);
     const [yearB, monthB] = dateB.split('-').map(Number);
@@ -113,11 +117,40 @@ const DataHub = () => {
     return yearA - yearB || monthA - monthB;
   })
   .forEach(([date, value]) => {
-    formattedSelectiveData.labels.push(date);
-    formattedSelectiveData.datasets[0].data.push(parseFloat(value.toFixed(2)));
+    formattedSelectiveCurrentData.labels.push(date);
+    formattedSelectiveCurrentData.datasets[0].data.push(parseFloat(value.toFixed(2)));
   });
 
-
+  //TEMP CODE to handle mock data for demos, specifically for active current crops chart, and is based on search input
+  const selectedPastCrops = CROPS
+  .filter(crop => crop.name === selectedCrop.name)
+  .filter(crop => {
+    const cropYear = crop.date.split('/')[2];
+    return parseInt(cropYear) < parseInt(DATE);
+  });
+  // Sum yields by year
+  const selectivePastDateCounts = {};
+  selectedPastCrops.forEach(entry => {
+    const year = entry.date.split('/')[2];
+    selectivePastDateCounts[year] = (selectivePastDateCounts[year] || 0) + parseFloat(entry.yield);
+  });
+  formattedSelectivePastData = {
+    labels: [],
+    datasets: [
+      {
+        data: []
+      }
+    ]
+  };
+  // Get the 6 newest entries by year and convert to the necessary format
+  Object.entries(selectivePastDateCounts)
+    .sort(([yearA], [yearB]) => parseInt(yearB) - parseInt(yearA))
+    .slice(0, 6)
+    .sort(([yearA], [yearB]) => parseInt(yearA) - parseInt(yearB))
+    .forEach(([year, value]) => {
+      formattedSelectivePastData.labels.push(year);
+      formattedSelectivePastData.datasets[0].data.push(parseFloat(value.toFixed(2)));
+    });
 
 
 
@@ -140,19 +173,19 @@ const DataHub = () => {
 
         <CollapsibleSection
           title="Active Crops"
-          chartData={formattedData}
+          chartData={formattedSelectiveActiveData}
           chartConfig={chartConfig}
           isDark={isDark}
         />
         <CollapsibleSection
           title="Current Crops"
-          chartData={formattedSelectiveData}
+          chartData={formattedSelectiveCurrentData}
           chartConfig={chartConfig}
           isDark={isDark}
         />
         <CollapsibleSection
           title="Past Crops"
-          chartData={pastCropsData}
+          chartData={formattedSelectivePastData}
           chartConfig={chartConfig}
           isDark={isDark}
         />

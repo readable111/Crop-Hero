@@ -14,6 +14,16 @@ import NavBar from './NavBar.jsx';
 import {SearchInput} from './SearchFeature.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+defaultDataset = {
+  "labels": ["D", "E", "F", "A", "U", "L", "T"],
+  "datasets": [
+    {
+      "data": [1, 2, 3, 4, 5, 6, 7]
+    }
+  ]
+}
+
+
 
 export const chartConfig = {
   backgroundColor: "#ffffff",
@@ -78,19 +88,35 @@ const ChartComponent = ({ chartData, isDark }) => {
     propsForLabels: {fontSize: 10,},
   };
 
-  return (
-    <View style={[styles.collapsibleContent, isDark && styles.collapsibleContentDark]}>
-      <LineChart
-        data={chartData}
-        width={screenWidth - 80}
-        height={220}
-        yAxisInterval={4}
-        chartConfig={isDark ? darkChartConfig : lightChartConfig}
-        bezier
-        style={[styles.chartStyle, isDark && styles.chartStyleDark]}
-      />
-    </View>
-  );
+  if (!Array.isArray(chartData.labels) || !chartData.labels.length) {
+    return (
+      <View style={[styles.collapsibleContent, isDark && styles.collapsibleContentDark]}>
+        <LineChart
+          data={defaultDataset}
+          width={screenWidth - 80}
+          height={220}
+          yAxisInterval={4}
+          chartConfig={isDark ? darkChartConfig : lightChartConfig}
+          bezier
+          style={[styles.chartStyle, isDark && styles.chartStyleDark]}
+        />
+      </View>
+    );
+  } else {
+    return (
+      <View style={[styles.collapsibleContent, isDark && styles.collapsibleContentDark]}>
+        <LineChart
+          data={chartData}
+          width={screenWidth - 80}
+          height={220}
+          yAxisInterval={4}
+          chartConfig={isDark ? darkChartConfig : lightChartConfig}
+          bezier
+          style={[styles.chartStyle, isDark && styles.chartStyleDark]}
+        />
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
