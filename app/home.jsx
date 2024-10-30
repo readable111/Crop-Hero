@@ -85,6 +85,7 @@ const test_data = [
 ];
 
 const Home = () =>{ 
+	let defaultZip = "76131"
 	const [forecastDataDay1, setforecastDataDay1] = useState(null);
 	const [dayName1, setDayName1] = useState(null);
 	const [forecastDataDay2, setforecastDataDay2] = useState(null);
@@ -104,8 +105,17 @@ const Home = () =>{
 	useEffect(() => {
 		// declare the async data fetching function
 		const fetchData = async () => {
+		  //
+		  const zipCodeVal = await AsyncStorage.getItem('zip_code');
+			let resultZipCode = null
+    		if (zipCodeVal && zipCodeVal !== "") {
+				resultZipCode = zipCodeVal
+			} else {
+				resultZipCode = defaultZip
+		  }
+
 		  // get the data from the api
-		  const data = await getGridpoints('76131');
+		  const data = await getGridpoints(resultZipCode);
 		  // convert the data to json
 		  if (data.status == 200) {
 			const response = await fetch(
@@ -156,6 +166,7 @@ const Home = () =>{
 		  }
 		  else {
 			console.log("bad")
+			console.log(data.status)
 		  }
 		}
 	  
