@@ -26,11 +26,14 @@ import Icons from '../assets/icons/Icons'
 import AppButton from '../assets/AppButton'
 import UploadImage from '../assets/ProfilePageImages/UploadImage'
 import {cleanText, cleanNumbers} from '../assets/sanitizer'
+import ZipLookup from '../assets/zip_codes.js'; 
 
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const BillingDetailsProfile = () =>{ 
 	{/*TODO: retrieve current model*/}
 	{/*create the subscription model list*/}
+	let defaultZip = "76131"
 	const [items, setItems] = useState([ //potential subscription model stuff
     	{label: 'Free', value: 'free', testID: 'free'},                   // 1 farmer,No Ambient Weather, No  Export,   10 Crops
     	{label: 'Individual', value: 'individual'},       // 1 farmer,   Ambient Weather, No  Export,   25 Crops
@@ -42,13 +45,41 @@ const BillingDetailsProfile = () =>{
   	const [value, setValue] = useState('family'); {/*must initialize with string of value from items list to assign a default option; TODO: retrieve option from database*/}
 	const [email, setEmail] = useState('test@example.com');
 	const [phoneNum, setPhoneNum] = useState('+1 (012) 345-6789');
-	const [zipCode, setZipCode] = useState('02914');
+	const [zipCode, setZipCode] = useState(defaultZip);
 	const [state, setState] = useState('Texas');
 
-	const handleSave = () =>{
+	const handleSave = async() =>{
 		//onChangeText={value => {setEmail(cleanText(email, noStopwords=false, noSQL=true));}}
-		console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Zip: " + cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false) + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
+		let cleanedZip = cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false)
+		if (cleanedZip in ZipLookup) {
+			console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Zip: " + cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false) + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
+			await AsyncStorage.setItem('zip_code', cleanedZip)
+		} else {
+			console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Default Zip: " + defaultZip + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
+			setZipCode(defaultZip)
+			Alert.alert("Zip Code doesn't exist. Default applied.")
+			await AsyncStorage.setItem('zip_code', defaultZip)
+		}
 	};
+
+	useEffect(() => {
+		// declare the async data fetching function
+		const fetchZipCode = async () => {
+			const val = await AsyncStorage.getItem('zip_code');
+			let result = null
+    		if (val && val !== "") {
+				result = val
+			} else {
+				result = defaultZip
+			}
+			setZipCode(result)
+		}
+	  
+		// call the function
+		fetchZipCode()
+		  	// make sure to catch any error
+		  	.catch(console.error);
+	}, [])
 
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
