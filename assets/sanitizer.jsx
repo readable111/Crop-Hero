@@ -17,17 +17,17 @@ export function cleanText(textToClean, noStopwords=false, noSQL=false, textOnly=
     if (textToClean !== null && textToClean !== '') {
         //make everything lowercase after converting to ascii
         asciiVal = unidecode(textToClean)
-        lowerVal = asciiVal.toLowerCase() 
-        whitelistVal = lowerVal.replace(/[^a-z0-9'.@+()\- ]/g, "");
+        whitelistVal = asciiVal.replace(/[^a-zA-Z0-9'.@+()\- ]/g, "");
         whitelistVal = whitelistVal.replace(/\-\-/g, "");
 
         if (noStopwords) {
-            whitelistVal = whitelistVal.replace(/[^a-z0-9 ]/g, "");
+            whitelistVal = whitelistVal.toLowerCase()
+            whitelistVal = whitelistVal.replace(/[^a-zA-Z0-9 ]/g, "");
             //remove stopwords and words that are too short
             //precompile regex to save time
             let stopWordRegex = new RegExp(`\\b(${STOP_WORDS.join('|')})\\b`, 'gi')
             //InnoDB also has issues with words <=2 characters long
-            let shortWordRegex = new RegExp("\\b[a-z]{1,2}\\b\\s*","gi")
+            let shortWordRegex = new RegExp("\\b[a-zA-Z]{1,2}\\b\\s*","gi")
             let previousVal = ""
             //loop until no more changes are applied
             while (whitelistVal !== previousVal) {
@@ -38,6 +38,7 @@ export function cleanText(textToClean, noStopwords=false, noSQL=false, textOnly=
         }
         
         if (noSQL) {
+            whitelistVal = whitelistVal.toLowerCase()
             whitelistVal = whitelistVal.replace(/[']/g, "");
             //precompile regex to save time
             let sqlRegex = new RegExp(`\\b(${SQL_KEYWORDS.join('|')})`, 'gi');
@@ -50,11 +51,11 @@ export function cleanText(textToClean, noStopwords=false, noSQL=false, textOnly=
         }
 
         if (hexCode) {
-            whitelistVal = whitelistVal.replace(/[^a-f0-9]/g, "");
+            whitelistVal = whitelistVal.replace(/[^a-fA-F0-9]/g, "");
         }
 
         if (textOnly) {
-            whitelistVal = whitelistVal.replace(/[^a-z@. ]/g, "");
+            whitelistVal = whitelistVal.replace(/[^a-zA-Z@. ]/g, "");
         }
         
         return whitelistVal
