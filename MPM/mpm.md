@@ -191,6 +191,29 @@ The intended purpose of the notebook page is for the user to be able to document
 *Author: McKenna* 
 
 ### Profile Page <a name="profile_page"></a>
+#### Base Page <a name="base_profile"></a>
+*Author: Daniel*
+
+The base Profile page functions as a central hub which allows a user to easily access the several subpages. At the top, there is a green oval which is laid over a Santa Gray background. The oval was created with a larger height than width, a large border radius, and a scaleX transformer. Then, the oval is moved upwards and folded over the top of the screen to create a half-circle. On this oval, I display the user's name and the profile picture. The profile picture uses the UploadImage component in read-only mode, simplifying the process of storing and using the selected image's URI. Below that, there is a button to edit the profile and a grid of buttons, with all of these buttons linking to other pages. These buttons are based on the AppButton component and use AntDesign icons. Only the icons and arrows are buttons, not the text.
+
+#### Edit Profile Page <a name="edit_profile"></a>
+*Author: Daniel*
+
+At the top of the page is a Santa Gray oval which is laid over an Irish Green background. On the circle is a back arrow which unwinds the stack and a save button. The save button triggers a specific function which sanitizes the input before saving it to the database or AsyncStorage. Below that, an UploadImage component allows users to select images for their profile picture. Then, there are a bunch of input fields to retrieve the user's name, keys for their Ambient Weather devices, and a new password. The Ambient Weather fields are auto-populated based on the saved values.
+
+The names are sanitized as `noSQL` and `textOnly`. The Ambient Weather API key, App key, and MAC address are sanitized as `noSQL` and `hexCode`.
+
+#### Settings Page <a name="settings_profile"></a>
+*Author: Daniel*
+
+At the top of this page is a back arrow which unwinds the stack and the page's title. Then, the page is divided into two Scotch Mist Tan sections: User Preferences and Account Details. User Preferences allows people to set the color mode, the default visibility for crops, and whether push notifications should be enabled. The buttons and their labels are organized by the Grid components. The color mode is controlled by a toggle switch that can set Dark Mode to true, though it technically works by inverting the switch's previous state in the onValueChange function. The default visibility is controlled by a toggle switch and determines whether crops default to a private or public visibility depending on the user's preferences. The push notifications are enabled generally by a toggle switch. When the notification switch is enabled, separate checkboxes are displayed to enable notifications specifically for upcoming tasks and payments.
+
+The Account Details section first allows the user to select the current farmer. The dropdown picker is set to Modal mode to prevent clipping issues and ensures that the full list of farmers can always be displayed. In addition, the addCustomItem prop allows the user to save and select what they have typed in if it isn't already in the list. In the future, the Account Sync button will generate a numeric code or QR code which allows users to sign into their account without needing to enter any information. Then, there are two buttons which redirect to the Terms of Service and Privacy Policy pages. While unnecessary for this project, they would be critical aspects of rolling the app out as a commercial product. Finally, the app's version is a number fetched from the package.json file to reduce how many things would have to be changed with each app update.
+
+#### Billing Details Page <a name="billing_details_profile"></a>
+*Author: Daniel*
+
+At the top of the page is a back arrow which unwinds the stack and a save button. The save button triggers a specific function which sanitizes the input before saving it to the database or AsyncStorage. There is another UploadImage component in read-only mode. Then, there is a dropdown box which opens a scrollview box that contains the different subscription models. Afterwards, there are 4 input fields for the user's email, phone number, zip code and state. The zip code is used by the Home page to determine the weather forecast which is why the save function verifies that the zip code is valid.
 
 ### Data Hub Page <a name="datahub_page"></a>
 
