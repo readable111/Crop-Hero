@@ -81,11 +81,18 @@
         1. [Starting Expo Go](#start_expo)
         1. [Starting The Test Suite](#start_tests)
 1. [Maintenance Tasks](#maint)
+    1. [Maintenance Schedule](#maint_sched)
+    1. [Fixing Bugs & Crashes](#fix_bugs_crashes)
+    1. [Code Validation](#code_validation)
     1. [Adding a New Page](#add_page)
         1. [The Status Bar](#status_bar)
         1. [Adding Dark Mode](#add_dark_mode)
         1. [Expanding the Navbar](#expand_navbar)
         1. [Importing the Search Bar](#import_search)
+    1. [Security Validation](#security_validation)
+    1. [Performance & Availability Monitoring](#performance_availability_monitoring)
+    1. [Updating the Design & Enhancing Features](#update_designs_features)
+    1. [App Compatibility Audit](#app_comp_audit)
 1. [Troubleshooting](#trblsht)
     1. [Emulator Errors](#emulator_errors)
         1. [Cannot Open Emulator](#cant_open_em)
@@ -946,8 +953,35 @@ To run only a specific test fil, execute `npm test -- BillingDetails.test.jsx` f
 If you want to update the snapshots, you can execute either `npm run updateTestSnapshots` or `npm test -- -u BillingDetails.test.jsx` from a command line at the root directory of the repo.
 
 ## Maintenance Tasks <a name="maint"></a>
+
+### Maintenance Schedule <a name="maint_sched"></a>
+*Author: Daniel*
+
+|       Tasks                              |  Frequency   |
+| :--------------------------------------- | :----------: |
+| Fixing Bugs & Crashes                    | Daily/Weekly |
+| Code Validation                          | Monthly      |
+| Adding a New Page                        | Quarterly    |
+| Security Validation                      | Quarterly    |
+| Performance & Availability Monitoring    | Quarterly    |
+| Updating the Design & Enhancing Features | Quarterly    |
+| App Compatibility Audit                  | Annual       |
+
+### Fixing Bugs & Crashes <a name="fix_bugs_crashes"></a>
+*Author: Daniel*
+
+On a weekly basis, bugs should be addressed with crashes being handled on a daily basis. Bugs can quickly annoy users and drive them away from an app if not fixed within a certain timeframe. However, crashes are far more problematic because they completely prevent the app from being utilized and may result in the loss of data. As a result, they are substantially more annoying for users and must be addressed as quickly as possible. Executing a specific test file and reviewing the Troubleshooting section of the MPM may help to pin down the issue. After identifying the issue, remember to add it to the test suite and to the Troubleshooting section to prevent a future reoccurrence.
+
+### Code Validation <a name="code_validation"></a>
+*Author: Daniel*
+
+On a monthly basis, the functionality and validity of all code should be tested. The Jest test suite will handle this by executing multiple unit, integration, and snapshot tests to identify potential errors. An ideal result will be a coverage of 80% or higher for both statement and branch coverage, though a lower percentage is acceptable so long as the core functionality encountered by most users has been thoroughly tested.
+
+Statement coverage reflects the percentage of statements that have been executed at least once during the tests. Line coverage is similar but less useful, especially for JavaScript which allows for multi-line statements. Those multi-line statements will inflate the line coverage and render it less useful than statement coverage. Even statement coverage is only useful to prove that functionality is being tested, rather than proving the quality of those tests.
+
+Branch coverage reflects the number of conditional branches which have been explored and tested. As such, branch coverage indicates the logical coverage and is useful to prove the test quality by showing how many possible inputs have been considered.
+
 ### Adding a New Page <a name="add_page"></a>
-Maintenance Type: Perfective Maintenance Task
 #### The Status Bar <a name="status_bar"></a>
 *Author: Daniel*
 
@@ -1048,48 +1082,25 @@ If you call the `<SearchInput />` tag, this will default to the dropdown mode. T
 ![Search Bar in Dropdown Mode](./images/Screenshot%202024-08-30%20090816.png "Dropdown Mode")
 ![Search Bar in Modal Mode](./images/Screenshot%202024-08-30%20091416.png "Modal Mode")
 
-### Code Validation <a name="a"></a>
+### Security Validation <a name="security_validation"></a>
 *Author: Daniel*
 
-(basically run test suite, montly)
+On a quarterly basis, all security aspects of the app must be tested, validated, and verified to ensure proper functionality. Since this is an app meant for laypeople and is connected to various APIs and databases, security controls to prevent accidential and malicious attacks are critical. A vulnerability scan should be run to identify common flaws in the code and to see if any new, important vulnerabilities have been identified in key dependencies. To be published on an app store, the app needs to be signed with an authorized certificate. As such, that certificate needs to be renewed. All input fields should be tested against at least Level 1 injection attacks and ideally, Level 2 or 3 attacks as well. If applicable, attempt a MITM attack against any communication with APIs or the backend to verify the traffic's encryption.
 
-### App Compatibility Audit <a name="a"></a>
+### Performance & Availability Monitoring <a name="performance_availability_monitoring"></a>
 *Author: Daniel*
 
-(annual, check libs & OS & lang & db, OS updates normally released in 3rd quarter so plan for the same)
-(bare min. as Apple and Google remove apps not updated in past 2-3yrs and that can't handle newer versions after some time)
+On a quarterly basis, the performance and availability of the app and its dependencies must be tested. This will likely include a review of all logs and user feedback reports to identify areas that frequently cause issues or experience difficulties. If using Expo Go, open the menu from the command line and select the JS Debugger option. From that menu, you can use Chrome Dev Tools to record performance profiles and to create flame graphs. You may also find the Low Orbit Ion Cannon (LOIC) tool useful to conduct stress testing on the backend. To evaluate percentage availability, it can be calculated with `(MTBF / (MTBF + MTTR)) X 100` where the goal to maximize availability can be achieved by reducing MTTR and increasing MTBF. This may also include cleaning up the database to remove old and unnecessary data, thereby improving performance and decreasing costs.
 
-### Security Validation <a name="a"></a>
+### Updating the Design & Enhancing Features <a name="update_designs_features"></a>
 *Author: Daniel*
 
-(vul check, cert check, input validation test, maybe MITM/encryption check, quarterly)
+On a quarterly basis, one should check whether any features need to be enhanced and whether the design needs to be updated. Initially, this will mean reviewing user feedback to identify and prioritize needs. That feedback can be collected from app store reviews, user ratings, in-app surveys, user testing sessions, social media, and customer support enquiries. Based on that feedback, new pages might be added, new features created, or unused/disliked functionality removed to lower operating costs.
 
-### Performance and Availability Monitoring <a name="a"></a>
+### App Compatibility Audit <a name="app_comp_audit"></a>
 *Author: Daniel*
 
-(quarterly)
-
-### Updating the Design & Enhancing Features <a name="a"></a>
-*Author: Daniel*
-
-(quarterly)
-
-    > start by reading through your app reviews on Google Play and App Store
-    talk to your customer service team and others who directly interface with the people using your app
-    implement a process so your team can save any app feedback that comes through
-    Conducting in-app surveys to gather user feedback directly within the application.
-    Levying user testing sessions, encouraging users to share their app experience and issues.
-    Asking for user ratings and reviews on app stores.
-    Using social media platforms, like Facebook, Instagram and Twitter.
-    Participating in community platforms like Reddit, Discord, and Slack.
-    Implementing feedback forms on your app landing page.
-    Monitoring customer support enquiries for common issues faced by users.
-
-
-### Fixing Bugs & Crashes <a name="a"></a>
-*Author: Daniel*
-
-(daily/weekly)
+The CropAlly app depends on a variety of languages, interpreters, libraries, databases, APIs, and OSs. Most of the time, CropAlly can afford to not update itself to the latest versions, continuing to run on its current versions. On an annual basis, it is recommended to conduct an audit of all dependencies and external pieces. Since Android and iOS updates are generally released in the 3rd Quarter, aim to conduct your annual audit in the 3rd Quarter and to release your update in the 4th Quarter. Keep in mind that Apple and Google remove apps from their app stores if the app has not been updated in the past 2-3 years or that can't handle OSs above a certain minimum level. As part of the audit process, determine whether you should upgrade to be compatible with the newer versions. If so, you will need to upgrade all dependencies as listed in package.json and then verify that the code still functions properly. Performing a code validation may be useful for this.
 
 ## Troubleshooting <a name="trblsht"></a>
 Assumes that you are using a Windows OS
