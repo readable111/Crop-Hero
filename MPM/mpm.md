@@ -37,6 +37,10 @@
     1. [To-Do Page](#todo_page)
         1. [Background](#todo_background)
     1. [Profile Page](#profile_page)
+        1. [Base Page](#base_profile)
+        1. [Edit Profile Page](#edit_profile)
+        1. [Settings Page](#settings_profile)
+        1. [Billing Details Page](#billing_details_profile)
     1. [Data Hub Page](#datahub_page)
     1. [Components & Assets](#components_n_assets)
         1. [Rows & Columns](#grid)
@@ -46,6 +50,8 @@
         1. [Icons](#icons)
         1. [Colors](#colors)
         1. [Sanitizers](#sanitizers)
+        1. [Profile Image Handler](#profile_img_handler)
+            1. [What is a URI?](#define_uri)
     1. [Search Bar](#search_bar)
         1. [Background](#search_bar_bkgd)
         1. [Search Bar Component](#search_bar_component)
@@ -278,6 +284,18 @@ The entire app uses a single standardized color palette. The color palette is a 
 As of right now, there are two sanitizing functions with the first parameter of each being the string that will be sanitized. They then return the cleaned text string based on the instructions set in the other boolean parameters. Beginning with `cleanText`, this function offers three options: no stopwords, no SQL, and only text. Firstly, it decodes any Unicode characters into their ASCII equivalents before converting it to lowercase to prevent regex issues. Double dashes are always removed, and a whitelist approach is taken to remove any characters other than `[a-z0-9'.@+()\- ]`. If stopwords were removed, then the sanitizer removes any words that are 2 or fewer characters long or are of 35 specific words. Azure MySQL servers use the InnoDB engine which stops any searching attempts when it encounters one of [35 specific stopwords](https://dev.mysql.com/doc/refman/8.4/en/fulltext-stopwords.html). There is also some useful information in [this StackOverflow thread](https://stackoverflow.com/questions/43319480/fulltext-index-match-string-with-period-mysql). These stopwords are defined in a list and then recursively removed which prevents 'bbye' from causing any issues. If SQL was removed, certain especially problematic SQL keywords are recursively removed to prevent multi-level SQL injection attacks like 'ALTALTERER' which triggers SQL injection if the sanitizer is only applied onced. Finally, the text-only option removes everything except letters, the @ symbol, and the period.
 
 The `cleanNumbers` function also has three optional parameters. By default, decimals are allowed which means that dots are only removed if they are not between two digits. However, this can be disabled. By default, negatives are allowed which means that dashes are only removed if there are two of them, if they do not precede a number, and if they are not the first character in the string. These two removals are performed recursively just like the text sanitizer. Finally, the phone parameter is mutually exclusive with the other two parameters, removing everything except numbers, dashes, parantheses, spaces, and the plus sign.
+
+#### Profile Image Handler <a name="profile_img_handler"></a>
+*Author: Daniel*
+
+The Profile Image Handler has two modes: read-only and editable. In read-only mode, this component is a basic Image component which either displays the selected and saved image URI or the placeholder avatar image. When editable, this component includes the same Image component to display the selected or placeholder avatar image. The image URI is stored and retrieved from AsyncStorage. An AppButton component with a MaterialCommunityIcon is displayed in the lower-right corner and can be clicked to trigger the UploadModal.
+
+When loaded, the UploadModal is a translucent gray background which obscures the background with a Scotch Mist Tan box in the center. That central box contains 3 buttons with icons from the MaterialCommunityIcons library. The UploadModal takes 5 props which are a boolean to control its visibility and 4 functions defined in UploadImage. The `onBackPress` function will be triggered when the user taps outside of the modal on the translucent gray background and is set to hide the modal. The `onCameraPress` function will be triggered when the user taps the Camera button in the modal. This function passes a prop from UploadImage to the `uploadImage` function, determining whether it will trigger the front/selfie camera or the back camera. In either case, the function will check whether the app has permission to access the camera. If it does not have access, the function will trigger the phone's built-in permission manager to request access only this time or forever. Once permissions are granted, the appropriate camera will be launched. The basic compression and quality level is set to 1 which is the maximum level of quality and minimum level of compression; the default would have been 0.2. To ensure a similar experience across all platforms, the aspect ratio is set to 1x1 for Android as iOs doesn't allow for aspect ratio configuration and locks it to 1x1. Also, editing is enabled which allows the user to crop, rotate, and flip the image after a picture has been taken. The `onGalleryPress` prop of UploadModal calls the `uploadImage` function in gallery mode which is extremely similar but requests access to the gallery and launches the gallery rather than the camera. The quality, aspect ratio, and editing settings are all set to the same option. At the end of `uploadImage` function is a simple statement to save an image if one was chosen. If the user selected an image in the camera or gallery, the image's URI will be saved in the result variable and then passed to the `saveImage` function. I should note that the assets attribute is a list because these functions can be configured to allow a user to select multiple images at the same time. If the system UI elements (camera, gallery, or permissions) are closed without selecting an image, the `canceled` boolean attribute is set to true, and an image is not saved. The `onRemovePress` prop of UploadModal calls the `saveImage` function with an empty string. If anything other than an empty string is passed to it, the `saveImage` function will save the selected URI with a state hook and in AsyncStorage before hiding the modal. If an empty string is passed, the state hook and AsyncStorage key are set to empty strings, meaning that the placeholder image will be used.
+
+##### What is a URI? <a name="define_uri"></a>
+*Author: Daniel*
+
+The acronym URI stands for Universal Resource Identifier. URI is an extremely broad term which includes URLs (which are only used by HTTP/HTTPS, FTP, or LDAP traffic like `https://stackoverflow.com/` or `ldap://[2001:db8::7]/c=GB?objectClass?one`), email addresses in a certain format (like `mailto:John.Doe@example.com`), telephone numbers (like `tel:+1-816-555-1212`), and local files (like `file:////something.png`). In the case of the UploadImage component, URI is used to refer to the path to a local file. Namely, it contains the path to the selected profile picture in the phone's local storage. Even if the camera is launched by the app, the picture will not use the space allocated to the app by the system as it will be placed in the phone's image storage.
 
 ### Search Bar <a name="search_bar"></a>
 #### Background <a name="search_bar_bkgd"></a>

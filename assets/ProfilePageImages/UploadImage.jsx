@@ -62,7 +62,7 @@ const UploadImage = ({ style, isEditable=true, cameraMode="selfie", darkMode=fal
 				result = await ImagePicker.launchCameraAsync({ //launch the camera
 					cameraType: ImagePicker.CameraType.front, //default the camera to the front one since it is a selfie
 					allowsEditing: true, //allows crop, rotate, flip depending on OS
-					aspect: [1, 1], //set default aspect ratio, only affects Android OS
+					aspect: [1, 1], //set default aspect ratio, only affects Android OS as iOs defaults to 1x1
 					quality: 1, //sets basic compression level by expo-image-picker
 				});
 			}
@@ -72,7 +72,7 @@ const UploadImage = ({ style, isEditable=true, cameraMode="selfie", darkMode=fal
 				result = await ImagePicker.launchCameraAsync({ //launch the camera
 					cameraType: ImagePicker.CameraType.back, //default the camera to the back one
 					allowsEditing: true, //allows crop, rotate, flip depending on OS
-					aspect: [1, 1], //set default aspect ratio, only affects Android OS
+					aspect: [1, 1], //set default aspect ratio, only affects Android OS as iOs defaults to 1x1
 					quality: 1, //sets basic compression level by expo-image-picker
 				});
 			}
@@ -89,33 +89,24 @@ const UploadImage = ({ style, isEditable=true, cameraMode="selfie", darkMode=fal
 		}
 	};
 
-	//overwrite the saved image with null
-	const removeImage = async() => {
-		try {
-			saveImage('')
-			await AsyncStorage.setItem('profile_uri', '')
-		} catch (error) {
-			alert(error)
-			setModalVisible(false)
-		}
-	};
-
 	//save the selected image's URI and close the modal
 	const saveImage = async(image) => {
 		//early return if image is an empty string, like when removeImage is triggered
 		if (image == '') {
 			setImageURI('')
+			await AsyncStorage.setItem('profile_uri', '')
 			setModalVisible(false)
 			return
 		}
 
 		try {
 			setImageURI(image)
-			setModalVisible(false)
 			console.log(image.toString())
 			await AsyncStorage.setItem('profile_uri', image.toString())
+			setModalVisible(false)
 		} catch (error) {
-			throw error;
+			Alert.alert(error)
+			setModalVisible(false)
 		}
 	};
 
@@ -137,7 +128,7 @@ const UploadImage = ({ style, isEditable=true, cameraMode="selfie", darkMode=fal
 					onBackPress={() => setModalVisible(false)} //disappear if it is clicked outside of the modal
 					onCameraPress={() => uploadImage(cameraMode)} //trigger camera when that icon is pressed
 					onGalleryPress={() => uploadImage("gallery")} //trigger gallery when that icon is pressed
-					onRemovePress={() => removeImage()} //remove the image when that icon is passed
+					onRemovePress={() => saveImage('')} //remove the image when that icon is passed
 				/>
 			</View>
 		);        
