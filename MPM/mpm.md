@@ -30,6 +30,7 @@
     1. [Home Page](#indepth_home)
         1. [General Weather Forecast](#weather_forecast)
         1. [Weather Slider](#weather_slider)
+        1. [Ambient Weather](#ambient_weather)
         1. [Crop Carousel](#crop_carousel)
     1. [My Crops Page](#my_crops_page)
     1. [Notebook Page](#notebook_page)
@@ -110,12 +111,14 @@
     1. [Expo Errors](#expo_errors)
         1. [Expo-CLI is Deprecated / Legacy Expo-CLI](#cli_deprecated)
         1. [Expo Keeps Stopping](#expo_stops)
+        1. [Android is Disabled](#disabled_android)
     1. [Common React Native Compilation Errors](#rn_compilation_err)
         1. [Error due to Different Number of Hooks Between Renders](#different_number_hooks)
         1. [Computer Restarts When Loading App in Emulator](#computer_restarts)
         1. [Infinite Number of Rerenders](#infinite_rerenders)
         1. [VirtualizedLists Nested In a ScrollView](#nested_virtualizedlists)
         1. [Invariant Violation Error](#invariant_violation)
+        1. [Destructuring Issue](#destructuring_issues)
     1. [Jest Errors](#jest_errors)
         1. [General Troubleshooting Advice For Jest](#general_ts_advice)
         1. [No Tests Found](#no_tests)
@@ -178,6 +181,13 @@ At its core, the WeatherSlider component uses a PagerView from the `react-native
 The custom page scroll handler function is based on a custom function defined in another file called `usePagerScrollHandler`. The handler use the `GeneralHandler` interface and `GeneralHandlers` type as a parameter. It is based on a useEvent hook which automatically optimizes the code as it waits for the scroll event to be triggered. You'll also see the `worklet` directive which defines the function as a worklet, meaning it's optimized to run on the native/UI thread in Reanimated. This makes animations and event handling more efficient. Basically, all of it allows me to define custom events when the page is scrolled.
 
 The `PagingDots` component uses the map function again to create one dot for every item in the lost. Each dot is a ScalingDot component which is passed any props passed to `PagingDots` that it does not already use. These props are defined in as a type so that I could specify which props existed and their type. While the props are copy-pasted from the ScalingDot file, ScalingDot only works properly with default exports so I could not export the props. The ScalingDot component basically just displays an animated circle with the color, opacity, and size changing based on whether it is the currently selected dot. All of the animated restyling is handled by more interpolation and clamping which function just like above. As one note, there are several lines like `inActiveDotColor: inActiveDotColor || '#347af0'`. This line means that the `inActiveDotColor` prop is used normally but allows the line to default to  '#347af0' when the prop is null.
+
+#### Ambient Weather <a name="ambient_weather"></a>
+*Author: Daniel*
+
+While the previous section discusses how the WeatherSlider component functions, this section focuses on how the information is obtained. First, the API key, app key, and device MAC address are fetched from AsyncStorage. If any of those values have not been set (meaning that they are equivalent to null or are zero-length), then the default JSON is used. Since this if block will trigger before the async functions fetch the values, the default JSON provides loading icons. Once the information has been fetched, it is passed to the `fetchWeatherData` function which returns an array. From the array, I retrieve the first entry and then construct the slider's JSON from specific fields. Specifically, I use the temperature in Fahrenheit (tempf), the feels-like temperature (feels_like), the wind speed in mph (windspeedmph), the amount of rain today in inches (dailyrainin), the humidity percent (humidity), and the soil moisture (soilmoisture).
+
+The `fetchWeatherData` function is wrapped by the `rateLimiter` function. The `rateLimiter` function checks whether the last request occurred within the past 1000ms or past 1 second (the maximum rate permitted by Ambient Weather). If the request is too soon, it is ignored and the Promise is resolved to null. Otherwise, the timestamp for the last request is updated, and the original function is called with the original arguments. The `fetchWeatherData` function receives the API key, app key, and MAC address. The function basically wraps an axios call which makes a GET request to Ambient Weather's RESTful API. The API and app keys are passed as params and are required to gain access to the API. The MAC address is passed as part of the URL which targets the data provided by a specific sensor. Without the MAC address, I would need to fetch a list of all sensors associated with that account, determine which ones provide useful information, and extract it.
 
 #### Crop Carousel <a name="crop_carousel"></a>
 *Author: Daniel*
@@ -979,6 +989,8 @@ When you need to import/install a new library, please use either `npm install --
 
 There are two other commands which can import libraries but which should not be used. Namely, they are `npx expo install <YourLibrary>` and `yarn add <YourLibrary>`. These commands do not properly save the libraries in package.json and use a different package manager. While expo can handle having both the npm and yarn package managers, it can create some conflicts with jest and requires that you import every library twice.
 
+As an important note, some libraries will ask you to use a linker like `npm link`. However, that is not necessary if you are using react-native@0.60 or newer. Newer versions of react-native contain an auto-linker which makes `npm link` unnecessary.
+
 ### Running The Program <a name="run_program"></a>
 #### Starting Expo Go <a name="start_expo"></a>
 *Author: Daniel*
@@ -1241,6 +1253,26 @@ This error is due to a syntax issue with the styling or the imports.
 * If it is an import issue, look for places where you import two different components/functions from the same source on different lines
     * Like `import { StyleSheet } from 'react-native'; import { TouchableOpacity } from 'react-native';` should be written as `import { StyleSheet, TouchableOpacity } from 'react-native';`
 
+#### Android is Disabled <a name="disabled_android"></a>
+*Author: Daniel*
+
+This error is indicated by issues like the 'Press a │ open Android' text being greyed out or the message of 'Android is disabled, enable it by adding android to the platforms array in your app.json or app.config.js' when trying to open the emulator via Expo. This has a variety of different solutions depending on the cause.
+
+* Solution 1: Use 's' to swap between development build and some other stuff until it says "Using Expo Go"
+* Solution 2: Try using the tunnel with `npx expo start --tunnel`
+* Solution 3: Check your dependencies for react, react-native, and expo. They don't need to be the newest version, but they do need to be versions compatible with each other.
+* Solution 4: Try deleting and recreating your Android emulator.
+* Solution 5: Ensure that app.json is not included in the .gitignore file as Expo Go/NPM obeys the .gitignore file
+* Solution 6: Delete the android folder and regenerate it
+* Solution 7: Go to app.json in the root directory and ensure that it has the following text, though the text in package and versionCode can be anything. Make sure it is nested in the `"expo"` key and below the `"name"` key
+
+~~~json
+"android": {
+  	"package": "com.yourcompany.yourappname",
+  	"versionCode": 1
+}
+~~~
+
 ### Common React Native Compilation Errors <a name="rn_compilation_err"></a>
 
 #### Error due to Different Number of Hooks Between Renders <a name="different_number_hooks"></a>
@@ -1310,6 +1342,20 @@ with
 return require('@react-native-picker/picker') 
 ~~~
 1. Run `npx patch-package react-native` to patch up the react-native folder and the index file you just altered
+
+#### Destructuring Issue <a name="destructuring_issues"></a>
+*Author: Daniel*
+
+This section will offer the most common causes for the following error message. 
+~~~bash
+Invalid attempt to destructure non-iterable instance.
+In order to be iterable, non-array objects must have a [Symbol.iterator]() method.
+~~~
+
+* Cause 1: You have something like `[aaa,bbb] = somefunc()` where somefunc() returns `{ 'some': 'object'}` which can't be destructured into a list
+* Cause 2: You have something like `const [text, by, order] = opts;` if `opts` doesn't contain 3 items that can be unrolled
+* Cause 3: You have something like `const [state, setState] = useEffect(defaultValue);` which is a typo since you should be using the useState() hook
+* Cause 4: You have something like `const [ data, isLoading ] = useContext(null);` instead of `const { data, isLoading } = useContext(null);` as context requires curly braces
 
 ### Jest Errors <a name="jest_errors"></a>
 
