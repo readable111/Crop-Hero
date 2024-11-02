@@ -243,7 +243,7 @@ const SettingsProfile = () =>{
 				</Row>
 			</View>
 		</View>
-		{/*user preferences section*/}
+		{/*account details section*/}
 		<Text style={[styles.categoryTitle, isDarkMode && styles.categoryTitleDark]}>Account Details</Text>
 		<View style={{alignItems:'center'}}>
 			<View style={[styles.settingsCategory2, isDarkMode && styles.settingsCategoryDark]}>

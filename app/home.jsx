@@ -193,28 +193,28 @@ const Home = () =>{
 				usefulData = data[0]
 				const weatherData = [
 					{
-					key: '1',
-					image: icons.thermometer_santa_gray,
-					line1Label: 'Temperature',
-					line1: usefulData.tempf + '°F',
-					line2Label: 'Feels Like',
-					line2: usefulData.feels_like + '°F',
+						key: '1',
+						image: icons.thermometer_santa_gray,
+						line1Label: 'Temperature',
+						line1: usefulData.tempf + '°F',
+						line2Label: 'Feels Like',
+						line2: usefulData.feels_like + '°F',
 					},
 					{
-					key: '2',
-					image: icons.rainfall_black,
-					line1Label: 'Wind Speed',
-					line1: usefulData.windspeedmph + 'mph',
-					line2Label: 'Rainfall',
-					line2: usefulData.dailyrainin + 'in',
+						key: '2',
+						image: icons.rainfall_black,
+						line1Label: 'Wind Speed',
+						line1: usefulData.windspeedmph + 'mph',
+						line2Label: 'Rainfall',
+						line2: usefulData.dailyrainin + 'in',
 					},
 					{
-					key: '3',
-					image: icons.humidity_santa_gray,
-					line1Label: 'Humidity',
-					line1: usefulData.humidity + '%',
-					line2Label: 'Soil Moisture',
-					line2: usefulData.soilmoisture + 'wfv',
+						key: '3',
+						image: icons.humidity_santa_gray,
+						line1Label: 'Humidity',
+						line1: usefulData.humidity + '%',
+						line2Label: 'Soil Moisture',
+						line2: usefulData.soilmoisture + 'wfv',
 					}
 				];
 				console.log(weatherData)
