@@ -38,6 +38,7 @@
         2. [General Trouble Shooting](#notebook_troubleshooting)
     1. [To-Do Page](#todo_page)
         1. [Background](#todo_background)
+        2. [General Trouble Shooting](#todo_troubleshooting)
     1. [Profile Page](#profile_page)
         1. [Base Page](#base_profile)
         1. [Edit Profile Page](#edit_profile)
@@ -210,6 +211,13 @@ To make sure an entry is selcted for editing, exporting, or deleting, a long pre
 ### To-Do Page <a name="todo_page"></a>
 #### Background <a name="todo_background"></a>
 *Author: McKenna* 
+
+The purpose of the To-Do page is for the user to keep track of tasks that need to be accomplished around their farming/planting environment. The user is able to assign things such as farmer, task type, crop type, icons, and more to the task entry for easy tracking and filtering. 
+
+#### General Trouble Shooting <a name="todo_troubleshooting"></a>
+*Author: McKenna*
+
+To make sure an entry is selcted for editing, exporting, marking complete, or deleting, a long press and hold is required for the system to capture the entry as slected. If the user recieves an error that no entry is selected, the user should acknowledge the confirmation and long press the entry once again.
 
 ### Profile Page <a name="profile_page"></a>
 #### Base Page <a name="base_profile"></a>
