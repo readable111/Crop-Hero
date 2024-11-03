@@ -33,6 +33,7 @@
         1. [Ambient Weather](#ambient_weather)
         1. [Crop Carousel](#crop_carousel)
     1. [My Crops Page](#my_crops_page)
+   	1.[My Crops](#my_crops)
     1. [Notebook Page](#notebook_page)
         1. [Background](#notebook_background)
         2. [General Trouble Shooting](#notebook_troubleshooting)
@@ -198,6 +199,10 @@ The `fetchWeatherData` function is wrapped by the `rateLimiter` function. The `r
 The CropCarousel component is far simpler than the WeatherSlider, just calling the Carousel component with a special name and passing over the props. The Carousel component is just a FlatList which renders multiple pressable views, one for each item passed in the JSON object. The Pressable uses the expo-router to push a new page when a user selects a crop.
 
 ### My Crops Page <a name="my_crops_page"></a>
+#### My Crops <a name="my_crops"></a>
+*Author: Isaac*
+The initial purpose behind this section is to have the user be able to create, manage, and delete crops that they may have. The user should be able to manage what crops they have and also be able to view and/or edit any relevant information about said crops. This starts with our initial home page, the "My Crops" page. This page is treated mostly just as a navigation tool between two more pages, Add Crops and View Crops. With this, the user should be able to select and press one of two buttons, and that button should connect to the correct page. This is also the page that the user will return to once they are done with either of the two pages, and it contains the navbar to lead to other pages. 
+
 
 ### Notebook Page <a name="notebook_page"></a>
 #### Background <a name="notebook_background"></a>
