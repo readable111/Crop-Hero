@@ -33,10 +33,14 @@
         1. [Ambient Weather](#ambient_weather)
         1. [Crop Carousel](#crop_carousel)
     1. [My Crops Page](#my_crops_page)
+    	1. [My Crops](#my_crops)
     1. [Notebook Page](#notebook_page)
         1. [Background](#notebook_background)
+        2. [General Trouble Shooting](#notebook_troubleshooting)
     1. [To-Do Page](#todo_page)
         1. [Background](#todo_background)
+        2. [General Trouble Shooting](#todo_troubleshooting)
+        3. [Adding Filtering Years](#todo_yearfilters)
     1. [Profile Page](#profile_page)
         1. [Base Page](#base_profile)
         1. [Edit Profile Page](#edit_profile)
@@ -195,16 +199,35 @@ The `fetchWeatherData` function is wrapped by the `rateLimiter` function. The `r
 The CropCarousel component is far simpler than the WeatherSlider, just calling the Carousel component with a special name and passing over the props. The Carousel component is just a FlatList which renders multiple pressable views, one for each item passed in the JSON object. The Pressable uses the expo-router to push a new page when a user selects a crop.
 
 ### My Crops Page <a name="my_crops_page"></a>
+#### My Crops <a name="my_crops"></a>
+*Author: Isaac*
+The initial purpose behind this section is to have the user be able to create, manage, and delete crops that they may have. The user should be able to manage what crops they have and also be able to view and/or edit any relevant information about said crops. This starts with our initial home page, the "My Crops" page. This page is treated mostly just as a navigation tool between two more pages, Add Crops and View Crops. With this, the user should be able to select and press one of two buttons, and that button should connect to the correct page. This is also the page that the user will return to once they are done with either of the two pages, and it contains the navbar to lead to other pages. 
+
 
 ### Notebook Page <a name="notebook_page"></a>
 #### Background <a name="notebook_background"></a>
 *Author: McKenna*
 
-The intended purpose of the notebook page is for the user to be able to document daily proceedings as to what has been happening that day on the farm. The user will add in entries via a pop-up modal and will be able to sort entries by month and year. 
+ The intended purpose of the notebook page is for the user to be able to document daily proceedings as to what has been happening that day on the farm. The user will add in entries via a pop-up modal and will be able to sort entries by month and year. The notebook page is the default page that is displayed when the user selects the notebook icon from the bottom navigation bar. At the top of the screen, two green ovals are displayed that allow the user to swap between the To-Do page and the Notebook page. Within the Notebook page, the user is given filters displayed along the top underneath the page toggles to allow for filtering entries made by the user for better a better viewing experience. All other interactions are initiated with the speed dial located at the bottom right that allows the user to add an entry. The speed dial is further used on a long press of an entry that allows the user to edit, delete, or export the long pressed entry.
+#### General Trouble Shooting <a name="notebook_troubleshooting"></a>
+*Author: McKenna*
+
+To make sure an entry is selcted for editing, exporting, or deleting, a long press and hold is required for the system to capture the entry as slected. If the user recieves an error that no entry is selected, the user should acknowledge the confirmation and long press the entry once again.
 
 ### To-Do Page <a name="todo_page"></a>
 #### Background <a name="todo_background"></a>
 *Author: McKenna* 
+
+The purpose of the To-Do page is for the user to keep track of tasks that need to be accomplished around their farming/planting environment. The user is able to assign things such as farmer, task type, crop type, icons, and more to the task entry for easy tracking and filtering. The To-Do page is a secondary page that can be accessed when the user selects the Notebook page from the bottom navigation bar and then toggles to the To-Do page by selecting the corresponding green oval at the top left of the screen. At the top of the screen, two green ovals are displayed that allow the user to swap between the To-Do page and the Notebook page. Within the To-Do page, the user is given filters displayed along the top underneath the page toggles to allow for filtering entries made by the user for better a better viewing experience. All other interactions are initiated with the speed dial located at the bottom right that allows the user to add an entry. The speed dial is further used on a long press of an entry that allows the user to edit, delete, mark complete, or export the long pressed entry.
+
+#### General Trouble Shooting <a name="todo_troubleshooting"></a>
+*Author: McKenna*
+
+To make sure an entry is selcted for editing, exporting, marking complete, or deleting, a long press and hold is required for the system to capture the entry as slected. If the user recieves an error that no entry is selected, the user should acknowledge the confirmation and long press the entry once again.
+#### Adding Additional Filtering Years <a name="todo_yearfilters"></a>
+*Author: McKenna*
+
+Should the application need more years added for entry adding and therefore filtering, more years can be added by simply navigating to the years section in the code and adding in addtional years to the list. 
 
 ### Profile Page <a name="profile_page"></a>
 #### Base Page <a name="base_profile"></a>
