@@ -34,6 +34,7 @@
         1. [Crop Carousel](#crop_carousel)
     1. [My Crops Page](#my_crops_page)
     	1. [My Crops](#my_crops)
+	2. [Add Crops](#add_crops)
     1. [Notebook Page](#notebook_page)
         1. [Background](#notebook_background)
         2. [General Trouble Shooting](#notebook_troubleshooting)
@@ -201,8 +202,13 @@ The CropCarousel component is far simpler than the WeatherSlider, just calling t
 ### My Crops Page <a name="my_crops_page"></a>
 #### My Crops <a name="my_crops"></a>
 *Author: Isaac*
+
 The initial purpose behind this section is to have the user be able to create, manage, and delete crops that they may have. The user should be able to manage what crops they have and also be able to view and/or edit any relevant information about said crops. This starts with our initial home page, the "My Crops" page. This page is treated mostly just as a navigation tool between two more pages, Add Crops and View Crops. With this, the user should be able to select and press one of two buttons, and that button should connect to the correct page. This is also the page that the user will return to once they are done with either of the two pages, and it contains the navbar to lead to other pages. 
 
+#### Add Crops <a name="add_crops"></a>
+*Author: Isaac*
+
+The purpose of this page is to create the crops that will be used and managed by the user. The user will be brought to a page with various fields to put information. They will have to fill out fields for the name, medium, location, type, variety, source, date planted, and more. The HRF number that will be tied to identify the crop is also created using this page, but it is assigned a randomized 6-digit number when the page is first opened. When the user is done filling out all the fields, they may hit the save button located in the top right. The save button will check to make sure every field is filled out, with no blanks. When that is confirmed, it will create an object and send it back to where the rest of the crops are stored, effectively saving the new crop. If failed, the page will prompt to the user that there are fields that are left unfilled, and will not save the object, but rather return to the add crops page so that the user may fill out the remaining fields. The input fields also go through sanitization, which is covered later by Daniel. All this does is ensure that the inputs are valid and nothing malicious or incorrect.
 
 ### Notebook Page <a name="notebook_page"></a>
 #### Background <a name="notebook_background"></a>
