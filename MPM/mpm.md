@@ -220,8 +220,10 @@ The purpose of the To-Do page is for the user to keep track of tasks that need t
 
 To make sure an entry is selcted for editing, exporting, marking complete, or deleting, a long press and hold is required for the system to capture the entry as slected. If the user recieves an error that no entry is selected, the user should acknowledge the confirmation and long press the entry once again.
 #### Adding Additional Filtering Years <a name="todo_yearfilters"></a>
+*Author: McKenna*
 
 Should the application need more years added for entry adding and therefore filtering, more years can be added by simply navigating to the years section in the code and adding in addtional years to the list. 
+
 ### Profile Page <a name="profile_page"></a>
 #### Base Page <a name="base_profile"></a>
 *Author: Daniel*
