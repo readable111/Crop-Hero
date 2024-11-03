@@ -202,7 +202,7 @@ The CropCarousel component is far simpler than the WeatherSlider, just calling t
 *Author: McKenna*
 
 The intended purpose of the notebook page is for the user to be able to document daily proceedings as to what has been happening that day on the farm. The user will add in entries via a pop-up modal and will be able to sort entries by month and year. 
-#### Genral Trouble Shooting <a name="notebook_troubleshooting"></a>
+#### General Trouble Shooting <a name="notebook_troubleshooting"></a>
 *Author: McKenna*
 
 To make sure an entry is selcted for editing, exporting, or deleting, a long press and hold is required for the system to capture the entry as slected. If the user recieves an error that no entry is selected, the user should acknowledge the confirmation and long press the entry once again.
