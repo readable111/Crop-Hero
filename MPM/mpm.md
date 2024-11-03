@@ -69,6 +69,7 @@
         1. [Backend Server](#backend_overview)
         1. [Writing Endpoints](#writing_endpoints)
         1. [Pushing to the GitHub](#push_to_github_backend)
+        1. [User Authentication](#user_authentication)
 1. [Installation & Setup](#setup)
     1. [Preparing The Development Environment](#prep_dev_environ)
         1. [Installing Android Studio](#install_android_studio)
@@ -877,6 +878,14 @@ The format can change depending on the method of the endpoint, POST or GET, but 
 *Author: Tyler*
 
 To push your changes to the server, use either the git cli, or the git GUI that can be downloaded. Add your modified files to be commited, run the `git commit` command, and then push to the remote branch desired using `git push origin <branch>`
+
+#### User Authentication <a name="user_authentication">
+*Author: Tyler*
+User Authentication is notoriously difficult and a large security risk. Rather than ris leaking emails, password, and other PII, the app uses a third party authentication service called Auth0. Auth0 uses several verified services in order to verify user identity, such as google or microsoft.
+
+On the Auth0 dashboard, we can manage the users in our systems and their information. By hosting the user authentication on a trusted third party service, we avoid the problem of having our small team writing a vulnerablility into the system, and we leave the storage of sensitive information in the hands of a trusted service.
+
+The documentatoin for the Auth0 authentication services can be found here https://auth0.github.io/react-native-auth0/ , and additional documentation located here, https://auth0.com/docs/quickstart/native/react-native/interactive. Essentially,
 
 ## Installation & Setup <a name="setup"></a>
 ### Preparing The Development Environment <a name="prep_dev_environ"></a>
