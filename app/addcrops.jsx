@@ -25,6 +25,8 @@ import { Input } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
 import Icons from '../assets/icons/Icons.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {cleanText, cleanNumbers} from '../assets/sanitizer'
+import DropDownPicker from 'react-native-dropdown-picker';
 
 
 
@@ -46,21 +48,55 @@ const AddCrops = () => {
                 active:'',
                 visible:'',
 
-        })
+        });
+        const [open, setOpen] = useState(false);
+        const [selectedIndoors, setSelectedIndoors] = useState(cropData.type)
+        const [selectedActive, setSelectedActive] = useState(cropData.active)
+        const [items, setItems] = useState([
+                {label: 'Yes', value: 'Yes' },
+                {label: 'No', value: 'No'}
+        ]);
 
+
+        const handleIndoorsChange = (value) =>
+        {
+                setCropData({
+                        ...cropData, 
+                        indoors: value,
+                })
+        }
+        const handleActiveChange = (value) =>
+        {
+                setCropData({
+                        ...cropData, 
+                        active: value,
+                })
+                setSelectedActive(value);
+        }
 
         //Change data as given, didn't want to worry about specifics, so search dummy object and change accordingly
         const handleChange = (fieldName, input) => {
+                
                 setCropData({
                         ...cropData,
-                        [fieldName]: input,
+                        //[fieldName]: cleanText(input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
+                        [fieldName]: input
                 })
         }
 
         //on save, alert for save push to view crops and add to list
         const handleSave = () =>{
-                Alert.alert(cropData.name + " saved");
-                router.push({pathname: '/viewcrops', params: {newCrop: JSON.stringify(cropData)}});
+                const emptyFields = Object.values(cropData).some(value=> value ==='');
+                if(emptyFields)
+                {
+                        console.log(emptyFields)
+                        Alert.alert("Unable to save, some fields are still empty");
+                }
+                else
+                {
+                        Alert.alert(cropData.name + " saved");
+                        router.push({pathname: '/viewcrops', params: {newCrop: JSON.stringify(cropData)}});
+                }
         };
         //Handle old unused print checker
         const printStatement = () =>
@@ -95,6 +131,12 @@ const AddCrops = () => {
                 }
                 fetchDarkModeSetting()
                 .catch(console.error);
+                const min = 100000;
+                const max = 999999;
+                const setHRFnum = Math.floor(Math.random() * (max - min - 1)) + min;
+                cropData.hrfNum = setHRFnum;
+                console.log(setHRFnum);
+                console.log(cropData.hrfNum)
         }, [])
 
         //load fonts
@@ -188,14 +230,29 @@ const AddCrops = () => {
                                         onChangeText={(text) => handleChange('comments', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Started Indoors?</Text>
-                                <Input
+                                
+                                <DropDownPicker
+                                        theme={isDark ? 'DARK' : 'LIGHT'}
+                                        open={open}
+                                        setOpen={setOpen}
+                                        value={selectedIndoors}
+                                        setValue={setSelectedIndoors}
+                                        items={items}
+                                        onChangeValue={handleIndoorsChange}
+                                        placeholder="Started Indoors?"
+                                        style={styles.textBox}
+                                />
+                                
+                                {/*}
+                               <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        placeholder = ' Indoors? (Y/N)'
+                                        placeholder = ' Indoors'
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={3}
                                         onChangeText={(text) => handleChange('indoors', text)}
 
                                 />
+                                */}
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Active</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
@@ -226,11 +283,9 @@ const AddCrops = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        placeholder = ' HRF Number'
+                                        value={cropData.hrfNum.toString()}
+                                        editable={false}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
-                                        maxLength={64}
-                                        onChangeText={(text) => handleChange('hrfNum', text)}
-
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Yield</Text>
                                 <Input

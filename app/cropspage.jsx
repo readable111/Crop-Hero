@@ -14,13 +14,14 @@ import AppButton from '../assets/AppButton.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
 import Icons from '../assets/icons/Icons.js';
+import { cleanText } from '../assets/sanitizer.jsx';
 
 
 
 const CropsPage = () => {
 
         {/* Grabs variable form viewcrops page for use */}
-        let crop = useLocalSearchParams();
+        let [crop, setCropData] = useState(useLocalSearchParams());
         //If crop.name couldn't be retrieved, assume that ?param= was used
         if(!crop.name) {
                 console.log("?param passed")
@@ -35,8 +36,8 @@ const CropsPage = () => {
 
         const handleChange = (fieldName, input) => {
                 setCropData({
-                        ...cropData,
-                        [fieldName]: input,
+                        ...crop,
+                        [fieldName]: cleanText(input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
                 })
         }
         const [isDark, setIsDarkMode] = useState(false)
@@ -99,6 +100,8 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength = {128}
                                         readOnly = {readOnly}
+                                        // onChangeText={(text) => handleChange('name', text)}
+                                        
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Variety</Text>
                                 <Input
@@ -107,6 +110,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         readOnly = {readOnly}
+                                        //onChangeText={(text) => handleChange('variety', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Source</Text>
                                 <Input
@@ -115,6 +119,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         readOnly = {readOnly}
+                                        //onChangeText={(text) => handleChange('source', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted</Text>
                                 <Input
@@ -172,7 +177,7 @@ const CropsPage = () => {
                                         value={crop.hrfNum}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
-                                        readOnly = {readOnly}
+                                        readOnly = {true}
 
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Visible</Text>
