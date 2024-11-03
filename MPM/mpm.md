@@ -34,7 +34,7 @@
         1. [Crop Carousel](#crop_carousel)
     1. [My Crops Page](#my_crops_page)
     	1. [My Crops](#my_crops)
-	2. [Add Crops](#add_crops)
+     2. [Add Crops](#add_crops)
     1. [Notebook Page](#notebook_page)
         1. [Background](#notebook_background)
         2. [General Trouble Shooting](#notebook_troubleshooting)
