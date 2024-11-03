@@ -35,6 +35,7 @@
     1. [My Crops Page](#my_crops_page)
     1. [Notebook Page](#notebook_page)
         1. [Background](#notebook_background)
+   	1. [General Trouble Shooting](#notebook_troubleshooting)
     1. [To-Do Page](#todo_page)
         1. [Background](#todo_background)
     1. [Profile Page](#profile_page)
@@ -201,6 +202,10 @@ The CropCarousel component is far simpler than the WeatherSlider, just calling t
 *Author: McKenna*
 
 The intended purpose of the notebook page is for the user to be able to document daily proceedings as to what has been happening that day on the farm. The user will add in entries via a pop-up modal and will be able to sort entries by month and year. 
+#### Genral Trouble Shooting <a name="notebook_troubleshooting"></a>
+*Author: McKenna*
+
+To make sure an entry is selcted for editing, exporting, or deleting, a long press and hold is required for the system to capture the entry as slected. If the user recieves an error that no entry is selected, the user should acknowledge the confirmation and long press the entry once again.
 
 ### To-Do Page <a name="todo_page"></a>
 #### Background <a name="todo_background"></a>
