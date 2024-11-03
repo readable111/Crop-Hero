@@ -35,7 +35,7 @@
     1. [My Crops Page](#my_crops_page)
     1. [Notebook Page](#notebook_page)
         1. [Background](#notebook_background)
-   	1. [General Trouble Shooting](#notebook_troubleshooting)
+        2. [General Trouble Shooting](#notebook_troubleshooting)
     1. [To-Do Page](#todo_page)
         1. [Background](#todo_background)
     1. [Profile Page](#profile_page)
