@@ -37,7 +37,7 @@
 	2. [Add Crops](#add_crops)
     1. [Notebook Page](#notebook_page)
         1. [Background](#notebook_background)
-        2. [General Trouble Shooting](#notebook_troubleshooting)
+        1. [General Trouble Shooting](#notebook_troubleshooting)
     1. [To-Do Page](#todo_page)
         1. [Background](#todo_background)
         2. [General Trouble Shooting](#todo_troubleshooting)
