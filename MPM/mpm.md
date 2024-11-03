@@ -212,7 +212,7 @@ To make sure an entry is selcted for editing, exporting, or deleting, a long pre
 #### Background <a name="todo_background"></a>
 *Author: McKenna* 
 
-The purpose of the To-Do page is for the user to keep track of tasks that need to be accomplished around their farming/planting environment. The user is able to assign things such as farmer, task type, crop type, icons, and more to the task entry for easy tracking and filtering. 
+The purpose of the To-Do page is for the user to keep track of tasks that need to be accomplished around their farming/planting environment. The user is able to assign things such as farmer, task type, crop type, icons, and more to the task entry for easy tracking and filtering. The To-Do page is a secondary page that can be accessed when the user selects the Notebook page from the bottom navigation bar and then toggles to the To-Do page by selecting the corresponding green oval at the top left of the screen. At the top of the screen, two green ovals are displayed that allow the user to swap between the To-Do page and the Notebook page. Within the To-Do page, the user is given filters displayed along the top underneath the page toggles to allow for filtering entries made by the user for better a better viewing experience. All other interactions are initiated with the speed dial located at the bottom right that allows the user to add an entry. The speed dial is further used on a long press of an entry that allows the user to edit, delete, mark complete, or export the long pressed entry.
 
 #### General Trouble Shooting <a name="todo_troubleshooting"></a>
 *Author: McKenna*
