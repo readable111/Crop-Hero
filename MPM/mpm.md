@@ -81,6 +81,7 @@
         1. [Backend Server](#backend_overview)
         1. [Writing Endpoints](#writing_endpoints)
         1. [Pushing to the GitHub](#push_to_github_backend)
+        1. [User Authentication](#user_authentication)
 1. [Installation & Setup](#setup)
     1. [Preparing The Development Environment](#prep_dev_environ)
         1. [Installing Android Studio](#install_android_studio)
@@ -510,7 +511,7 @@ def pluralize(word):
     # Words ending in x, s, z, ch, sh -> add es 
     if search(r"[xsxz]$", word) or search(r"[cs]h$", word): 
         return word + ENDINGS.SPECIAL 
- 
+  
     # Words ending in y with a consonant before it -> change y to i and add es 
     if search(r"[^aeiou]y$", word): 
         return word[:-1] + "i" + ENDINGS.SPECIAL 
@@ -922,37 +923,59 @@ The database is deployed on Azure MySQL flexible server. Connecting to the datab
 
 The database is connected to the app using a Node.JS Express server backend which will also be deployed on the Azure Portal through the App Services. The database consists of 11 tables, each having their own primary keys. If you wish to see more on the Database structure, please see the Project Plan Document or Design Document. If you wish to alter these tables, please run `ALTER TABLE SQL` query. If you wish to insert custom values or fields into the database, run the `CREATE TABLE` query, and be sure to add the `fld_s_<tableletter>_subscriberID_pk` to the table if it needs another primary key to ensure unique values. 
 
-If you wish to add your own custom endpoints to the backend, we have our backend deployed using Azure App services CI/CD pipeline. It is set up to track a GitHub repo for pushes to the master branch, and then build and deploy the app to Azure App Services. If you wish to write a custom endpoint, please clone the repository using git, and then add your new endpoint. Please remember to pass the `<user>` object to the backend when you call the endpoint, as we use the user object to structure the SQL queries needed to fetch data. 
-
+Be aware the our third party user authentication service, Auth0, has an action written so that upon a user sign up, it will send that userID token to the database and create a new Subscriber entry
 #### Backend Server <a name="backend_overview"></a>
 *Author: Tyler*
 
-Our backend interacts with 2 key services: the database and our user authentication service, Auth0. 
+The backend mainly consists of 2 entities, CAbackend, which is our backend server deployed on a Azure App Service. Due to some issues with the compatability of Node.js and Azure App Service, our backend is written in python using the Flask library. When logging into the Azure App Service, we can manage the resource through the overview tab, and can see more of the capabilities and capacity in this tab as well. It is important to note that sometimes the container takes some time to start up. If the URLs for the endpoints are not behaving as expected, connect to the log stream through the Azure App Service, and check to see that the container is going through it's startup procedure.
 
-Auth0 is a third-party user authentication service that is built on the Oauth architecture. Oauth simply allows apps and services to host user management and authentication on their platform. Users can sign in through many providers, including Google, Microsoft, Facebook, and other similar social media sites. This simplifies the user authentication process.
+There are some quirks when dealing with Azure App Service. If you run into any errors(as I have ran into several), please ensure that you have set up all environment variables needed. There may also be an issue with the configuration of the connection between the server and the database, as that has proven to be more than finnicky to set up. As it is currently, The two are set up on an azure virtual network, with a private endpoint that the backend can use to access the server. The values used to actuallyt connect to the database, such as username and password, are stored in envrionment variables in the backend server itself, not the code. There are several resources online that are useful when debugging Azure service issues, and if all else fails you can contact the Azure Support team for resources.
 
-To get the backend code, contact me (Tyler Bowen) to be added as a contributor, and then clone the repo using git clone `tjb0264@<repository address>`. This will clone the repository that contains the backend code.
+Our backend code is hosted on github, and if you wish to change something or add a new method to the backend then you can push the the repository, and the github action will build and deploy it for you. The action will trigger upon pushing to the main branch. Be aware that there may be some azure OneDeploy issues that cause the action to fail, in this case, I found that re running the action on the github repositories' actions tab usuall works. Keep in mind that after deployment it takes a couple of minutes in order for the new container to startup on the backend server
 
-This is also a node.js project, so please run the `npm install` command to download the dependencies described in package.json. 
-
-Once the `npm install` command is finished running, we can start a local instance of the server using either `npm start` or `npm run dev`. It is important to note that this instance is local, and changes to your local files do not affect the actual server.
 
 #### Writing Endpoints <a name="writing_endpoints"></a>
 *Author: Tyler*
+Our Backend is written in python, using the Flask library. The format for writing an endpoint goes as follows.
+```py
+@app.route('/route_path/<paramType: param>', methods=['GET'])
+def route_path(param):
+    #initialize the request parameter
+    try:
+        cur = conn.cursor() #conn is the variable that holds our connection to the database, the cursor() method is called when we want to open a connection 
+        query = """WRITE SQL QUERY HERE ACCESS VALUES WITH %s"""
+        cur.execute(query, (value1, value2))#if using only one value, then be sure to format it like so (value,) with the comma at the end
+        results = cur.fetchone()/fetchall()
+        
+        #if you are writting to the database, be sure to write a conn.commit() line
+        return jsonify(results), 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error message", 500
+```
+The format can change depending on the method of the endpoint, POST or GET, but the general layout is pretty much the same
 
-If you want to write your own custom API endpoints to handle user data, to add new queries to the database, or handle some data/function on the server side, you will need to use the following syntax and add it to the server.js file.
+#### General Debbugging <a name="Debugging The backend"></a>
+1. Restart the backend server and check the logs
+2. if container restart fails, try once more, if that fails continue
+3. Re-deploy the backend code by running the github action
+4. Monitor Containment Logs
+5. Ensure that python code is bug free
+6. Ensure that environment variables are set up correctly in Azure App Service
+7. See resources for the Azure App Service here to get more help on the infe URL: https://learn.microsoft.com/en-us/azure/app-service/
 
-~~~node
-app.(get/post)('/path_for_callback', (req, res) =>{
-    //do some dta function here
-})
-~~~
-
-We are declaring the method of the endpoint, whether that is a GET method from the client requesting data, or it is a POST methid from the user pushing data to an entity. We then declare the second parameter as a callback function with two parameters: request, containing the request information, and the response, which is what we will eventually send to the client with the desired data.
 #### Pushing to the GitHub <a name="push_to_github_backend"></a>
 *Author: Tyler*
 
 To push your changes to the server, use either the git cli, or the git GUI that can be downloaded. Add your modified files to be commited, run the `git commit` command, and then push to the remote branch desired using `git push origin <branch>`
+
+#### User Authentication <a name="user_authentication">
+*Author: Tyler*
+User Authentication is notoriously difficult and a large security risk. Rather than ris leaking emails, password, and other PII, the app uses a third party authentication service called Auth0. Auth0 uses several verified services in order to verify user identity, such as google or microsoft.
+
+On the Auth0 dashboard, we can manage the users in our systems and their information. By hosting the user authentication on a trusted third party service, we avoid the problem of having our small team writing a vulnerablility into the system, and we leave the storage of sensitive information in the hands of a trusted service.
+
+The documentatoin for the Auth0 authentication services can be found here https://auth0.github.io/react-native-auth0/ , and additional documentation located here, https://auth0.com/docs/quickstart/native/react-native/interactive. Essentially, we check if the user is logged in upon entering the entry point for the app, and if the user access token exists in the Async Storage, we redirect them to the user's home page. From there we can access the user object through the API, we use the userID as a primary key for our subscribers.
 
 ## Installation & Setup <a name="setup"></a>
 ### Preparing The Development Environment <a name="prep_dev_environ"></a>
