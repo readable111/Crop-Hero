@@ -300,7 +300,7 @@ Use the icon prop if you want to specify an image in the Icons folder. Use the m
 #### NavBar Component <a name="navbar"></a>
 *Author: Daniel*
 
-The NavBar component is used on all of the major pages and allows the user to navigate between the pages. The NavBar is split into 3 rows with 5 columns in each row, 1 column for each major page. The first row is in a separate View component and exists solely to provide the tan circle which juts up from the bar. The second row provides the icons for each page, along with the green circle behind the Home icon. The third and final row provides the text label for each page. Both the icons and the text use the AppButton component to route people to the selected page, preventing issues where the user may click one but not the other.
+The NavBar component is used on all of the major pages and allows the user to navigate between the pages. The NavBar is split into 3 rows with 5 columns in each row, 1 column for each major page. The first row is in a separate View component and exists solely to provide the tan circle that juts up from the bar. The second row provides the icons for each page, along with the green circle behind the Home icon. The third and final row provides the text label for each page. Both the icons and the text use the AppButton component to route people to the selected page, preventing issues where the user may click one but not the other.
 
 When the component is called, a prop like `homeSelected` should be specified in it, though it does not require a value. Since these selected props are boolean props, they are automatically set to true if they are specified without a value. That prop tells the component to change the color of the associated page's icon and text.
 
@@ -356,7 +356,7 @@ The acronym URI stands for Universal Resource Identifier. URI is an extremely br
 #### Background <a name="search_bar_bkgd"></a>
 *Author: Daniel*
 
-In several places throughout the app, a search bar is necessary. A user should be able to search for a specific crop by its name or HRFNum. The user will be typing on a mobile keyboard, possibly while wearing gloves. As such, the search bar needs to provide error correction or possible matches for the user's input. This is where fuzzy searching comes into the equation. Fuzzy searching is the usage of one or more algorithms to find strings in the database and suggest it to the user, boosting the relevance of search options. For most cases, substring matches are sufficient which just checks whether the input is present within any database strings. However, this does not allow for error correction, a necessity for this use case. Many companies prefer machine learning approaches because pre-existing solutions can be quickly bought and used. Since this is school assignment, a custom algorithm is necessary, and machine learning is too complex for this situation. Another approach to fuzzy searching is synonym, grammar, and dictionary-based approaches, but those do not work well when searching numbers and names. As such, this left partial word matching, edit distances, similarity coefficients or indices, and n-gram matching. 
+In several places throughout the app, a search bar is necessary. A user should be able to search for a specific crop by its name or HRFNum. The user will be typing on a mobile keyboard, possibly while wearing gloves. As such, the search bar needs to provide error correction or possible matches for the user's input. This is where fuzzy searching comes into the equation. Fuzzy searching is the usage of one or more algorithms to find strings in the database and suggest it to the user, boosting the relevance of search options. For most cases, substring matches are sufficient which just checks whether the input is present within any database strings. However, this does not allow for error correction, a necessity for this use case. Many companies prefer machine learning approaches because pre-existing solutions can be quickly bought and used. Since this is a school assignment, a custom algorithm is necessary, and machine learning is too complex for this situation. Another approach to fuzzy searching is synonym, grammar, and dictionary-based approaches, but those do not work well when searching numbers and names. As such, this left partial word matching, edit distances, similarity coefficients or indices, and n-gram matching. 
 
 The idea of placing the Search Bar section under the Components and Assets section was considered. However, it was decided to make the Search Bar portion into a separate section due to its length and complexity. 
 
@@ -429,7 +429,7 @@ Initially, I was using a JSON file with 8 entries. My first version of compareSt
 
 Based on that, I decided to create my own test cases. First, I found a list of crops grown in Texas on the Department of Agriculture's website. Then, I created a basic Python program to generate JSON entries for each crop and export them to a usable file. Afterwards, I set up some code to randomly assign plausible values for the other fields. Also, I used a function that creates the plural form of a word as the database could have "Blackberry" and "Blackberries". I would like to credit it, but I found the function years ago and have been using it for some time. The pluralizer may not be perfect, but it has always met my needs. 
 
-Since this semester kept me very busy and the program didn't need to be perfect, I just threw it together in about 30 minutes. As an example it has been included here. 
+Since this semester kept me very busy and the program didn't need to be perfect, I just threw it together in about 30 minutes. As an example, it has been included here. 
 
 ~~~python
 import json 
@@ -691,7 +691,7 @@ With this done, I could finally test my search bar properly. While decently fast
 
 At this point, I discovered an [article on ForrestTheWoods' blog](https://www.forrestthewoods.com/blog/reverse_engineering_sublime_texts_fuzzy_match/) about Sublime Text's fuzzy search algorithm. Sublime Text uses their algorithm to suggest keywords to programmers as they type. According to him, Sublime Text tries to match each character in the user's input and assigns a bonus to the match score for specific characters that are worth more points. Then, the algorithm returns the match with the highest final score. Based on some other blogs I found, I decided that it was still a good idea to combine multiple algorithms but as part of a weighted fuzzy search. Also, I found that multiple algorithms would decrease the likelihood of encountering the [birthday paradox](https://pudding.cool/2018/04/birthday-paradox/), though my use case helped to further reduce this potential problem. All of this led to another version of compareStrings and a change to searchFunction to place the strings with the highest score at the top of the list. 
 
-As denoted by the PROFILING comments, the function can now by broken up into general sections. Preprocessing removes Unicode characters with a transliteration library, changes all letters to uppercase, checks for an exact match which permits an early return, and stores each string's length. The Sørensen-Dice Coefficient (SDC) section calculates the coefficient, multiplies it by 100, rounds it to the nearest integer, and makes that the initial match score. The First and Last Letter section gives a bonus score if the first letter, last letter, or the letters after each space matches. The Length & Syllable section gives a bonus if the two strings are the same number of syllables and a penalty if a different length. The Prefix Match section provides a bonus if the second string starts with the first string. The Damerau-Levenshtein Edit Distance (DLED) section compares the two strings, though I also use it earlier in the First and Last Letter section. The Jaro-Winkler Similarity (JWS) section provides a bonus based on the strings' similarity with an extra bonus for matching prefixes. The final two sections lemmatize the two words, retrieve approximate phonetic encodings for the new words, and then provide a bonus if the encodings match. In a later section, I will explain what all of these terms mean. 
+As denoted by the PROFILING comments, the function can now be broken up into general sections. Preprocessing removes Unicode characters with a transliteration library, changes all letters to uppercase, checks for an exact match which permits an early return, and stores each string's length. The Sørensen-Dice Coefficient (SDC) section calculates the coefficient, multiplies it by 100, rounds it to the nearest integer and makes that the initial match score. The First and Last Letter section gives a bonus score if the first letter, last letter, or the letters after each space matches. The Length & Syllable section gives a bonus if the two strings are the same number of syllables and a penalty if a different length. The Prefix Match section provides a bonus if the second string starts with the first string. The Damerau-Levenshtein Edit Distance (DLED) section compares the two strings, though I also use it earlier in the First and Last Letter section. The Jaro-Winkler Similarity (JWS) section provides a bonus based on the strings' similarity with an extra bonus for matching prefixes. The final two sections lemmatize the two words, retrieve approximate phonetic encodings for the new words, and then provide a bonus if the encodings match. In a later section, I will explain what all of these terms mean. 
 
 #### Initial Optimizations <a name="init_optimizations"></a>
 *Author: Daniel*
@@ -936,22 +936,22 @@ Second, I will discuss how I determined the length of the common suffix. This fu
 
 The database is deployed on Azure MySQL flexible server. Connecting to the database can be done either through MySQL's command line tools, or it can be done through the Azure portal. Once we have set up the database connected to the client's account, you can handle maintenance tasks using the Azure Portal. These tasks include log and read-write monitoring, as well as viewing the database in PowerBI.
 
-The database is connected to the app using a Node.JS Express server backend which will also be deployed on the Azure Portal through the App Services. The database consists of 11 tables, each having their own primary keys. If you wish to see more on the Database structure, please see the Project Plan Document or Design Document. If you wish to alter these tables, please run `ALTER TABLE SQL` query. If you wish to insert custom values or fields into the database, run the `CREATE TABLE` query, and be sure to add the `fld_s_<tableletter>_subscriberID_pk` to the table if it needs another primary key to ensure unique values. 
+The database is connected to the app using a Python Flask backend which will also be deployed on the Azure Portal through the App Services. The database consists of 11 tables, each having its own primary keys. If you wish to see more on the Database structure, please see the Project Plan Document or Design Document. If you wish to alter these tables, please run `ALTER TABLE SQL` query. If you wish to insert custom values or fields into the database, run the `CREATE TABLE` query, and be sure to add the `fld_s_<tableletter>_subscriberID_pk` to the table if it needs another primary key to ensure unique values. 
 
-Be aware the our third party user authentication service, Auth0, has an action written so that upon a user sign up, it will send that userID token to the database and create a new Subscriber entry
+Be aware that our third-party user authentication service, Auth0, has an action written so that upon a user sign-up, it will send that userID token to the database and create a new Subscriber entry
 #### Backend Server <a name="backend_overview"></a>
 *Author: Tyler*
 
-The backend mainly consists of 2 entities, CAbackend, which is our backend server deployed on a Azure App Service. Due to some issues with the compatability of Node.js and Azure App Service, our backend is written in python using the Flask library. When logging into the Azure App Service, we can manage the resource through the overview tab, and can see more of the capabilities and capacity in this tab as well. It is important to note that sometimes the container takes some time to start up. If the URLs for the endpoints are not behaving as expected, connect to the log stream through the Azure App Service, and check to see that the container is going through it's startup procedure.
+The backend mainly consists of 2 entities, CAbackend, which is our backend server deployed on an Azure App Service. Due to some issues with the compatibility of Node.js and Azure App Service, our backend is written in python using the Flask library. When logging into the Azure App Service, we can manage the resource through the overview tab, and can see more of the capabilities and capacity in this tab as well. It is important to note that sometimes the container takes some time to start up. If the URLs for the endpoints are not behaving as expected, connect to the log stream through the Azure App Service, and check to see that the container is going through its startup procedure.
 
-There are some quirks when dealing with Azure App Service. If you run into any errors(as I have ran into several), please ensure that you have set up all environment variables needed. There may also be an issue with the configuration of the connection between the server and the database, as that has proven to be more than finnicky to set up. As it is currently, The two are set up on an azure virtual network, with a private endpoint that the backend can use to access the server. The values used to actuallyt connect to the database, such as username and password, are stored in envrionment variables in the backend server itself, not the code. There are several resources online that are useful when debugging Azure service issues, and if all else fails you can contact the Azure Support team for resources.
+There are some quirks when dealing with Azure App Service. If you run into any errors(as I have ran into several), please ensure that you have set up all environment variables needed. There may also be an issue with the configuration of the connection between the server and the database, as that has proven to be more than finicky to set up. As it is currently, The two are set up on an Azure virtual network, with a private endpoint that the backend can use to access the server. The values used to actually connect to the database, such as username and password, are stored in environment variables in the backend server itself, not the code. There are several resources online that are useful when debugging Azure service issues, and if all else fails you can contact the Azure Support team for resources.
 
-Our backend code is hosted on github, and if you wish to change something or add a new method to the backend then you can push the the repository, and the github action will build and deploy it for you. The action will trigger upon pushing to the main branch. Be aware that there may be some azure OneDeploy issues that cause the action to fail, in this case, I found that re running the action on the github repositories' actions tab usuall works. Keep in mind that after deployment it takes a couple of minutes in order for the new container to startup on the backend server
+Our backend code is hosted on github, and if you wish to change something or add a new method to the backend then you can push the repository, and the github action will build and deploy it for you. The action will trigger upon pushing to the main branch. Be aware that there may be some azure OneDeploy issues that cause the action to fail, in this case, I found that re-running the action on the github repositories' actions tab usually works. Keep in mind that after deployment it takes a couple of minutes in order for the new container to start on the backend server
 
 
 #### Writing Endpoints <a name="writing_endpoints"></a>
 *Author: Tyler*
-Our Backend is written in python, using the Flask library. The format for writing an endpoint goes as follows.
+Our Backend is written in Python, using the Flask library. The format for writing an endpoint goes as follows.
 ```py
 @app.route('/route_path/<paramType: param>', methods=['GET'])
 def route_path(param):
@@ -977,12 +977,12 @@ The format can change depending on the method of the endpoint, POST or GET, but 
 4. Monitor Containment Logs
 5. Ensure that python code is bug free
 6. Ensure that environment variables are set up correctly in Azure App Service
-7. See resources for the Azure App Service here to get more help on the infe URL: https://learn.microsoft.com/en-us/azure/app-service/
+7. See resources for the Azure App Service here to get more help on the info URL: https://learn.microsoft.com/en-us/azure/app-service/
 
 #### Pushing to the GitHub <a name="push_to_github_backend"></a>
 *Author: Tyler*
 
-To push your changes to the server, use either the git cli, or the git GUI that can be downloaded. Add your modified files to be commited, run the `git commit` command, and then push to the remote branch desired using `git push origin <branch>`
+To push your changes to the server, use either the git cli, or the git GUI that can be downloaded. Add your modified files to be committed, run the `git commit` command, and then push to the remote branch desired using `git push origin <branch>`
 
 #### User Authentication <a name="user_authentication">
 *Author: Tyler*
@@ -1000,7 +1000,7 @@ The documentatoin for the Auth0 authentication services can be found here https:
 This guide will assume that you are using a Windows environment.
 1. Go to the [Android Developer page for Android Studio](https://developer.android.com/studio)
 1. Download the latest version as an .exe file
-1. Open Android Studio Setup. Under Select components to install, select Android Studio and Android Virtual Device and then click Next
+1. Open Android Studio Setup. Under Select Components to install, select Android Studio and Android Virtual Device and then click Next
 1. In the Android Studio Setup Wizard, under Install Type, select Standard and click Next
 1. The Android Studio Setup Wizard will ask you to verify the settings, such as the version of Android SDK, platform-tools, and so on. Click Next after you have verified
 1. Accept licenses for all available components
@@ -1052,7 +1052,7 @@ This guide will assume that you are using a Windows environment.
 #### Importing Libraries <a name="import_libs"></a>
 *Author: Daniel*
 
-When you need to import/install a new library, please use either `npm install --save <YourLibrary>` or `npm install --save-dev <YourLibrary>`. The former will add it to the dependencies list in package.json while the latter adds it to the devDependencies list.
+When you need to import/install a new library, please use either `npm install --save <YourLibrary>` or `npm install --save-dev <YourLibrary>`. The former will add it to the dependencies list in package.json while the latter will add it to the devDependencies list.
 
 There are two other commands which can import libraries but which should not be used. Namely, they are `npx expo install <YourLibrary>` and `yarn add <YourLibrary>`. These commands do not properly save the libraries in package.json and use a different package manager. While expo can handle having both the npm and yarn package managers, it can create some conflicts with jest and requires that you import every library twice.
 
@@ -1068,7 +1068,7 @@ Start Expo Go by executing `npx expo start` from a command line at the root dire
 
 Start the full test suite by executing `npm test` from a command line at the root directory of the repo.
 
-To run only a specific test fil, execute `npm test -- BillingDetails.test.jsx` from a command line at the root directory of the repo. Since this file is in \_\_tests\_\_ which is in the root directory, a directory is not necessary in the command.
+To run only a specific test file, execute `npm test -- BillingDetails.test.jsx` from a command line at the root directory of the repo. Since this file is in \_\_tests\_\_ which is in the root directory, a directory is not necessary in the command.
 
 If you want to update the snapshots, you can execute either `npm run updateTestSnapshots` or `npm test -- -u BillingDetails.test.jsx` from a command line at the root directory of the repo.
 
@@ -1178,7 +1178,7 @@ After the previous useEffect hook, you can use the `isDarkMode` state variable a
 }, isDarkMode && (hasNotificationsEnabled ? {color: Colors.HOT_GREEN} : {color: Colors.ALMOST_BLACK})]}> 
 ~~~
 
-To provide some extra help, here is the code for adding dark mode to the status bar and navbar as they are two components frequently reused throughout the program. The navbar is especially easy since it takes a boolean, just keep in mind that this navbar example is meant for the profile page. Don't forget to the change the selected page to your page.
+To provide some extra help, here is the code for adding dark mode to the status bar and navbar as they are two components frequently reused throughout the program. The navbar is especially easy since it takes a boolean, just keep in mind that this navbar example is meant for the profile page. Don't forget to change the navbar's selected page to your page.
 
 ~~~jsx
 <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/> 
@@ -1372,10 +1372,11 @@ This error is indicated by issues like the 'Press a │ open Android' text being
 This section is useful when you see a warning like "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead." Basically, this happens when you use a VirtualizedList-based component, like FlatList, inside of ScrollView components. This is because the app doesn't know which list is being targeted by a scroll gesture. There are a lot of different solutions to this.
 
 * Use the .map function instead of a VirtualizedList to display the list within the ScrollView
-* Make the ScrollView and VirtualizedList scroll different directions (vertical vs. horizontal)
+* Make the ScrollView and VirtualizedList scroll in different directions (vertical vs. horizontal)
 * Disable the scrollable feature on either the VirtualizedList or the ScrollView
 * Use a component like VirtualizedScrollView instead of ScrollView
-* Use the FlatList props instead of ScrollView to provide headers, footers,
+* Use the FlatList props instead of ScrollView to provide headers and footers
+* Check if your nested component has a prop/mode to fix this
 
 #### Invariant Violation Error <a name="invariant_violation"></a>
 *Author: Daniel*
