@@ -35,6 +35,8 @@
      1. [Crops Page](#my_crops_page)
         1. [My Crops](#my_crops)
         1. [Add Crops](#add_crops)
+	1. [View Crops](#view_crops)
+        1. [Individual Crop](#ind_crop)
     1. [Notebook Page](#notebook_page)
         1. [Background](#notebook_background)
         1. [General Trouble Shooting](#notebook_troubleshooting)
@@ -210,6 +212,16 @@ The initial purpose behind this section is to have the user be able to create, m
 *Author: Isaac*
 
 The purpose of this page is to create the crops that will be used and managed by the user. The user will be brought to a page with various fields to put information. They will have to fill out fields for the name, medium, location, type, variety, source, date planted, and more. The HRF number that will be tied to identify the crop is also created using this page, but it is assigned a randomized 6-digit number when the page is first opened. When the user is done filling out all the fields, they may hit the save button located in the top right. The save button will check to make sure every field is filled out, with no blanks. When that is confirmed, it will create an object and send it back to where the rest of the crops are stored, effectively saving the new crop. If failed, the page will prompt to the user that there are fields that are left unfilled, and will not save the object, but rather return to the add crops page so that the user may fill out the remaining fields. The input fields also go through sanitization, which is covered later by Daniel. All this does is ensure that the inputs are valid and nothing malicious or incorrect.
+
+#### View Crops <a name="view_crops"></a>
+*Author: Isaac*
+
+The view crops page is used to present all created crops to the user. This is presented through a scrollable list, with each crop being presented. The objects will only show their name, and the way that they are identified in the list is through the created HRF number. The user should be able to scroll through the list and select any crop that they wish to view more information about. On selection (press), the user will be sent to a mimic of the Add crops page where the crop information will be presented in the input boxes. There is current plans to add search and sort functions as well, where the user will be able to search for specific crops and be able to sort crops based on location or name. The purpose for this page is to present every object in an orderly fashion to the user.
+
+#### Individual Crop Page <a name="ind_crop"></a>
+*Author: Isaac*
+
+The individual crop page is created from the View Crops page, where the user has selected a crop to view more information about. This page will look very similar to the Add Crops page, with a similar layout and input boxes, where the main difference is that the information is already filled out and the boxes start uneditable. The user will be able to scroll up and down to view all information about the crop that has been selected. On the bottom of the screen the user will be able to see and edit button. This button makes it so that the user may edit the selected crop so that they may change specifics on information. Every field except the HRF number will be editable, and when the edit is done it should change the information about the crop. 
 
 ### Notebook Page <a name="notebook_page"></a>
 #### Background <a name="notebook_background"></a>
