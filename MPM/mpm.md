@@ -262,6 +262,9 @@ The Account Details section first allows the user to select the current farmer. 
 At the top of the page is a back arrow which unwinds the stack and a save button. The save button triggers a specific function which sanitizes the input before saving it to the database or AsyncStorage. There is another UploadImage component in read-only mode. Then, there is a dropdown box which opens a scrollview box that contains the different subscription models. Afterwards, there are 4 input fields for the user's email, phone number, zip code and state. The zip code is used by the Home page to determine the weather forecast which is why the save function verifies that the zip code is valid.
 
 ### Data Hub Page <a name="datahub_page"></a>
+*Author: Matthew*
+
+The main functionality of the Data Hub Page is to take a JSON object. Then, using react-native-chart-kit to display relevent graphs about the user's account. This is the page where the user may get a history of their activity on the app. The secondary functionality of the page is to provide a way for the user to export their compiled data to their phone's local storage or posting to Facebook. The graphs are all contained within collapsible sections, or drop downs, that require the user to press to open. There is a search bar that allows the user to specifically input certain kinds of crops and have the graphs display the relevent information about them. The export functionality uses a form of html2canvas to turn the drop down components into a saveable PNG image file.
 
 ### Components & Assets <a name="components_n_assets"></a>
 #### Rows & Columns <a name="grid"></a>
