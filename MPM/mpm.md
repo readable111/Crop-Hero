@@ -35,7 +35,7 @@
      1. [Crops Page](#my_crops_page)
         1. [My Crops](#my_crops)
         1. [Add Crops](#add_crops)
-	1. [View Crops](#view_crops)
+        1. [View Crops](#view_crops)
         1. [Individual Crop](#ind_crop)
     1. [Notebook Page](#notebook_page)
         1. [Background](#notebook_background)
