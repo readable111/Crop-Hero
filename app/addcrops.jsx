@@ -25,7 +25,7 @@ import { Input } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
 import Icons from '../assets/icons/Icons.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {cleanText, cleanNumbers} from '../assets/sanitizer'
+import {cleanNumbers} from '../assets/sanitizer'
 import DropDownPicker from 'react-native-dropdown-picker';
 
 
@@ -79,7 +79,7 @@ const AddCrops = () => {
                 
                 setCropData({
                         ...cropData,
-                        //[fieldName]: cleanText(input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
+                        //[fieldName]:  (input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
                         [fieldName]: input
                 })
         }
@@ -229,7 +229,7 @@ const AddCrops = () => {
                                         maxLength={1024}
                                         onChangeText={(text) => handleChange('comments', text)}
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Started Indoors?</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark, styles.dropdownLabel]}>Started Indoors?</Text>
                                 
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}
@@ -240,7 +240,42 @@ const AddCrops = () => {
                                         items={items}
                                         onChangeValue={handleIndoorsChange}
                                         placeholder="Started Indoors?"
-                                        style={styles.textBox}
+                                        listMode='SCROLLVIEW'
+					dropDownDirection='BOTTOM'
+                                        scrollViewProps={{
+					        nestedScrollEnabled: true
+					}}
+                                        props={{
+						activeOpacity: 1,
+					}}
+                                        containerStyle={{
+						width: '94%',
+						zIndex: 50,
+						marginBottom: 40,
+					}}
+                                        dropDownContainerStyle={[{
+						borderWidth: 2,
+						borderColor: Colors.CHARCOAL,
+						backgroundColor: Colors.WHITE_SMOKE,
+						borderRadius: 12,
+						zIndex: 50,
+                                                marginTop: -10,
+                                                width: '90%',
+                                                marginLeft: '8%',
+                                                marginRight: '5%',
+					}, isDark && {borderColor: Colors.WHITE_SMOKE, backgroundColor: Colors.IRIDIUM}]}
+                                        style={[{
+						borderColor: Colors.CHARCOAL,
+						borderWidth: 2,
+						borderRadius: 12,
+						height: 52,
+						backgroundColor: Colors.WHITE_SMOKE,
+                                                width: '90%',
+                                                marginLeft: '8%',
+                                                marginRight: '5%',
+                                                height: 40,
+                                                zIndex: 1,
+					}, isDark && {borderColor: Colors.WHITE_SMOKE, backgroundColor: Colors.IRIDIUM}]}
                                 />
                                 
                                 {/*}
@@ -416,6 +451,12 @@ const styles = StyleSheet.create({
 		fontSize: 16,
                 fontFamily: 'Domine-Regular',
 		borderColor: 'white',
+                paddingLeft: 5,
+                paddingRight: 5,
+        },
+        dropdownLabel:{
+		zIndex: 9999,
+                elevation: (Platform.OS === 'android') ? 9999 : 0,
         },
         labelDark:{
                 backgroundColor: Colors.IRIDIUM,
