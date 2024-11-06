@@ -1749,8 +1749,6 @@ The Expo Router library will automatically generate statically typed routes for 
 * Allow crop sharing between app users as part of data aggregation for the Data Hub graphs
     * This would be connected to crop visibility where only crops set to visible will be included in the data aggregation
 * Improve the speed and efficiency of calls to APIs or the backend
-* Speed up the fuzzy string matching/approximate string matching (FSM/ASM) algorithm
-    * Currently, the massive limiter on the algorithm's speed is the sorting algorithm that it uses. The quickselect, heapselect, or Floyd-Rivest sorting algorithms are optimized to identify the X largest values which would be the entries with the X highest match scores in this use case. As such, implementing these algorithms should increase the FSM speed.
 * Add GPS functionality and/or geotagging to identify specific crops or locations
     * Perhaps add a map of the area with zones and markers
 * Add a desktop computer-focused website interface for the mobile app
