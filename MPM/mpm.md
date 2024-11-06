@@ -79,6 +79,7 @@
         1. [Installing Expo](#install_expo)
     1. [Package Management](#pkg_mgmt)
         1. [Importing Libraries](#import_libs)
+        1. [Updating Libraries](#update_libs)
     1. [Running The Program](#run_program)
         1. [Starting Expo Go](#start_expo)
         1. [Starting The Test Suite](#start_tests)
@@ -114,6 +115,7 @@
         1. [Snap File is Mostly Empty](#empty_snap_file)
         1. [Expected String or Class/Function But Got Undefined](#undefined_not_string_class)
         1. [Error About Act Wrapping](#act_wrapping)
+        1. [Unable to Find Component With Test ID](#testid_not_found)
 1. [Tools & Resources](#tools)
 1. [Appendices](#appendices)
     1. [Appendix A: Understanding React Native](#react_native)
@@ -122,6 +124,7 @@
         1. [Import Types](#import_types)
         1. [Inter-Page Routing](#routing)
     1. [Appendix B: Glossary](#b_glossary)
+    1. [Appendix C: Future Improvements](#c_future_improvements)
 
 ## Introduction <a name="intro"></a>
 ### Purpose of Project <a name="project_purpose"></a>
@@ -972,6 +975,7 @@ Unsurprisingly, libraries will go out of date over time. Use the following comma
 * `npm update --save`: update all project dependencies and save the new values to package.json
 * `npm update react-native --save`: update the specified project dependency (react-native in this case) and save the new value to package.json
 * `npm update react-native@0.74.5 --save`: update/downgrade the specified project dependency (react-native in this case) to version 0.74.5 and save the new value to package.json
+* `npx expo start`: lists any conflicting dependency versions for critical dependencies before starting Expo Go
 
 ### Running The Program <a name="run_program"></a>
 #### Starting Expo Go <a name="start_expo"></a>
@@ -1396,6 +1400,23 @@ await waitForElementToBeRemoved(() => queryByText("Loading ..."));
 ##### Case 4: Formik Updates
 Like Case 3, Case 4 is a variant of Case 1. In this case, the test simulates events to change values in form inputs like changing the value in a text input. If the form input is managed by Formik, your test will have a chance to run into this error. Just like Case 1, you can solve it by just waiting for it to complete.
 
+#### Unable to Find Component With Test ID <a name="testid_not_found"></a>
+*Author: Daniel*
+
+This is a common issue where you are unable to find any component with the desired test ID, which is especially annoying when dealing with @rneu/themed. You'll probably notice it because you are getting errors about trying to call functions on "null" or "undefined" values. Here are some troubleshooting steps.
+
+1. Try to render the component as a snapshot test
+    * If you get exports[`<YourComponent/> renders correctly 1`] = `<YourComponent />` or exports[`<YourComponent/> renders correctly 1`] = null, then you have an error with the component. Check the other sections in the MPM on how to troubleshoot this specific error.
+    * Otherwise, continue through the steps
+1. Follow the general troubleshooting advice in this section to identify the problematic component
+1. Check whether the `testID` prop is properly passed
+    * This can be an issue if you are dealing with a component that you wrote
+1. Check whether the problematic library needs to be ignored in the Jest transformer
+    * To ignore the library, go to jest.config.js and add the library to the 'transformIgnorePatterns' list
+1. Check whether the problematic component has been mocked as an empty component like `<></>`
+1. Mock the problematic component if it has not already been mocked
+    * Just make sure not to use an empty component here, per the previous step
+
 ## Tools & Resources <a name="tools"></a>
 *Author: Daniel*
 
@@ -1500,3 +1521,22 @@ The Expo Router library will automatically generate statically typed routes for 
 - Unit Test: this test focuses on testing the functionality of a single function, class, or component; ensures that each individual part works before trying to combine them which allows issues to be isolated
 - Usability Test: this test focuses on asking the user to perform certain tasks and assessing whether they are capable of achieving this task in a reasonable amount of time
 - User Acceptance Test (UAT): this test focuses on the user's experience and whether the client is content with the product rather than how usable the product is
+
+#### Appendix C: Future Improvements <a name="c_future_improvements"></a>
+*Author: Daniel*
+
+* Add livestock tracking to the app by expanding the crop tracking features
+* Add a subscription model, likely based on a freemium model
+    * Charge via PayPal or Square to offload security considerations and PCI DSS requirements
+* Expand social media integration
+* Allow crop sharing between app users as part of data aggregation for the Data Hub graphs
+    * This would be connected to crop visibility where only crops set to visible will be included in the data aggregation
+* Improve the speed and efficiency of calls to APIs or the backend
+* Speed up the fuzzy string matching/approximate string matching (FSM/ASM) algorithm
+    * Currently, the massive limiter on the algorithm's speed is the sorting algorithm that it uses. The quickselect, heapselect, or Floyd-Rivest sorting algorithms are optimized to identify the X largest values which would be the entries with the X highest match scores in this use case. As such, implementing these algorithms should increase the FSM speed.
+* Add GPS functionality and/or geotagging to identify specific crops or locations
+    * Perhaps add a map of the area with zones and markers
+* Add a desktop computer-focused website interface for the mobile app
+    * May be an option provided by React Native and Expo's interpreters, with Expo allowing both statically and client rendered websites
+* Increase the number of components that can tied to images
+    * May include crops, livestock, tasks, task types, locations, etc.
