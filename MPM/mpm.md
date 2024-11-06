@@ -32,13 +32,25 @@
     1. [Home Page](#indepth_home)
         1. [General Weather Forecast](#weather_forecast)
         1. [Weather Slider](#weather_slider)
+        1. [Ambient Weather](#ambient_weather)
         1. [Crop Carousel](#crop_carousel)
-    1. [My Crops Page](#my_crops_page)
+     1. [Crops Page](#my_crops_page)
+        1. [My Crops](#my_crops)
+        1. [Add Crops](#add_crops)
+        1. [View Crops](#view_crops)
+        1. [Individual Crop](#ind_crop)
     1. [Notebook Page](#notebook_page)
         1. [Background](#notebook_background)
+        1. [General Trouble Shooting](#notebook_troubleshooting)
     1. [To-Do Page](#todo_page)
         1. [Background](#todo_background)
+        2. [General Trouble Shooting](#todo_troubleshooting)
+        3. [Adding Filtering Years](#todo_yearfilters)
     1. [Profile Page](#profile_page)
+        1. [Base Page](#base_profile)
+        1. [Edit Profile Page](#edit_profile)
+        1. [Settings Page](#settings_profile)
+        1. [Billing Details Page](#billing_details_profile)
     1. [Data Hub Page](#datahub_page)
     1. [Components & Assets](#components_n_assets)
         1. [Rows & Columns](#grid)
@@ -48,6 +60,8 @@
         1. [Icons](#icons)
         1. [Colors](#colors)
         1. [Sanitizers](#sanitizers)
+        1. [Profile Image Handler](#profile_img_handler)
+            1. [What is a URI?](#define_uri)
     1. [Search Bar](#search_bar)
         1. [Background](#search_bar_bkgd)
         1. [Search Bar Component](#search_bar_component)
@@ -71,6 +85,7 @@
         1. [Backend Server](#backend_overview)
         1. [Writing Endpoints](#writing_endpoints)
         1. [Pushing to the GitHub](#push_to_github_backend)
+        1. [User Authentication](#user_authentication)
 1. [Installation & Setup](#setup)
     1. [Preparing The Development Environment](#prep_dev_environ)
         1. [Installing Android Studio](#install_android_studio)
@@ -84,11 +99,18 @@
         1. [Starting Expo Go](#start_expo)
         1. [Starting The Test Suite](#start_tests)
 1. [Maintenance Tasks](#maint)
+    1. [Maintenance Schedule](#maint_sched)
+    1. [Fixing Bugs & Crashes](#fix_bugs_crashes)
+    1. [Code Validation](#code_validation)
     1. [Adding a New Page](#add_page)
         1. [The Status Bar](#status_bar)
         1. [Adding Dark Mode](#add_dark_mode)
         1. [Expanding the Navbar](#expand_navbar)
         1. [Importing the Search Bar](#import_search)
+    1. [Security Validation](#security_validation)
+    1. [Performance & Availability Monitoring](#performance_availability_monitoring)
+    1. [Updating the Design & Enhancing Features](#update_designs_features)
+    1. [App Compatibility Audit](#app_comp_audit)
 1. [Troubleshooting](#trblsht)
     1. [Emulator Errors](#emulator_errors)
         1. [Cannot Open Emulator](#cant_open_em)
@@ -100,12 +122,14 @@
     1. [Expo Errors](#expo_errors)
         1. [Expo-CLI is Deprecated / Legacy Expo-CLI](#cli_deprecated)
         1. [Expo Keeps Stopping](#expo_stops)
+        1. [Android is Disabled](#disabled_android)
     1. [Common React Native Compilation Errors](#rn_compilation_err)
         1. [Error due to Different Number of Hooks Between Renders](#different_number_hooks)
         1. [Computer Restarts When Loading App in Emulator](#computer_restarts)
         1. [Infinite Number of Rerenders](#infinite_rerenders)
         1. [VirtualizedLists Nested In a ScrollView](#nested_virtualizedlists)
         1. [Invariant Violation Error](#invariant_violation)
+        1. [Destructuring Issue](#destructuring_issues)
     1. [Jest Errors](#jest_errors)
         1. [General Troubleshooting Advice For Jest](#general_ts_advice)
         1. [No Tests Found](#no_tests)
@@ -117,6 +141,9 @@
         1. [Error About Act Wrapping](#act_wrapping)
         1. [Unable to Find Component With Test ID](#testid_not_found)
 1. [Tools & Resources](#tools)
+    1. [General Docs](#general_docs)
+    1. [Testing Utilities](#testing_utilities)
+    1. [Ambient Weather](#ambient_weather)
 1. [Appendices](#appendices)
     1. [Appendix A: Understanding React Native](#react_native)
         1. [File Types](#file_types)
@@ -185,26 +212,93 @@ The custom page scroll handler function is based on a custom function defined in
 
 The `PagingDots` component uses the map function again to create one dot for every item in the lost. Each dot is a ScalingDot component which is passed any props passed to `PagingDots` that it does not already use. These props are defined in as a type so that I could specify which props existed and their type. While the props are copy-pasted from the ScalingDot file, ScalingDot only works properly with default exports so I could not export the props. The ScalingDot component basically just displays an animated circle with the color, opacity, and size changing based on whether it is the currently selected dot. All of the animated restyling is handled by more interpolation and clamping which function just like above. As one note, there are several lines like `inActiveDotColor: inActiveDotColor || '#347af0'`. This line means that the `inActiveDotColor` prop is used normally but allows the line to default to  '#347af0' when the prop is null.
 
+#### Ambient Weather <a name="ambient_weather"></a>
+*Author: Daniel*
+
+While the previous section discusses how the WeatherSlider component functions, this section focuses on how the information is obtained. First, the API key, app key, and device MAC address are fetched from AsyncStorage. If any of those values have not been set (meaning that they are equivalent to null or are zero-length), then the default JSON is used. Since this if block will trigger before the async functions fetch the values, the default JSON provides loading icons. Once the information has been fetched, it is passed to the `fetchWeatherData` function which returns an array. From the array, I retrieve the first entry and then construct the slider's JSON from specific fields. Specifically, I use the temperature in Fahrenheit (tempf), the feels-like temperature (feels_like), the wind speed in mph (windspeedmph), the amount of rain today in inches (dailyrainin), the humidity percent (humidity), and the soil moisture (soilmoisture).
+
+The `fetchWeatherData` function is wrapped by the `rateLimiter` function. The `rateLimiter` function checks whether the last request occurred within the past 1000ms or past 1 second (the maximum rate permitted by Ambient Weather). If the request is too soon, it is ignored and the Promise is resolved to null. Otherwise, the timestamp for the last request is updated, and the original function is called with the original arguments. The `fetchWeatherData` function receives the API key, app key, and MAC address. The function basically wraps an axios call which makes a GET request to Ambient Weather's RESTful API. The API and app keys are passed as params and are required to gain access to the API. The MAC address is passed as part of the URL which targets the data provided by a specific sensor. Without the MAC address, I would need to fetch a list of all sensors associated with that account, determine which ones provide useful information, and extract it.
+
 #### Crop Carousel <a name="crop_carousel"></a>
 *Author: Daniel*
 
 The CropCarousel component is far simpler than the WeatherSlider, just calling the Carousel component with a special name and passing over the props. The Carousel component is just a FlatList which renders multiple pressable views, one for each item passed in the JSON object. The Pressable uses the expo-router to push a new page when a user selects a crop.
 
 ### My Crops Page <a name="my_crops_page"></a>
+#### My Crops <a name="my_crops"></a>
+*Author: Isaac*
+
+The initial purpose behind this section is to have the user be able to create, manage, and delete crops that they may have. The user should be able to manage what crops they have and also be able to view and/or edit any relevant information about said crops. This starts with our initial home page, the "My Crops" page. This page is treated mostly just as a navigation tool between two more pages, Add Crops and View Crops. With this, the user should be able to select and press one of two buttons, and that button should connect to the correct page. This is also the page that the user will return to once they are done with either of the two pages, and it contains the navbar to lead to other pages. 
+
+#### Add Crops <a name="add_crops"></a>
+*Author: Isaac*
+
+The purpose of this page is to create the crops that will be used and managed by the user. The user will be brought to a page with various fields to put information. They will have to fill out fields for the name, medium, location, type, variety, source, date planted, and more. The HRF number that will be tied to identify the crop is also created using this page, but it is assigned a randomized 6-digit number when the page is first opened. When the user is done filling out all the fields, they may hit the save button located in the top right. The save button will check to make sure every field is filled out, with no blanks. When that is confirmed, it will create an object and send it back to where the rest of the crops are stored, effectively saving the new crop. If failed, the page will prompt to the user that there are fields that are left unfilled, and will not save the object, but rather return to the add crops page so that the user may fill out the remaining fields. The input fields also go through sanitization, which is covered later by Daniel. All this does is ensure that the inputs are valid and nothing malicious or incorrect.
+
+#### View Crops <a name="view_crops"></a>
+*Author: Isaac*
+
+The view crops page is used to present all created crops to the user. This is presented through a scrollable list, with each crop being presented. The objects will only show their name, and the way that they are identified in the list is through the created HRF number. The user should be able to scroll through the list and select any crop that they wish to view more information about. On selection (press), the user will be sent to a mimic of the Add crops page where the crop information will be presented in the input boxes. There is current plans to add search and sort functions as well, where the user will be able to search for specific crops and be able to sort crops based on location or name. The purpose for this page is to present every object in an orderly fashion to the user.
+
+#### Individual Crop Page <a name="ind_crop"></a>
+*Author: Isaac*
+
+The individual crop page is created from the View Crops page, where the user has selected a crop to view more information about. This page will look very similar to the Add Crops page, with a similar layout and input boxes, where the main difference is that the information is already filled out and the boxes start uneditable. The user will be able to scroll up and down to view all information about the crop that has been selected. On the bottom of the screen the user will be able to see and edit button. This button makes it so that the user may edit the selected crop so that they may change specifics on information. Every field except the HRF number will be editable, and when the edit is done it should change the information about the crop. 
 
 ### Notebook Page <a name="notebook_page"></a>
 #### Background <a name="notebook_background"></a>
 *Author: McKenna*
 
-The intended purpose of the notebook page is for the user to be able to document daily proceedings as to what has been happening that day on the farm. The user will add in entries via a pop-up modal and will be able to sort entries by month and year. 
+ The intended purpose of the notebook page is for the user to be able to document daily proceedings as to what has been happening that day on the farm. The user will add in entries via a pop-up modal and will be able to sort entries by month and year. The notebook page is the default page that is displayed when the user selects the notebook icon from the bottom navigation bar. At the top of the screen, two green ovals are displayed that allow the user to swap between the To-Do page and the Notebook page. Within the Notebook page, the user is given filters displayed along the top underneath the page toggles to allow for filtering entries made by the user for better a better viewing experience. All other interactions are initiated with the speed dial located at the bottom right that allows the user to add an entry. The speed dial is further used on a long press of an entry that allows the user to edit, delete, or export the long pressed entry.
+#### General Trouble Shooting <a name="notebook_troubleshooting"></a>
+*Author: McKenna*
+
+To make sure an entry is selcted for editing, exporting, or deleting, a long press and hold is required for the system to capture the entry as slected. If the user recieves an error that no entry is selected, the user should acknowledge the confirmation and long press the entry once again.
 
 ### To-Do Page <a name="todo_page"></a>
 #### Background <a name="todo_background"></a>
 *Author: McKenna* 
 
+The purpose of the To-Do page is for the user to keep track of tasks that need to be accomplished around their farming/planting environment. The user is able to assign things such as farmer, task type, crop type, icons, and more to the task entry for easy tracking and filtering. The To-Do page is a secondary page that can be accessed when the user selects the Notebook page from the bottom navigation bar and then toggles to the To-Do page by selecting the corresponding green oval at the top left of the screen. At the top of the screen, two green ovals are displayed that allow the user to swap between the To-Do page and the Notebook page. Within the To-Do page, the user is given filters displayed along the top underneath the page toggles to allow for filtering entries made by the user for better a better viewing experience. All other interactions are initiated with the speed dial located at the bottom right that allows the user to add an entry. The speed dial is further used on a long press of an entry that allows the user to edit, delete, mark complete, or export the long pressed entry.
+
+#### General Trouble Shooting <a name="todo_troubleshooting"></a>
+*Author: McKenna*
+
+To make sure an entry is selcted for editing, exporting, marking complete, or deleting, a long press and hold is required for the system to capture the entry as slected. If the user recieves an error that no entry is selected, the user should acknowledge the confirmation and long press the entry once again.
+#### Adding Additional Filtering Years <a name="todo_yearfilters"></a>
+*Author: McKenna*
+
+Should the application need more years added for entry adding and therefore filtering, more years can be added by simply navigating to the years section in the code and adding in addtional years to the list. 
+
 ### Profile Page <a name="profile_page"></a>
+#### Base Page <a name="base_profile"></a>
+*Author: Daniel*
+
+The base Profile page functions as a central hub which allows a user to easily access the several subpages. At the top, there is a green oval which is laid over a Santa Gray background. The oval was created with a larger height than width, a large border radius, and a scaleX transformer. Then, the oval is moved upwards and folded over the top of the screen to create a half-circle. On this oval, I display the user's name and the profile picture. The profile picture uses the UploadImage component in read-only mode, simplifying the process of storing and using the selected image's URI. Below that, there is a button to edit the profile and a grid of buttons, with all of these buttons linking to other pages. These buttons are based on the AppButton component and use AntDesign icons. Only the icons and arrows are buttons, not the text.
+
+#### Edit Profile Page <a name="edit_profile"></a>
+*Author: Daniel*
+
+At the top of the page is a Santa Gray oval which is laid over an Irish Green background. On the circle is a back arrow which unwinds the stack and a save button. The save button triggers a specific function which sanitizes the input before saving it to the database or AsyncStorage. Below that, an UploadImage component allows users to select images for their profile picture. Then, there are a bunch of input fields to retrieve the user's name, keys for their Ambient Weather devices, and a new password. The Ambient Weather fields are auto-populated based on the saved values.
+
+The names are sanitized as `noSQL` and `textOnly`. The Ambient Weather API key, App key, and MAC address are sanitized as `noSQL` and `hexCode`.
+
+#### Settings Page <a name="settings_profile"></a>
+*Author: Daniel*
+
+At the top of this page is a back arrow which unwinds the stack and the page's title. Then, the page is divided into two Scotch Mist Tan sections: User Preferences and Account Details. User Preferences allows people to set the color mode, the default visibility for crops, and whether push notifications should be enabled. The buttons and their labels are organized by the Grid components. The color mode is controlled by a toggle switch that can set Dark Mode to true, though it technically works by inverting the switch's previous state in the onValueChange function. The default visibility is controlled by a toggle switch and determines whether crops default to a private or public visibility depending on the user's preferences. The push notifications are enabled generally by a toggle switch. When the notification switch is enabled, separate checkboxes are displayed to enable notifications specifically for upcoming tasks and payments.
+
+The Account Details section first allows the user to select the current farmer. The dropdown picker is set to Modal mode to prevent clipping issues and ensures that the full list of farmers can always be displayed. In addition, the addCustomItem prop allows the user to save and select what they have typed in if it isn't already in the list. In the future, the Account Sync button will generate a numeric code or QR code which allows users to sign into their account without needing to enter any information. Then, there are two buttons which redirect to the Terms of Service and Privacy Policy pages. While unnecessary for this project, they would be critical aspects of rolling the app out as a commercial product. Finally, the app's version is a number fetched from the package.json file to reduce how many things would have to be changed with each app update.
+
+#### Billing Details Page <a name="billing_details_profile"></a>
+*Author: Daniel*
+
+At the top of the page is a back arrow which unwinds the stack and a save button. The save button triggers a specific function which sanitizes the input before saving it to the database or AsyncStorage. There is another UploadImage component in read-only mode. Then, there is a dropdown box which opens a scrollview box that contains the different subscription models. Afterwards, there are 4 input fields for the user's email, phone number, zip code and state. The zip code is used by the Home page to determine the weather forecast which is why the save function verifies that the zip code is valid.
 
 ### Data Hub Page <a name="datahub_page"></a>
+*Author: Matthew*
+
+The main functionality of the Data Hub Page is to take a JSON object. Then, using react-native-chart-kit to display relevent graphs about the user's account. This is the page where the user may get a history of their activity on the app. The secondary functionality of the page is to provide a way for the user to export their compiled data to their phone's local storage or posting to Facebook. The graphs are all contained within collapsible sections, or drop downs, that require the user to press to open. There is a search bar that allows the user to specifically input certain kinds of crops and have the graphs display the relevent information about them. The export functionality uses a form of html2canvas to turn the drop down components into a saveable PNG image file.
 
 ### Components & Assets <a name="components_n_assets"></a>
 #### Rows & Columns <a name="grid"></a>
@@ -267,6 +361,18 @@ The entire app uses a single standardized color palette. The color palette is a 
 As of right now, there are two sanitizing functions with the first parameter of each being the string that will be sanitized. They then return the cleaned text string based on the instructions set in the other boolean parameters. Beginning with `cleanText`, this function offers three options: no stopwords, no SQL, and only text. Firstly, it decodes any Unicode characters into their ASCII equivalents before converting it to lowercase to prevent regex issues. Double dashes are always removed, and a whitelist approach is taken to remove any characters other than `[a-z0-9'.@+()\- ]`. If stopwords were removed, then the sanitizer removes any words that are 2 or fewer characters long or are of 35 specific words. Azure MySQL servers use the InnoDB engine which stops any searching attempts when it encounters one of [35 specific stopwords](https://dev.mysql.com/doc/refman/8.4/en/fulltext-stopwords.html). There is also some useful information in [this StackOverflow thread](https://stackoverflow.com/questions/43319480/fulltext-index-match-string-with-period-mysql). These stopwords are defined in a list and then recursively removed which prevents 'bbye' from causing any issues. If SQL was removed, certain especially problematic SQL keywords are recursively removed to prevent multi-level SQL injection attacks like 'ALTALTERER' which triggers SQL injection if the sanitizer is only applied onced. Finally, the text-only option removes everything except letters, the @ symbol, and the period.
 
 The `cleanNumbers` function also has three optional parameters. By default, decimals are allowed which means that dots are only removed if they are not between two digits. However, this can be disabled. By default, negatives are allowed which means that dashes are only removed if there are two of them, if they do not precede a number, and if they are not the first character in the string. These two removals are performed recursively just like the text sanitizer. Finally, the phone parameter is mutually exclusive with the other two parameters, removing everything except numbers, dashes, parantheses, spaces, and the plus sign.
+
+#### Profile Image Handler <a name="profile_img_handler"></a>
+*Author: Daniel*
+
+The Profile Image Handler has two modes: read-only and editable. In read-only mode, this component is a basic Image component which either displays the selected and saved image URI or the placeholder avatar image. When editable, this component includes the same Image component to display the selected or placeholder avatar image. The image URI is stored and retrieved from AsyncStorage. An AppButton component with a MaterialCommunityIcon is displayed in the lower-right corner and can be clicked to trigger the UploadModal.
+
+When loaded, the UploadModal is a translucent gray background which obscures the background with a Scotch Mist Tan box in the center. That central box contains 3 buttons with icons from the MaterialCommunityIcons library. The UploadModal takes 5 props which are a boolean to control its visibility and 4 functions defined in UploadImage. The `onBackPress` function will be triggered when the user taps outside of the modal on the translucent gray background and is set to hide the modal. The `onCameraPress` function will be triggered when the user taps the Camera button in the modal. This function passes a prop from UploadImage to the `uploadImage` function, determining whether it will trigger the front/selfie camera or the back camera. In either case, the function will check whether the app has permission to access the camera. If it does not have access, the function will trigger the phone's built-in permission manager to request access only this time or forever. Once permissions are granted, the appropriate camera will be launched. The basic compression and quality level is set to 1 which is the maximum level of quality and minimum level of compression; the default would have been 0.2. To ensure a similar experience across all platforms, the aspect ratio is set to 1x1 for Android as iOs doesn't allow for aspect ratio configuration and locks it to 1x1. Also, editing is enabled which allows the user to crop, rotate, and flip the image after a picture has been taken. The `onGalleryPress` prop of UploadModal calls the `uploadImage` function in gallery mode which is extremely similar but requests access to the gallery and launches the gallery rather than the camera. The quality, aspect ratio, and editing settings are all set to the same option. At the end of `uploadImage` function is a simple statement to save an image if one was chosen. If the user selected an image in the camera or gallery, the image's URI will be saved in the result variable and then passed to the `saveImage` function. I should note that the assets attribute is a list because these functions can be configured to allow a user to select multiple images at the same time. If the system UI elements (camera, gallery, or permissions) are closed without selecting an image, the `canceled` boolean attribute is set to true, and an image is not saved. The `onRemovePress` prop of UploadModal calls the `saveImage` function with an empty string. If anything other than an empty string is passed to it, the `saveImage` function will save the selected URI with a state hook and in AsyncStorage before hiding the modal. If an empty string is passed, the state hook and AsyncStorage key are set to empty strings, meaning that the placeholder image will be used.
+
+##### What is a URI? <a name="define_uri"></a>
+*Author: Daniel*
+
+The acronym URI stands for Universal Resource Identifier. URI is an extremely broad term which includes URLs (which are only used by HTTP/HTTPS, FTP, or LDAP traffic like `https://stackoverflow.com/` or `ldap://[2001:db8::7]/c=GB?objectClass?one`), email addresses in a certain format (like `mailto:John.Doe@example.com`), telephone numbers (like `tel:+1-816-555-1212`), and local files (like `file:////something.png`). In the case of the UploadImage component, URI is used to refer to the path to a local file. Namely, it contains the path to the selected profile picture in the phone's local storage. Even if the camera is launched by the app, the picture will not use the space allocated to the app by the system as it will be placed in the phone's image storage.
 
 ### Search Bar <a name="search_bar"></a>
 #### Background <a name="search_bar_bkgd"></a>
@@ -900,6 +1006,14 @@ The format can change depending on the method of the endpoint, POST or GET, but 
 
 To push your changes to the server, use either the git cli, or the git GUI that can be downloaded. Add your modified files to be committed, run the `git commit` command, and then push to the remote branch desired using `git push origin <branch>`
 
+#### User Authentication <a name="user_authentication">
+*Author: Tyler*
+User Authentication is notoriously difficult and a large security risk. Rather than ris leaking emails, password, and other PII, the app uses a third party authentication service called Auth0. Auth0 uses several verified services in order to verify user identity, such as google or microsoft.
+
+On the Auth0 dashboard, we can manage the users in our systems and their information. By hosting the user authentication on a trusted third party service, we avoid the problem of having our small team writing a vulnerablility into the system, and we leave the storage of sensitive information in the hands of a trusted service.
+
+The documentatoin for the Auth0 authentication services can be found here https://auth0.github.io/react-native-auth0/ , and additional documentation located here, https://auth0.com/docs/quickstart/native/react-native/interactive. Essentially, we check if the user is logged in upon entering the entry point for the app, and if the user access token exists in the Async Storage, we redirect them to the user's home page. From there we can access the user object through the API, we use the userID as a primary key for our subscribers.
+
 ## Installation & Setup <a name="setup"></a>
 ### Preparing The Development Environment <a name="prep_dev_environ"></a>
 #### Installing Android Studio <a name="install_android_studio"></a>
@@ -964,6 +1078,8 @@ When you need to import/install a new library, please use either `npm install --
 
 There are two other commands which can import libraries but which should not be used. Namely, they are `npx expo install <YourLibrary>` and `yarn add <YourLibrary>`. These commands do not properly save the libraries in package.json and use a different package manager. While expo can handle having both the npm and yarn package managers, it can create some conflicts with jest and requires that you import every library twice.
 
+As an important note, some libraries will ask you to use a linker like `npm link`. However, that is not necessary if you are using react-native@0.60 or newer. Newer versions of react-native contain an auto-linker which makes `npm link` unnecessary.
+
 #### Updating Libraries <a name="update_libs"></a>
 *Author: Daniel*
 
@@ -992,8 +1108,35 @@ To run only a specific test file, execute `npm test -- BillingDetails.test.jsx` 
 If you want to update the snapshots, you can execute either `npm run updateTestSnapshots` or `npm test -- -u BillingDetails.test.jsx` from a command line at the root directory of the repo.
 
 ## Maintenance Tasks <a name="maint"></a>
+
+### Maintenance Schedule <a name="maint_sched"></a>
+*Author: Daniel*
+
+|       Tasks                              |  Frequency   |
+| :--------------------------------------- | :----------: |
+| Fixing Bugs & Crashes                    | Daily/Weekly |
+| Code Validation                          | Monthly      |
+| Adding a New Page                        | Quarterly    |
+| Security Validation                      | Quarterly    |
+| Performance & Availability Monitoring    | Quarterly    |
+| Updating the Design & Enhancing Features | Quarterly    |
+| App Compatibility Audit                  | Annual       |
+
+### Fixing Bugs & Crashes <a name="fix_bugs_crashes"></a>
+*Author: Daniel*
+
+On a weekly basis, bugs should be addressed with crashes being handled on a daily basis. Bugs can quickly annoy users and drive them away from an app if not fixed within a certain timeframe. However, crashes are far more problematic because they completely prevent the app from being utilized and may result in the loss of data. As a result, they are substantially more annoying for users and must be addressed as quickly as possible. Executing a specific test file and reviewing the Troubleshooting section of the MPM may help to pin down the issue. After identifying the issue, remember to add it to the test suite and to the Troubleshooting section to prevent a future reoccurrence.
+
+### Code Validation <a name="code_validation"></a>
+*Author: Daniel*
+
+On a monthly basis, the functionality and validity of all code should be tested. The Jest test suite will handle this by executing multiple unit, integration, and snapshot tests to identify potential errors. An ideal result will be a coverage of 80% or higher for both statement and branch coverage, though a lower percentage is acceptable so long as the core functionality encountered by most users has been thoroughly tested.
+
+Statement coverage reflects the percentage of statements that have been executed at least once during the tests. Line coverage is similar but less useful, especially for JavaScript which allows for multi-line statements. Those multi-line statements will inflate the line coverage and render it less useful than statement coverage. Even statement coverage is only useful to prove that functionality is being tested, rather than proving the quality of those tests.
+
+Branch coverage reflects the number of conditional branches which have been explored and tested. As such, branch coverage indicates the logical coverage and is useful to prove the test quality by showing how many possible inputs have been considered.
+
 ### Adding a New Page <a name="add_page"></a>
-Maintenance Type: Perfective Maintenance Task
 #### The Status Bar <a name="status_bar"></a>
 *Author: Daniel*
 
@@ -1094,6 +1237,26 @@ If you call the `<SearchInput />` tag, this will default to the dropdown mode. T
 ![Search Bar in Dropdown Mode](./images/Screenshot%202024-08-30%20090816.png "Dropdown Mode")
 ![Search Bar in Modal Mode](./images/Screenshot%202024-08-30%20091416.png "Modal Mode")
 
+### Security Validation <a name="security_validation"></a>
+*Author: Daniel*
+
+On a quarterly basis, all security aspects of the app must be tested, validated, and verified to ensure proper functionality. Since this is an app meant for laypeople and is connected to various APIs and databases, security controls to prevent accidential and malicious attacks are critical. A vulnerability scan should be run to identify common flaws in the code and to see if any new, important vulnerabilities have been identified in key dependencies. To be published on an app store, the app needs to be signed with an authorized certificate. As such, that certificate needs to be renewed. All input fields should be tested against at least Level 1 injection attacks and ideally, Level 2 or 3 attacks as well. If applicable, attempt a MITM attack against any communication with APIs or the backend to verify the traffic's encryption.
+
+### Performance & Availability Monitoring <a name="performance_availability_monitoring"></a>
+*Author: Daniel*
+
+On a quarterly basis, the performance and availability of the app and its dependencies must be tested. This will likely include a review of all logs and user feedback reports to identify areas that frequently cause issues or experience difficulties. If using Expo Go, open the menu from the command line and select the JS Debugger option. From that menu, you can use Chrome Dev Tools to record performance profiles and to create flame graphs. You may also find the Low Orbit Ion Cannon (LOIC) tool useful to conduct stress testing on the backend. To evaluate percentage availability, it can be calculated with `(MTBF / (MTBF + MTTR)) X 100` where the goal to maximize availability can be achieved by reducing MTTR and increasing MTBF. This may also include cleaning up the database to remove old and unnecessary data, thereby improving performance and decreasing costs.
+
+### Updating the Design & Enhancing Features <a name="update_designs_features"></a>
+*Author: Daniel*
+
+On a quarterly basis, one should check whether any features need to be enhanced and whether the design needs to be updated. Initially, this will mean reviewing user feedback to identify and prioritize needs. That feedback can be collected from app store reviews, user ratings, in-app surveys, user testing sessions, social media, and customer support enquiries. Based on that feedback, new pages might be added, new features created, or unused/disliked functionality removed to lower operating costs.
+
+### App Compatibility Audit <a name="app_comp_audit"></a>
+*Author: Daniel*
+
+The CropAlly app depends on a variety of languages, interpreters, libraries, databases, APIs, and OSs. Most of the time, CropAlly can afford to not update itself to the latest versions, continuing to run on its current versions. On an annual basis, it is recommended to conduct an audit of all dependencies and external pieces. Since Android and iOS updates are generally released in the 3rd Quarter, aim to conduct your annual audit in the 3rd Quarter and to release your update in the 4th Quarter. Keep in mind that Apple and Google remove apps from their app stores if the app has not been updated in the past 2-3 years or that can't handle OSs above a certain minimum level. As part of the audit process, determine whether you should upgrade to be compatible with the newer versions. If so, you will need to upgrade all dependencies as listed in package.json and then verify that the code still functions properly. Performing a code validation may be useful for this.
+
 ## Troubleshooting <a name="trblsht"></a>
 Assumes that you are using a Windows OS
 
@@ -1192,6 +1355,26 @@ This error is due to a syntax issue with the styling or the imports.
 * If it is an import issue, look for places where you import two different components/functions from the same source on different lines
     * Like `import { StyleSheet } from 'react-native'; import { TouchableOpacity } from 'react-native';` should be written as `import { StyleSheet, TouchableOpacity } from 'react-native';`
 
+#### Android is Disabled <a name="disabled_android"></a>
+*Author: Daniel*
+
+This error is indicated by issues like the 'Press a │ open Android' text being greyed out or the message of 'Android is disabled, enable it by adding android to the platforms array in your app.json or app.config.js' when trying to open the emulator via Expo. This has a variety of different solutions depending on the cause.
+
+* Solution 1: Use 's' to swap between development build and some other stuff until it says "Using Expo Go"
+* Solution 2: Try using the tunnel with `npx expo start --tunnel`
+* Solution 3: Check your dependencies for react, react-native, and expo. They don't need to be the newest version, but they do need to be versions compatible with each other.
+* Solution 4: Try deleting and recreating your Android emulator.
+* Solution 5: Ensure that app.json is not included in the .gitignore file as Expo Go/NPM obeys the .gitignore file
+* Solution 6: Delete the android folder and regenerate it
+* Solution 7: Go to app.json in the root directory and ensure that it has the following text, though the text in package and versionCode can be anything. Make sure it is nested in the `"expo"` key and below the `"name"` key
+
+~~~json
+"android": {
+  	"package": "com.yourcompany.yourappname",
+  	"versionCode": 1
+}
+~~~
+
 ### Common React Native Compilation Errors <a name="rn_compilation_err"></a>
 
 #### Error due to Different Number of Hooks Between Renders <a name="different_number_hooks"></a>
@@ -1262,6 +1445,20 @@ with
 return require('@react-native-picker/picker') 
 ~~~
 1. Run `npx patch-package react-native` to patch up the react-native folder and the index file you just altered
+
+#### Destructuring Issue <a name="destructuring_issues"></a>
+*Author: Daniel*
+
+This section will offer the most common causes for the following error message. 
+~~~bash
+Invalid attempt to destructure non-iterable instance.
+In order to be iterable, non-array objects must have a [Symbol.iterator]() method.
+~~~
+
+* Cause 1: You have something like `[aaa,bbb] = somefunc()` where somefunc() returns `{ 'some': 'object'}` which can't be destructured into a list
+* Cause 2: You have something like `const [text, by, order] = opts;` if `opts` doesn't contain 3 items that can be unrolled
+* Cause 3: You have something like `const [state, setState] = useEffect(defaultValue);` which is a typo since you should be using the useState() hook
+* Cause 4: You have something like `const [ data, isLoading ] = useContext(null);` instead of `const { data, isLoading } = useContext(null);` as context requires curly braces
 
 ### Jest Errors <a name="jest_errors"></a>
 
@@ -1420,11 +1617,31 @@ This is a common issue where you are unable to find any component with the desir
 ## Tools & Resources <a name="tools"></a>
 *Author: Daniel*
 
-* Color Blindness Simulator: [https://daltonlens.org/colorblindness-simulator](https://daltonlens.org/colorblindness-simulator)
+### General Docs <a name="general_docs"></a>
+*Author: Daniel*
+
 * Expo Docs: [https://docs.expo.dev/](https://docs.expo.dev/)
 * Jest Docs: [https://jestjs.io/docs/getting-started](https://jestjs.io/docs/getting-started)
-* Luminance Contrast Ratio Calculator: [https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php](https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php)
 * React Native Docs: [https://reactnative.dev/docs/getting-started](https://reactnative.dev/docs/getting-started)
+* Types of Autocomplete for Input Fields: [https://reactnative.dev/docs/textinput#autocomplete](https://reactnative.dev/docs/textinput#autocomplete)
+* Visual Examples of Input Keyboard Types: [https://www.lefkowitz.me/visual-guide-to-react-native-textinput-keyboardtype-options/](https://www.lefkowitz.me/visual-guide-to-react-native-textinput-keyboardtype-options/)
+    * If an image is not in both columns, it means that keyboard type is not available for the missing column's OS type.
+
+### Testing Utilities <a name="testing_utilities"></a>
+*Author: Daniel*
+
+* Color Blindness Simulator: [https://daltonlens.org/colorblindness-simulator](https://daltonlens.org/colorblindness-simulator)
+* Luminance Contrast Ratio Calculator: [https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php](https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php)
+
+### Ambient Weather <a name="ambient_weather"></a>
+*Author: Daniel*
+
+* Ambient Weather RESTful API Docs: [https://ambientweather.docs.apiary.io](https://ambientweather.docs.apiary.io)
+* APIB Version of RESTful API Docs: [https://github.com/ambient-weather/api-docs/blob/master/apiary.apib](https://github.com/ambient-weather/api-docs/blob/master/apiary.apib)
+* Sample Station Response from the API for the Tempest App as an Example: [https://github.com/tidbyt/community/blob/main/apps/tempest/sample_station_response.json](https://github.com/tidbyt/community/blob/main/apps/tempest/sample_station_response.json)
+* Example Code using Ambient Weather for a Tidbyt Applet: [https://github.com/tidbyt/community/blob/main/apps/ambientweather/ambient_weather.star](https://github.com/tidbyt/community/blob/main/apps/ambientweather/ambient_weather.star)
+* Node.JS Wrapper Library for Ambient Weather: [https://github.com/owise1/ambient-weather-api](https://github.com/owise1/ambient-weather-api)
+    - This project uses React Native, not Node.JS. As such, the library itself cannot be used, but it can be used as examples of how to access the API and to handle the responses. The src/ and examples/ folders are particularly useful.
 
 ## Logs & Records <a name="logs"></a>
 

@@ -14,6 +14,7 @@ jest.mock('@rneui/themed', () => ({
   SearchBar: jest.fn(() => <></>)
 }))
 
+require('react-native-reanimated').setUpTests();
 
 jest.mock('react-native', () => {
   const rn = jest.requireActual('react-native');

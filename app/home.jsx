@@ -17,6 +17,8 @@ import NavBar from '../assets/NavBar.jsx'
 import icons from '../assets/icons/Icons.js';
 import { WeatherSlider } from '../src/components/WeatherSlider';
 import {getGridpoints, WeatherIcon} from '../assets/HomeWeatherFunctions'
+import { fetchWeatherData } from '../src/components/AmbientWeatherService';
+import CROPS from '../test_data/testCropData.json'
 
 const todayDayLookup = {
 	"Monday": "Sunday",
@@ -28,6 +30,8 @@ const todayDayLookup = {
 	"Sunday": "Saturday",
 }
 
+/*
+//Mock data as an example
 const test_data = [
 	{
 	  key: '1',
@@ -53,9 +57,36 @@ const test_data = [
 	  line2Label: 'Soil Moisture',
 	  line2: ' 0.2wfv',
 	}
+];*/
+const test_data = [
+	{
+	  key: '1',
+	  image: icons.hourglass_green,
+	  line1Label: 'Temperature',
+	  line1: 'Loading',
+	  line2Label: 'Feels Like',
+	  line2: 'Loading',
+	},
+	{
+	  key: '2',
+	  image: icons.hourglass_green,
+	  line1Label: 'Wind Speed',
+	  line1: 'Loading',
+	  line2Label: 'Rainfall',
+	  line2: 'Loading',
+	},
+	{
+	  key: '3',
+	  image: icons.hourglass_green,
+	  line1Label: 'Humidity',
+	  line1: 'Loading',
+	  line2Label: 'Soil Moisture',
+	  line2: 'Loading',
+	}
 ];
 
 const Home = () =>{ 
+	let defaultZip = "76131"
 	const [forecastDataDay1, setforecastDataDay1] = useState(null);
 	const [dayName1, setDayName1] = useState(null);
 	const [forecastDataDay2, setforecastDataDay2] = useState(null);
@@ -70,12 +101,22 @@ const Home = () =>{
 	const [dayName6, setDayName6] = useState(null);
 	const [forecastDataDay7, setforecastDataDay7] = useState(null);
 	const [dayName7, setDayName7] = useState(null);
+	const [ambientWeatherData, setAmbientWeatherData] = useState(test_data);
 
 	useEffect(() => {
 		// declare the async data fetching function
 		const fetchData = async () => {
+		  //
+		  const zipCodeVal = await AsyncStorage.getItem('zip_code');
+			let resultZipCode = null
+    		if (zipCodeVal && zipCodeVal !== "") {
+				resultZipCode = zipCodeVal
+			} else {
+				resultZipCode = defaultZip
+		  }
+
 		  // get the data from the api
-		  const data = await getGridpoints('76131');
+		  const data = await getGridpoints(resultZipCode);
 		  // convert the data to json
 		  if (data.status == 200) {
 			const response = await fetch(
@@ -126,6 +167,7 @@ const Home = () =>{
 		  }
 		  else {
 			console.log("bad")
+			console.log(data.status)
 		  }
 		}
 	  
@@ -134,6 +176,57 @@ const Home = () =>{
 		  // make sure to catch any error
 		  .catch(console.error);
 	}, [])
+
+	useEffect(() => {
+		const getWeatherData = async () => {
+		  try {
+			apiKey = await AsyncStorage.getItem('aw_api_key');
+			appKey = await AsyncStorage.getItem('aw_app_key');
+			deviceMacAddress = await AsyncStorage.getItem('aw_device_mac');
+			console.log(apiKey, appKey, deviceMacAddress)
+			//ensure that all of those were set
+			if (!apiKey || !apiKey.length || !appKey || !appKey.length || !deviceMacAddress || !deviceMacAddress.length) {
+				setAmbientWeatherData(test_data); 
+			} else {
+				const data = await fetchWeatherData(apiKey, appKey, deviceMacAddress);
+				//Assuming the response is an array of weather data entries, sorted with the newest at the start
+				usefulData = data[0]
+				const weatherData = [
+					{
+						key: '1',
+						image: icons.thermometer_santa_gray,
+						line1Label: 'Temperature',
+						line1: usefulData.tempf + '°F',
+						line2Label: 'Feels Like',
+						line2: usefulData.feels_like + '°F',
+					},
+					{
+						key: '2',
+						image: icons.rainfall_black,
+						line1Label: 'Wind Speed',
+						line1: usefulData.windspeedmph + 'mph',
+						line2Label: 'Rainfall',
+						line2: usefulData.dailyrainin + 'in',
+					},
+					{
+						key: '3',
+						image: icons.humidity_santa_gray,
+						line1Label: 'Humidity',
+						line1: usefulData.humidity + '%',
+						line2Label: 'Soil Moisture',
+						line2: usefulData.soilmoisture + 'wfv',
+					}
+				];
+				console.log(weatherData)
+				setAmbientWeatherData(weatherData); 
+			}
+		  } catch (error) {
+			console.warn('Failed to fetch weather data:', error);
+		  }
+		};
+	
+		getWeatherData();
+	  }, []);
 
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
@@ -169,20 +262,12 @@ const Home = () =>{
 
 	if (!fontsLoaded && !fontError) {
 		return null;
-	}
-		
-	const weather = [{id:1, day: "Mo", weather: "rainy"},{id:2,day: "Tu", weather: "pcloudy"},{id:3,day: "We", weather: "cloudy"},{id:4,day: "Th", weather: "sunny"},{id:5,day: "Fr", weather: "sunny"},{id:6,day: "Sat", weather: "rainy"},{id:7,day: "Sun", weather: "snow"}]
-	
+	}	
 
-        const crops = [
-                { label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', date: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard'},
-                { label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', date: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' },
-                { label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", date: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard' },
-                { label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", date: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard' }
-        ]
+	let everyOtherCrop = CROPS.slice(0,21).filter((element, index) => {
+		return index % 2 === 0;
+	})
 
-	const temp = [{temp: 70, perc: 80},{temp: 68, perc:68}, {temp: 70, perc: 72}]
-	
 	return(
 	<View style = {[styles.container, isDarkMode && styles.containerDark]}>	
 		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE} />
@@ -196,12 +281,12 @@ const Home = () =>{
 			<WeatherIcon forecastVal={forecastDataDay7} day={dayName7} isDarkMode={isDarkMode}/>
 		</View>
 		<View style = {styles.weatherCarousel}>
-			<WeatherSlider intro_data={test_data} isDarkMode={isDarkMode}/>
+			<WeatherSlider intro_data={ambientWeatherData} isDarkMode={isDarkMode}/>
 		</View>
 		<View style = {styles.Search}>
 			<SearchInput isDarkMode={isDarkMode} />
 		</View>
-			<CropCarousel crops = {crops} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
+			<CropCarousel crops = {everyOtherCrop} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
 		<NavBar homeSelected darkMode={isDarkMode}/>
 	</View>)
 };
