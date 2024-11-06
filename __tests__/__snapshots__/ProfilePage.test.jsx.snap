@@ -112,7 +112,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
         "width": 172,
       }
     }
-    testID=""
+    testID="edit-profile"
   >
     <Text
       style={
@@ -205,7 +205,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="settings-icon"
         >
           <Text
             allowFontScaling={false}
@@ -316,7 +316,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="settings-arrow"
         >
           <Text
             allowFontScaling={false}
@@ -478,7 +478,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="billing-icon"
         >
           <Text
             allowFontScaling={false}
@@ -589,7 +589,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="billing-arrow"
         >
           <Text
             allowFontScaling={false}
@@ -751,7 +751,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="logout-icon"
         >
           <Text
             allowFontScaling={false}
@@ -862,7 +862,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="logout-arrow"
         >
           <Text
             allowFontScaling={false}
@@ -1093,7 +1093,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="crops"
+            testID="crops-icon"
           >
             <Text
               allowFontScaling={false}
@@ -1167,7 +1167,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="todo"
+            testID="notebook-icon"
           >
             <Text
               allowFontScaling={false}
@@ -1248,7 +1248,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
                 "width": 55,
               }
             }
-            testID="home-button"
+            testID="home-icon"
           >
             <Text
               allowFontScaling={false}
@@ -1322,7 +1322,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="datahub"
+            testID="datahub-icon"
           >
             <Text
               allowFontScaling={false}
@@ -1396,7 +1396,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="profile"
+            testID="profile-icon"
           >
             <Text
               allowFontScaling={false}
@@ -1484,7 +1484,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="crops-txt"
           >
             <Text
               style={
@@ -1549,7 +1549,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="notebook-txt"
           >
             <Text
               style={
@@ -1614,7 +1614,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="home-txt"
           >
             <Text
               style={
@@ -1679,7 +1679,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="datahub-txt"
           >
             <Text
               style={
@@ -1744,7 +1744,7 @@ exports[`Dark Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="profile-txt"
           >
             <Text
               style={
@@ -1878,7 +1878,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
         "width": 172,
       }
     }
-    testID=""
+    testID="edit-profile"
   >
     <Text
       style={
@@ -1971,7 +1971,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="settings-icon"
         >
           <Text
             allowFontScaling={false}
@@ -2082,7 +2082,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="settings-arrow"
         >
           <Text
             allowFontScaling={false}
@@ -2244,7 +2244,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="billing-icon"
         >
           <Text
             allowFontScaling={false}
@@ -2355,7 +2355,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="billing-arrow"
         >
           <Text
             allowFontScaling={false}
@@ -2517,7 +2517,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="logout-icon"
         >
           <Text
             allowFontScaling={false}
@@ -2628,7 +2628,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="logout-arrow"
         >
           <Text
             allowFontScaling={false}
@@ -2859,7 +2859,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="crops"
+            testID="crops-icon"
           >
             <Text
               allowFontScaling={false}
@@ -2933,7 +2933,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="todo"
+            testID="notebook-icon"
           >
             <Text
               allowFontScaling={false}
@@ -3014,7 +3014,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
                 "width": 55,
               }
             }
-            testID="home-button"
+            testID="home-icon"
           >
             <Text
               allowFontScaling={false}
@@ -3088,7 +3088,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="datahub"
+            testID="datahub-icon"
           >
             <Text
               allowFontScaling={false}
@@ -3162,7 +3162,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="profile"
+            testID="profile-icon"
           >
             <Text
               allowFontScaling={false}
@@ -3250,7 +3250,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="crops-txt"
           >
             <Text
               style={
@@ -3315,7 +3315,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="notebook-txt"
           >
             <Text
               style={
@@ -3380,7 +3380,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="home-txt"
           >
             <Text
               style={
@@ -3445,7 +3445,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="datahub-txt"
           >
             <Text
               style={
@@ -3510,7 +3510,7 @@ exports[`Light Mode <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="profile-txt"
           >
             <Text
               style={
@@ -3644,7 +3644,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
         "width": 172,
       }
     }
-    testID=""
+    testID="edit-profile"
   >
     <Text
       style={
@@ -3737,7 +3737,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="settings-icon"
         >
           <Text
             allowFontScaling={false}
@@ -3848,7 +3848,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="settings-arrow"
         >
           <Text
             allowFontScaling={false}
@@ -4010,7 +4010,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="billing-icon"
         >
           <Text
             allowFontScaling={false}
@@ -4121,7 +4121,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="billing-arrow"
         >
           <Text
             allowFontScaling={false}
@@ -4283,7 +4283,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="logout-icon"
         >
           <Text
             allowFontScaling={false}
@@ -4394,7 +4394,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
               "width": 40,
             }
           }
-          testID=""
+          testID="logout-arrow"
         >
           <Text
             allowFontScaling={false}
@@ -4625,7 +4625,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="crops"
+            testID="crops-icon"
           >
             <Text
               allowFontScaling={false}
@@ -4699,7 +4699,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="todo"
+            testID="notebook-icon"
           >
             <Text
               allowFontScaling={false}
@@ -4780,7 +4780,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
                 "width": 55,
               }
             }
-            testID="home-button"
+            testID="home-icon"
           >
             <Text
               allowFontScaling={false}
@@ -4854,7 +4854,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="datahub"
+            testID="datahub-icon"
           >
             <Text
               allowFontScaling={false}
@@ -4928,7 +4928,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="profile"
+            testID="profile-icon"
           >
             <Text
               allowFontScaling={false}
@@ -5016,7 +5016,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="crops-txt"
           >
             <Text
               style={
@@ -5081,7 +5081,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="notebook-txt"
           >
             <Text
               style={
@@ -5146,7 +5146,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="home-txt"
           >
             <Text
               style={
@@ -5211,7 +5211,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="datahub-txt"
           >
             <Text
               style={
@@ -5276,7 +5276,7 @@ exports[`No Async <Profile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="profile-txt"
           >
             <Text
               style={

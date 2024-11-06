@@ -42,7 +42,7 @@ describe('Light Mode <SearchInput/>', () =>{
         expect(tree).toMatchSnapshot();
     })
  
-    test('renders correctly', () =>{
+    test('modal mode renders correctly', () =>{
         const tree = render(<SearchInput isDarkMode={false} resultDisplayMode={"modal"} />).toJSON();
         expect(tree).toMatchSnapshot();
     })
@@ -93,6 +93,17 @@ describe('Search Modal <SearchModal />', () => {
             isDarkMode={true}
         />).toJSON();
         expect(tree).toMatchSnapshot();
+    })
+    test('can be opened', ()=> {
+        const { getByTestId } = render(
+            <SearchInput isDarkMode={false} resultDisplayMode={"modal"} />
+        );
+
+        const button = getByTestId('search-modal');
+        fireEvent.press(button);
+
+        const viewModal = getByTestId('modal-view');
+        expect(viewModal.childElementCount).not.toEqual(0);
     })
 })
 

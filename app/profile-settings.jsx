@@ -24,7 +24,7 @@ import {Col, Row} from '../assets/Grid.jsx'
 import Colors from '../assets/Color.js'
 import Icons from '../assets/icons/Icons.js'
 import AppButton from '../assets/AppButton.jsx'
-
+import {cleanText} from '../assets/sanitizer'
 
 
 const SettingsProfile = () =>{ 
@@ -89,6 +89,7 @@ const SettingsProfile = () =>{
 		return null;
 	}
 
+	console.log(cleanText(value, noStopwords=false, noSQL=true, textOnly=false))
 	return(
 	<ScrollView style = {[styles.container, isDarkMode && styles.containerDark]}>
 		{/*create the default phone status bar at the top of the screen*/}
@@ -99,7 +100,7 @@ const SettingsProfile = () =>{
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
 					{/*create the arrow to unwind the stack and go back one page*/}
-					<AppButton title="" icon={isDarkMode ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
+					<AppButton testID={"back-arrow"} title="" icon={isDarkMode ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
 				</Col>
 				<Col relativeColsCovered={8} alignItems='center'>
 					<Text style={[styles.pageTitle, isDarkMode && styles.pageTitleDark]}>Settings</Text>
@@ -121,6 +122,7 @@ const SettingsProfile = () =>{
 					<Col relativeColsCovered={3} alignItems='center'>
 						{/*TODO: set dark mode across multiple pages*/}
 						<Switch 
+							testID={"light-dark-switch"}
 							value={isDarkMode}
 							onValueChange={async (previousState) => { 
 								await AsyncStorage.setItem('dark_mode_setting', previousState.toString())
@@ -142,6 +144,7 @@ const SettingsProfile = () =>{
 					<Col relativeColsCovered={3} alignItems='center'>
 						{/*TODO: set default visibility for crops*/}
 						<Switch 
+							testID={"visibility-switch"}
 							value={hasPublicDefaultVisibility} 
 							onValueChange={() => setHasPublicDefaultVisibility((previousState) => !previousState)}
 							thumbColor={Colors.IRISH_GREEN}
@@ -160,6 +163,7 @@ const SettingsProfile = () =>{
 					<Col relativeColsCovered={3} alignItems='center'>
 						{/*TODO: set push notifications settings*/}
 						<Switch 
+							testID={"notif-switch"}
 							value={hasNotificationsEnabled} 
 							onValueChange={() => setHasNotificationsEnabled(!hasNotificationsEnabled)}
 							thumbColor={Colors.IRISH_GREEN}
@@ -239,7 +243,7 @@ const SettingsProfile = () =>{
 				</Row>
 			</View>
 		</View>
-		{/*user preferences section*/}
+		{/*account details section*/}
 		<Text style={[styles.categoryTitle, isDarkMode && styles.categoryTitleDark]}>Account Details</Text>
 		<View style={{alignItems:'center'}}>
 			<View style={[styles.settingsCategory2, isDarkMode && styles.settingsCategoryDark]}>
@@ -263,6 +267,7 @@ const SettingsProfile = () =>{
 							modalAnimationType='fade'
 							searchable={true}
 							searchTextInputProps={{
+								backgroundColor: Colors.WHITE_SMOKE,
 								maxLength: 512
 							}}
 							labelProps={{
@@ -276,10 +281,17 @@ const SettingsProfile = () =>{
 								fontFamily: 'WorkSans-Regular',
 								fontSize: 16,
 							}}
+							searchContainerStyle={isDarkMode ? {
+								backgroundColor: Colors.BALTIC_SEA,
+							} : {
+								backgroundColor: Colors.ALMOND_TAN,
+							}}
 							searchPlaceholder='Search/Add...'
 							addCustomItem={true}
-							modalContentContainerStyle={isDarkMode && {
-								backgroundColor: Colors.BALTIC_SEA,
+							modalContentContainerStyle={isDarkMode ? {
+								backgroundColor: Colors.IRIDIUM,
+							} : {
+								backgroundColor: Colors.SCOTCH_MIST_TAN,
 							}}
 						/>
 					</Col>
@@ -294,7 +306,7 @@ const SettingsProfile = () =>{
 					</Col>
 					<Col relativeColsCovered={3} alignItems='center'>
 						{/*TODO: generate code to sync account via QR code, 60s code, etc.*/}
-						<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => Alert.alert('Disabled until Phase 2')}/>
+						<AppButton testID={"sync"} title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => {Alert.alert('Disabled until Phase 2'); console.log("sync")}}/>
 					</Col>
 				</Row>
 				{/*divider line*/}
@@ -306,8 +318,7 @@ const SettingsProfile = () =>{
 						<Text style={styles.settingsDesc}>Read Terms of Service</Text>
 					</Col>
 					<Col relativeColsCovered={3} alignItems='center'>
-						{/*TODO: generate code to sync account via QR code, 60s code, etc.*/}
-						<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => router.push('/termsofservice')}/>
+						<AppButton testID={"tos"} title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => router.push('/termsofservice')}/>
 					</Col>
 				</Row>
 				<Row height={60} >
@@ -316,8 +327,7 @@ const SettingsProfile = () =>{
 						<Text style={styles.settingsDesc}>Read Privacy Policy</Text>
 					</Col>
 					<Col relativeColsCovered={3} alignItems='center'>
-						{/*TODO: generate code to sync account via QR code, 60s code, etc.*/}
-						<AppButton title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => router.push('/privacypolicy')}/>
+						<AppButton testID={"privacy"} title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => router.push('/privacypolicy')}/>
 					</Col>
 				</Row>
 				{/*divider line*/}

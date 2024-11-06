@@ -95,7 +95,7 @@ export function getWeatherIcon(forecastDesc) {
     let matchedKeyProb = -1
 
     if (!forecastDesc) {
-        return [icons.progress_clock_black, "None"]
+        return [icons.hourglass_green, "None"]
     }
 
     //get just the stuff before 'then', and remove any spaces or capitals
@@ -118,7 +118,7 @@ export function getWeatherIcon(forecastDesc) {
 
     let image_url = ""
     if (matchedKeyWeather < 0) {
-        image_url = icons.progress_clock_black
+        image_url = icons.hourglass_green
     }
     else {
         switch(keysWeather[matchedKeyWeather]) { 
@@ -163,7 +163,7 @@ export function getWeatherIcon(forecastDesc) {
                 break; 
             }
             default: { 
-                image_url = icons.progress_clock_black
+                image_url = icons.hourglass_green
                 break; 
             } 
         } 

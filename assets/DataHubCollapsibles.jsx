@@ -7,12 +7,22 @@
  ***/
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, StatusBar, ScrollView, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
+import { View, Platform, Text, StyleSheet, StatusBar, ScrollView, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import Colors from './Color.js';
 import NavBar from './NavBar.jsx';
 import {SearchInput} from './SearchFeature.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+defaultDataset = {
+  "labels": ["D", "E", "F", "A", "U", "L", "T"],
+  "datasets": [
+    {
+      "data": [1, 2, 3, 4, 5, 6, 7]
+    }
+  ]
+}
+
 
 
 export const chartConfig = {
@@ -24,6 +34,7 @@ export const chartConfig = {
   labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
   style: { borderRadius: 16 },
   propsForDots: { r: "6", strokeWidth: "2", stroke: "#000000" },
+  propsForLabels: {fontSize: 50,},
 };
 
 const screenWidth = Dimensions.get("window").width;
@@ -58,6 +69,7 @@ const ChartComponent = ({ chartData, isDark }) => {
       strokeWidth: "2",
       stroke: Colors.MALACHITE,
     },
+    propsForLabels: {fontSize: 12,},
   };
 
   const lightChartConfig = {
@@ -73,21 +85,38 @@ const ChartComponent = ({ chartData, isDark }) => {
       strokeWidth: "2",
       stroke: Colors.IRIDIUM,
     },
+    propsForLabels: {fontSize: 10,},
   };
 
-  return (
-    <View style={[styles.collapsibleContent, isDark && styles.collapsibleContentDark]}>
-      <LineChart
-        data={chartData}
-        width={screenWidth - 80}
-        height={220}
-        yAxisInterval={4}
-        chartConfig={isDark ? darkChartConfig : lightChartConfig}
-        bezier
-        style={[styles.chartStyle, isDark && styles.chartStyleDark]}
-      />
-    </View>
-  );
+  if (!Array.isArray(chartData.labels) || !chartData.labels.length) {
+    return (
+      <View style={[styles.collapsibleContent, isDark && styles.collapsibleContentDark]}>
+        <LineChart
+          data={defaultDataset}
+          width={screenWidth - 80}
+          height={220}
+          yAxisInterval={4}
+          chartConfig={isDark ? darkChartConfig : lightChartConfig}
+          bezier
+          style={[styles.chartStyle, isDark && styles.chartStyleDark]}
+        />
+      </View>
+    );
+  } else {
+    return (
+      <View style={[styles.collapsibleContent, isDark && styles.collapsibleContentDark]}>
+        <LineChart
+          data={chartData}
+          width={screenWidth - 80}
+          height={220}
+          yAxisInterval={4}
+          chartConfig={isDark ? darkChartConfig : lightChartConfig}
+          bezier
+          style={[styles.chartStyle, isDark && styles.chartStyleDark]}
+        />
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

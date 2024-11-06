@@ -555,7 +555,7 @@ exports[`<DataHub/> Renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="crops"
+            testID="crops-icon"
           >
             <Text
               allowFontScaling={false}
@@ -629,7 +629,7 @@ exports[`<DataHub/> Renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="todo"
+            testID="notebook-icon"
           >
             <Text
               allowFontScaling={false}
@@ -710,7 +710,7 @@ exports[`<DataHub/> Renders correctly 1`] = `
                 "width": 55,
               }
             }
-            testID="home-button"
+            testID="home-icon"
           >
             <Text
               allowFontScaling={false}
@@ -784,7 +784,7 @@ exports[`<DataHub/> Renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="datahub"
+            testID="datahub-icon"
           >
             <Text
               allowFontScaling={false}
@@ -858,7 +858,7 @@ exports[`<DataHub/> Renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID="profile"
+            testID="profile-icon"
           >
             <Text
               allowFontScaling={false}
@@ -946,7 +946,7 @@ exports[`<DataHub/> Renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="crops-txt"
           >
             <Text
               style={
@@ -1011,7 +1011,7 @@ exports[`<DataHub/> Renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="notebook-txt"
           >
             <Text
               style={
@@ -1076,7 +1076,7 @@ exports[`<DataHub/> Renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="home-txt"
           >
             <Text
               style={
@@ -1141,7 +1141,7 @@ exports[`<DataHub/> Renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="datahub-txt"
           >
             <Text
               style={
@@ -1206,7 +1206,7 @@ exports[`<DataHub/> Renders correctly 1`] = `
                 "opacity": 1,
               }
             }
-            testID=""
+            testID="profile-txt"
           >
             <Text
               style={

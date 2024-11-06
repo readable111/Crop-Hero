@@ -7,23 +7,25 @@
 import { StatusBar } from 'expo-status-bar';
 import Colors from '../assets/Color'
 import React, { useState, useEffect } from 'react';
-import { Pressable, StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
+import { Pressable, StyleSheet, Text, View, ScrollView, Alert, Appearance } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
 import Icons from '../assets/icons/Icons.js';
+import { cleanText } from '../assets/sanitizer.jsx';
 
 
 
-const cropsPage = () => {
+const CropsPage = () => {
 
         {/* Grabs variable form viewcrops page for use */}
-        let crop = useLocalSearchParams();
+        let [crop, setCropData] = useState(useLocalSearchParams());
         //If crop.name couldn't be retrieved, assume that ?param= was used
         if(!crop.name) {
                 console.log("?param passed")
+                console.log(crop.param)
                 crop = JSON.parse(crop.param)
         }
         console.log("CROP: " + crop); //test
@@ -34,8 +36,8 @@ const cropsPage = () => {
 
         const handleChange = (fieldName, input) => {
                 setCropData({
-                        ...cropData,
-                        [fieldName]: input,
+                        ...crop,
+                        [fieldName]: cleanText(input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
                 })
         }
         const [isDark, setIsDarkMode] = useState(false)
@@ -50,7 +52,7 @@ const cropsPage = () => {
                         }
                         else
                         {
-                                useColorScheme.Appearence.getColorScheme()
+                                colorScheme = Appearance.getColorScheme()
                                 if(colorScheme == 'dark')
                                 {
                                         result = true;
@@ -98,6 +100,8 @@ const cropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength = {128}
                                         readOnly = {readOnly}
+                                        // onChangeText={(text) => handleChange('name', text)}
+                                        
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Variety</Text>
                                 <Input
@@ -106,6 +110,7 @@ const cropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         readOnly = {readOnly}
+                                        //onChangeText={(text) => handleChange('variety', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Source</Text>
                                 <Input
@@ -114,6 +119,7 @@ const cropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         readOnly = {readOnly}
+                                        //onChangeText={(text) => handleChange('source', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted</Text>
                                 <Input
@@ -171,7 +177,7 @@ const cropsPage = () => {
                                         value={crop.hrfNum}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
-                                        readOnly = {readOnly}
+                                        readOnly = {true}
 
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Visible</Text>
@@ -203,7 +209,7 @@ const cropsPage = () => {
         )
 }
 
-export default cropsPage;
+export default CropsPage;
 
 const styles = StyleSheet.create({
         container: {
