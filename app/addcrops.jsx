@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
         save:{
                 position: 'absolute',
                 marginTop: 10,
-                marginLeft: 370,
+                marginLeft: '85%',
                 width: 40,
                 height: 40,
                 borderRadius: 40/2,
