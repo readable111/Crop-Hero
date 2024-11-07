@@ -2,7 +2,7 @@
  * @author Matthew Bustamente, Daniel Moreno
  * @reviewer Daniel Moreno
  * @tester Matthew Bustamente
- * 
+ *
  * Secondary author primarily hooked up the graphs to the search bar so that they were no longer random mock graphs
  * Also fixed some bugs
  ***/
@@ -293,6 +293,24 @@ const styles = StyleSheet.create({
   },
   chartStyleDark: {
     borderColor: Colors.CHARCOAL,
+  },
+exportButton: {
+    marginTop: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    backgroundColor: Colors.MALACHITE,
+    borderRadius: 3,
+  },
+  exportButtonDark: {
+    backgroundColor: Colors.SANTA_GRAY,
+  },
+  exportButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  exportButtonTextDark: {
+    color: 'white',
   },
 });
 
