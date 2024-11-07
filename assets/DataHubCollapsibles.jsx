@@ -14,16 +14,14 @@ import NavBar from './NavBar.jsx';
 import {SearchInput} from './SearchFeature.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-defaultDataset = {
+const defaultDataset = {
   "labels": ["D", "E", "F", "A", "U", "L", "T"],
   "datasets": [
     {
       "data": [1, 2, 3, 4, 5, 6, 7]
     }
   ]
-}
-
-
+};
 
 export const chartConfig = {
   backgroundColor: "#ffffff",
@@ -49,7 +47,12 @@ export const CollapsibleSection = ({ title, chartData, chartConfig, isDark }) =>
       </TouchableOpacity>
 
       {isOpen && chartData && (
-        <ChartComponent chartData={chartData} chartConfig={chartConfig} isDark={isDark} />
+        <View style={styles.chartContainer}>
+          <ChartComponent chartData={chartData} chartConfig={chartConfig} isDark={isDark} />
+          <TouchableOpacity style={[styles.exportButton, isDark && styles.exportButtonDark]}>
+            <Text style={[styles.exportButtonText, isDark && styles.exportButtonTextDark]}>Export Data</Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
@@ -215,5 +218,27 @@ const styles = StyleSheet.create({
   },
   chartStyleDark: {
     borderColor: Colors.CHARCOAL,
+  },
+  chartContainer: {
+    paddingTop: 15,
+    paddingBottom: 15,
+  },
+  exportButton: {
+    marginTop: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    backgroundColor: Colors.MALACHITE,
+    borderRadius: 3,
+  },
+  exportButtonDark: {
+    backgroundColor: Colors.SANTA_GRAY,
+  },
+  exportButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  exportButtonTextDark: {
+    color: 'white',
   },
 });

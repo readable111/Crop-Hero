@@ -28,8 +28,8 @@ import {cleanText, cleanNumbers} from '../assets/sanitizer'
 
 
 const EditProfile = () =>{ 
-	const [first, setFirst] = useState("Zina")
-	const [last, setLast] = useState("Townley")
+	const [first, setFirst] = useState("")
+	const [last, setLast] = useState("")
 	const [awAPIKey, setAWAPIKey] = useState("")
 	const [awAppKey, setAWAppKey] = useState("")
 	const [awMACAddrKey, setAWMACAddrKey] = useState("")
@@ -40,21 +40,38 @@ const EditProfile = () =>{
 		await AsyncStorage.setItem('aw_api_key', cleanText(awAPIKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true))
 		await AsyncStorage.setItem('aw_app_key', cleanText(awAppKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true))
 		await AsyncStorage.setItem('aw_device_mac', cleanText(awMACAddrKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true))
+
+		await AsyncStorage.setItem('first_name', cleanText(first, noStopwords=false, noSQL=true, textOnly=true))
+		await AsyncStorage.setItem('last_name', cleanText(last, noStopwords=false, noSQL=true, textOnly=true))
 	};
 
 	useEffect(() => {
 		// declare the async data fetching function
-		const fetchAmbientWeatherInfo = async () => {
+		const fetchInputFieldData = async () => {
 			const api = await AsyncStorage.getItem('aw_api_key');
 			const app = await AsyncStorage.getItem('aw_app_key');
 			const mac = await AsyncStorage.getItem('aw_device_mac');
+			const firstName = await AsyncStorage.getItem('first_name');
+			const lastName = await AsyncStorage.getItem('last_name');
+
+			if (!firstName) {
+				await AsyncStorage.setItem('first_name', "Zina")
+				setFirst("Zina")
+			}
+			if (!lastName) {
+				await AsyncStorage.setItem('last_name', "Townley")
+				setLast("Townley")
+			}
+
 			setAWAPIKey(api)
 			setAWAppKey(app)
 			setAWMACAddrKey(mac)
+			setFirst(firstName)
+			setLast(lastName)
 		}
 	  
 		// call the function
-		fetchAmbientWeatherInfo()
+		fetchInputFieldData()
 		  	// make sure to catch any error
 		  	.catch(console.warn);
 	}, [])

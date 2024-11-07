@@ -21,8 +21,11 @@ import Colors from '../assets/Color'
 import AppButton from '../assets/AppButton.jsx'
 import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
 import NavBar from '../assets/NavBar.jsx'
+import { toTitleCase } from '../assets/sanitizer.jsx'
 
 const Profile = () =>{ 
+	const [username, setUsername] = useState("")
+
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
 		// declare the async data fetching function
@@ -50,6 +53,30 @@ const Profile = () =>{
 		  	.catch(console.error);
 	}, [])
 
+	useEffect(() => {
+		// declare the async data fetching function
+		const fetchUsername = async () => {
+			firstName = await AsyncStorage.getItem('first_name');
+			lastName = await AsyncStorage.getItem('last_name');
+
+			if (!firstName) {
+				firstName = "zina"
+			}
+			if (!lastName) {
+				lastName = "townley"
+			}
+
+			capitalizedUsername = toTitleCase(firstName + " " + lastName)
+
+			setUsername(capitalizedUsername)
+		}
+	  
+		// call the function
+		fetchUsername()
+		  	// make sure to catch any error
+		  	.catch(console.warn);
+	}, [])
+
 	{/*load in all fonts used for this page*/}
 	const [fontsLoaded, fontError] = useFonts({
 		'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
@@ -68,7 +95,7 @@ const Profile = () =>{
 		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
 		{/*green oval at the top to denote profile picture and name*/}
 		<Text style = {styles.oval}></Text>
-		<Text style = {styles.profileName}>Zina Townley</Text>
+		<Text style = {styles.profileName}>{username}</Text>
 		{/*TODO: set image to display profile picture after retrieving it*/}
 		<UploadImage style={styles.avatarImg} isEditable={false} />
 		{/*add edit profile button*/}
