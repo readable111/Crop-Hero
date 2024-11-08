@@ -952,6 +952,15 @@ First, I will discuss how I determined the length of the common prefix. A for lo
 
 Second, I will discuss how I determined the length of the common suffix. This function uses a while loop to assess the strings. The while loop has two conditions. The first condition ensures that the found suffix length is less than the length of the shortest string. The second condition compares two characters, one from each string. The character’s index is equal to the string’s length minus 1 and minus the found suffix length, meaning that the while loop starts at the end when the found suffix length is 0 and moves forward. I multiply the final found suffix length by –1 as I need a negative length to properly slice up the strings. 
 
+#### Floyd-Rivest Sorting Algorithm <a name="sorting_for_search"></a>
+*Author: Daniel*
+
+After all of the other optimizations, the search algorithm achieved an average runtime of 267ms for an input size of about 600. Slightly over 60% of the runtime was attributable to the sorting algorithm which was sorting the crops such that the highest match scores would be at the top.
+
+To correct this, I looked into algorithms that only cared about the Kth biggest or smallest elements. During this research, I found [an interesting article](https://blog.mischel.com/2011/10/25/when-theory-meets-practice/) about the QuickSelect and HeapSelect algorithms. HeapSelect has a complexity of O(N log K). Initially, I thought that HeapSelect would be the best choice since it is faster than QuickSelect when K is less than 1% of N. In addition, HeapSelect does not require the entire list to be loaded into memory and does not alter the original list. However, when I actually implemented it, HeapSelect was slower than the default sorting algorithm and experienced intermittent errors that I could never properly track down.
+
+As such, I implemented a very naive version of QuickSelect which was slightly faster and did not experience any errors. I conducted further research into QuickSelect and any related algorithms, such as Floyd-Rivest. [This article](https://danlark.org/2020/11/11/miniselect-practical-and-generic-selection-algorithms/), [this Reddit post](https://www.reddit.com/r/rust/comments/145xn00/turboselect_faster_than_quickselect/), and [this StackOverflow post](https://stackoverflow.com/questions/29592546/floyd-rivest-vs-introselect-algorithm-performance) are all interesting and useful reads on the topic. Importantly, they led me to the conclusion that Floyd-Rivest would be a better choice than QuickSelect, especially since it minimizes the number of comparisons which is a massive time sink in my case.
+
 ### Backend Services <a name="backend_overview"></a>
 #### Database <a name="database_overview"></a>
 *Author: Tyler*
@@ -1748,12 +1757,12 @@ The Expo Router library will automatically generate statically typed routes for 
 * Expand social media integration
 * Allow crop sharing between app users as part of data aggregation for the Data Hub graphs
     * This would be connected to crop visibility where only crops set to visible will be included in the data aggregation
+    * Includes implementation of the default visibility toggle switch
 * Improve the speed and efficiency of calls to APIs or the backend
-* Speed up the fuzzy string matching/approximate string matching (FSM/ASM) algorithm
-    * Currently, the massive limiter on the algorithm's speed is the sorting algorithm that it uses. The quickselect, heapselect, or Floyd-Rivest sorting algorithms are optimized to identify the X largest values which would be the entries with the X highest match scores in this use case. As such, implementing these algorithms should increase the FSM speed.
 * Add GPS functionality and/or geotagging to identify specific crops or locations
     * Perhaps add a map of the area with zones and markers
 * Add a desktop computer-focused website interface for the mobile app
     * May be an option provided by React Native and Expo's interpreters, with Expo allowing both statically and client rendered websites
 * Increase the number of components that can tied to images
+* Add push notifications for upcoming tasks and payments
     * May include crops, livestock, tasks, task types, locations, etc.
