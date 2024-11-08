@@ -254,12 +254,6 @@ function defaultCompare(a, b) {
 /**
  * Rearranges items so that all items in the [left, k] are the smallest.
  * The k-th element will have the (k - left + 1)-th smallest value in [left, right].
- *
- * @template T
- * @param {T[]} arr the array to partially sort (in place)
- * @param {number} k middle index for partial sorting (as defined above)
- * @param {number} [right=arr.length-1] right index
- * @param {(a: T, b: T) => number} [compare = (a, b) => a - b] compare function
  */
 function quickselect(arr, k, right = arr.length, compare = defaultCompare) {
     let left = 0
@@ -279,9 +273,6 @@ function quickselect(arr, k, right = arr.length, compare = defaultCompare) {
           swap(arr, k, right)
         }
       
-      
-        //600 is an arbitrary kQCap which serves as the max partition
-        //Derived from original paper and is used to minimize execution time
         if (right - left > k) {
             const n = right - left + 1;
             i = k - left + 1;
