@@ -273,7 +273,8 @@ function quickselect(arr, k, right = arr.length, compare = defaultCompare) {
           swap(arr, k, right)
         }
       
-        if (right - left > k) {
+        /* Preserved as necessary for certain optimizations beyond my ability
+	if (right - left > k) {
             const n = right - left + 1;
             i = k - left + 1;
             const s = (2 * n / 3);
@@ -281,7 +282,7 @@ function quickselect(arr, k, right = arr.length, compare = defaultCompare) {
             // Biased slightly so that the (k - left + 1)-th element is expected to lie in the smallest set after partitioning
             ll = Math.max(left, k - i * s / n + sd);
             rr = Math.min(right, k + (n - i) * s / n + sd);
-        }
+        }*/
 
         //partition elements from arr[left : right] around t (which is set to the kth element)
         //basically a faster version of traditional partition function or subscript range fetching as subscript range checking on i and j has been removed
