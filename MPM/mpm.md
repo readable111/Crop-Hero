@@ -80,6 +80,7 @@
         1. [First and Last Letter Section](#1st_last_letter)
         1. [Syllable Counting](#syllables)
         1. [Common Prefix and Suffix](#common_prefix_suffix)
+        1. [Floyd-Rivest Sorting Algorithm](#sorting_for_search)
     1. [Backend Services](#backend_overview) 
         1. [Database](#database_overview)
         1. [Backend Server](#backend_overview)
@@ -952,6 +953,33 @@ First, I will discuss how I determined the length of the common prefix. A for lo
 
 Second, I will discuss how I determined the length of the common suffix. This function uses a while loop to assess the strings. The while loop has two conditions. The first condition ensures that the found suffix length is less than the length of the shortest string. The second condition compares two characters, one from each string. The character’s index is equal to the string’s length minus 1 and minus the found suffix length, meaning that the while loop starts at the end when the found suffix length is 0 and moves forward. I multiply the final found suffix length by –1 as I need a negative length to properly slice up the strings. 
 
+#### Floyd-Rivest Sorting Algorithm <a name="sorting_for_search"></a>
+*Author: Daniel*
+
+After all of the other optimizations, the search algorithm achieved an average runtime of 267ms for an input size of about 600. Slightly over 60% of the runtime was attributable to the sorting algorithm which was sorting the crops such that the highest match scores would be at the top.
+
+To correct this, I looked into algorithms that only cared about the Kth biggest or smallest elements. During this research, I found [an interesting article](https://blog.mischel.com/2011/10/25/when-theory-meets-practice/) about the QuickSelect and HeapSelect algorithms. HeapSelect has a complexity of O(N log K). Initially, I thought that HeapSelect would be the best choice since it is faster than QuickSelect when K is less than 1% of N. In addition, HeapSelect does not require the entire list to be loaded into memory and does not alter the original list. However, when I actually implemented it, HeapSelect was slower than the default sorting algorithm and experienced intermittent errors that I could never properly track down. Besides, HeapSelect is best for streaming data rather than when you have all of it. The implementation for the custom comparator was based on some information from [this article](https://www.geeksforgeeks.org/how-to-sort-an-array-in-typescript/).
+
+As such, I implemented a very naive version of QuickSelect which was slightly faster and did not experience any errors. I conducted further research into QuickSelect and any related algorithms, such as Floyd-Rivest. [This article](https://danlark.org/2020/11/11/miniselect-practical-and-generic-selection-algorithms/), [this Reddit post](https://www.reddit.com/r/rust/comments/145xn00/turboselect_faster_than_quickselect/), and [this StackOverflow post](https://stackoverflow.com/questions/29592546/floyd-rivest-vs-introselect-algorithm-performance) are all interesting and useful reads on the topic. Importantly, they led me to the conclusion that Floyd-Rivest would be a better choice than QuickSelect, especially since it minimizes the number of comparisons which is a massive time sink in my case. For my initial implementation, the [original paper](https://people.csail.mit.edu/rivest/pubs/FR75b.pdf) provides a really clear code snippet which I could use. I simply had to translate it from Algol to TypeScript.
+
+At this point, I simply needed to optimize the Floyd-Rivest sorting algorithm. I based my optimizations of the code on what I saw [here](https://github.com/mourner/quickselect) and [here](https://softwareengineering.stackexchange.com/questions/284767/kth-selection-routine-floyd-algorithm-489/284858#284858). Based on my understanding, recursive code is slower and harder to optimize. As such, my first step was turning the function into an iterative design rather than a recursive design. Secondly, I borrowed the median-of-3 strategy from QuickSelect. While proportion-of-s may have been faster, I could not find any good explanations of its implementation, leading me back to the median-of-3 approach. In QuickSelect, you would look at the first, middle, and last elements of an array and choose the median of those 3 points to serve as the pivot. To prevent issues with the next recursive call in QuickSelect, those three points are then sorted. Specifically, this prevents the situation where an array is completely sorted except for having the smallest/largest element as the first/last point on the wrong side of the array. Basically, median-of-3 ensures that fully sorted data remains optimal, decreases the number of worst cases, and removes any PRNG calls which are extremely slow. For an iterative Floyd-Rivest, I look at the first, Kth, and last elements of the array. Rather than choosing the median as a pivot since I don't need a pivot, I simply swap and sort them. I will note that median-of-3 would traditionally use XOR like `if ((a > b) ^ (a > c)) {...} else if ((b < a) ^ (b < c)) {...} else {...}`, but I am not always comparing numbers which makes this unviable. Then, I removed the natural logs, exponentation, and square root functions as they were causing unnecessary slowdowns. Since it is not recursive and due to the median-of-3 approach, the if statement now compares `right - left` against K rather than right. That being said, I ended up commenting out the if statement. Originally, it was used to shrink the subset for the recursive calls, but it is no longer being used. I didn't delete it because I wanted to preserve the removal of the math functions and because I saw it being used for quintary partitions. While I lack the ability to understand and implement quintary partitioning per [Kiwiel's article](https://core.ac.uk/download/pdf/82672439.pdf), I would love to see it being applied in the future.
+
+The new, optimized sorting algorithm substantially decreased the average runtime from 267ms to 98ms. Interestingly, about 70% of the runtime is still coming from the sorting algorithm or an average of 69ms.
+
+| Section                   | % of Overall Runtime (97.9918ms) |
+| :-----------------------: | :------------------------------: |
+| Cleaning                  | 0.22%                            |
+| Preprocessing             | 7.24%                            |
+| SDC                       | 1.75%                            |
+| Check 1st/Last            | 3.99%                            |
+| Length/Syllable           | 1.63%                            |
+| Prefix Match              | 7.23%                            |
+| DLED                      | 1.02%                            |
+| JWS                       | 2.04%                            |
+| Lemmatizer                | 4.07%                            |
+| Double Metaphone          | 0.54%                            |
+| Other (sorting algorithm) | 70.27%                           |
+
 ### Backend Services <a name="backend_overview"></a>
 #### Database <a name="database_overview"></a>
 *Author: Tyler*
@@ -1745,13 +1773,17 @@ The Expo Router library will automatically generate statically typed routes for 
 * Add livestock tracking to the app by expanding the crop tracking features
 * Add a subscription model, likely based on a freemium model
     * Charge via PayPal or Square to offload security considerations and PCI DSS requirements
+    * Includes writing a proper Terms of Service and Privacy Policy, for legal reasons
 * Expand social media integration
 * Allow crop sharing between app users as part of data aggregation for the Data Hub graphs
     * This would be connected to crop visibility where only crops set to visible will be included in the data aggregation
+    * Includes implementation of the default visibility toggle switch
 * Improve the speed and efficiency of calls to APIs or the backend
 * Add GPS functionality and/or geotagging to identify specific crops or locations
     * Perhaps add a map of the area with zones and markers
 * Add a desktop computer-focused website interface for the mobile app
     * May be an option provided by React Native and Expo's interpreters, with Expo allowing both statically and client rendered websites
 * Increase the number of components that can tied to images
+* Add push notifications for upcoming tasks and payments
     * May include crops, livestock, tasks, task types, locations, etc.
+* Further improve Floyd-Rivest sorting algorithm per [https://core.ac.uk/download/pdf/82672439.pdf](https://core.ac.uk/download/pdf/82672439.pdf) and [https://github.com/koskinev/turboselect](https://github.com/koskinev/turboselect)
