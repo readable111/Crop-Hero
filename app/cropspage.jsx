@@ -21,24 +21,32 @@ import { cleanText } from '../assets/sanitizer.jsx';
 const CropsPage = () => {
 
         {/* Grabs variable form viewcrops page for use */}
+        
         let [crop, setCropData] = useState(useLocalSearchParams());
         //If crop.name couldn't be retrieved, assume that ?param= was used
+        /*
         if(!crop.name) {
                 console.log("?param passed")
                 console.log(crop.param)
                 crop = JSON.parse(crop.param)
         }
-        console.log("CROP: " + crop); //test
-        console.log("Crop name: " + crop.name); //test
+        */
+        //console.log("CROP: " + crop); //test
+        //console.log("Crop name: " + crop.name); //test
+        
 
         //Use state for switching if something is editable
         const [readOnly, setReadOnly] = useState(true)
 
         const handleChange = (fieldName, input) => {
-                setCropData({
-                        ...crop,
-                        [fieldName]: cleanText(input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
-                })
+                //console.log("Changing field:", fieldName, "to value:", input);
+                
+                setCropData((prevCrop) => ({
+                         ...prevCrop,
+                        [fieldName]: input
+                }))
+                               
+                
         }
         const [isDark, setIsDarkMode] = useState(false)
         useEffect(() => {
@@ -68,14 +76,18 @@ const CropsPage = () => {
                 fetchDarkModeSetting()
                 .catch(console.error);
         }, [])
-        const printStatement = () =>
-        {
-                Alert.alert('Save pressed');
-                console.log(cropData);
-        };
+        
+
         const toggleRead = () =>
         {
                 setReadOnly(!readOnly);
+                console.log(readOnly);
+                if(!readOnly)
+                {
+                        console.log("Editing Done");
+                        
+                }
+                
         };
 
         return (
@@ -96,11 +108,12 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Crop Name</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
+                                        placeholder = "[Empty]"
                                         value={crop.name}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength = {128}
                                         readOnly = {readOnly}
-                                        // onChangeText={(text) => handleChange('name', text)}
+                                        onChangeText={(text) => handleChange('name', text)}
                                         
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Variety</Text>
@@ -110,7 +123,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         readOnly = {readOnly}
-                                        //onChangeText={(text) => handleChange('variety', text)}
+                                        onChangeText={(text) => handleChange('variety', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Source</Text>
                                 <Input
@@ -119,7 +132,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         readOnly = {readOnly}
-                                        //onChangeText={(text) => handleChange('source', text)}
+                                        onChangeText={(text) => handleChange('source', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted</Text>
                                 <Input
@@ -128,6 +141,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={10}
                                         readOnly = {readOnly}
+                                        onChangeText={(text) => handleChange('datePlanted', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Location</Text>
                                 <Input
@@ -136,6 +150,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         readOnly = {readOnly}
+                                        onChangeText={(text) => handleChange('location', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Comments</Text>
                                 <Input
@@ -144,6 +159,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={1024}
                                         readOnly = {readOnly}
+                                        onChangeText={(text) => handleChange('comments', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Started Indoors?</Text>
                                 <Input
@@ -152,6 +168,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={3}
                                         readOnly = {readOnly}
+                                        onChangeText={(text) => handleChange('indoors', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Active</Text>
                                 <Input
@@ -160,6 +177,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={3}
                                         readOnly = {readOnly}
+                                        onChangeText={(text) => handleChange('active' , text)}
 
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Type</Text>
@@ -169,7 +187,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {readOnly}
-
+                                        onChangeText={(text) => handleChange('type' , text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
                                 <Input
@@ -178,7 +196,6 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {true}
-
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Visible</Text>
                                 <Input
@@ -187,6 +204,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {readOnly}
+                                        onChangeText={(text) => handleChange('visible' , text)}
 
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Yield</Text>
@@ -196,6 +214,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {readOnly}
+                                        onChangeText={(text) => handleChange('yield' , text)}
 
                                 />
                         </ScrollView>
