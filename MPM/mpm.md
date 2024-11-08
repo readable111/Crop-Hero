@@ -80,6 +80,7 @@
         1. [First and Last Letter Section](#1st_last_letter)
         1. [Syllable Counting](#syllables)
         1. [Common Prefix and Suffix](#common_prefix_suffix)
+        1. [Floyd-Rivest Sorting Algorithm](#sorting_for_search)
     1. [Backend Services](#backend_overview) 
         1. [Database](#database_overview)
         1. [Backend Server](#backend_overview)
@@ -963,7 +964,21 @@ As such, I implemented a very naive version of QuickSelect which was slightly fa
 
 At this point, I simply needed to optimize the Floyd-Rivest sorting algorithm. I based my optimizations of the code on what I saw [here](https://github.com/mourner/quickselect) and [here](https://softwareengineering.stackexchange.com/questions/284767/kth-selection-routine-floyd-algorithm-489/284858#284858). Based on my understanding, recursive code is slower and harder to optimize. As such, my first step was turning the function into an iterative design rather than a recursive design. Secondly, I borrowed the median-of-3 strategy from QuickSelect. While proportion-of-s may have been faster, I could not find any good explanations of its implementation, leading me back to the median-of-3 approach. In QuickSelect, you would look at the first, middle, and last elements of an array and choose the median of those 3 points to serve as the pivot. To prevent issues with the next recursive call in QuickSelect, those three points are then sorted. Specifically, this prevents the situation where an array is completely sorted except for having the smallest/largest element as the first/last point on the wrong side of the array. Basically, median-of-3 ensures that fully sorted data remains optimal, decreases the number of worst cases, and removes any PRNG calls which are extremely slow. For an iterative Floyd-Rivest, I look at the first, Kth, and last elements of the array. Rather than choosing the median as a pivot since I don't need a pivot, I simply swap and sort them. I will note that median-of-3 would traditionally use XOR like `if ((a > b) ^ (a > c)) {...} else if ((b < a) ^ (b < c)) {...} else {...}`, but I am not always comparing numbers which makes this unviable. Then, I removed the natural logs, exponentation, and square root functions as they were causing unnecessary slowdowns. Since it is not recursive and due to the median-of-3 approach, the if statement now compares `right - left` against K rather than right. That being said, I ended up commenting out the if statement. Originally, it was used to shrink the subset for the recursive calls, but it is no longer being used. I didn't delete it because I wanted to preserve the removal of the math functions and because I saw it being used for quintary partitions. While I lack the ability to understand and implement quintary partitioning per [Kiwiel's article](https://core.ac.uk/download/pdf/82672439.pdf), I would love to see it being applied in the future.
 
-The new, optimized sorting algorithm substantially decreased the average runtime from 267ms to 50ms.
+The new, optimized sorting algorithm substantially decreased the average runtime from 267ms to 98ms. Interestingly, about 70% of the runtime is still coming from the sorting algorithm or an average of 69ms.
+
+| Section                   | % of Overall Runtime (97.9918ms) |
+| :-----------------------: | :------------------------------: |
+| Cleaning                  | 0.22%                            |
+| Preprocessing             | 7.24%                            |
+| SDC                       | 1.75%                            |
+| Check 1st/Last            | 3.99%                            |
+| Length/Syllable           | 1.63%                            |
+| Prefix Match              | 7.23%                            |
+| DLED                      | 1.02%                            |
+| JWS                       | 2.04%                            |
+| Lemmatizer                | 4.07%                            |
+| Double Metaphone          | 0.54%                            |
+| Other (sorting algorithm) | 70.27%                           |
 
 ### Backend Services <a name="backend_overview"></a>
 #### Database <a name="database_overview"></a>
