@@ -264,7 +264,14 @@ const Home = () =>{
 		return null;
 	}	
 
-	let everyOtherCrop = CROPS.slice(0,21).filter((element, index) => {
+
+	const [cropData, setCropData] = useState([])
+	useEffect(()=>{
+		fetch('https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCrops/sub123').then(response=>response.json()).then(data=>setCropData(data))
+	})
+
+
+	let everyOtherCrop = cropData.slice(0,21).filter((element, index) => {
 		return index % 2 === 0;
 	})
 
@@ -286,7 +293,7 @@ const Home = () =>{
 		<View style = {styles.Search}>
 			<SearchInput isDarkMode={isDarkMode} />
 		</View>
-			<CropCarousel crops = {everyOtherCrop} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
+			<CropCarousel crops = {} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
 		<NavBar homeSelected darkMode={isDarkMode}/>
 	</View>)
 };

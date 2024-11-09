@@ -6,7 +6,7 @@
  * Secondary author (Daniel) added dark mode
  ***/
 
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { View, FlatList, Dimensions, Text, StyleSheet, Image, Pressable } from 'react-native'
 import { useRouter } from 'expo-router'
 import Colors from '../../assets/Color.js'
@@ -14,8 +14,39 @@ const { width } = Dimensions.get('window')
 
 const Carousel = ({data, isDarkMode=false}) => {
   const router  = useRouter();
+  const [data, setData] = useState(data)
 
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const updatedData = await Promise.all(
+        data.map(async (item) => {
+          // Fetch CropMedium data
+          const cropMediumResponse = await fetch(
+            `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCropMedium/${item.fld_s_SubscriberID_pk}/${item.fld_c_CropID_pk}`
+          );
+          const cropMediumData = await cropMediumResponse.json();
+
+          // Fetch CropLocation data
+          const cropLocationResponse = await fetch(
+            `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCropLocation/${item.fld_s_SubscriberID_pk}/${item.fld_c_CropID_pk}`
+          );
+          const cropLocationData = await cropLocationResponse.json();
+
+          return {
+            ...item,
+            CropMedium: cropMediumData,
+            CropLocation: cropLocationData,
+          };
+        })
+      );
+
+      setData(updatedData);
+    };
+
+    fetchData();
+  }, [data]); 
+  
   return(
           <FlatList
             data={data}
@@ -28,8 +59,8 @@ const Carousel = ({data, isDarkMode=false}) => {
           <View style={[styles.item, isDarkMode && styles.itemDark]}>
             <Image source = {require("../../assets/icons/cropDefaultImage.png")}/>
             <Text>Name: {item.name}</Text> 
-            <Text>Medium: {item.media}</Text>
-            <Text>Location: {item.location}</Text>
+            <Text>Medium: {item.CropMediumData.fld_m_MediumName}</Text>
+            <Text>Location: {item.CropLocationData.fld_l_location}</Text>
             <Text>Start Date: {item.date}</Text>
           </View>
         </Pressable>
