@@ -3,7 +3,7 @@
  * @reviewer Daniel Moreno
  * @tester 
  * 
- * UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 10_27_2024
+ * UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 11_10_2024
  * This  page is meant to keep track of what was done that day for future reference if needed
  ***/
 import { React, useState, useEffect } from 'react';
@@ -13,12 +13,12 @@ import { router } from 'expo-router';
 import { Col, Row } from '../assets/Grid.jsx';
 import Colors from '../assets/Color';
 import AppButton from '../assets/AppButton.jsx';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import { SpeedDial } from '@rneui/themed';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavBar from '../assets/NavBar';
 import JournalEntryModal from '../assets/NotebookModals/JournalEntryModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Notebook = () => {
     const [entries, setEntries] = useState([]);
@@ -29,7 +29,10 @@ const Notebook = () => {
     const [open, setOpen] = useState(false);
     const [selectedEntry, setSelectedEntry] = useState(null);
     //const [isDarkMode, setIsDarkMode] = useState(false);
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    const clearSelectedEntry = () => {
+        setSelectedEntry(null); // Reset the selected entry
+    };
     useEffect(() => {
         // declare the async data fetching function
         const fetchDarkModeSetting = async () => {
@@ -57,23 +60,33 @@ const Notebook = () => {
     }, [])
     const handleSaveEntry = (entryID, jsonData) => {
         const entry = JSON.parse(jsonData);
-        // Assume entry contains a date in the format: { month: <month>, day: <day>, year: <year> }
-        const { month, day, year } = entry; // Adjust according to the structure of the entry
-        entry.EntryDate = new Date(year, month - 1, day); // Create a new date from the user input
+        const dateString = entry.EntryDate; // "01301995"
+
+        // Extract month, day, year from the date string coming in from the modal as 2024-12-31
+        const month = parseInt(dateString.substring(5, 7), 10); // JavaScript months are 0-based
+        const day = parseInt(dateString.substring(8, 10), 10);
+        const year = parseInt(dateString.substring(0, 5), 10);
+
+        //entry.EntryDate = new Date(month, day, year); // Create a Date object
+        entry.EntryDate = new Date(year, month, day);
+       
+        const formattedDate = `${month}/${day}/${year}`;
+
+        // You can save or display the formatted date as required
+        console.log(`Entry Date: ${formattedDate}`);
 
         if (entryID) {
-            // Update existing entry
             setEntries(prevEntries =>
                 prevEntries.map(item => item.EntryID === entryID ? entry : item)
             );
         } else {
-            // Add new entry
-            entry.EntryID = entries.length > 0 ? Math.max(...entries.map(e => e.EntryID)) + 1 : 1; // Increment EntryID
+            entry.EntryID = entries.length > 0 ? Math.max(...entries.map(e => e.EntryID)) + 1 : 1;
             setEntries(prevEntries => [...prevEntries, entry]);
         }
     };
 
     const openModalForEdit = (entry) => {
+        console.log(formattedDate);
         setEditingEntry(entry);
         setModalVisible(true);
     };
@@ -81,7 +94,7 @@ const Notebook = () => {
     const filteredEntries = () => {
         return entries.filter(entry => {
             const entryDate = new Date(entry.EntryDate);
-            const entryMonth = String(entryDate.getMonth() + 1).padStart(2, '0');
+            const entryMonth = String(entryDate.getMonth()).padStart(2, '0');
             const entryYear = String(entryDate.getFullYear());
 
             const monthMatch = selectedMonth === "All" || entryMonth === selectedMonth;
@@ -98,20 +111,28 @@ const Notebook = () => {
     const renderItem = ({ item }) => {
         // Extract month, day, year for display
         const entryDate = new Date(item.EntryDate);
-        const formattedDate = `${entryDate.getMonth() + 1}/${entryDate.getDate()}/${entryDate.getFullYear()}`; // Format: month/day/year
+        const formattedDate = `${entryDate.getMonth()}/${entryDate.getDate()}/${entryDate.getFullYear()}`;
+        //let formattedDate = "Invalid Date";
+        //if (item.EntryDate instanceof Date && !isNaN(item.EntryDate)) {
+          //    formattedDate = `${item.EntryDate.getMonth() + 1}/${item.EntryDate.getDate()}/${item.EntryDate.getFullYear()}`;
+        //}
+         //   const entryDate = item.EntryDate ? new Date(item.EntryDate) : null;
+    //const formattedDate = entryDate && !isNaN(entryDate.getTime())
+      //  ? `${entryDate.getMonth() + 1}/${entryDate.getDate()}/${entryDate.getFullYear()}`
+        //: "Invalid Date";
 
         return (
-            <View style={styles.entryContainer}>
+            <View style={[styles.entryContainer, isDarkMode && styles.darkEntryContainer]}>
                 <TouchableOpacity
                     onLongPress={() => {
                         setSelectedEntry(item);
                         setOpen(true);
                     }}
-                    style={styles.entryContainer}
+                    style={[styles.entryInsideContainer, isDarkMode && styles.darkEntryInsideContainer]}
                 >
-                    <Text style={styles.entryText}>Entry ID: {item.EntryID}</Text>
-                    <Text style={styles.entryText}>Date: {formattedDate}</Text>
-                    <Text style={styles.entryText}>Contents: {item.Contents}</Text>
+                    <Text style={[styles.entryText, isDarkMode && styles.darkText]}>Entry ID: {item.EntryID}</Text>
+                    <Text style={[styles.entryText, isDarkMode && styles.darkText]}>Date: {formattedDate}</Text>
+                    <Text style={[styles.entryText, isDarkMode && styles.darkText]}>Contents: {item.Contents}</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -145,23 +166,23 @@ const Notebook = () => {
     }
 
     return (
-        <View style={styles.topContainer}>
-            <StatusBar backgroundColor={Colors.WHITE_SMOKE} />
-            <View style={styles.btnGridContainer}>
+        <View style={[styles.topContainer, isDarkMode && styles.darkContainer]}>
+            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={isDarkMode ? Colors.ALMOST_BLACK : Colors.WHITE_SMOKE} />
+            <View style={isDarkMode ? styles.darkBtnGridContainer : styles.btnGridContainer}>
                 <Row height={80}>
                     <Col relativeColsCovered={2} alignItems='center'>
-                        <AppButton title="To-Do" specifiedStyle={styles.ovals} onPress={() => router.replace('/todo')} />
+                        <AppButton title="To-Do" specifiedStyle={isDarkMode ? styles.darkOvals : styles.ovals} onPress={() => router.replace('/todo')} />
                     </Col>
                     <Col relativeColsCovered={2} alignItems='center'>
-                        <AppButton title="Notebook" specifiedStyle={styles.oval} onPress={() => router.replace('/notebook')} />
+                        <AppButton title="Notebook" specifiedStyle={isDarkMode ? styles.darkOval : styles.oval} onPress={() => router.replace('/notebook')} />
                     </Col>
                 </Row>
             </View>
 
-            <View style={styles.filterContainer}>
+            <View style={isDarkMode ? styles.darkFilterContainer : styles.filterContainer}>
                 <Picker
                     selectedValue={selectedMonth}
-                    style={styles.picker}
+                    style={isDarkMode ? styles.darkPicker : styles.picker}
                     onValueChange={(itemValue) => setSelectedMonth(itemValue)}
                 >
                     <Picker.Item label="Month" value="All" />
@@ -172,11 +193,11 @@ const Notebook = () => {
 
                 <Picker
                     selectedValue={selectedYear}
-                    style={styles.picker}
+                    style={isDarkMode ? styles.darkPicker : styles.picker}
                     onValueChange={(itemValue) => setSelectedYear(itemValue)}
                 >
                     <Picker.Item label="Year" value="All" />
-                    {[2023, 2024].map(year => (
+                    {[2023, 2024, 2025, 2026].map(year => (
                         <Picker.Item key={year} label={year.toString()} value={year.toString()} />
                     ))}
                 </Picker>
@@ -194,7 +215,7 @@ const Notebook = () => {
                 icon={{ name: 'edit', color: 'white' }}
                 openIcon={{ name: 'close', color: 'white' }}
                 onOpen={() => setOpen(!open)}
-                onClose={() => setOpen(false)}
+                onClose={() => { setOpen(false); clearSelectedEntry(); }}
                 buttonStyle={{ backgroundColor: 'green' }}
                 style={styles.speedDial}
             >
@@ -210,7 +231,15 @@ const Notebook = () => {
                 <SpeedDial.Action
                     icon={<MaterialCommunityIcons name="export" size={24} color="white" />}
                     title="Export"
-                    onPress={handleExport}
+                    //onPress={handleExport}
+                    onPress={() => {
+                        if (selectedEntry) {
+                            handleExport(selectedEntry);
+                        }
+                        else {
+                            Alert.alert("Select an Entry to export.");
+                        }
+                    } }
                     buttonStyle={{ backgroundColor: 'green' }}
                 />
                 <SpeedDial.Action
@@ -248,7 +277,7 @@ const Notebook = () => {
                 onSave={handleSaveEntry}
                 journalEntry={editingEntry} // Pass entry to edit
             />
-            <NavBar notebookSelected />
+            <NavBar notebookSelected darkMode={isDarkMode} />
         </View>
     );
 };
@@ -303,6 +332,45 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
 
     },
+    darkEntryContainer: {
+        width: '90%',
+        // height: '80%',
+        backgroundColor: Colors.PERIWINKLE_GRAY,
+        padding: 5,
+        marginBottom: 27,
+        marginTop: 20,
+        border: 'black',
+        borderWidth: 1,
+        borderRadius: 5,
+        alignSelf: 'center',
+
+    },
+    entryInsideContainer: {
+        width: '90%',
+        // height: '80%',
+        backgroundColor: Colors.ALMOND_TAN,
+        padding: 5,
+        marginBottom: 27,
+        marginTop: 20,
+        border: 'black',
+        borderWidth: 1,
+        borderRadius: 5,
+        alignSelf: 'center',
+
+    },
+    darkEntryInsideContainer: {
+        width: '90%',
+        // height: '80%',
+        backgroundColor: Colors.LICHEN,
+        padding: 5,
+        marginBottom: 27,
+        marginTop: 20,
+        border: 'black',
+        borderWidth: 1,
+        borderRadius: 5,
+        alignSelf: 'center',
+
+    },
     filterContainer: { // holds picker
         flexDirection: 'row',
         backgroundColor: Colors.ALMOND_TAN,
@@ -318,6 +386,19 @@ const styles = StyleSheet.create({
       
 
     },
+    darkFilterContainer: {
+        flexDirection: 'row',
+        backgroundColor: Colors.PERIWINKLE_GRAY,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: 'black',
+        alignContent: 'flex-start',
+        width: '100%',
+        height: '7%',
+        marginTop: 5,
+        marginBotton: 3,
+        alignSelf: 'center'
+    },
     picker: { // two drop down elements overall contained in filterContainer
         height: '20%',
         width: 200,
@@ -329,15 +410,32 @@ const styles = StyleSheet.create({
        // marginTop: 20,
         flexDirection: 'row',
         alignSelf: 'center'
+    },
+    darkPicker: {
+        height: '20%',
+        width: 200,
+        borderColor: 'black',
+        borderWidth: 1,
+        borderRadius: 5,
+        backgroundColor: Colors.PERIWINKLE_GRAY,
+        //marginBottom: 20,
+        // marginTop: 20,
+        flexDirection: 'row',
+        alignSelf: 'center'
 
-        
     },
    
     entryText: {
         fontSize: 16,
-        backgroundColor: 'white'
-    },
+        backgroundColor: 'white',
+        marginBottom: 5,
 
+    },
+    darkText: {
+        fontSize: 16,
+        backgroundColor: Colors.LICHEN,
+        marginBottom: 5,
+    },
     pickerItem: {
         backgroundColor: Colors.HOT_GREEN
     },
@@ -345,6 +443,15 @@ const styles = StyleSheet.create({
         marginHorizontal: "auto",
         width: '100%',
         backgroundColor: Colors.ALMOND_TAN,
+        borderRadius: 5,
+        borderColor: 'black',
+        borderWidth: 1,
+        height: '13%'
+    },
+    darkBtnGridContainer: {
+        marginHorizontal: "auto",
+        width: '100%',
+        backgroundColor: Colors.BALTIC_SEA,
         borderRadius: 5,
         borderColor: 'black',
         borderWidth: 1,
@@ -369,9 +476,7 @@ const styles = StyleSheet.create({
     },
 
   
-    entryText: {
-        marginBottom: 5,
-    },
+   
     speedDialContainer: { // didnt end up needing this
         backgroundColor: 'purple',
         //height: '80%',
@@ -416,7 +521,17 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		//zIndex: -1,
 		height:'90%',
-	},
+    },
+    darkContainer: { // dark mode version of topContainer
+        backgroundColor: Colors.BALTIC_SEA,
+        //backgroundColor:'pink',
+        flex: 1,
+        alignItems: 'flex-start',
+        flexDirection: 'column',
+        //zIndex: -1,
+        height: '90%',
+    },
+
 	
 	oval: {
 		backgroundColor: Colors.IRISH_GREEN,
@@ -428,7 +543,21 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		textAlign: 'center',
 		fontFamily: 'Domine-Regular',		
-	},
+    },
+    darkOval: {
+        backgroundColor: Colors.IRISH_GREEN,
+        width: 180,
+        height: 180,
+        borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
+        paddingTop: 120,
+        marginTop: -90,
+        fontSize: 18,
+        textAlign: 'center',
+        fontFamily: 'Domine-Regular',
+
+
+    },
+
 	ovals: {
 		backgroundColor: Colors.ALMOND_TAN,
 		width: 180,
@@ -439,8 +568,21 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		textAlign: 'center',
 		fontFamily: 'Domine-Regular',
-	},
-	
+    },
+    darkOvals: {
+        backgroundColor: Colors.RIVER_BED,
+        //backgroundColor: Colors.ALMOND_TAN,
+        width: 180,
+        height: 180,
+        borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
+        paddingTop: 120,
+        marginTop: -90,
+        fontSize: 18,
+        textAlign: 'center',
+        fontFamily: 'Domine-Regular',
+
+    },
+   
 })
 
 export default Notebook;
