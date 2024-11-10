@@ -27,6 +27,7 @@ import Icons from '../assets/icons/Icons.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {cleanText, cleanNumbers} from '../assets/sanitizer'
 import DropDownPicker from 'react-native-dropdown-picker';
+import * as ImagePicker from 'expo-image-picker'
 
 
 
@@ -56,6 +57,7 @@ const AddCrops = () => {
                 {label: 'Yes', value: 'Yes' },
                 {label: 'No', value: 'No'}
         ]);
+        const [selectedImage, setSelectedImage] = useState(null);
 
 
         const handleIndoorsChange = (value) =>
@@ -106,6 +108,12 @@ const AddCrops = () => {
         }
         const [isDark, setIsDarkMode] = useState(false)
         useEffect(() => {
+                (async () => {
+                        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                        if (status !== 'granted') {
+                          Alert.alert('Permission Required', 'Permission to access media library is required!');
+                        }
+                })();
                 const fetchDarkModeSetting = async () => {
                         const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
                         let result = null
@@ -137,7 +145,28 @@ const AddCrops = () => {
                 cropData.hrfNum = setHRFnum;
                 console.log(setHRFnum);
                 console.log(cropData.hrfNum)
+                
         }, [])
+
+        const handleAddMedia = async () => {
+                try{
+                        const result = await ImagePicker.launchImageLibraryAsync({
+                                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                                allowsEditing: true,
+                                quality: 1,
+                        })
+                        
+                        if(!result.canceled)
+                        {
+                                setSelectedImage(result.assets[0].uri);
+                        }
+
+                }
+                catch(error)
+                {
+                        console.error("Error picking image: ", error);
+                }
+        }
 
         //load fonts
         const [fontsLoaded, fontError] = useFonts({
@@ -165,7 +194,9 @@ const AddCrops = () => {
                         <View style={[styles.titleCard, isDark && styles.titleCarddark]}>
                                 <View style={styles.titleContainer}>
                                         <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>Add Crop</Text>
-                                        <View style={styles.semicircle}></View>
+                                        <View style={styles.semicircle}>
+                                                <Text style={styles.AddMedia} onPress = {handleAddMedia}>Add media</Text>
+                                        </View>
                                 </View>
                         </View>
                         {/* Body (Scrollable inputs)*/}
@@ -434,8 +465,11 @@ const styles = StyleSheet.create({
         inputTextDark:{
                   color: Colors.WHITE_SMOKE
         },
-        icon:{
-
+        AddMedia:{
+                textAlign: 'center',
+                fontSize: 21,
+                fontFamily: 'Domine-Medium',
+                marginTop: '10%'
         }
 
 
