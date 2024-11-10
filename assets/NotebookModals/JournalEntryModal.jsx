@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Colors from '../Color';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
     const [entryID, setEntryID] = useState(null);
@@ -10,17 +11,49 @@ const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
     const [day, setDay] = useState('01');
     const [month, setMonth] = useState('01');
     const [year, setYear] = useState('2024');
+    const [isNewEntry, setIsNewEntry] = useState(true);
+    const [isDarkMode, setIsDarkMode] = useState(false);
 
     useEffect(() => {
+        // declare the async data fetching function
+        const fetchDarkModeSetting = async () => {
+            const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
+            let result = null
+            if (JSON_VALUE && JSON_VALUE !== "") {
+                result = JSON.parse(JSON_VALUE)
+                console.log("Async: " + result)
+            } else {
+                colorScheme = Appearance.getColorScheme()
+                if (colorScheme == 'dark') {
+                    result = true
+                } else {
+                    result = false
+                }
+                console.log("colorScheme: " + result)
+            }
+            setIsDarkMode(result)
+        }
+
+        // call the function
+        fetchDarkModeSetting()
+            // make sure to catch any error
+            .catch(console.error);
+    }, [])
+   /* useEffect(() => {
+        
         if (journalEntry) {
+            //const EntryDate = journalEntry.EntryDate || '';
+            //const dateString = entry.EntryDate; // e.g., "01301995"
             if (!entryID) {
                 setEntryID(journalEntry.EntryID);
             }
+            setIsNewEntry(false); 
             setContents(journalEntry.Contents);
-            setDay(journalEntry.EntryDate.slice(2, 4));
-            setMonth(journalEntry.EntryDate.slice(0, 2));
-            setYear(journalEntry.EntryDate.slice(4));
+            setDay(journalEntry.EntryDate.parseInt(substring(8, 10), 10));
+            setMonth(journalEntry.EntryDate.parseInt(substring(5, 7), 10));
+            setYear(journalEntry.EntryDate.parseInt(substring(0, 5), 10));
         } else {
+            setIsNewEntry(true);
             setEntryID(null);
             setContents('');
             setDay('01');
@@ -28,30 +61,62 @@ const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
             setYear(new Date().getFullYear().toString());
         }
     }, [journalEntry]);
-   
+   */
+    useEffect(() => {
+        if (journalEntry) {
+            if (!entryID) {
+                setEntryID(journalEntry.EntryID);
+            }
+            setIsNewEntry(false);
+            setContents(journalEntry.Contents);
+
+            // Assuming EntryDate is in "MM/DD/YYYY" format
+            const dateString = journalEntry.EntryDate; // Example: "01/01/2024"
+
+            if (dateString && dateString.length === 10) { // Ensure it's in "MM/DD/YYYY" format
+                const [month, day, year] = dateString.split('/'); // Split by "/"
+                setDay(day); // Set day
+                setMonth(month); // Set month
+                setYear(year); // Set year
+            } else {
+                // Handle cases where EntryDate might be in an invalid format or empty
+                setDay('01');
+                setMonth('01');
+                setYear(new Date().getFullYear().toString()); // Set current year as default
+            }
+        } else {
+            // Reset to defaults if no journal entry
+            setEntryID(null);
+            setContents('');
+            setDay('01');
+            setMonth('01');
+            setYear(new Date().getFullYear().toString());
+        }
+    }, [journalEntry]);
     const handleSave = () => {
-        // Create a new Date object
-        const entryDate = new Date(year, month - 1, day); // month is 0-indexed
+        // Create a new Date object // check this for date error
+        const entryDate = new Date(year, month -1, day); // month is 0-indexed
 
         const entryData = {
             EntryID: entryID,
             Contents: contents,
-            EntryDate: entryDate.toISOString(), // Convert to ISO string for consistent formatting
+            EntryDate: entryDate.toISOString(), // Convert to ISO string for consistent formatting; 
         };
 
         const jsonData = JSON.stringify(entryData);
         onSave(entryID, jsonData);
+        console.log(entryDate);
         onClose();
     };
-
+    //const screenWidth = Dimensions.get('window').width;
     return (
         <Modal visible={visible} animationType="slide">
-            <View style={styles.modalContainer}>
-                <Text style={styles.title}>Journal Entry</Text>
+            <View style={[styles.modalContainer, isDarkMode && styles.darkModalContainer]}>
+                <Text style={[styles.title, isDarkMode && styles.darkText]}>Journal Entry</Text>
 
                 <View style={styles.dateContainer}>
-                    <Text>Entry Date:</Text>
-                    <View style={styles.datePicker}>
+                    <Text style={[styles.dateLabel, isDarkMode && styles.darkText]}>Entry Date:</Text>
+                    <View style={[styles.datePicker, isDarkMode && styles.darkDatePicker]}>
                         <Picker
                             selectedValue={month}
                             style={styles.picker}
@@ -81,11 +146,12 @@ const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
                                 <Picker.Item key={i} label={(new Date().getFullYear() + i).toString()} value={(new Date().getFullYear() + i).toString()} />
                             ))}
                         </Picker>
+                        
                     </View>
                 </View>
 
                 <View style={styles.entryContainer}>
-                    <Text style={styles.entryLabel}>Entry:</Text>
+                    <Text style={[styles.entryLabel, isDarkMode && styles.darkText]}>Entry:</Text>
                     <TextInput
                         style={[styles.input, styles.textArea]}
                         value={contents}
@@ -108,6 +174,8 @@ const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
 };
 
 const styles = StyleSheet.create({
+    
+
     entryContainer: {
         width: '100%',
         marginBottom: 15,
@@ -133,28 +201,69 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         shadowColor: Colors.PERIWINKLE_GRAY,
     },
+    darkModalContainer: {
+        flex: 1,
+        padding: 20,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        borderRadius: 20,
+        backgroundColor: Colors.BALTIC_SEA,
+        margin: 20,
+        elevation: 10,
+        //shadowColor: '#000',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: .9,
+        shadowRadius: 100,
+        shadowColor: 'black',
+        elevation: 10
+        //shadowColor: Colors.PERIWINKLE_GRAY,
+       // color: 'white'
+    },
     title: {
         fontSize: 24,
         marginBottom: 20,
         textAlign: 'center',
         fontFamily: 'Domine-Regular',
     },
+    darkText: {
+        color: 'white'
+    },
     dateContainer: {
         alignSelf: 'flex-start',
         marginBottom: 15,
         fontFamily: 'Domine-Regular',
+        borderWidth: 1,
+        borderColor: 'black',
+        borderRadius: 5,
+        backgroundColor: Colors.PERIWINKLE_GRAY
+
     },
     datePicker: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+       // justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
-        paddingHorizontal: 5, // Reduced padding
+        //paddingHorizontal: 5, // Reduced padding
+        backgroundColor: Colors.PERIWINKLE_GRAY,
+        borderRadius: 5,
+    },
+    darkDatePicker: {
+        flexDirection: 'row',
+        // justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        //paddingHorizontal: 5, // Reduced padding
         backgroundColor: Colors.PERIWINKLE_GRAY,
         borderRadius: 5,
     },
     picker: {
-        width: 90, // Increased width for better visibility
+        //width: '30%', // Increased width for better visibility,
+        //justifyContent: 'space-between',
+        //paddingHorizontal: 0,
+        flex: 1,
+        flexDirection: 'row',
+        alignContent: 'flex-end'
+        
     },
     input: {
         borderWidth: 1,
@@ -198,3 +307,4 @@ const styles = StyleSheet.create({
 });
 
 export default JournalEntryModal;
+
