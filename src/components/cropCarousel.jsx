@@ -6,50 +6,19 @@
  * Secondary author (Daniel) added dark mode
  ***/
 
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import { View, FlatList, Dimensions, Text, StyleSheet, Image, Pressable } from 'react-native'
 import { useRouter } from 'expo-router'
 import Colors from '../../assets/Color.js'
 const { width } = Dimensions.get('window')
 
-const Carousel = ({data, isDarkMode=false}) => {
+const Carousel = ({data,  isDarkMode=false}) => {
   const router  = useRouter();
-  const [data, setData] = useState(data)
+  const cropArray = Object.values(data)
 
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const updatedData = await Promise.all(
-        data.map(async (item) => {
-          // Fetch CropMedium data
-          const cropMediumResponse = await fetch(
-            `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCropMedium/${item.fld_s_SubscriberID_pk}/${item.fld_c_CropID_pk}`
-          );
-          const cropMediumData = await cropMediumResponse.json();
-
-          // Fetch CropLocation data
-          const cropLocationResponse = await fetch(
-            `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCropLocation/${item.fld_s_SubscriberID_pk}/${item.fld_c_CropID_pk}`
-          );
-          const cropLocationData = await cropLocationResponse.json();
-
-          return {
-            ...item,
-            CropMedium: cropMediumData,
-            CropLocation: cropLocationData,
-          };
-        })
-      );
-
-      setData(updatedData);
-    };
-
-    fetchData();
-  }, [data]); 
-  
   return(
           <FlatList
-            data={data}
+            data={cropArray}
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
@@ -58,10 +27,10 @@ const Carousel = ({data, isDarkMode=false}) => {
         <Pressable onPress = {() => router.push({pathname:'/cropspage', params: item})}>
           <View style={[styles.item, isDarkMode && styles.itemDark]}>
             <Image source = {require("../../assets/icons/cropDefaultImage.png")}/>
-            <Text>Name: {item.name}</Text> 
-            <Text>Medium: {item.CropMediumData.fld_m_MediumName}</Text>
-            <Text>Location: {item.CropLocationData.fld_l_location}</Text>
-            <Text>Start Date: {item.date}</Text>
+            <Text>Name: {item['10']}</Text> 
+            <Text>Medium: {item.CropLocation[2]}</Text>
+            <Text>Location: {item.CropMedium[1]}</Text>
+            <Text>Start Date: {item[13]}</Text>
           </View>
         </Pressable>
         )}
