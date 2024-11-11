@@ -86,7 +86,7 @@ const Notebook = () => {
     };
 
     const openModalForEdit = (entry) => {
-        console.log(formattedDate);
+        //console.log(formattedDate);
         setEditingEntry(entry);
         setModalVisible(true);
     };
