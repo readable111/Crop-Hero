@@ -5,16 +5,16 @@
  ***/
 
 import { StatusBar } from 'expo-status-bar';
-import Colors from '../assets/Color'
+import Colors from '../../assets/Color.js'
 import React, { useState, useEffect } from 'react';
 import { Pressable, StyleSheet, Text, View, ScrollView, Alert, Appearance } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input } from 'react-native-elements';
-import AppButton from '../assets/AppButton.jsx';
+import AppButton from '../../assets/AppButton.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
-import Icons from '../assets/icons/Icons.js';
-import { cleanText } from '../assets/sanitizer.jsx';
+import Icons from '../../assets/icons/Icons.js';
+import { cleanText } from '../../assets/sanitizer.jsx';
 
 
 
@@ -23,13 +23,8 @@ const CropsPage = () => {
         {/* Grabs variable form viewcrops page for use */}
         let [crop, setCropData] = useState(useLocalSearchParams());
         //If crop.name couldn't be retrieved, assume that ?param= was used
-        if(!crop.name) {
-                console.log("?param passed")
-                console.log(crop.param)
-                crop = JSON.parse(crop.param)
-        }
         console.log("CROP: " + crop); //test
-        console.log("Crop name: " + crop.name); //test
+        console.log("Crop name: " + crop[10]); //test
 
         //Use state for switching if something is editable
         const [readOnly, setReadOnly] = useState(true)

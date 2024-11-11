@@ -9,9 +9,9 @@ import { Pressable, StyleSheet, StatusBar, Text, View, Appearance, ScrollView, I
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input, colors } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AppButton from '../assets/AppButton.jsx';
-import Icons from '../assets/icons/Icons.js';
-import Colors from '../assets/Color';
+import AppButton from '../../assets/AppButton.jsx';
+import Icons from '../../assets/icons/Icons.js';
+import Colors from '../../assets/Color.js';
 import { useFonts } from 'expo-font'
 
 
@@ -19,8 +19,9 @@ import { useFonts } from 'expo-font'
 const ViewCrops = () => {
         {/* Array of objects, used to differentiate picked items */}
         const [selectedItem, setItem] = useState(null);
-
+        const [cropData, setCropData] = useState({})
         const [isDark, setIsDarkMode] = useState(false)
+        const subID = "sub123"
         useEffect(() => {
                 const fetchDarkModeSetting = async () => {
                         const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
@@ -49,22 +50,6 @@ const ViewCrops = () => {
                 .catch(console.error);
         }, [])
 
-        {/* Dummy Data, for picker use */}
-        const [crops, setCrops] = useState([
-                {label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', datePlanted: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '193242', visible:'visible', yield:'none'},
-                {label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', datePlanted: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' , medium: 'Hugel Mound', hrfNum: '945304', visible:'not visible', yield:'large'},
-                {label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", datePlanted: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard', medium: 'Hugel Mound', hrfNum: '835242', visible:'visible', yield:'medium' },
-                {label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
-                {label: 'Tomato2', name: "Tomato2", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999991', visible:'not visible', yield:'small' },
-                {label: 'Tomato3', name: "Tomato3", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999998', visible:'not visible', yield:'small' },
-                {label: 'Tomato4', name: "Tomato4", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999997', visible:'not visible', yield:'small' },
-                {label: 'Tomato5', name: "Tomato5", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999996', visible:'not visible', yield:'small' },
-                {label: 'Tomato6', name: "Tomato6", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999995', visible:'not visible', yield:'small' },
-                {label: 'Tomato7', name: "Tomato7", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999994', visible:'not visible', yield:'small' },
-                {label: 'Tomato8', name: "Tomato8", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999993', visible:'not visible', yield:'small' },
-        
-        
-        ]);
         const { newCrop } = useLocalSearchParams();
 
         useEffect(() => {
@@ -74,12 +59,81 @@ const ViewCrops = () => {
                                // Alert.alert("Test2");
                                 const crop = JSON.parse(newCrop);
                                 //Alert.alert("Crop Recieved: " + crop.name);
-                                console.log(JSON.stringify(crops))
-                                setCrops((prevCrops)=>[...prevCrops, crop]);
+                                console.log(JSON.stringify(cropData))
+                                setCrops((prevCrops)=>[...prevCrops, cropData]);
                         }
         }, [newCrop]);
-        console.log(crops);
-               
+
+        useEffect(() => {
+                const fetchData = async () => {
+                  const url = `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCrops/${subID}`;
+                  try {
+                    const response = await fetch(url, { method: 'GET' });
+                    if (!response.ok) {
+                      throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+              
+                    const data = await response.json();
+                    // Create an empty object to store updated data
+                    const updatedData = {};
+                    // Process each item and add it to the updatedData dictionary
+                    await Promise.all(
+                      data.map(async (item) => {
+                        if (!item || !Array.isArray(item) || item.length < 2) {
+                          console.error("Invalid item:", item);
+                          return;
+                        }
+              
+                        try {
+                          // Fetch CropMedium data
+                          const cropMediumResponse = await fetch(
+                            `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCropMedium/${item[1]}/${item[0]}`
+                          );
+                          if (!cropMediumResponse.ok) {
+                            throw new Error('Failed to fetch CropMedium');
+                          }
+                          const cropMediumData = await cropMediumResponse.json();
+              
+                          // Fetch CropLocation data
+                          const cropLocationResponse = await fetch(
+                            `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCropLocation/${item[1]}/${item[0]}`
+                          );
+                          if (!cropLocationResponse.ok) {
+                            throw new Error('Failed to fetch CropLocation');
+                          }
+                          const cropLocationData = await cropLocationResponse.json();
+              
+                          // Use the first value of the item (item[0] or item[1]) as the key
+                          const key = item[0]; // Assuming item[0] is the unique identifier for each crop
+              
+                          // Add the updated item to the dictionary (using the key)
+                          updatedData[key] = {
+                            ...item,
+                            CropMedium: cropMediumData,
+                            CropLocation: cropLocationData,
+                          };
+                        } catch (fetchError) {
+                          console.error("Error fetching crop data for item:", item, fetchError);
+                          const key = item[0]; // Use item[0] or item[1] as the key
+                          updatedData[key] = {
+                            ...item,
+                            CropMedium: null,
+                            CropLocation: null,
+                          };
+                        }
+                      })
+                    );
+              
+                    // Once all fetches are complete, set the cropData state with the updated dictionary
+                    setCropData(updatedData);
+                  } catch (error) {
+                    console.error("Error fetching crop data:", error);
+                  }
+                };
+              
+                fetchData();
+              }, []);
+                     
         {/* Was testing something, leaving for now
         const handleChange = (itemValue, itemIndex) =>
         {
@@ -95,7 +149,7 @@ const ViewCrops = () => {
         (
                 <TouchableOpacity onPress={() => handlePress(item)}>
                         <View style={[ styles.button, isDark && styles.buttonDark ]}>
-                                <Text style={styles.buttonText}>{item.name}</Text>
+                                <Text style={styles.buttonText}>{item[10]}</Text>
                         </View>
                 </TouchableOpacity>
         );
@@ -103,14 +157,15 @@ const ViewCrops = () => {
         const handlePress = (item) => 
         {
                 console.log('Item pressed:');
-                router.push({pathname: '/cropspage', params: item})
+                router.push({pathname: './cropspage', params: item, relativeToDirectory: true})
         }
 
         {/*load in all fonts used for this page*/}
 	const [fontsLoaded, fontError] = useFonts({
-		'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
-		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+		'Domine-Medium': require('../../assets/fonts/Domine-Medium.ttf'),
+		'Domine-Regular': require('../../assets/fonts/Domine-Regular.ttf'),
 	});
+
 	{/*return an error if the fonts fail to load*/}
 	if (!fontsLoaded && !fontError) {
 		return null;
@@ -126,12 +181,12 @@ const ViewCrops = () => {
                         </View>
                         <View style={[styles.container, isDark && styles.containerDark]}>
                                 <View style={styles.back}>
-                                        <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.push('/crops')}/>
+                                        <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.push('crops/crops')}/>
                                 </View>
                                 <FlatList
-                                        data={crops}
+                                        data={Object.values(cropData)}
                                         renderItem={renderItem}
-                                        keyExtractor={ item => item.hrfNum }
+                                        keyExtractor={(item, index) => index.toString()}
                                 />
                         </View>
                 </View>
