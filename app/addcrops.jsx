@@ -475,7 +475,7 @@ const AddCrops = () => {
                                         setValue={setSelectedVisible}
                                         items={items}
                                         onChangeValue={handleVisibleChange}
-                                        placeholder="Crop Visible??"
+                                        placeholder="Crop Visible?"
                                         listMode='SCROLLVIEW'
 					dropDownDirection='TOP'
                                         scrollViewProps={{
