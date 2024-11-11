@@ -17,6 +17,7 @@ import {
     StatusBar,
     Alert,
     FlatList,
+    Modal,
     TouchableOpacity,
     Text
 } from 'react-native';
@@ -30,6 +31,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import NavBar from '../assets/NavBar.jsx';
 import TodoEntryModal from '../assets/NotebookModals/TodoEntryModal';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const todo = () => {
     const [index, setIndex] = useState(0);
@@ -54,6 +57,10 @@ const todo = () => {
         { label: 'Not Completed', value: 'notCompleted' },
         { label: 'Last 3 Entries', value: 'last3Entries' }
     ]);
+    const clearSelectedEntry = () => {
+        setCurrentTask(null); // Reset the selected entry
+        //taskData.Comments('');
+    };
     const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
         // declare the async data fetching function
@@ -77,7 +84,7 @@ const todo = () => {
 
         // call the function
         fetchDarkModeSetting()
-           // error catch
+            // error catch
             .catch(console.error);
     }, [])
     const handleExport = (task) => {
@@ -88,44 +95,33 @@ const todo = () => {
         // export function
         console.log("Exporting task:", task); // checking for task exit
     };
-    const handleAddTask = () => {
-        const maxTaskID = tasks.length > 0 ? Math.max(...tasks.map(task => task.TaskID)) : 0;
-        const newTaskID = maxTaskID + 1;
-        const newTask = {
-            TaskID: newTaskID,
-            AssignedFarmerID: '',
-            TaskType: '',
-            LocationID: '',
-            CropID: '',
-            Comments: '',
-            DueDate: '',
-            IsCompleted: false,
-            DateCompleted: null,
-        };
 
-        setCurrentTaskID(newTaskID);
-        setCurrentTask(newTask); // Initialize the new task
-        setModalVisible(true);
-        const updatedTasks = [...tasks, newTask];
-       
-        setTasks(updatedTasks);
-        setFilteredTasks(updatedTasks); // Update filtered tasks immediately
+    const handleSaveTask = (taskData) => {
+        let newTasks;
 
-        console.log("updated tasks:", updatedTasks);
-    };
- 
-    const handleSaveTask = (taskData) => { // bug in this that does not increase taskID for new task creation
         if (currentTaskID) {
-            const updatedTasks = tasks.map(task =>
+            // Edit existing task
+            newTasks = tasks.map(task =>
                 task.TaskID === currentTaskID ? { ...task, ...taskData } : task
             );
-            setTasks(updatedTasks);
         } else {
-            setTasks([...tasks, { ...taskData, TaskID: tasks.length + 1 }]); // this is not working to increment taskID
-           // task.TaskID = entries.length > 0 ? Math.max(...entries.map(e => e.EntryID)) + 1 : 1; // Increment EntryID
-           // setTaskID(prevEntries => [...prevEntries, entry]);
+            // Add new task
+            const maxTaskID = tasks.length > 0 ? Math.max(...tasks.map(task => task.TaskID)) : 0;
+            const newTaskID = maxTaskID + 1;
+            const newTask = { ...taskData, TaskID: newTaskID };
+
+            newTasks = [...tasks, newTask];
+            console.log("newTaskID", newTaskID);
+            console.log("MaxTaskID", maxTaskID);
+            console.log("newTasks", newTasks);
         }
+
+        setTasks(newTasks);
+        setFilteredTasks(newTasks);
+       
         setModalVisible(false);
+        setCurrentTaskID(null);  // Reset currentTaskID after saving
+        setIsSpeedDialOpen(false);
     };
 
     const handleTaskLongPress = (task) => {
@@ -235,13 +231,13 @@ const todo = () => {
 
                 <FlatList
                     data={filteredTasks}
-                   // keyExtractor={item => item.TaskID.toString()}
-                    
+                    // keyExtractor={item => item.TaskID.toString()}
+
                     renderItem={({ item }) => (
                         //<View style={styles.entryContainer }>
                         <TouchableOpacity
                             style={[styles.taskContainer, { opacity: item.IsCompleted ? 0.6 : 1 }]}
-                           // onPress={() => handleTaskTap(item)}
+                            // onPress={() => handleTaskTap(item)}
                             onLongPress={() => handleTaskLongPress(item)}
                         >
                             <Text>Assigned Farmer ID: {item.AssignedFarmerID}</Text>
@@ -250,7 +246,7 @@ const todo = () => {
                             <Text>Comments: {item.Comments}</Text>
                             <Text>Due Date: {item.DueDate}</Text>
                         </TouchableOpacity>
-                           // </View>
+                        // </View>
                     )}
                 />
             </View>
@@ -259,38 +255,70 @@ const todo = () => {
                 icon={{ name: 'edit', color: 'white' }}
                 openIcon={{ name: 'close', color: 'white' }}
                 onOpen={() => setIsSpeedDialOpen(true)}
-                onClose={() => setIsSpeedDialOpen(false)}
+                //onClose={() => setIsSpeedDialOpen(false)}
+                onClose={() => { setIsSpeedDialOpen(false); clearSelectedEntry(); }}
                 buttonStyle={{ backgroundColor: 'green' }}
                 style={styles.speedDial}
             >
                 <SpeedDial.Action
                     icon={<MaterialCommunityIcons name="plus" size={24} color="white" />}
                     title="Add Task"
-                    onPress={handleAddTask}
+                    onPress={() => {
+                        setCurrentTask(null); // Reset current task
+                        setCurrentTaskID(null); // Reset currentTaskID to signal new task creation
+                        setModalVisible(true);
+                    }}
                     buttonStyle={{ backgroundColor: 'green' }}
                 />
                 <SpeedDial.Action
                     icon={{ name: 'edit', color: 'white' }}
                     title="Edit Task"
-                    onPress={handleEditTask}
+                    onPress={() => {
+                        if (currentTask) {
+                            handleEditTask();
+                        } else {
+                            Alert.alert("Select a task to edit.");
+                        }
+                    }}
                     buttonStyle={{ backgroundColor: 'green' }}
                 />
                 <SpeedDial.Action
                     icon={{ name: 'check', color: 'white' }}
                     title="Mark Complete"
-                    onPress={() => handleCheckboxChange(currentTask?.TaskID)}
+                    //onPress={() => handleCheckboxChange(currentTask?.TaskID)}
+                    onPress={() => {
+                        if (currentTask) {
+                            handleCheckboxChange(currentTask.TaskID);
+                        } else {
+                            Alert.alert("Select a task to mark as complete.");
+                        }
+                    }}
                     buttonStyle={{ backgroundColor: 'green' }}
                 />
                 <SpeedDial.Action
                     icon={<MaterialCommunityIcons name="export" size={24} color="white" />}
                     title="Export"
-                    onPress={() => handleExport(currentTask)}
+                   // onPress={() => handleExport(currentTask)}
+                    onPress={() => {
+                        if (currentTask) {
+                            handleExport(currentTask);
+                        } else {
+                            Alert.alert("Select a task to export.");
+                        }
+                    }}
                     buttonStyle={{ backgroundColor: 'green' }}
                 />
                 <SpeedDial.Action
                     icon={{ name: 'delete', color: 'white' }}
                     title="Delete Task"
-                    onPress={() => handleDeleteTask(currentTask?.TaskID)}
+                    //onPress={() => handleDeleteTask(currentTask?.TaskID)}
+                    onPress={() => {
+                        if (currentTask) {
+                            handleDeleteTask(currentTask.TaskID);
+                        } else {
+                            Alert.alert("Select a task to delete.");
+                        }
+                    }}
                     buttonStyle={{ backgroundColor: 'green' }}
                 />
             </SpeedDial>
@@ -307,7 +335,7 @@ const todo = () => {
                 taskData={currentTask}
             />
 
-            <NavBar notebookSelected />
+            <NavBar notebookSelected darkMode={isDarkMode} />
         </View>
     );
 };
@@ -421,4 +449,3 @@ const styles = StyleSheet.create({
 });
 
 export default todo;
-
