@@ -62,11 +62,16 @@ const AddCrops = () => {
                 {label: 'Yes', value: 'Yes' },
                 {label: 'No', value: 'No'}
         ]);
+        const [types, setType] = useState([
+                {label: 'Standard', value: 'Standard'},
+                {label: 'Nocturnal', value: 'Nocturnal'},
+        ])
         const [locations, setLocation] = useState([
                 {label: 'Mound 1', value: 'Mound1' },
                 {label: 'Greenhouse 2', value: 'Greenhouse 2'}
         ])
         const [modalVisible, setModalVisible] = useState(false);
+        const [typeModalVisible, setTypeModalVisible] = useState(false);
         const [selectedImage, setSelectedImage] = useState(null);
         const [newOption, setNewOption] = useState('');
 
@@ -79,6 +84,15 @@ const AddCrops = () => {
                 {
                         setLocation([...locations, {label: newOption, value: newOption.toLowerCase().replace(/\s+/g, '') }]);
                         setModalVisible(false);
+                        setNewOption('');
+                }
+        }
+        
+        const handleNewType = () => {
+                if(newOption.trim() !== '')
+                {
+                        setType([...types, {label: newOption, value: newOption.toLowerCase().replace(/\+/g, '')}])
+                        setTypeModalVisible(false);
                         setNewOption('');
                 }
         }
@@ -245,6 +259,9 @@ const AddCrops = () => {
                                 <TouchableOpacity style={[styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
                                         <Text style={styles.locationText}>Add Location</Text>
                                 </TouchableOpacity>
+                                <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setModalVisible(true)}>
+                                        <Text style={styles.typeText}>Add Type</Text>
+                                </TouchableOpacity>
                                 
                                 <View style={styles.save}>
                                         <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
@@ -272,6 +289,34 @@ const AddCrops = () => {
                                                         </View>
                                                         <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
                                                                 <Button title="Cancel" onPress={() => setModalVisible(false)} />
+                                                        
+                                                        </View>
+                                                </View>
+                                        </View>
+                                </View>
+
+                        </Modal>
+                        <Modal
+                                visible = {typeModalVisible}
+                                animationType = 'slide'
+                                transparent = {true}
+                                onRequestClose={() => setTypeModalVisible(false)}
+                        >  
+                                <View style={styles.modalContainer}>
+                                        <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
+                                                <Text style={styles.modalTitle}>Enter a New Location</Text>
+                                                <Input
+                                                        style={styles.input}
+                                                        placeholder="Type new option"
+                                                        value={newOption}
+                                                        onChangeText={setNewOption}
+                                                />
+                                                <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
+                                                        <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
+                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewType} />
+                                                        </View>
+                                                        <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
+                                                                <Button title="Cancel" onPress={() => setTypeModalVisible(false)} />
                                                         
                                                         </View>
                                                 </View>
@@ -323,7 +368,7 @@ const AddCrops = () => {
                                         value={selectedLocation}
                                         setValue={setSelectedLocation}
                                         items={locations}
-                                        onChangeValue={handleLocationChange}
+                                        onChangeValue = {(selectedLocation) => handleChange('location', selectedLocation)}
                                         placeholder="Location?"
                                         listMode='SCROLLVIEW'
 					dropDownDirection='BOTTOM'
@@ -587,12 +632,31 @@ const styles = StyleSheet.create({
                 borderRadius: 20,
                 borderColor: '#20232a',
                 borderWidth: 1,
-                marginRight: '20%',
+                marginRight: '5%'
         },
         locationContainerDark:{
                 backgroundColor: Colors.LICHEN
         },
         locationText:{
+                fontFamily: 'Domine-Medium',
+                fontSize: 20
+        },
+        typeContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: 11,
+                paddingHorizontal: 10,
+                backgroundColor: Colors.SCOTCH_MIST_TAN, // Light background color around the toggle
+                borderRadius: 20,
+                borderColor: '#20232a',
+                borderWidth: 1,
+                marginRight: '40%',
+        },
+        typeContainerDark:{
+                backgroundColor: Colors.LICHEN
+        },
+        typeText:{
                 fontFamily: 'Domine-Medium',
                 fontSize: 20
         },
