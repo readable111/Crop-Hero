@@ -7,7 +7,7 @@
 import { StatusBar } from 'expo-status-bar';
 import Colors from '../assets/Color'
 import React, { useState, useEffect } from 'react';
-import { Pressable, StyleSheet, Text, View, ScrollView, Alert, Appearance } from 'react-native';
+import { Pressable, StyleSheet, Text, View, ScrollView, Alert, Appearance, TouchableOpacity, Button } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
@@ -23,6 +23,7 @@ const CropsPage = () => {
         {/* Grabs variable form viewcrops page for use */}
         
         let [crop, setCropData] = useState(useLocalSearchParams());
+        const [isVisible, setIsVisible] = useState(false);
         //If crop.name couldn't be retrieved, assume that ?param= was used
         /*
         if(!crop.name) {
@@ -48,6 +49,21 @@ const CropsPage = () => {
                                
                 
         }
+
+        const handleSave = () =>{
+                const emptyFields = Object.values(cropData).some(value=> value ==='');
+                if(emptyFields)
+                {
+                        console.log(cropData)
+                        Alert.alert("Unable to save, some fields are still empty");
+                }
+                else
+                {
+                        Alert.alert(cropData.name + " saved");
+                        router.push({pathname: '/viewcrops', params: {newCrop: JSON.stringify(cropData)}});
+                }
+        };
+
         const [isDark, setIsDarkMode] = useState(false)
         useEffect(() => {
                 const fetchDarkModeSetting = async () => {
@@ -81,6 +97,7 @@ const CropsPage = () => {
         const toggleRead = () =>
         {
                 setReadOnly(!readOnly);
+                setIsVisible(!isVisible);
                 console.log(readOnly);
                 if(!readOnly)
                 {
@@ -95,12 +112,22 @@ const CropsPage = () => {
                         <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={ isDark ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
                         {/* Header */}
                         <View style={[styles.titleCard, isDark && styles.titleCarddark]}>
-                                <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>Add Crop</Text>
+                                <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>{crop.name}</Text>
                         </View>
-                        <View>
+                        <View style={[styles.topContainer, styles.spaceBetween]}>
                                 <View style={styles.back}>
                                         <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                 </View>
+                                
+                                <TouchableOpacity style={[ isVisible && styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
+                                                {isVisible && <Text style={styles.locationText}>Add Location</Text>}
+                                </TouchableOpacity>
+                                
+                                
+                                <View style={[isVisible && styles.save]}>
+                                        {isVisible && <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>}
+                                </View>
+                                
                         </View>
                         <ScrollView> 
                                 <View style={styles.spacer}/>
@@ -346,9 +373,36 @@ const styles = StyleSheet.create({
                 fontSize: 16,
                 fontWeight: 'bold',
               },
-              icon:{
-      
-              }
+              topContainer: {
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: '1%',
+                marginBottom: '1%',
+                paddingVertical:3
+        },
+        spaceBetween:
+        {
+                justifyContent: "space-between"
+        },
+        locationContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: 11,
+                paddingHorizontal: 10,
+                backgroundColor: Colors.SCOTCH_MIST_TAN, // Light background color around the toggle
+                borderRadius: 20,
+                borderColor: '#20232a',
+                borderWidth: 1,
+                marginRight: '20%',
+        },
+        locationContainerDark:{
+                backgroundColor: Colors.LICHEN
+        },
+        locationText:{
+                fontFamily: 'Domine-Medium',
+                fontSize: 18
+        },
 
 
 

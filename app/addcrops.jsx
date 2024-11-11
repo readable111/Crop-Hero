@@ -586,7 +586,7 @@ const styles = StyleSheet.create({
                 backgroundColor: Colors.SCOTCH_MIST_TAN, // Light background color around the toggle
                 borderRadius: 20,
                 borderColor: '#20232a',
-                borderWidth: 2,
+                borderWidth: 1,
                 marginRight: '20%',
         },
         locationContainerDark:{
