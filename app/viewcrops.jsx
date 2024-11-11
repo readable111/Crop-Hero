@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
         },
         titleText:{
                 textAlign: 'right',
-                fontSize: 42,
+                fontSize: 38,
                 fontFamily: 'Domine-Medium',
                 alignContent: 'center',
                 flex: 1,
