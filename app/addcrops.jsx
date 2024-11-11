@@ -504,8 +504,6 @@ const AddCrops = () => {
                                 */}
                         </ScrollView>
                         
-                        <View style={styles.spacer}>
-                        </View>
                         
                 </View>
                 
