@@ -109,18 +109,17 @@ const todo = () => {
             const maxTaskID = tasks.length > 0 ? Math.max(...tasks.map(task => task.TaskID)) : 0;
             const newTaskID = maxTaskID + 1;
             const newTask = { ...taskData, TaskID: newTaskID };
-
-            newTasks = [...tasks, newTask];
             console.log("newTaskID", newTaskID);
-            console.log("MaxTaskID", maxTaskID);
-            console.log("newTasks", newTasks);
+            console.log("maxTaskID", maxTaskID);
+            
+            newTasks = [...tasks, newTask];
+            //console.log("newTasks", newtasks)
         }
 
         setTasks(newTasks);
         setFilteredTasks(newTasks);
-       
-        setModalVisible(false);
-        setCurrentTaskID(null);  // Reset currentTaskID after saving
+        setModalVisible(false);  // Close the modal
+        setCurrentTaskID(null);  // Reset the task ID
         setIsSpeedDialOpen(false);
     };
 
@@ -332,7 +331,7 @@ const todo = () => {
                 locations={locations}
                 crops={crops}
                 taskTypes={taskTypes}
-                taskData={currentTask}
+                taskData={currentTask}  // This should contain the current task details for editing
             />
 
             <NavBar notebookSelected darkMode={isDarkMode} />
