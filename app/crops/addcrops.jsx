@@ -30,21 +30,24 @@ const addCrops = () => {
         {/* */}
         //Dummy object that will be filled in later
         const [cropData, setCropData] = useState({
-                name:'',
-                medium:'',
-                location:'',
-                type:'',
-                hrfNum:'',
-                variety:'',
-                source:'',
-                datePlanted:'',
-                comments:'',
-                yield:'',
-                indoors:'',
-                active:'',
-                visible:'',
+            "fld_c_ZipCode": "12345",
+            "fld_c_State": "TX",
+            "fld_f_FarmID_fk": 1,
+            "fld_c_HRFNumber": 0,
+            "fld_l_LocationID_fk": 1,
+            "fld_ct_CropTypeID_fk": 1,
+            "fld_m_MediumID_fk": 1,
+            "fld_c_CropName": "",
+            "fld_c_Variety": "",
+            "fld_c_Source": "",
+            "fld_c_DatePlanted": "",
+            "fld_c_Comments": "",
+            "fld_c_Yield": "", 
+            "fld_c_WasStartedIndoors": 0b0,
+            "fld_c_isActive": 0b0,
 
         })
+        const  [savePressed, setButtonPress ] = useState(false)
 
 
         //Change data as given, didn't want to worry about specifics, so search dummy object and change accordingly
@@ -58,8 +61,8 @@ const addCrops = () => {
         //on save, alert for save push to view crops and add to list
         const handleSave = () =>{
                 Alert.alert(cropData.name + " saved");
-                fetch('url',{method:'POST', headers: {'Content-Type':'application/json'}, body: {cropData: cropData, subID: user.user_id}})
-                router.push({pathname: '/viewcrops', params: {newCrop: JSON.stringify(cropData)}});
+                setButtonPress(true)
+               // router.push({pathname: '/viewcrops', params: {newCrop: JSON.stringify(cropData)}});
         };
         //Handle old unused print checker
         const printStatement = () =>
@@ -95,6 +98,25 @@ const addCrops = () => {
                 fetchDarkModeSetting()
                 .catch(console.error);
         }, [])
+         useEffect(()=>{
+                        const fetchData = async () =>{
+                                console.log(cropData)
+                                if(savePressed){
+                                try{
+                                        const response = await fetch('https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addcrop',{method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({cropData: cropData, subID: "sub123"})})
+                                        if (!response.ok) {
+                                             throw new Error(`HTTP error! Status: ${response.status}`);
+                                        }
+                                }catch(error){
+                                        console.error("Error: ", error)
+                                }
+                        }
+
+                        }
+
+                        fetchData()
+                }, [savePressed])
+
 
         //load fonts
         const [fontsLoaded, fontError] = useFonts({
@@ -139,7 +161,7 @@ const addCrops = () => {
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = "name"
                                         maxLength = {128}
-                                        onChangeText={(text) => handleChange('name', text)}
+                                        onChangeText={(text) => handleChange('fld_c_CropName', text)}
                                         testID="name-input"
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Variety</Text>
@@ -147,42 +169,42 @@ const addCrops = () => {
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Variety'
                                         maxLength={128}
-                                        onChangeText={(text) => handleChange('variety', text)}
+                                        onChangeText={(text) => handleChange('fld_c_Variety', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Source</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Source'
                                         maxLength={128}
-                                        onChangeText={(text) => handleChange('source', text)}
+                                        onChangeText={(text) => handleChange('fld_c_Source', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Date Planted'
                                         maxLength={10}
-                                        onChangeText={(text) => handleChange('datePlanted', text)}
+                                        onChangeText={(text) => handleChange('fld_c_DatePlanted', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Location</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Location'
                                         maxLength={128}
-                                        onChangeText={(text) => handleChange('location', text)}
+                                        onChangeText={(text) => handleChange('fld_l_LocationID_pk', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Comments</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Comments'
                                         maxLength={1024}
-                                        onChangeText={(text) => handleChange('comments', text)}
+                                        onChangeText={(text) => handleChange('fld_c_Comments', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Started Indoors?</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Indoors? (Y/N)'
                                         maxLength={3}
-                                        onChangeText={(text) => handleChange('indoors', text)}
+                                        onChangeText={(text) => handleChange('fld_c_WasStartedIndoors', text)}
 
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Active</Text>
@@ -190,7 +212,7 @@ const addCrops = () => {
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Active'
                                         maxLength={3}
-                                        onChangeText={(text) => handleChange('active', text)}
+                                        onChangeText={(text) => handleChange('fld_c_isActive', text)}
 
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Type</Text>
@@ -198,7 +220,7 @@ const addCrops = () => {
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Type'
                                         maxLength={64}
-                                        onChangeText={(text) => handleChange('type', text)}
+                                        onChangeText={(text) => handleChange('fld_c_CropTypeID_fk', text)}
 
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Medium</Text>
@@ -206,7 +228,7 @@ const addCrops = () => {
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Medium'
                                         maxLength={64}
-                                        onChangeText={(text) => handleChange('medium', text)}
+                                        onChangeText={(text) => handleChange('fld_c_MediumID_fk', text)}
 
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
@@ -214,7 +236,7 @@ const addCrops = () => {
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' HRF Number'
                                         maxLength={64}
-                                        onChangeText={(text) => handleChange('hrfNum', text)}
+                                        onChangeText={(text) => handleChange('fld_c_HRFNumber', parseInt(text))}
 
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Yield</Text>
@@ -222,7 +244,7 @@ const addCrops = () => {
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Yield'
                                         maxLength={64}
-                                        onChangeText={(text) => handleChange('yield', text)}
+                                        onChangeText={(text) => handleChange('fld_c_Yield', text)}
 
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Visible</Text>
@@ -230,7 +252,7 @@ const addCrops = () => {
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Visibility'
                                         maxLength={64}
-                                        onChangeText={(text) => handleChange('visible', text)}
+                                        onChangeText={(text) => handleChange('fld_c_IsVisible', text)}
 
                                 />
                         </ScrollView>
@@ -278,7 +300,7 @@ const styles = StyleSheet.create({
         save:{
                 position: 'absolute',
                 marginTop: 10,
-                marginLeft: 370,
+                marginLeft: 300,
                 width: 40,
                 height: 40,
                 borderRadius: 40/2,

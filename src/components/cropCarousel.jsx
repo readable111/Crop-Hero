@@ -14,11 +14,10 @@ const { width } = Dimensions.get('window')
 
 const Carousel = ({data,  isDarkMode=false}) => {
   const router  = useRouter();
-  const cropArray = Object.values(data)
 
   return(
           <FlatList
-            data={cropArray}
+            data={data}
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
@@ -27,9 +26,9 @@ const Carousel = ({data,  isDarkMode=false}) => {
         <Pressable onPress = {() => router.push({pathname:'/cropspage', params: item})}>
           <View style={[styles.item, isDarkMode && styles.itemDark]}>
             <Image source = {require("../../assets/icons/cropDefaultImage.png")}/>
-            <Text>Name: {item['10']}</Text> 
-            <Text>Medium: {item.CropLocation[2]}</Text>
-            <Text>Location: {item.CropMedium[1]}</Text>
+            <Text>Name: {item[10]}</Text> 
+            <Text>Medium: {item[18]}</Text>
+            <Text>Location: {item[19]}</Text>
             <Text>Start Date: {item[13]}</Text>
           </View>
         </Pressable>

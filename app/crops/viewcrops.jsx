@@ -19,7 +19,7 @@ import { useFonts } from 'expo-font'
 const ViewCrops = () => {
         {/* Array of objects, used to differentiate picked items */}
         const [selectedItem, setItem] = useState(null);
-        const [cropData, setCropData] = useState({})
+        const [cropData, setCropData] = useState([])
         const [isDark, setIsDarkMode] = useState(false)
         const subID = "sub123"
         useEffect(() => {
@@ -66,7 +66,7 @@ const ViewCrops = () => {
 
         useEffect(() => {
                 const fetchData = async () => {
-                  const url = `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCrops/${subID}`;
+                  const url = `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCropsVerbose/${subID}`;
                   try {
                     const response = await fetch(url, { method: 'GET' });
                     if (!response.ok) {
@@ -74,58 +74,7 @@ const ViewCrops = () => {
                     }
               
                     const data = await response.json();
-                    // Create an empty object to store updated data
-                    const updatedData = {};
-                    // Process each item and add it to the updatedData dictionary
-                    await Promise.all(
-                      data.map(async (item) => {
-                        if (!item || !Array.isArray(item) || item.length < 2) {
-                          console.error("Invalid item:", item);
-                          return;
-                        }
-              
-                        try {
-                          // Fetch CropMedium data
-                          const cropMediumResponse = await fetch(
-                            `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCropMedium/${item[1]}/${item[0]}`
-                          );
-                          if (!cropMediumResponse.ok) {
-                            throw new Error('Failed to fetch CropMedium');
-                          }
-                          const cropMediumData = await cropMediumResponse.json();
-              
-                          // Fetch CropLocation data
-                          const cropLocationResponse = await fetch(
-                            `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCropLocation/${item[1]}/${item[0]}`
-                          );
-                          if (!cropLocationResponse.ok) {
-                            throw new Error('Failed to fetch CropLocation');
-                          }
-                          const cropLocationData = await cropLocationResponse.json();
-              
-                          // Use the first value of the item (item[0] or item[1]) as the key
-                          const key = item[0]; // Assuming item[0] is the unique identifier for each crop
-              
-                          // Add the updated item to the dictionary (using the key)
-                          updatedData[key] = {
-                            ...item,
-                            CropMedium: cropMediumData,
-                            CropLocation: cropLocationData,
-                          };
-                        } catch (fetchError) {
-                          console.error("Error fetching crop data for item:", item, fetchError);
-                          const key = item[0]; // Use item[0] or item[1] as the key
-                          updatedData[key] = {
-                            ...item,
-                            CropMedium: null,
-                            CropLocation: null,
-                          };
-                        }
-                      })
-                    );
-              
-                    // Once all fetches are complete, set the cropData state with the updated dictionary
-                    setCropData(updatedData);
+                    setCropData(data);
                   } catch (error) {
                     console.error("Error fetching crop data:", error);
                   }

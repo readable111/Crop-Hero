@@ -23,8 +23,7 @@ const CropsPage = () => {
         {/* Grabs variable form viewcrops page for use */}
         let [crop, setCropData] = useState(useLocalSearchParams());
         //If crop.name couldn't be retrieved, assume that ?param= was used
-        console.log("CROP: " + crop); //test
-        console.log("Crop name: " + crop[10]); //test
+        console.log(crop); //test
 
         //Use state for switching if something is editable
         const [readOnly, setReadOnly] = useState(true)
@@ -91,7 +90,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Crop Name</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.name}
+                                        value={crop[10]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength = {128}
                                         readOnly = {readOnly}
@@ -101,7 +100,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Variety</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.variety}
+                                        value={crop[11]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         readOnly = {readOnly}
@@ -110,7 +109,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Source</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.source}
+                                        value={crop[12]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         readOnly = {readOnly}
@@ -119,7 +118,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.datePlanted}
+                                        value={crop[13]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={10}
                                         readOnly = {readOnly}
@@ -127,7 +126,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Location</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.location}
+                                        value={crop[20]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         readOnly = {readOnly}
@@ -135,7 +134,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Comments</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.comments}
+                                        value={crop[14]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={1024}
                                         readOnly = {readOnly}
@@ -160,7 +159,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Type</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.type}
+                                        value={crop[21]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {readOnly}
@@ -169,7 +168,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.hrfNum}
+                                        value={crop[2]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {true}
@@ -187,7 +186,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Yield</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.yield}
+                                        value={crop[15]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {readOnly}
