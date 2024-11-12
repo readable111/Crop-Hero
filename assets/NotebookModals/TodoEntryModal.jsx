@@ -18,12 +18,12 @@ const TodoEntryModal = ({
     onClose,
     onSave,
     taskID,
-    initialTaskData = {},
-    farmers = [],
-    locations = [],
-    crops = [],
-    taskTypes = [],
-    icons = [],
+    initialTaskData,
+    farmers,
+    locations,
+    crops,
+    taskTypes,
+    icons,
     onAddNewTaskType
 }) => {
     const [taskData, setTaskData] = useState({
@@ -41,20 +41,20 @@ const TodoEntryModal = ({
     });
 
     useEffect(() => {
-        if (!initialTaskData) return; // Guard clause for initialTaskData
+        if (!initialTaskData) return; // Guard clause for initialTaskData  
         // Set task data once when the modal opens
         setTaskData({
-            TaskID: initialTaskData.TaskID || taskID,
-            Comments: initialTaskData.Comments || '',
-            DueDate: initialTaskData.DueDate || '',
-            AssignedFarmerID: initialTaskData.AssignedFarmerID || '',
-            LocationID: initialTaskData.LocationID || '',
-            CropID: initialTaskData.CropID || '',
-            TaskType: initialTaskData.TaskType || '',
+            TaskID: initialTaskData[0] || taskID,
+            Comments: initialTaskData[8] || '',
+            DueDate: initialTaskData[6] || '',
+            AssignedFarmerID: initialTaskData[2] || '',
+            LocationID: initialTaskData[3]|| '',
+            CropID: '' || '',
+            TaskType: initialTaskData[4] || '',
             NewTaskType: '',
-            TaskIconPath: initialTaskData.TaskIconPath || '',
-            IsCompleted: initialTaskData.IsCompleted || false,
-            CompletedDate: initialTaskData.CompletedDate || '',
+            TaskIconPath: initialTaskData[9] || '',
+            IsCompleted: initialTaskData[5] || 0b0,
+            CompletedDate: initialTaskData[7] || '',
         });
     }, [visible]); // Only run when `visible` changes
 
@@ -115,8 +115,7 @@ const TodoEntryModal = ({
             CompletedDate: '',
         });
     };
-
-    return (
+       return (
         <Modal visible={visible} animationType="slide">
             <ScrollView style={styles.modalContainer} contentContainerStyle={styles.scrollContent}>
 
@@ -130,7 +129,7 @@ const TodoEntryModal = ({
                     >
                         {farmers.length > 0 ? (
                             farmers.map((farmer) => (
-                                <Picker.Item key={farmer.id} label={farmer.name} value={farmer.id} />
+                                <Picker.Item key={farmer[0]} label={farmer[3]} value={farmer[0]} />
                             ))
                         ) : (
                             <Picker.Item label="No farmers available" value="" />
@@ -147,9 +146,11 @@ const TodoEntryModal = ({
                         style={styles.picker}
                     >
                         {locations.length > 0 ? (
-                            locations.map((location) => (
-                                <Picker.Item key={location.id} label={location.name} value={location.id} />
-                            ))
+                            locations.map((location) => {(
+                                <Picker.Item key={location[0]} label={location[4]} value={location[0]} />
+                            )
+                            console.log(location)
+                        })
                         ) : (
                             <Picker.Item label="No locations available" value="" />
                         )}
@@ -184,7 +185,7 @@ const TodoEntryModal = ({
                     >
                         {taskTypes.length > 0 ? (
                             taskTypes.map((taskType) => (
-                                <Picker.Item key={taskType.id} label={taskType.name} value={taskType.id} />
+                                <Picker.Item key={taskType[0]} label={taskType[3]} value={taskType[0]} />
                             ))
                         ) : (
                             <Picker.Item label="No task types available" value="" />
@@ -201,7 +202,7 @@ const TodoEntryModal = ({
 
                 {/* Due Date Section */}
                 <View style={styles.listContainer}>
-                    <Text style={styles.label}>Due Date</Text>
+                    <Text style={styles.label}>Due Date</Text> 
                     <View style={styles.dateRow}>
                         <Picker
                             selectedValue={taskData.DueDate.split(' ')[0] || 'January'}
@@ -282,7 +283,6 @@ const styles = StyleSheet.create({
     },
     picker: {
         height: 50,
-        marginBottom: 15,
         borderRadius: 5,
         backgroundColor: '#fff',
     },
