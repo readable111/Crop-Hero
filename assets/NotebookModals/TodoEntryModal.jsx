@@ -13,8 +13,19 @@ import Colors from '../Color';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers = [], locations = [], crops = [], taskTypes = [], icons = [], onAddNewTaskType }) => {
+const TodoEntryModal = ({
+    visible,
+    onClose,
+    onSave,
+    taskID,
+    initialTaskData = {},
+    farmers = [],
+    locations = [],
+    crops = [],
+    taskTypes = [],
+    icons = [],
+    onAddNewTaskType
+}) => {
     const [taskData, setTaskData] = useState({
         TaskID: taskID || null,
         Comments: '',
@@ -29,24 +40,26 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers = [], locati
         CompletedDate: '',
     });
 
-    // Reset form fields when modal is closed or saved
-    const resetForm = () => {
+    useEffect(() => {
+        if (!initialTaskData) return; // Guard clause for initialTaskData
+        // Set task data once when the modal opens
         setTaskData({
-            TaskID: null,
-            Comments: '',
-            DueDate: '',
-            AssignedFarmerID: '',
-            LocationID: '',
-            CropID: '',
-            TaskType: '',
+            TaskID: initialTaskData.TaskID || taskID,
+            Comments: initialTaskData.Comments || '',
+            DueDate: initialTaskData.DueDate || '',
+            AssignedFarmerID: initialTaskData.AssignedFarmerID || '',
+            LocationID: initialTaskData.LocationID || '',
+            CropID: initialTaskData.CropID || '',
+            TaskType: initialTaskData.TaskType || '',
             NewTaskType: '',
-            TaskIconPath: '',
-            IsCompleted: false,
-            CompletedDate: '',
+            TaskIconPath: initialTaskData.TaskIconPath || '',
+            IsCompleted: initialTaskData.IsCompleted || false,
+            CompletedDate: initialTaskData.CompletedDate || '',
         });
-    };
+    }, [visible]); // Only run when `visible` changes
 
     const handleDateChange = (type, value) => {
+        // Splitting DueDate to allow month, day, and year selection
         const dateParts = taskData.DueDate.split(' ');
         let newDate = '';
 
@@ -69,8 +82,9 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers = [], locati
         const newTaskType = taskData.NewTaskType.trim();
         if (newTaskType !== '') {
             const uniqueID = `${newTaskType}-${Math.random().toString(36).substr(2, 9)}`;
-            taskTypes.push({ id: uniqueID, name: newTaskType });
-            handleChange('TaskType', newTaskType);
+            const updatedTaskTypes = [...taskTypes, { id: uniqueID, name: newTaskType }];
+            onAddNewTaskType(updatedTaskTypes);
+            handleChange('TaskType', uniqueID);
             handleChange('NewTaskType', '');
         }
     };
@@ -79,11 +93,27 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers = [], locati
         onSave(taskData);
         resetForm();  // Reset form after saving
         onClose();
-
     };
+
     const handleCancel = () => {
         resetForm();  // Reset form if the modal is cancelled
         onClose();
+    };
+
+    const resetForm = () => {
+        setTaskData({
+            TaskID: null,
+            Comments: '',
+            DueDate: '',
+            AssignedFarmerID: '',
+            LocationID: '',
+            CropID: '',
+            TaskType: '',
+            NewTaskType: '',
+            TaskIconPath: '',
+            IsCompleted: false,
+            CompletedDate: '',
+        });
     };
 
     return (
@@ -98,7 +128,7 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers = [], locati
                         onValueChange={(itemValue) => handleChange('AssignedFarmerID', itemValue)}
                         style={styles.picker}
                     >
-                        {farmers && farmers.length > 0 ? (
+                        {farmers.length > 0 ? (
                             farmers.map((farmer) => (
                                 <Picker.Item key={farmer.id} label={farmer.name} value={farmer.id} />
                             ))
@@ -116,7 +146,7 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers = [], locati
                         onValueChange={(itemValue) => handleChange('LocationID', itemValue)}
                         style={styles.picker}
                     >
-                        {locations && locations.length > 0 ? (
+                        {locations.length > 0 ? (
                             locations.map((location) => (
                                 <Picker.Item key={location.id} label={location.name} value={location.id} />
                             ))
@@ -134,7 +164,7 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers = [], locati
                         onValueChange={(itemValue) => handleChange('CropID', itemValue)}
                         style={styles.picker}
                     >
-                        {crops && crops.length > 0 ? (
+                        {crops.length > 0 ? (
                             crops.map((crop) => (
                                 <Picker.Item key={crop.id} label={crop.name} value={crop.id} />
                             ))
@@ -152,7 +182,7 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers = [], locati
                         onValueChange={(itemValue) => handleChange('TaskType', itemValue)}
                         style={styles.picker}
                     >
-                        {taskTypes && taskTypes.length > 0 ? (
+                        {taskTypes.length > 0 ? (
                             taskTypes.map((taskType) => (
                                 <Picker.Item key={taskType.id} label={taskType.name} value={taskType.id} />
                             ))
@@ -203,51 +233,29 @@ const TodoEntryModal = ({ visible, onClose, onSave, taskID, farmers = [], locati
                     </View>
                 </View>
 
-                {/* Task Icon Picker with Icons */}
-                <View style={styles.iconPickerContainer}>
-                    <Text style={styles.label}>Task Icon</Text>
-                    <Picker
-                        selectedValue={taskData.TaskIconPath}
-                        onValueChange={(itemValue) => handleChange('TaskIconPath', itemValue)}
-                        style={styles.picker}
-                    >
-                        {icons && icons.length > 0 ? (
-                            icons.map((icon) => (
-                                <Picker.Item
-                                    key={icon.value}
-                                    label={
-                                        <View style={styles.iconItem}>
-                                            {icon.icon}
-                                        </View>
-                                    }
-                                    value={icon.value}
-                                />
-                            ))
-                        ) : (
-                            <Picker.Item label="No icons available" value="" />
-                        )}
-                    </Picker>
-                </View>
-
-                {/* Comments Section */}
+                {/* Comments */}
                 <View style={styles.listContainer}>
+                    <Text style={styles.label}>Comments</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder="Comments"
+                        placeholder="Enter comments"
                         value={taskData.Comments}
-                        onChangeText={text => handleChange('Comments', text)}
+                        onChangeText={(text) => handleChange('Comments', text)}
+                        multiline
                     />
                 </View>
 
-                {/* Save and Cancel buttons */}
+                {/* Save/Cancel Buttons */}
                 <View style={styles.buttonContainer}>
-                    <Button title="Cancel" onPress={handleCancel} />
                     <Button title="Save" onPress={handleSave} />
+                    <Button title="Cancel" onPress={handleCancel} color={Colors.cancelButton} />
                 </View>
+
             </ScrollView>
         </Modal>
     );
 };
+
 
 const styles = StyleSheet.create({
     modalContainer: {
@@ -311,5 +319,3 @@ const styles = StyleSheet.create({
 });
 
 export default TodoEntryModal;
-
-
