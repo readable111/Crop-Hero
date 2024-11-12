@@ -28,7 +28,7 @@ import { Input } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
 import Icons from '../assets/icons/Icons.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {cleanText, cleanNumbers} from '../assets/sanitizer'
+import {cleanNumbers} from '../assets/sanitizer'
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as ImagePicker from 'expo-image-picker'
 
@@ -132,7 +132,7 @@ const AddCrops = () => {
                 
                 setCropData({
                         ...cropData,
-                        //[fieldName]: cleanText(input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
+                        //[fieldName]:  (input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
                         [fieldName]: input
                 })
         }
@@ -403,7 +403,7 @@ const AddCrops = () => {
                                         maxLength={1024}
                                         onChangeText={(text) => handleChange('comments', text)}
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Started Indoors?</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark, styles.dropdownLabel]}>Started Indoors?</Text>
                                 
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}
@@ -694,6 +694,12 @@ const styles = StyleSheet.create({
 		fontSize: 16,
                 fontFamily: 'Domine-Regular',
 		borderColor: 'white',
+                paddingLeft: 5,
+                paddingRight: 5,
+        },
+        dropdownLabel:{
+		zIndex: 9999,
+                elevation: (Platform.OS === 'android') ? 9999 : 0,
         },
         labelDark:{
                 backgroundColor: Colors.IRIDIUM,

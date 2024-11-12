@@ -80,9 +80,10 @@
         1. [First and Last Letter Section](#1st_last_letter)
         1. [Syllable Counting](#syllables)
         1. [Common Prefix and Suffix](#common_prefix_suffix)
+        1. [Floyd-Rivest Sorting Algorithm](#sorting_for_search)
     1. [Backend Services](#backend_overview) 
         1. [Database](#database_overview)
-        1. [Backend Server](#backend_overview)
+        1. [Backend Server](#backend_server)
         1. [Writing Endpoints](#writing_endpoints)
         1. [Pushing to the GitHub](#push_to_github_backend)
         1. [User Authentication](#user_authentication)
@@ -228,17 +229,17 @@ The CropCarousel component is far simpler than the WeatherSlider, just calling t
 #### My Crops <a name="my_crops"></a>
 *Author: Isaac*
 
-The initial purpose behind this section is to have the user be able to create, manage, and delete crops that they may have. The user should be able to manage what crops they have and also be able to view and/or edit any relevant information about said crops. This starts with our initial home page, the "My Crops" page. This page is treated mostly just as a navigation tool between two more pages, Add Crops and View Crops. With this, the user should be able to select and press one of two buttons, and that button should connect to the correct page. This is also the page that the user will return to once they are done with either of the two pages, and it contains the navbar to lead to other pages. 
+The initial purpose behind this section is to have the user be able to create, manage, and delete crops that they may have. The user should be able to manage what crops they have and also be able to view and/or edit any relevant information about said crops. This starts with our base page, the "My Crops" page. This page is treated mostly just as a navigation tool between two more pages, Add Crops and View Crops. With this, the user should be able to select and press one of two buttons, and that button should connect to the correct page. This is also the page that the user will return to once they are done with either of the two pages. Also, My Crops contains the navbar to lead to other pages. 
 
 #### Add Crops <a name="add_crops"></a>
 *Author: Isaac*
 
-The purpose of this page is to create the crops that will be used and managed by the user. The user will be brought to a page with various fields to put information. They will have to fill out fields for the name, medium, location, type, variety, source, date planted, and more. The HRF number that will be tied to identify the crop is also created using this page, but it is assigned a randomized 6-digit number when the page is first opened. When the user is done filling out all the fields, they may hit the save button located in the top right. The save button will check to make sure every field is filled out, with no blanks. When that is confirmed, it will create an object and send it back to where the rest of the crops are stored, effectively saving the new crop. If failed, the page will prompt to the user that there are fields that are left unfilled, and will not save the object, but rather return to the add crops page so that the user may fill out the remaining fields. The input fields also go through sanitization, which is covered later by Daniel. All this does is ensure that the inputs are valid and nothing malicious or incorrect.
+The purpose of this page is to create the crops that will be used and managed by the user. The user will be brought to a page with various fields to put information. They will have to fill out fields for the name, medium, location, type, variety, source, date planted, and more. The HRF number that will be used by the user to identify the crop is also created using this page, but the HRF number is assigned a randomized 6-digit number when the page is first opened. When the user is done filling out all the fields, they may hit the save button located in the top right. The save button will check to make sure every field is filled out, with no blanks. When that is confirmed, it will create an object and send it back to where the rest of the crops are stored, effectively saving the new crop. If failed, the page will prompt to the user that there are fields that are left unfilled, and will not save the object, but rather return to the add crops page so that the user may fill out the remaining fields. The input fields also go through sanitization, which is covered later by Daniel. All of this ensures that the inputs are valid and that nothing malicious or incorrect is saved.
 
 #### View Crops <a name="view_crops"></a>
 *Author: Isaac*
 
-The view crops page is used to present all created crops to the user. This is presented through a scrollable list, with each crop being presented. The objects will only show their name, and the way that they are identified in the list is through the created HRF number. The user should be able to scroll through the list and select any crop that they wish to view more information about. On selection (press), the user will be sent to a mimic of the Add crops page where the crop information will be presented in the input boxes. There is current plans to add search and sort functions as well, where the user will be able to search for specific crops and be able to sort crops based on location or name. The purpose for this page is to present every object in an orderly fashion to the user.
+The View Crops page is used to present all created crops to the user. This is presented through a scrollable list, with each crop being presented. The objects will only show their name, and the way that they are identified in the list is through the created HRF number. The user should be able to scroll through the list and select any crop that they wish to view more information about. On selection (press), the user will be sent to a mimic of the Add crops page where the crop information will be presented in the input boxes. There are plans to add search and sort functions as well, where the user will be able to search for specific crops and be able to sort crops based on location or name. The purpose for this page is to present every object in an orderly fashion to the user.
 
 #### Individual Crop Page <a name="ind_crop"></a>
 *Author: Isaac*
@@ -249,26 +250,27 @@ The individual crop page is created from the View Crops page, where the user has
 #### Background <a name="notebook_background"></a>
 *Author: McKenna*
 
- The intended purpose of the notebook page is for the user to be able to document daily proceedings as to what has been happening that day on the farm. The user will add in entries via a pop-up modal and will be able to sort entries by month and year. The notebook page is the default page that is displayed when the user selects the notebook icon from the bottom navigation bar. At the top of the screen, two green ovals are displayed that allow the user to swap between the To-Do page and the Notebook page. Within the Notebook page, the user is given filters displayed along the top underneath the page toggles to allow for filtering entries made by the user for better a better viewing experience. All other interactions are initiated with the speed dial located at the bottom right that allows the user to add an entry. The speed dial is further used on a long press of an entry that allows the user to edit, delete, or export the long pressed entry.
-#### General Trouble Shooting <a name="notebook_troubleshooting"></a>
+ The intended purpose of the notebook page is for the user to be able to document daily proceedings regarding what has happened that day on the farm. The user will add entries via a pop-up modal and will be able to sort entries by month and year. The notebook page is the default page that is displayed when the user selects the notebook icon from the bottom navigation bar. At the top of the screen, two green ovals are displayed that allow the user to swap between the To-Do page and the Notebook page. Within the Notebook page, the user is given filters displayed along the top underneath the page toggles to allow for filtering entries made by the user for better a better viewing experience. All other interactions are initiated with the speed dial located at the bottom right that allows the user to add an entry. The speed dial is further used on a long press of an entry that allows the user to edit, delete, or export the long pressed entry.
+#### General Troubleshooting <a name="notebook_troubleshooting"></a>
 *Author: McKenna*
 
-To make sure an entry is selcted for editing, exporting, or deleting, a long press and hold is required for the system to capture the entry as slected. If the user recieves an error that no entry is selected, the user should acknowledge the confirmation and long press the entry once again.
+To make sure an entry is selected for editing, exporting, or deleting, a long press and hold is required for the system to capture the entry as selected. If the user recieves an error that no entry is selected, the user should acknowledge the confirmation and long press the entry once again.
 
 ### To-Do Page <a name="todo_page"></a>
 #### Background <a name="todo_background"></a>
 *Author: McKenna* 
 
-The purpose of the To-Do page is for the user to keep track of tasks that need to be accomplished around their farming/planting environment. The user is able to assign things such as farmer, task type, crop type, icons, and more to the task entry for easy tracking and filtering. The To-Do page is a secondary page that can be accessed when the user selects the Notebook page from the bottom navigation bar and then toggles to the To-Do page by selecting the corresponding green oval at the top left of the screen. At the top of the screen, two green ovals are displayed that allow the user to swap between the To-Do page and the Notebook page. Within the To-Do page, the user is given filters displayed along the top underneath the page toggles to allow for filtering entries made by the user for better a better viewing experience. All other interactions are initiated with the speed dial located at the bottom right that allows the user to add an entry. The speed dial is further used on a long press of an entry that allows the user to edit, delete, mark complete, or export the long pressed entry.
+The purpose of the To-Do page is allowing the user to track tasks that need to be accomplished around their farming/planting environment. The user is able to assign things such as farmer, task type, crop type, icons, and more to the task entry for easy tracking and filtering. The To-Do page is a secondary page that can be accessed when the user selects the Notebook page from the bottom navigation bar and then toggles to the To-Do page by selecting the corresponding green oval at the top left of the screen. At the top of the screen, two green ovals are displayed that allow the user to swap between the To-Do page and the Notebook page. Within the To-Do page, the user is given filters displayed along the top underneath the page toggles to allow for filtering entries made by the user for better a better viewing experience. All other interactions are initiated with the speed dial located at the bottom right that allows the user to add an entry. The speed dial is further used on a long press of an entry that allows the user to edit, delete, mark complete, or export the long pressed entry.
 
-#### General Trouble Shooting <a name="todo_troubleshooting"></a>
+#### General Troubleshooting <a name="todo_troubleshooting"></a>
 *Author: McKenna*
 
 To make sure an entry is selcted for editing, exporting, marking complete, or deleting, a long press and hold is required for the system to capture the entry as slected. If the user recieves an error that no entry is selected, the user should acknowledge the confirmation and long press the entry once again.
+
 #### Adding Additional Filtering Years <a name="todo_yearfilters"></a>
 *Author: McKenna*
 
-Should the application need more years added for entry adding and therefore filtering, more years can be added by simply navigating to the years section in the code and adding in addtional years to the list. 
+Should the application need more years added for entry adding and therefore filtering, more years can be added by simply navigating to the years section in the code and adding additional years to the list. 
 
 ### Profile Page <a name="profile_page"></a>
 #### Base Page <a name="base_profile"></a>
@@ -298,7 +300,7 @@ At the top of the page is a back arrow which unwinds the stack and a save button
 ### Data Hub Page <a name="datahub_page"></a>
 *Author: Matthew*
 
-The main functionality of the Data Hub Page is to take a JSON object. Then, using react-native-chart-kit to display relevent graphs about the user's account. This is the page where the user may get a history of their activity on the app. The secondary functionality of the page is to provide a way for the user to export their compiled data to their phone's local storage or posting to Facebook. The graphs are all contained within collapsible sections, or drop downs, that require the user to press to open. There is a search bar that allows the user to specifically input certain kinds of crops and have the graphs display the relevent information about them. The export functionality uses a form of html2canvas to turn the drop down components into a saveable PNG image file.
+The main functionality of the Data Hub Page is to use react-native-chart-kit to display relevant graphs about the user's crops. This is the page where the user may get a history of their activity on the app. The secondary functionality of the page is to provide a way for the user to export their compiled data to their phone's local storage or posting to Facebook. The graphs are all contained within collapsible sections, or drop downs, that require the user to press to open. There is a search bar that allows the user to specifically input certain kinds of crops and have the graphs display the relevent information about them. The export functionality uses a form of html2canvas to turn the drop down components into a saved PNG image file.
 
 ### Components & Assets <a name="components_n_assets"></a>
 #### Rows & Columns <a name="grid"></a>
@@ -952,11 +954,38 @@ First, I will discuss how I determined the length of the common prefix. A for lo
 
 Second, I will discuss how I determined the length of the common suffix. This function uses a while loop to assess the strings. The while loop has two conditions. The first condition ensures that the found suffix length is less than the length of the shortest string. The second condition compares two characters, one from each string. The character’s index is equal to the string’s length minus 1 and minus the found suffix length, meaning that the while loop starts at the end when the found suffix length is 0 and moves forward. I multiply the final found suffix length by –1 as I need a negative length to properly slice up the strings. 
 
+#### Floyd-Rivest Sorting Algorithm <a name="sorting_for_search"></a>
+*Author: Daniel*
+
+After all of the other optimizations, the search algorithm achieved an average runtime of 267ms for an input size of about 600. Slightly over 60% of the runtime was attributable to the sorting algorithm which was sorting the crops such that the highest match scores would be at the top.
+
+To correct this, I looked into algorithms that only cared about the Kth biggest or smallest elements. During this research, I found [an interesting article](https://blog.mischel.com/2011/10/25/when-theory-meets-practice/) about the QuickSelect and HeapSelect algorithms. HeapSelect has a complexity of O(N log K). Initially, I thought that HeapSelect would be the best choice since it is faster than QuickSelect when K is less than 1% of N. In addition, HeapSelect does not require the entire list to be loaded into memory and does not alter the original list. However, when I actually implemented it, HeapSelect was slower than the default sorting algorithm and experienced intermittent errors that I could never properly track down. Besides, HeapSelect is best for streaming data rather than when you have all of it. The implementation for the custom comparator was based on some information from [this article](https://www.geeksforgeeks.org/how-to-sort-an-array-in-typescript/).
+
+As such, I implemented a very naive version of QuickSelect which was slightly faster and did not experience any errors. I conducted further research into QuickSelect and any related algorithms, such as Floyd-Rivest. [This article](https://danlark.org/2020/11/11/miniselect-practical-and-generic-selection-algorithms/), [this Reddit post](https://www.reddit.com/r/rust/comments/145xn00/turboselect_faster_than_quickselect/), and [this StackOverflow post](https://stackoverflow.com/questions/29592546/floyd-rivest-vs-introselect-algorithm-performance) are all interesting and useful reads on the topic. Importantly, they led me to the conclusion that Floyd-Rivest would be a better choice than QuickSelect, especially since it minimizes the number of comparisons which is a massive time sink in my case. For my initial implementation, the [original paper](https://people.csail.mit.edu/rivest/pubs/FR75b.pdf) provides a really clear code snippet which I could use. I simply had to translate it from Algol to TypeScript.
+
+At this point, I simply needed to optimize the Floyd-Rivest sorting algorithm. I based my optimizations of the code on what I saw [here](https://github.com/mourner/quickselect) and [here](https://softwareengineering.stackexchange.com/questions/284767/kth-selection-routine-floyd-algorithm-489/284858#284858). Based on my understanding, recursive code is slower and harder to optimize. As such, my first step was turning the function into an iterative design rather than a recursive design. Secondly, I borrowed the median-of-3 strategy from QuickSelect. While proportion-of-s may have been faster, I could not find any good explanations of its implementation, leading me back to the median-of-3 approach. In QuickSelect, you would look at the first, middle, and last elements of an array and choose the median of those 3 points to serve as the pivot. To prevent issues with the next recursive call in QuickSelect, those three points are then sorted. Specifically, this prevents the situation where an array is completely sorted except for having the smallest/largest element as the first/last point on the wrong side of the array. Basically, median-of-3 ensures that fully sorted data remains optimal, decreases the number of worst cases, and removes any PRNG calls which are extremely slow. For an iterative Floyd-Rivest, I look at the first, Kth, and last elements of the array. Rather than choosing the median as a pivot since I don't need a pivot, I simply swap and sort them. I will note that median-of-3 would traditionally use XOR like `if ((a > b) ^ (a > c)) {...} else if ((b < a) ^ (b < c)) {...} else {...}`, but I am not always comparing numbers which makes this unviable. Then, I removed the natural logs, exponentation, and square root functions as they were causing unnecessary slowdowns. Since it is not recursive and due to the median-of-3 approach, the if statement now compares `right - left` against K rather than right. That being said, I ended up commenting out the if statement. Originally, it was used to shrink the subset for the recursive calls, but it is no longer being used. I didn't delete it because I wanted to preserve the removal of the math functions and because I saw it being used for quintary partitions. While I lack the ability to understand and implement quintary partitioning per [Kiwiel's article](https://core.ac.uk/download/pdf/82672439.pdf), I would love to see it being applied in the future.
+
+The new, optimized sorting algorithm substantially decreased the average runtime from 267ms to 98ms. Interestingly, about 70% of the runtime is still coming from the sorting algorithm or an average of 69ms.
+
+| Section                   | % of Overall Runtime (97.9918ms) |
+| :-----------------------: | :------------------------------: |
+| Cleaning                  | 0.22%                            |
+| Preprocessing             | 7.24%                            |
+| SDC                       | 1.75%                            |
+| Check 1st/Last            | 3.99%                            |
+| Length/Syllable           | 1.63%                            |
+| Prefix Match              | 7.23%                            |
+| DLED                      | 1.02%                            |
+| JWS                       | 2.04%                            |
+| Lemmatizer                | 4.07%                            |
+| Double Metaphone          | 0.54%                            |
+| Other (sorting algorithm) | 70.27%                           |
+
 ### Backend Services <a name="backend_overview"></a>
 #### Database <a name="database_overview"></a>
 *Author: Tyler*
 
-The database is deployed on Azure MySQL flexible server. Connecting to the database can be done either through MySQL's command line tools, or it can be done through the Azure portal. Once we have set up the database connected to the client's account, you can handle maintenance tasks using the Azure Portal. These tasks include log and read-write monitoring, as well as viewing the database in PowerBI.
+The database is deployed on Azure MySQL flexible server. Connecting to the database can be done either through MySQL's command line tools or through the Azure portal. Once we have set up the database connected to the client's account, you can handle maintenance tasks using the Azure Portal. These tasks include log and read-write monitoring, as well as viewing the database in PowerBI.
 
 The database is connected to the app using a Python Flask backend which will also be deployed on the Azure Portal through the App Services. The database consists of 11 tables, each having its own primary keys. If you wish to see more on the Database structure, please see the Project Plan Document or Design Document. If you wish to alter these tables, please run `ALTER TABLE SQL` query. If you wish to insert custom values or fields into the database, run the `CREATE TABLE` query, and be sure to add the `fld_s_<tableletter>_subscriberID_pk` to the table if it needs another primary key to ensure unique values. 
 
@@ -981,8 +1010,8 @@ def route_path(param):
     try:
         cur = conn.cursor() #conn is the variable that holds our connection to the database, the cursor() method is called when we want to open a connection 
         query = """WRITE SQL QUERY HERE ACCESS VALUES WITH %s"""
-        cur.execute(query, (value1, value2))#if using only one value, then be sure to format it like so (value,) with the comma at the end
-        results = cur.fetchone()/fetchall()
+        cur.execute(query, (value1, value2)) #if using only one value, then be sure to format it like `(value,)` with the comma at the end to ensure that it is formatted as a tuple
+        results = cur.fetchone() #or fetchall()
         
         #if you are writting to the database, be sure to write a conn.commit() line
         return jsonify(results), 200
@@ -990,12 +1019,15 @@ def route_path(param):
         print(f"Error: {e}")
         return "Error message", 500
 ```
-The format can change depending on the method of the endpoint, POST or GET, but the general layout is pretty much the same
+The format can change depending on the method of the endpoint, POST or GET, but the general layout remains pretty much the same.
 
 #### General Debbugging <a name="Debugging The backend"></a>
+*Author: Tyler*
+
 1. Restart the backend server and check the logs
-2. if container restart fails, try once more, if that fails continue
-3. Re-deploy the backend code by running the github action
+2. If container restart fails, try once more
+1. If the second restart fails, continue
+3. Re-deploy the backend code by running the GitHub action
 4. Monitor Containment Logs
 5. Ensure that python code is bug free
 6. Ensure that environment variables are set up correctly in Azure App Service
@@ -1008,11 +1040,12 @@ To push your changes to the server, use either the git cli, or the git GUI that 
 
 #### User Authentication <a name="user_authentication">
 *Author: Tyler*
-User Authentication is notoriously difficult and a large security risk. Rather than ris leaking emails, password, and other PII, the app uses a third party authentication service called Auth0. Auth0 uses several verified services in order to verify user identity, such as google or microsoft.
+
+User Authentication is notoriously difficult and a large security risk. Rather than risk leaking emails, passwords, and other PII, the app uses a third-party authentication service called Auth0. Auth0 uses several verified services in order to verify user identity, such as Google or Microsoft.
 
 On the Auth0 dashboard, we can manage the users in our systems and their information. By hosting the user authentication on a trusted third party service, we avoid the problem of having our small team writing a vulnerablility into the system, and we leave the storage of sensitive information in the hands of a trusted service.
 
-The documentatoin for the Auth0 authentication services can be found here https://auth0.github.io/react-native-auth0/ , and additional documentation located here, https://auth0.com/docs/quickstart/native/react-native/interactive. Essentially, we check if the user is logged in upon entering the entry point for the app, and if the user access token exists in the Async Storage, we redirect them to the user's home page. From there we can access the user object through the API, we use the userID as a primary key for our subscribers.
+The documentation for the Auth0 authentication services can be found [here](https://auth0.github.io/react-native-auth0/) and additional documentation located [here](https://auth0.com/docs/quickstart/native/react-native/interactive). Essentially, we check if the user is logged in upon entering the entry point for the app, and if the user access token exists in the Async Storage, we redirect them to the user's home page. From there we can access the user object through the API, we use the userID as a primary key for our subscribers.
 
 ## Installation & Setup <a name="setup"></a>
 ### Preparing The Development Environment <a name="prep_dev_environ"></a>
@@ -1745,15 +1778,17 @@ The Expo Router library will automatically generate statically typed routes for 
 * Add livestock tracking to the app by expanding the crop tracking features
 * Add a subscription model, likely based on a freemium model
     * Charge via PayPal or Square to offload security considerations and PCI DSS requirements
+    * Includes writing a proper Terms of Service and Privacy Policy, for legal reasons
 * Expand social media integration
 * Allow crop sharing between app users as part of data aggregation for the Data Hub graphs
     * This would be connected to crop visibility where only crops set to visible will be included in the data aggregation
+    * Includes implementation of the default visibility toggle switch
 * Improve the speed and efficiency of calls to APIs or the backend
-* Speed up the fuzzy string matching/approximate string matching (FSM/ASM) algorithm
-    * Currently, the massive limiter on the algorithm's speed is the sorting algorithm that it uses. The quickselect, heapselect, or Floyd-Rivest sorting algorithms are optimized to identify the X largest values which would be the entries with the X highest match scores in this use case. As such, implementing these algorithms should increase the FSM speed.
 * Add GPS functionality and/or geotagging to identify specific crops or locations
     * Perhaps add a map of the area with zones and markers
 * Add a desktop computer-focused website interface for the mobile app
     * May be an option provided by React Native and Expo's interpreters, with Expo allowing both statically and client rendered websites
 * Increase the number of components that can tied to images
+* Add push notifications for upcoming tasks and payments
     * May include crops, livestock, tasks, task types, locations, etc.
+* Further improve Floyd-Rivest sorting algorithm per [https://core.ac.uk/download/pdf/82672439.pdf](https://core.ac.uk/download/pdf/82672439.pdf) and [https://github.com/koskinev/turboselect](https://github.com/koskinev/turboselect)

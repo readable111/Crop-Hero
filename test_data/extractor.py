@@ -3,7 +3,7 @@
 import json
 import random
 from datetime import datetime, timedelta
-from re import search, sub
+from re import search
 from types import SimpleNamespace
 
 # Read input file of crop names
@@ -140,11 +140,11 @@ def random_variety():
 
 # Generate random source from list of plausible values
 def random_source():
-    return random.choice(["personal cutting", "cutting from friend", "burpee", "johnny's selected seeds", "ferry-morse", "walmart", "home depot"])
+    return random.choice(["personal cutting", "cutting from friend", "burpee", "johnny's selected seeds", "ferry-morse", "walmart", "home depot", "amazon"])
 
-# Generate random yield number between 0 and 5 (2 decimal places)
+# Generate random yield number between 0 and 20 (2 decimal places)
 def random_yield():
-    return round(random.uniform(0, 5), 2)
+    return round(random.uniform(0, 20), 2)
     
 # Function to generate random comments from an array of sentences
 def generate_comments():
@@ -185,65 +185,55 @@ for line in lines:
     # Strip whitespace and split by spaces
     words = line.strip().split()
 
-    # Generate random values
+    # Generate the label and name based on the crops in the wordlist and randomly pluralize it
     label = ' '.join(words)
-    name = label
-    hrfNum = str(random.randint(1, 999)).zfill(3) #generate 3 digit number with prepended 0s
-    media = random_media()
-    location = random_location()
-    variety = random_variety()
-    source = random_source()
-    yield_amount = f"{random_yield()} kg/ha" #appends the units of kilograms per hectares
-    crop_type = random.choice(['annual', 'perennial', 'biennial'])
-    active = random.choice(['Y', 'N'])
-    indoors = random.choice(['Yes', 'No'])
-    date = random_date()
-    comment = generate_comments()
+    plural_choice = random.randint(1, 2)
+    if plural_choice == 1:  #singular
+        name = label
+    else:  #plural
+        # Generate plural label
+        plural_label = ' '.join(words[:-1])
+        plural_label = plural_label + ' ' + pluralize(words[-1]).capitalize()
+        label = plural_label.strip()
+        name = label
 
-    # Create crop dictionary for singular form
-    crop_singular = {
-        'label': label,
-        'name': name,
-        'hrfNum': hrfNum,
-        'active': active,
-        'location': location,
-        'variety': variety,
-        'source': source,
-        'date': date,
-        'comments': comment,
-        'indoors': indoors,
-        'type': crop_type,
-        'media': media,
-        'yield': yield_amount
-    }
+    # Create 1 to 5 entries per crop; ends up with about 875 entries
+    for _ in range(random.randint(1, 5)):
+        hrfNum = str(random.randint(1, 999999)).zfill(6) # Generate 6 digit number with prepended 0s
+        media = random_media()
+        location = random_location()
+        variety = random_variety()
+        source = random_source()
+        yield_amount = f"{random_yield()} kg/ha" # Appends the units of kilograms per hectares
+        crop_type = random.choice(['annual', 'perennial', 'biennial'])
+        active = random.choice(['Yes', 'No'])
+        indoors = random.choice(['Yes', 'No'])
+        visible = random.choice(['Yes', 'No'])
+        date_planted = random_date()
+        comment = generate_comments()        
+        
+        # Create crop dictionary
+        crop = {
+            'label': label,
+            'name': name,
+            'active': active,
+            'location': location,
+            'variety': variety,
+            'source': source,
+            'datePlanted': date_planted,
+            'comments': comment,
+            'indoors': indoors,
+            'type': crop_type,
+            'medium': media,
+            'hrfNum': hrfNum,
+            'visible': visible,
+            'yield': yield_amount,
+        }
 
-    # Append singular crop to CROPS list
-    CROPS.append(crop_singular)
+        print(crop)
 
-    # Generate plural label
-    plural_label = ' '.join(words[:-1])
-    plural_label = plural_label + ' ' + pluralize(words[-1]).capitalize()
-    plural_label = plural_label.strip()
-
-    # Create crop dictionary for plural form
-    crop_plural = {
-        'label': plural_label,
-        'name': plural_label,
-        'hrfNum': hrfNum,
-        'active': active,
-        'location': location,
-        'variety': variety,
-        'source': source,
-        'date': date,
-        'comments': comment,
-        'indoors': indoors,
-        'type': crop_type,
-        'media': media,
-        'yield': yield_amount
-    }
-
-    # Append plural crop to CROPS list
-    CROPS.append(crop_plural)
+        # Append crop to CROPS list
+        CROPS.append(crop)
 
 # Write output JSON to file
 with open('testCropData.json', 'w') as f:

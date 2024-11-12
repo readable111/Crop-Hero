@@ -2,7 +2,7 @@
  * @author Matthew Bustamente, Daniel Moreno
  * @reviewer Daniel Moreno
  * @tester Matthew Bustamente
- * 
+ *
  * Secondary author primarily hooked up the graphs to the search bar so that they were no longer random mock graphs
  * Also fixed some bugs
  ***/
@@ -45,12 +45,17 @@ const DataHub = () => {
 
   const DATE = new Date().getFullYear() + "";
   //TEMP CODE to handle mock data for demos, specifically for the active crops chart, and is based on search input
-  selectedActiveCrops = CROPS.filter(crop => crop.name === selectedCrop.name);
-  selectedActiveCrops = selectedActiveCrops.filter(crop => crop.active === 'Y');
+  const selectedActiveCrops = CROPS
+  .filter(crop => crop.name === selectedCrop.name)
+  .filter(crop => crop.active === 'Yes')
+  .filter(crop => {
+    const cropYear = crop.datePlanted.split('/')[2];
+    return parseInt(cropYear) >= parseInt(DATE);
+  });
   //sum yields by year and month
   const selectiveActiveDateCounts = {};
   selectedActiveCrops.forEach(entry => {
-      const [month, day, year] = entry.date.split('/');
+      const [month, day, year] = entry.datePlanted.split('/');
       const monthYear = `${year}-${month.padStart(2, '0')}`; // Format as 'YYYY-MM'
       selectiveActiveDateCounts[monthYear] = (selectiveActiveDateCounts[monthYear] || 0) + parseFloat(entry.yield);
   });
@@ -85,13 +90,13 @@ const DataHub = () => {
   const selectedCurrentCrops = CROPS
   .filter(crop => crop.name === selectedCrop.name)
   .filter(crop => {
-    const cropYear = crop.date.split('/')[2];
+    const cropYear = crop.datePlanted.split('/')[2];
     return parseInt(cropYear) >= parseInt(DATE);
   });
   //sum yields by year and month
   const selectiveCurrentDateCounts = {};
   selectedCurrentCrops.forEach(entry => {
-      const [month, day, year] = entry.date.split('/');
+      const [month, day, year] = entry.datePlanted.split('/');
       const monthYear = `${year}-${month.padStart(2, '0')}`; // Format as 'YYYY-MM'
       selectiveCurrentDateCounts[monthYear] = (selectiveCurrentDateCounts[monthYear] || 0) + parseFloat(entry.yield);
   });
@@ -125,13 +130,13 @@ const DataHub = () => {
   const selectedPastCrops = CROPS
   .filter(crop => crop.name === selectedCrop.name)
   .filter(crop => {
-    const cropYear = crop.date.split('/')[2];
+    const cropYear = crop.datePlanted.split('/')[2];
     return parseInt(cropYear) < parseInt(DATE);
   });
   // Sum yields by year
   const selectivePastDateCounts = {};
   selectedPastCrops.forEach(entry => {
-    const year = entry.date.split('/')[2];
+    const year = entry.datePlanted.split('/')[2];
     selectivePastDateCounts[year] = (selectivePastDateCounts[year] || 0) + parseFloat(entry.yield);
   });
   formattedSelectivePastData = {
@@ -293,6 +298,24 @@ const styles = StyleSheet.create({
   },
   chartStyleDark: {
     borderColor: Colors.CHARCOAL,
+  },
+exportButton: {
+    marginTop: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    backgroundColor: Colors.MALACHITE,
+    borderRadius: 3,
+  },
+  exportButtonDark: {
+    backgroundColor: Colors.SANTA_GRAY,
+  },
+  exportButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  exportButtonTextDark: {
+    color: 'white',
   },
 });
 
