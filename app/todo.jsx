@@ -1,5 +1,5 @@
 /****
- * @author McKenna Beard
+ * @author McKenna Beard, Tyler Bowen
  * @reviewer Daniel Moreno
  * @tester 
  * 
@@ -146,10 +146,10 @@ const todo = () => {
                 setFilteredTasks(tasks.slice(-3));
                 break;
             case 'completed':
-                setFilteredTasks(tasks.filter(task => task.IsCompleted));
+                 setFilteredTasks(tasks.filter(task => task[5] == 1));
                 break;
             case 'notCompleted':
-                setFilteredTasks(tasks.filter(task => !task.IsCompleted));
+                setFilteredTasks(tasks.filter(task => task[5] == 0));
                 break;
             default:
                 setFilteredTasks(tasks);
@@ -209,6 +209,24 @@ const todo = () => {
         'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
     });
 
+    const subID = "sub123"
+    const farmerID = 2
+    useEffect(()=>{
+        const fetchTasks = async () =>{
+            try{
+                response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listTasks/${subID}`,{method: 'GET'})
+                if(!response.ok){
+                    console.error("HTTP ERROR:")
+                    throw new Error;
+                }
+                const data = await response.json()
+                setTasks(data)
+            }catch(error){
+                console.error("Error:", error)
+            }
+        }
+        fetchTasks()
+    }, [tasks])
     if (!fontsLoaded && !fontError) {
         return null;
     }
@@ -246,15 +264,15 @@ const todo = () => {
                     renderItem={({ item }) => (
                         //<View style={styles.entryContainer }>
                         <TouchableOpacity
-                            style={[styles.taskContainer, { opacity: item.IsCompleted ? 0.6 : 1 }]}
+                            style={[styles.taskContainer, { opacity: item[5] == 1 ? 0.6 : 1 }]}
                             // onPress={() => handleTaskTap(item)}
                             onLongPress={() => handleTaskLongPress(item)}
                         >
-                            <Text>Assigned Farmer ID: {item.AssignedFarmerID}</Text>
-                            <Text>Task Type: {item.TaskType}</Text>
-                            <Text>Location ID: {item.LocationID}</Text>
-                            <Text>Comments: {item.Comments}</Text>
-                            <Text>Due Date: {item.DueDate}</Text>
+                            <Text>Assigned Farmer ID: {item[2]}</Text>
+                            <Text>Task Type ID: {item[4]}</Text>
+                            <Text>Location ID: {item[3]}</Text>
+                            <Text>Comments: {item[8]}</Text>
+                            <Text>Due Date: {item[6]}</Text>
                         </TouchableOpacity>
                         // </View>
                     )}
