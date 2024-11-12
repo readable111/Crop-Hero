@@ -5,7 +5,7 @@
  ***/
 
 import React, { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, StatusBar, Text, View, Appearance, ScrollView, Image, TextInput, FlatList, TouchableOpacity, Alert} from 'react-native';
+import { Pressable, Switch, StyleSheet, StatusBar, Text, View, Appearance, ScrollView, Image, TextInput, FlatList, TouchableOpacity, Alert} from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input, colors } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -79,7 +79,6 @@ const ViewCrops = () => {
                         }
         }, [newCrop]);
         console.log(crops);
-               
         {/* Was testing something, leaving for now
         const handleChange = (itemValue, itemIndex) =>
         {
@@ -89,6 +88,12 @@ const ViewCrops = () => {
 
         //Testing functions now
 
+        //Delete toggle
+        const [isDelete, setIsDelete] = useState(false);
+
+        const deleteItem = (hrfNum) => {
+                setCrops((prevItems) => prevItems.filter(item => item.hrfNum !== hrfNum))
+        }
         {/* Deals with rendering the items (In this case, selectables) in the flatlist */}
 
         const renderItem = ({ item }) => 
@@ -102,8 +107,21 @@ const ViewCrops = () => {
 
         const handlePress = (item) => 
         {
-                console.log('Item pressed:');
-                router.push({pathname: '/cropspage', params: item})
+                if(isDelete)
+                {
+                        Alert.alert(`Delete Item`, `Are you sure you want to delete "${item.name}"?`,
+                                [
+                                        { text: "Delete", onPress: () => deleteItem(item.hrfNum) },
+                                        { text: "Cancel", style: "cancel"}
+                                ]
+                        )
+                        
+                }
+                else{
+
+                        console.log('Item pressed:');
+                        router.push({pathname: '/cropspage', params: item})
+                }
         }
 
         {/*load in all fonts used for this page*/}
@@ -125,8 +143,17 @@ const ViewCrops = () => {
                                 </View>
                         </View>
                         <View style={[styles.container, isDark && styles.containerDark]}>
-                                <View style={styles.back}>
-                                        <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.push('/crops')}/>
+                                <View style={[styles.topContainer, styles.spaceBetween]}>
+                                        <View style={styles.back}>
+                                                <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.push('/crops')}/>
+                                        </View>
+                                        <View style={[styles.toggleContainer, isDark && styles.toggleContainerDark]}>
+                                                <Text style={styles.toggleLabel}>Toggle Delete</Text>
+                                                <Switch
+                                                        value={isDelete}
+                                                        onValueChange={setIsDelete}
+                                                />
+                                        </View>
                                 </View>
                                 <FlatList
                                         data={crops}
@@ -228,5 +255,35 @@ const styles = StyleSheet.create({
         },
         wrapper:{
                 flex:1
+        },
+        toggleContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: 5,
+                paddingHorizontal: 5,
+                backgroundColor: Colors.SCOTCH_MIST_TAN, // Light background color around the toggle
+                borderRadius: 20,
+                borderColor: '#20232a',
+                borderWidth: 2,
+                margin: 10,
+                marginRight: "5%"
+        },
+        toggleContainerDark:
+        {
+                backgroundColor: Colors.LICHEN
+        },
+        toggleLabel: {
+                
+                fontSize: 18,
+                marginRight: 0,
+        },
+        topContainer: {
+                flexDirection: "row",
+                alignItems: "center"
+        },
+        spaceBetween:
+        {
+                justifyContent: "space-between"
         }
 });
