@@ -61,7 +61,7 @@ const todo = () => {
         setCurrentTask(null); // Reset the selected entry
         //taskData.Comments('');
     };
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(false);
     useEffect(() => {
         // declare the async data fetching function
         const fetchDarkModeSetting = async () => {
@@ -101,6 +101,7 @@ const todo = () => {
 
         if (currentTaskID) {
             // Edit existing task
+            console.log(currentTaskID);
             newTasks = tasks.map(task =>
                 task.TaskID === currentTaskID ? { ...task, ...taskData } : task
             );
@@ -118,6 +119,7 @@ const todo = () => {
 
         setTasks(newTasks);
         setFilteredTasks(newTasks);
+        //onEditTask(updatedTask);
         setModalVisible(false);  // Close the modal
         setCurrentTaskID(null);  // Reset the task ID
         setIsSpeedDialOpen(false);
@@ -126,14 +128,16 @@ const todo = () => {
     const handleTaskLongPress = (task) => {
         setCurrentTask(task);
         setCurrentTaskID(task.TaskID);
+        
         setIsSpeedDialOpen(true);
     };
 
     const handleEditTask = () => {
         if (currentTask) {
+
             setModalVisible(true);
         }
-        setIsSpeedDialOpen(false);
+        //setIsSpeedDialOpen(false);
     };
 
     useEffect(() => {
@@ -153,10 +157,10 @@ const todo = () => {
         }
     }, [value, tasks]);
 
-    const handleTaskTap = (task) => {
-        setCurrentTask(task);
-        setModalVisible(true);
-    };
+   // const handleTaskTap = (task) => {
+     //   setCurrentTask(task);
+       // setModalVisible(true);
+    //};
 
     const handleDeleteTask = (taskID) => {
         Alert.alert(
@@ -175,7 +179,10 @@ const todo = () => {
             { cancelable: true }
         );
     };
-
+    const handleOpenModal = (task) => {
+        setCurrentTask(task);  // Set the task to edit (pass all the task data)
+        setModalVisible(true);  // Open the modal
+    };
     const handleCheckboxChange = async (taskID) => {
         const taskToUpdate = tasks.find(task => task.TaskID === taskID);
         const updatedTask = {
@@ -190,7 +197,11 @@ const todo = () => {
         setTasks(updatedTasks);
         setFilteredTasks(updatedTasks);
     };
-
+    // Function to add a new task type
+    const addNewTaskType = (newTaskType) => {
+        const uniqueID = `${newTaskType}-${Math.random().toString(36).substr(2, 9)}`;
+        setTaskTypes([...taskTypes, { id: uniqueID, name: newTaskType }]);
+    };
     const [fontsLoaded, fontError] = useFonts({
         'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
         'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
@@ -274,7 +285,8 @@ const todo = () => {
                     title="Edit Task"
                     onPress={() => {
                         if (currentTask) {
-                            handleEditTask();
+                            console.log(currentTask);
+                            handleOpenModal(currentTask);
                         } else {
                             Alert.alert("Select a task to edit.");
                         }
@@ -331,6 +343,7 @@ const todo = () => {
                 locations={locations}
                 crops={crops}
                 taskTypes={taskTypes}
+                onAddNewTaskType={addNewTaskType}  // Pass addNewTaskType as prop
                 taskData={currentTask}  // This should contain the current task details for editing
             />
 
