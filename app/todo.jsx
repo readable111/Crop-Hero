@@ -10,7 +10,7 @@
 {/*McKenna Beard for IT Capstone 2024  UNT To-do Page as apart of the notebook tab on the nav bar*/ }
 {/*This page can only be accessed after clicking on the notebook page from the main nav bar*/ }
 
-import { React, useState, useEffect } from 'react';
+import { React, useState, useEffect, useCallback } from 'react';
 import {
     StyleSheet,
     View,
@@ -47,6 +47,8 @@ const todo = () => {
     const [farmers, setFarmers] = useState([]);
     const [locations, setLocations] = useState([]);
     const [taskTypes, setTaskTypes] = useState([]);
+    const [editTask, setEditTask] = useState(false)
+    const [saveTask, setSaveTask] = useState(false)
     const [crops, setCrops] = useState([]);
 
     const [open, setOpen] = useState(false);
@@ -100,19 +102,12 @@ const todo = () => {
         let newTasks;
 
         if (currentTaskID) {
-            // Edit existing task
-            console.log(currentTaskID);
-            newTasks = tasks.map(task =>
-                task.TaskID === currentTaskID ? { ...task, ...taskData } : task
-            );
+            setEditTask(true)
         } else {
+            console.log(taskData)
             // Add new task
-            const maxTaskID = tasks.length > 0 ? Math.max(...tasks.map(task => task.TaskID)) : 0;
-            const newTaskID = maxTaskID + 1;
             const newTask = { ...taskData, TaskID: newTaskID };
-            console.log("newTaskID", newTaskID);
-            console.log("maxTaskID", maxTaskID);
-            
+            setSaveTask(true)            
             newTasks = [...tasks, newTask];
             //console.log("newTasks", newtasks)
         }
@@ -127,7 +122,7 @@ const todo = () => {
 
     const handleTaskLongPress = (task) => {
         setCurrentTask(task);
-        setCurrentTaskID(task.TaskID);
+        setCurrentTaskID(task[0]);
         
         setIsSpeedDialOpen(true);
     };
@@ -226,10 +221,99 @@ const todo = () => {
             }
         }
         fetchTasks()
-    }, [tasks])
+    }, [modalVisible])
+
+    useEffect(() =>{
+        const editTasks = async () =>{
+            if(editTask){
+              try{
+                  response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/editTask`,{method: 'GET', headers: {'Content-Type':'application/json'}, body: JSON.stringify({subID:subID, taskUpdate: currentTask, taskID: currentTaskID})})
+                  if(!response.ok){
+                      console.error("HTTP ERROR:")
+                      throw new Error;
+                  }
+              }catch(error){
+                  console.error("Error:", error)
+              }
+        }
+    }
+        editTasks()
+        setEditTask(false)
+    }, [editTask])
+
+    useEffect(() =>{
+        const saveTasks = async () =>{
+            if(saveTask){
+              try{
+                  response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addTask`,{method: 'GET', headers: {'Content-Type':'application/json'}, body: JSON.stringify({subID:subID, taskUpdate: currentTask})})
+                  if(!response.ok){
+                      console.error("HTTP ERROR:")
+                      throw new Error;
+                  }
+              }catch(error){
+                  console.error("Error:", error)
+              }
+        }
+    }
+        saveTasks()
+        setEditTask(false)
+    }, [saveTask])
+
+    useEffect(()=>{
+        const fetchLocations = async () =>{
+            try{
+                response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listLocation/${subID}`,{method: 'GET'})
+                if(!response.ok){
+                    console.error("HTTP ERROR:")
+                    throw new Error;
+                }
+                const data = await response.json()
+                setLocations(data)
+            }catch(error){
+                console.error("Error:", error)
+            }
+        }
+        fetchLocations()
+    }, [])
+
+    useEffect(()=>{
+        const fetchFarmers = async () =>{
+            try{
+                response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listFarmers/${subID}`,{method: 'GET'})
+                if(!response.ok){
+                    console.error("HTTP ERROR:")
+                    throw new Error;
+                }
+                const data = await response.json()
+                setFarmers(data)
+            }catch(error){
+                console.error("Error:", error)
+            }
+        }
+        fetchFarmers()
+    }, [])
+
+    useEffect(()=>{
+        const fetchTaskTypes = async () =>{
+            try{
+                response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listTaskTypes/${subID}`,{method: 'GET'})
+                if(!response.ok){
+                    console.error("HTTP ERROR:")
+                    throw new Error;
+                }
+                const data = await response.json()
+                setTaskTypes(data)
+            }catch(error){
+                console.error("Error:", error)
+            }
+        }
+        fetchTaskTypes()
+    }, [])
+
     if (!fontsLoaded && !fontError) {
         return null;
     }
+
 
     return (
         <View style={styles.topContainer}>
@@ -269,7 +353,7 @@ const todo = () => {
                             onLongPress={() => handleTaskLongPress(item)}
                         >
                             <Text>Assigned Farmer ID: {item[2]}</Text>
-                            <Text>Task Type ID: {item[4]}</Text>
+                            <Text>Task Type: {item[10]}</Text>
                             <Text>Location ID: {item[3]}</Text>
                             <Text>Comments: {item[8]}</Text>
                             <Text>Due Date: {item[6]}</Text>
@@ -284,6 +368,7 @@ const todo = () => {
                 openIcon={{ name: 'close', color: 'white' }}
                 onOpen={() => setIsSpeedDialOpen(true)}
                 //onClose={() => setIsSpeedDialOpen(false)}
+                transitionDuration= {0}
                 onClose={() => { setIsSpeedDialOpen(false); clearSelectedEntry(); }}
                 buttonStyle={{ backgroundColor: 'green' }}
                 style={styles.speedDial}
@@ -317,7 +402,7 @@ const todo = () => {
                     //onPress={() => handleCheckboxChange(currentTask?.TaskID)}
                     onPress={() => {
                         if (currentTask) {
-                            handleCheckboxChange(currentTask.TaskID);
+                           // handleCheckboxChange(currentTask.TaskID);
                         } else {
                             Alert.alert("Select a task to mark as complete.");
                         }
@@ -362,7 +447,7 @@ const todo = () => {
                 crops={crops}
                 taskTypes={taskTypes}
                 onAddNewTaskType={addNewTaskType}  // Pass addNewTaskType as prop
-                taskData={currentTask}  // This should contain the current task details for editing
+                initialTaskDataaskData={currentTask}  // This should contain the current task details for editing
             />
 
             <NavBar notebookSelected darkMode={isDarkMode} />
