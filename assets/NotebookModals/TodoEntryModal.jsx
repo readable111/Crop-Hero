@@ -6,7 +6,8 @@ import {
     TextInput,
     Button,
     StyleSheet,
-    ScrollView
+    ScrollView,
+    Appearance
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Colors from '../Color';
@@ -80,8 +81,10 @@ const TodoEntryModal = ({
 
     const handleAddTaskType = () => {
         const newTaskType = taskData.NewTaskType.trim();
+        console.log(taskData)
+        console.log(taskData.NewTaskType)
         if (newTaskType !== '') {
-            const uniqueID = `${newTaskType}-${Math.random().toString(36).substr(2, 9)}`;
+            const uniqueID = `${newTaskType}-${Math.floor(Math.random()*100).toString()}`;
             const updatedTaskTypes = [...taskTypes, { id: uniqueID, name: newTaskType }];
             onAddNewTaskType(updatedTaskTypes);
             handleChange('TaskType', uniqueID);
@@ -208,9 +211,10 @@ const TodoEntryModal = ({
                             selectedValue={taskData.DueDate.split(' ')[0] || 'January'}
                             onValueChange={(itemValue) => handleDateChange('month', itemValue)}
                             style={styles.datePicker}
+                            itemStyle={{backgroundColor: Colors.IRISH_GREEN}}
                         >
                             {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((month) => (
-                                <Picker.Item key={month} label={month} value={month} />
+                                <Picker.Item key={month} label={month} value={month} style={{fontSize: 16}}/>
                             ))}
                         </Picker>
                         <Picker
@@ -219,7 +223,7 @@ const TodoEntryModal = ({
                             style={styles.datePicker}
                         >
                             {[...Array(31)].map((_, i) => (
-                                <Picker.Item key={i} label={`${i + 1}`} value={`${i + 1}`} />
+                                <Picker.Item key={i} label={`${i + 1}`} value={`${i + 1}`} style={{fontSize: 16}}/>
                             ))}
                         </Picker>
                         <Picker
@@ -228,7 +232,7 @@ const TodoEntryModal = ({
                             style={styles.datePicker}
                         >
                             {[...Array(21)].map((_, i) => (
-                                <Picker.Item key={i} label={`${new Date().getFullYear() + i}`} value={`${new Date().getFullYear() + i}`} />
+                                <Picker.Item key={i} label={`${new Date().getFullYear() + i}`} value={`${new Date().getFullYear() + i}`} style={{fontSize: 16}}/>
                             ))}
                         </Picker>
                     </View>

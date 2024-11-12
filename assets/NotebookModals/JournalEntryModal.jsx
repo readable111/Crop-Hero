@@ -1,6 +1,6 @@
 // Journal Entry Modal
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { Modal, View, Text, TextInput, StyleSheet, TouchableOpacity, Appearance } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Colors from '../Color';
 import AsyncStorage from '@react-native-async-storage/async-storage';

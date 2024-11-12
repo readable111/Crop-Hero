@@ -19,7 +19,8 @@ import {
     FlatList,
     Modal,
     TouchableOpacity,
-    Text
+    Text,
+    Appearance
 } from 'react-native';
 import { useFonts } from 'expo-font';
 import { router } from 'expo-router';
