@@ -16,6 +16,7 @@ import { useFonts } from 'expo-font';
 import Icons from '../assets/icons/Icons.js';
 import { cleanText } from '../assets/sanitizer.jsx';
 
+import DropDownPicker from 'react-native-dropdown-picker';
 
 
 const CropsPage = () => {
@@ -23,6 +24,32 @@ const CropsPage = () => {
         {/* Grabs variable form viewcrops page for use */}
         
         let [crop, setCropData] = useState(useLocalSearchParams());
+        
+        const [open, setOpen] = useState(null);
+        const [selectedIndoors, setSelectedIndoors] = useState(crop.indoors)
+        const [selectedLocation, setSelectedLocation] = useState(crop.location)
+        const [selectedActive, setSelectedActive] = useState(crop.active)
+        const [selectedVisible, setSelectedVisible] = useState(crop.visible)
+        const [items, setItems] = useState([
+                {label: 'Yes', value: 'Yes' },
+                {label: 'No', value: 'No'}
+        ]);
+        const [types, setType] = useState([
+                {label: 'Standard', value: 'Standard'},
+                {label: 'Nocturnal', value: 'Nocturnal'},
+                {label: crop.type, value: crop.type}
+        ])
+        const [locations, setLocation] = useState([
+                {label: 'Mound 1', value: 'Mound1' },
+                {label: 'Greenhouse 2', value: 'Greenhouse 2'},
+                {label: crop.location, value: crop.location }
+        ])
+        const [newOption, setNewOption] = useState('');
+        
+
+        const handleOpenDropdown = (id) => {
+                setOpen(open === id ? null : id)
+        }
         const [isVisible, setIsVisible] = useState(false);
         //If crop.name couldn't be retrieved, assume that ?param= was used
         /*
@@ -49,18 +76,64 @@ const CropsPage = () => {
                                
                 
         }
+        const handleNewLocation = () => {
+                if(newOption.trim() !== '')
+                {
+                        setLocation([...locations, {label: newOption, value: newOption.toLowerCase().replace(/\s+/g, '') }]);
+                        setModalVisible(false);
+                        setNewOption('');
+                }
+        }
+        
+        const handleNewType = () => {
+                if(newOption.trim() !== '')
+                {
+                        setType([...types, {label: newOption, value: newOption.toLowerCase().replace(/\+/g, '')}])
+                        setTypeModalVisible(false);
+                        setNewOption('');
+                }
+        }
+
+        const handleLocationChange = (value) =>
+        {
+                setCropData({
+                        ...crop,
+                        location: value
+                })
+        }
+        const handleIndoorsChange = (value) =>
+        {
+                setCropData({
+                        ...crop, 
+                        indoors: value,
+                })
+        }
+        const handleActiveChange = (value) =>
+        {
+                setCropData({
+                        ...crop, 
+                        active: value,
+                })
+        }
+
+        const handleVisibleChange = (value) =>
+        {
+                setCropData({
+                        ...crop,
+                        visible: value,
+                })
+        }
 
         const handleSave = () =>{
-                const emptyFields = Object.values(cropData).some(value=> value ==='');
+                const emptyFields = Object.values(crop).some(value=> value ==='');
                 if(emptyFields)
                 {
-                        console.log(cropData)
+                        console.log(crop)
                         Alert.alert("Unable to save, some fields are still empty");
                 }
                 else
                 {
-                        Alert.alert(cropData.name + " saved");
-                        router.push({pathname: '/viewcrops', params: {newCrop: JSON.stringify(cropData)}});
+                        Alert.alert(crop.name + " saved");
                 }
         };
 
@@ -119,8 +192,11 @@ const CropsPage = () => {
                                         <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                 </View>
                                 
-                                <TouchableOpacity style={[ isVisible && styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
-                                                {isVisible && <Text style={styles.locationText}>Add Location</Text>}
+                                <TouchableOpacity style={[isVisible && styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
+                                        {isVisible && <Text style={styles.locationText}>Add Location</Text>}
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[isVisible && styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setModalVisible(true)}>
+                                        {isVisible && <Text style={styles.typeText}>Add Type</Text>}
                                 </TouchableOpacity>
                                 
                                 
@@ -171,13 +247,31 @@ const CropsPage = () => {
                                         onChangeText={(text) => handleChange('datePlanted', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Location</Text>
-                                <Input
-                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.location}
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
-                                        maxLength={128}
-                                        readOnly = {readOnly}
-                                        onChangeText={(text) => handleChange('location', text)}
+                                <DropDownPicker
+                                        theme={isDark ? 'DARK' : 'LIGHT'}
+                                        open={open === 'location'}
+                                        setOpen={() => handleOpenDropdown('location')}
+                                        value={selectedLocation}
+                                        setValue={setSelectedLocation}
+                                        items= {locations}
+                                        disabled= {readOnly}
+                                        onChangeValue = {(selectedLocation) => handleChange('location', selectedLocation)}
+                                        placeholder="Location?"
+                                        listMode='SCROLLVIEW'
+					dropDownDirection='BOTTOM'
+                                        scrollViewProps={{
+					        nestedScrollEnabled: true
+					}}
+                                        props={{
+						activeOpacity: 1,
+					}}
+                                        containerStyle={{
+						width: '94%',
+						zIndex: 70,
+						marginBottom: 40,
+					}}
+                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Comments</Text>
                                 <Input
@@ -189,23 +283,58 @@ const CropsPage = () => {
                                         onChangeText={(text) => handleChange('comments', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Started Indoors?</Text>
-                                <Input
-                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.indoors}
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
-                                        maxLength={3}
-                                        readOnly = {readOnly}
-                                        onChangeText={(text) => handleChange('indoors', text)}
+                                <DropDownPicker
+                                        theme={isDark ? 'DARK' : 'LIGHT'}
+                                        open={open === 'indoors'}
+                                        setOpen={() => handleOpenDropdown('indoors')}
+                                        value={selectedIndoors}
+                                        setValue={setSelectedIndoors}
+                                        disabled= {readOnly}
+                                        items={items}
+                                        onChangeValue={handleIndoorsChange}
+                                        placeholder="Started Indoors?"
+                                        listMode='SCROLLVIEW'
+					dropDownDirection='BOTTOM'
+                                        scrollViewProps={{
+					        nestedScrollEnabled: true
+					}}
+                                        props={{
+						activeOpacity: 1,
+					}}
+                                        containerStyle={{
+						width: '94%',
+						zIndex: 60,
+						marginBottom: 40,
+					}}
+                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Active</Text>
-                                <Input
-                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.active}
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
-                                        maxLength={3}
-                                        readOnly = {readOnly}
-                                        onChangeText={(text) => handleChange('active' , text)}
-
+                                <DropDownPicker
+                                        theme={isDark ? 'DARK' : 'LIGHT'}
+                                        open={open === 'active'}
+                                        setOpen={() => handleOpenDropdown('active')}
+                                        value={selectedActive}
+                                        setValue={setSelectedActive}
+                                        disabled= {readOnly}
+                                        items={items}
+                                        onChangeValue={handleActiveChange}
+                                        placeholder="Active?"
+                                        listMode='SCROLLVIEW'
+					dropDownDirection='BOTTOM'
+                                        scrollViewProps={{
+					        nestedScrollEnabled: true
+					}}
+                                        props={{
+						activeOpacity: 1,
+					}}
+                                        containerStyle={{
+						width: '94%',
+						zIndex: 50,
+						marginBottom: 40,
+					}}
+                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Type</Text>
                                 <Input
@@ -224,16 +353,6 @@ const CropsPage = () => {
                                         maxLength={64}
                                         readOnly = {true}
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Visible</Text>
-                                <Input
-                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.visible}
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
-                                        maxLength={64}
-                                        readOnly = {readOnly}
-                                        onChangeText={(text) => handleChange('visible' , text)}
-
-                                />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Yield</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
@@ -244,6 +363,34 @@ const CropsPage = () => {
                                         onChangeText={(text) => handleChange('yield' , text)}
 
                                 />
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Visible</Text>
+                                <DropDownPicker
+                                        theme={isDark ? 'DARK' : 'LIGHT'}
+                                        open={open === 'visible'}
+                                        setOpen={() => handleOpenDropdown('visible')}
+                                        value={selectedVisible}
+                                        setValue={setSelectedVisible}
+                                        disabled= {readOnly}
+                                        items={items}
+                                        onChangeValue={handleVisibleChange}
+                                        placeholder="Crop Visible?"
+                                        listMode='SCROLLVIEW'
+					dropDownDirection='TOP'
+                                        scrollViewProps={{
+					        nestedScrollEnabled: true
+					}}
+                                        props={{
+						activeOpacity: 1,
+					}}
+                                        containerStyle={{
+						width: '94%',
+						zIndex: 60,
+						marginBottom: 40,
+					}}
+                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
+                                />
+                                
                         </ScrollView>
                         <View style={styles.spacer}/>
                         <View style={styles.spacer}/>
@@ -394,15 +541,66 @@ const styles = StyleSheet.create({
                 borderRadius: 20,
                 borderColor: '#20232a',
                 borderWidth: 1,
-                marginRight: '20%',
+                marginRight: '5%'
         },
         locationContainerDark:{
                 backgroundColor: Colors.LICHEN
         },
         locationText:{
                 fontFamily: 'Domine-Medium',
-                fontSize: 18
+                fontSize: 20
         },
+        dropDownContainer: {
+                borderWidth: 2,
+		borderColor: Colors.CHARCOAL,
+		backgroundColor: Colors.WHITE_SMOKE,
+		borderRadius: 12,
+		zIndex: 50,
+                marginTop: -10,
+                width: '90%',
+                marginLeft: '8%',
+                marginRight: '5%',
+        },
+        dropDownContainerDark: {
+                borderColor: Colors.WHITE_SMOKE, 
+                backgroundColor: Colors.IRIDIUM
+        },
+        dropDownStyle: {
+                borderColor: Colors.CHARCOAL,
+                borderWidth: 2,
+                borderRadius: 12,
+                height: 52,
+                backgroundColor: Colors.WHITE_SMOKE,
+                width: '90%',
+                marginLeft: '8%',
+                marginRight: '5%',
+                height: 40,
+                zIndex: 1,
+        },
+        dropDownStyleDark: {
+                borderColor: Colors.WHITE_SMOKE, 
+                backgroundColor: Colors.IRIDIUM
+        },
+        typeContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: 11,
+                paddingHorizontal: 10,
+                backgroundColor: Colors.SCOTCH_MIST_TAN, // Light background color around the toggle
+                borderRadius: 20,
+                borderColor: '#20232a',
+                borderWidth: 1,
+                marginRight: '40%',
+        },
+        typeContainerDark:{
+                backgroundColor: Colors.LICHEN
+        },
+        typeText:{
+                fontFamily: 'Domine-Medium',
+                fontSize: 20
+        },
+
 
 
 
