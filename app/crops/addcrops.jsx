@@ -165,9 +165,7 @@ const addCrops = () => {
                 }
                 else
                 {
-
                         setSavePressed(true)
-                        Alert.alert(cropData.name + " saved");
                 }
                // router.push({pathname: '/viewcrops', params: {newCrop: JSON.stringify(cropData)}});
         };
