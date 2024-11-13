@@ -7,7 +7,7 @@
 import { StatusBar } from 'expo-status-bar';
 import Colors from '../assets/Color'
 import React, { useState, useEffect } from 'react';
-import { Pressable, StyleSheet, Text, View, ScrollView, Alert, Appearance, TouchableOpacity, Button, Modal} from 'react-native';
+import { Pressable, StyleSheet, Text, View, ScrollView, Alert, Appearance, TouchableOpacity, Button } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
@@ -30,8 +30,6 @@ const CropsPage = () => {
         const [selectedLocation, setSelectedLocation] = useState(crop.location)
         const [selectedActive, setSelectedActive] = useState(crop.active)
         const [selectedVisible, setSelectedVisible] = useState(crop.visible)
-        const [modalVisible, setModalVisible] = useState(false);
-        const [typeModalVisible, setTypeModalVisible] = useState(false);
         const [items, setItems] = useState([
                 {label: 'Yes', value: 'Yes' },
                 {label: 'No', value: 'No'}
@@ -199,7 +197,7 @@ const CropsPage = () => {
                                         <TouchableOpacity style={[isVisible && styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
                                                 {isVisible && <Text style={styles.locationText}>Location</Text>}
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={[isVisible && styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setTypeModalVisible(true)}>
+                                        <TouchableOpacity style={[isVisible && styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setModalVisible(true)}>
                                                 {isVisible && <Text style={styles.typeText}>Type</Text>}
                                         </TouchableOpacity>
                                         <TouchableOpacity style={[isVisible&&styles.medContainer, isDark && styles.medContainerDark]} onPress = {() => setModalVisible(true)}>
@@ -214,62 +212,6 @@ const CropsPage = () => {
                                 </View>
                                 
                         </View>
-                        <Modal
-                                visible = {modalVisible}
-                                animationType = 'slide'
-                                transparent = {true}
-                                onRequestClose={() => setModalVisible(false)}
-                        >  
-                                <View style={styles.modalContainer}>
-                                        <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
-                                                <Text style={styles.modalTitle}>Enter a New Location</Text>
-                                                <Input
-                                                        style={styles.input}
-                                                        placeholder="Type new option"
-                                                        value={newOption}
-                                                        onChangeText={setNewOption}
-                                                />
-                                                <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
-                                                        <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
-                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewLocation} />
-                                                        </View>
-                                                        <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
-                                                                <Button title="Cancel" onPress={() => setModalVisible(false)} />
-                                                        
-                                                        </View>
-                                                </View>
-                                        </View>
-                                </View>
-
-                        </Modal>
-                        <Modal
-                                visible = {typeModalVisible}
-                                animationType = 'slide'
-                                transparent = {true}
-                                onRequestClose={() => setTypeModalVisible(false)}
-                        >  
-                                <View style={styles.modalContainer}>
-                                        <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
-                                                <Text style={styles.modalTitle}>Enter a New Location</Text>
-                                                <Input
-                                                        style={styles.input}
-                                                        placeholder="Type new option"
-                                                        value={newOption}
-                                                        onChangeText={setNewOption}
-                                                />
-                                                <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
-                                                        <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
-                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewType} />
-                                                        </View>
-                                                        <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
-                                                                <Button title="Cancel" onPress={() => setTypeModalVisible(false)} />
-                                                        
-                                                        </View>
-                                                </View>
-                                        </View>
-                                </View>
-
-                        </Modal>
                         <ScrollView> 
                                 <View style={styles.spacer}/>
                                 <StatusBar style={{backgroundColor: 'white'}}/>
@@ -713,36 +655,7 @@ const styles = StyleSheet.create({
                 borderColor: Colors.WHITE_SMOKE, 
                 backgroundColor: Colors.IRIDIUM
         },
-        modalContainer: {
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        },
-        modalContent: {
-                width: 300,
-                backgroundColor: Colors.SCOTCH_MIST_TAN,
-                padding: 20,
-                borderRadius: 10,
-                alignItems: 'center',
-        },
-        modalContentDark:{
-                backgroundColor: Colors.LICHEN
-        },
-        modalTitle: {
-                fontSize: 18,
-                fontFamily: 'Domine-Medium',
-                marginBottom: 10,
-        },
-        input: {
-                width: '100%',
-                height: 40,
-                borderColor: 'black',
-                borderWidth: 1,
-                borderRadius: 12,
-                marginBottom: 20,
-                paddingLeft: 10,
-        },
+        
 
 
 
