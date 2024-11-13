@@ -74,16 +74,18 @@ const addCrops = () => {
         const [selectedImage, setSelectedImage] = useState(null);
         const [newOption, setNewOption] = useState('');
         const [selectedType, setSelectedType] = useState()
+        const [addLocationAdded, setLocationAdded] = useState(false)
+        const [addTypeAdded, setTypeAdded] = useState(false)
+        const [locationNameOption, setLocationNameOption] = useState()
         const handleOpenDropdown = (id) => {
                 setOpen(open === id ? null : id)
         }
 
         const handleNewLocation = () => {
-                if(newOption.trim() !== '')
+                if(locationNameOption.trim() !== '')
                 {
-                        setLocation([...locations, {label: newOption, value: newOption.toLowerCase().replace(/\s+/g, '') }]);
+                        setLocationAdded(true)
                         setModalVisible(false);
-                        setNewOption('');
                 }
         }
         
@@ -251,7 +253,7 @@ const addCrops = () => {
                         }
                 }
                 fetchLocations()
-        },[])
+        },[addLocationAdded])
         useEffect(()=>{
                 const fetchMediums = async () =>{
                         try{
@@ -267,6 +269,24 @@ const addCrops = () => {
                 }
                 fetchMediums()
         },[])
+
+        useEffect(()=>{
+                const addLocation = async () =>{
+                        if(addLocationAdded){
+                                try{
+                                        const response = await fetch('https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addLocation',{method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({locationName: locationNameOption, farmID: 1, subID: "sub123"})})
+                                        if (!response.ok) {
+                                             throw new Error(`HTTP error! Status: ${response.status}`);
+                                        }
+                                        setLocationNameOption('')
+                                }catch(error){
+                                        console.error("Error:", error)
+                                }
+                        }
+                }
+                addLocation()
+        }, [addLocationAdded])
+
         useEffect(()=>{
                 const fetchCropTypes = async () =>{
                         try{
@@ -390,8 +410,8 @@ const addCrops = () => {
                                                 <Input
                                                         style={styles.input}
                                                         placeholder="Type new option"
-                                                        value={newOption}
-                                                        onChangeText={setNewOption}
+                                                        value={locationNameOption}
+                                                        onChangeText={setLocationNameOption}
                                                 />
                                                 <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
                                                         <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
