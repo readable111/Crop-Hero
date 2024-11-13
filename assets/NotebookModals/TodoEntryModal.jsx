@@ -7,7 +7,9 @@ import {
     Button,
     StyleSheet,
     ScrollView,
-    Appearance
+    Appearance,
+    FlatList,
+    TouchableOpacity
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Colors from '../Color';
@@ -95,7 +97,15 @@ const TodoEntryModal = ({
     };
 
     console.log("Locations to render: \n\n",locations)     
-
+    // Initialize the icon picker visibility state
+    const [iconPickerVisible, setIconPickerVisible] = useState(false);                                                   
+    const handleIconSelect = (iconName) => {
+        setTaskData((prevData) => ({
+            ...prevData,
+            fld_t_TaskIconPath: iconName,
+        }));
+        setIconPickerVisible(false);
+    };
     const handleAddTaskType = () => {
         const newTaskType = taskData.NewTaskType.trim();
         console.log(taskData)
@@ -255,7 +265,33 @@ const TodoEntryModal = ({
                         </Picker>
                     </View>
                 </View>
-
+ {/* Icon Picker Section */}
+                   <View style={styles.listContainer}>
+                       <Text style={styles.label}>Select Task Icon</Text>
+                       <TouchableOpacity onPress={() => setIconPickerVisible(true)} style={styles.iconPickerContainer}>
+                           {taskData.fld_t_TaskIconPath ? (
+                               <MaterialCommunityIcons name={taskData.fld_t_TaskIconPath} size={32} />
+                           ) : (
+                               <Text style={styles.placeholderText}>Choose an Icon</Text>
+                           )}
+                       </TouchableOpacity>
+                   </View>
+                   {/* Custom Icon Picker Modal */}
+                   <Modal visible={iconPickerVisible} transparent animationType="slide">
+                       <View style={styles.iconPickerModal}>
+                           <FlatList
+                               data={icons} // icon data
+                               keyExtractor={(item) => item}
+                               numColumns={4}
+                               renderItem={({ item }) => (
+                                   <TouchableOpacity onPress={() => handleIconSelect(item)} style={styles.iconItem}>
+                                       <MaterialCommunityIcons name={item} size={32} />
+                                   </TouchableOpacity>
+                               )}
+                           />
+                           <Button title="Close" onPress={() => setIconPickerVisible(false)} />
+                       </View>
+                   </Modal>
                 {/* Comments */}
                 <View style={styles.listContainer}>
                     <Text style={styles.label}>Comments</Text>
@@ -317,6 +353,14 @@ const styles = StyleSheet.create({
         marginRight: 10,
         backgroundColor: '#fff',
         height: 50,
+    },
+       iconPickerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: '1%',
+        borderWidth: 1,
+        borderColor: 'black',
+        borderRadius: 5,
     },
     input: {
         padding: 10,
