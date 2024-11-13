@@ -7,13 +7,17 @@
  * This  page is meant to keep track of what was done that day for future reference if needed
  ***/
 
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import {
 	StyleSheet,
 	View,
 	StatusBar,
 	Alert,
 	ScrollView,
+    FlatList,
+    TouchableOpacity,
+    Text,
+    Button,
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
@@ -23,6 +27,11 @@ import AppButton from '../assets/AppButton.jsx'
 import { Input } from 'react-native-elements'
 import DropDownPicker from 'react-native-dropdown-picker'
 import NavBar from '../assets/NavBar.jsx'
+import { SpeedDial } from '@rneui/themed';
+import {Picker} from '@react-native-picker/picker';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import JournalEntryModal from '../assets/NotebookModals/JournalEntryModal.jsx'
 
 const Notebook = () => {
     const subID ="sub123"

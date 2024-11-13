@@ -15,7 +15,10 @@ import { StyleSheet,
         StatusBar,
         TouchableWithoutFeedback, 
         Alert,
-        Appearance
+        Appearance,
+        TouchableOpacity,
+        Modal,
+        Button
 } from 'react-native';
         
 import Colors from '../assets/Color';
@@ -172,7 +175,7 @@ const AddCrops = () => {
                  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                  keyboardVerticalOffset={Platform.OS ==='ios' ? 0 : 20}
                  style={styles.containment}
-                 >
+                >
                 <TouchableWithoutFeedback onPress = {Keyboard.dismiss}>
                 <View style={[styles.container, isDark && styles.containerDark]}>
                         <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={ isDark ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
@@ -224,7 +227,7 @@ const AddCrops = () => {
                                                 />
                                                 <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
                                                         <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
-                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewLocation} />
+                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={()=>console.log("pressed")} />
                                                         </View>
                                                         <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
                                                                 <Button title="Cancel" onPress={() => setModalVisible(false)} />
@@ -252,7 +255,7 @@ const AddCrops = () => {
                                                 />
                                                 <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
                                                         <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
-                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewType} />
+                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={()=>console.log("pressed")} />
                                                         </View>
                                                         <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
                                                                 <Button title="Cancel" onPress={() => setTypeModalVisible(false)} />
@@ -260,6 +263,8 @@ const AddCrops = () => {
                                                         </View>
                                                 </View>
                                         </View>
+                                </View>
+                        </Modal>
                         <View>
                                 <View style={styles.save}>
                                         <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
@@ -333,17 +338,6 @@ const AddCrops = () => {
                                         placeholder="Started Indoors?"
                                         style={styles.textBox}
                                 />
-                                
-                                {/*}
-                               <Input
-                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        placeholder = ' Indoors'
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
-                                        maxLength={3}
-                                        onChangeText={(text) => handleChange('indoors', text)}
-
-                                />
-                                */}
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Active</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
@@ -395,7 +389,7 @@ const AddCrops = () => {
                                         value={selectedVisible}
                                         setValue={setSelectedVisible}
                                         items={items}
-                                        onChangeValue={handleVisibleChange}
+                                        onChangeValue={()=>console.log("pressed")}
                                         placeholder="Crop Visible?"
                                         listMode='SCROLLVIEW'
 					dropDownDirection='TOP'
@@ -413,7 +407,7 @@ const AddCrops = () => {
                                         dropDownContainerStyle={[styles.dropDownBottomContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
-                                {/*}
+                                
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Visibility'
@@ -431,8 +425,8 @@ const AddCrops = () => {
                 
                 </TouchableWithoutFeedback>
                 </KeyboardAvoidingView>
-        )
-}
+        );
+};
 
 
 const styles = StyleSheet.create({
@@ -662,5 +656,5 @@ const styles = StyleSheet.create({
 
 
 
-      });
-      export default AddCrops;
+});
+export default AddCrops;
