@@ -59,6 +59,11 @@ const AddCrops = () => {
         const [selectedActive, setSelectedActive] = useState(cropData.active)
         const [selectedVisible, setSelectedVisible] = useState(cropData.visible)
         const [selectedMedium, setSelectedMedium] = useState(cropData.medium)
+        
+        const [modalVisible, setModalVisible] = useState(false);
+        const [typeModalVisible, setTypeModalVisible] = useState(false);
+        const [selectedImage, setSelectedImage] = useState(null);
+        const [newOption, setNewOption] = useState('');
         const [items, setItems] = useState([
                 {label: 'Yes', value: 'Yes' },
                 {label: 'No', value: 'No'}
@@ -71,10 +76,6 @@ const AddCrops = () => {
                 {label: 'Mound 1', value: 'Mound 1' },
                 {label: 'Greenhouse 2', value: 'Greenhouse 2'}
         ])
-        const [modalVisible, setModalVisible] = useState(false);
-        const [typeModalVisible, setTypeModalVisible] = useState(false);
-        const [selectedImage, setSelectedImage] = useState(null);
-        const [newOption, setNewOption] = useState('');
 
         const handleOpenDropdown = (id) => {
                 setOpen(open === id ? null : id)
@@ -260,7 +261,7 @@ const AddCrops = () => {
                                         <TouchableOpacity style={[styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
                                                 <Text style={styles.locationText}>Location</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setModalVisible(true)}>
+                                        <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setTypeModalVisible(true)}>
                                                 <Text style={styles.typeText}>Type</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={[styles.medContainer, isDark && styles.medContainerDark]} onPress = {() => setModalVisible(true)}>
@@ -311,7 +312,7 @@ const AddCrops = () => {
                         >  
                                 <View style={styles.modalContainer}>
                                         <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
-                                                <Text style={styles.modalTitle}>Enter a New Location</Text>
+                                                <Text style={styles.modalTitle}>Enter a New Type</Text>
                                                 <Input
                                                         style={styles.input}
                                                         placeholder="Type new option"
@@ -558,7 +559,7 @@ const AddCrops = () => {
 						zIndex: 60,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownBottomContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 {/*}
@@ -742,7 +743,7 @@ const styles = StyleSheet.create({
                 paddingRight: 5,
         },
         dropdownLabel:{
-		zIndex: 9999,
+		zIndex: 30,
                 elevation: (Platform.OS === 'android') ? 9999 : 0,
         },
         labelDark:{
@@ -758,7 +759,8 @@ const styles = StyleSheet.create({
         },
         inputText:{
                 fontSize: 16,
-                marginLeft: "2%"
+                marginLeft: "2%",
+                zIndex: 0
         },
         inputTextDark:{
                   color: Colors.WHITE_SMOKE
@@ -816,13 +818,28 @@ const styles = StyleSheet.create({
 		borderColor: Colors.CHARCOAL,
 		backgroundColor: Colors.WHITE_SMOKE,
 		borderRadius: 12,
-		zIndex: 50,
+		zIndex: 80,
                 marginTop: -10,
                 width: '90%',
                 marginLeft: '8%',
                 marginRight: '5%',
         },
         dropDownContainerDark: {
+                borderColor: Colors.WHITE_SMOKE, 
+                backgroundColor: Colors.IRIDIUM
+        },
+        dropDownBottomContainer: {
+                borderWidth: 2,
+		borderColor: Colors.CHARCOAL,
+		backgroundColor: Colors.WHITE_SMOKE,
+		borderRadius: 12,
+		zIndex: 50,
+                marginBottom: -10,
+                width: '90%',
+                marginLeft: '8%',
+                marginRight: '5%',
+        },
+        dropDownBottomContainerDark: {
                 borderColor: Colors.WHITE_SMOKE, 
                 backgroundColor: Colors.IRIDIUM
         },
