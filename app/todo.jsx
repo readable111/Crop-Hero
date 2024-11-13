@@ -1,15 +1,3 @@
-/****
- * @author McKenna Beard, Tyler Bowen
- * @reviewer Daniel Moreno
- * @tester 
- * 
- * UNT To-do Page as apart of the notebook tab on the nav bar
- * This page can only be accessed after clicking on the notebook page from the main nav bar
- ***/
-
-{/*McKenna Beard for IT Capstone 2024  UNT To-do Page as apart of the notebook tab on the nav bar*/ }
-{/*This page can only be accessed after clicking on the notebook page from the main nav bar*/ }
-
 import { React, useState, useEffect, useCallback } from 'react';
 import {
     StyleSheet,
@@ -102,20 +90,36 @@ const todo = () => {
     };
 
     const handleSaveTask = (taskData) => {
-        let newTasks;
-        console.log("old tasks: ", tasks)
 
-        if (currentTaskID) {
+        // Format date fields in MMDDYYYY before saving, assuming taskData.date exists
+     //   if (taskData["fld_t_DateDue"]) {
+       //     const date = new Date(taskData.date);
+         //   const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}${date.getFullYear()}`;
+           // taskData["fld_t_DateDue"] = formattedDate;
+       // }
+
+        if (currentTaskID!==null){
+            if(!taskData["fld_t_IsCompleted"]){
+                setNewTask({
+                    ...taskData,
+                    "fld_t_DateCompleted":"1990-01-01" 
+                })
+            }else{  
             setNewTask(taskData)
+            }
             setEditTask(true)
             setSaveTask(true)
         } else {
-            console.log(taskData)
-            // Add new task
-            setNewTask(taskData);
-            setAddNewTasl(true)
+            if(!taskData["fld_t_IsCompleted"]){
+                setNewTask({
+                    ...taskData,
+                    "fld_t_DateCompleted":"1990-01-01" 
+                })
+            }else{  
+            setNewTask(taskData)
+            }
+            setAddNewTask(true)
             setSaveTask(true)            
-            console.log("newTasks", newTasks)
         }
 
         //onEditTask(updatedTask);
@@ -182,19 +186,40 @@ const todo = () => {
         setCurrentTask(task);  // Set the task to edit (pass all the task data)
         setModalVisible(true);  // Open the modal
     };
-    const handleCheckboxChange = async (taskID) => {
-        const taskToUpdate = tasks.find(task => task.TaskID === taskID);
-        const updatedTask = {
-            ...taskToUpdate,
-            IsCompleted: !taskToUpdate.IsCompleted,
+
+
+    const handleCheckboxChange = (taskData) => {
+        const monthMap = {
+            "January": "01", "February": "02", "March": "03", "April": "04",
+            "May": "05", "June": "06", "July": "07", "August": "08",
+            "September": "09", "October": "10", "November": "11", "December": "12"
         };
 
-        const updatedTasks = tasks.map(task =>
-            task.TaskID === taskID ? updatedTask : task
-        );
+        // Split the current date parts or default to current year
+        const date = new Date(taskData[6])
+        const dateDue = date.toISOString().slice(0,10)
 
-        setTasks(updatedTasks);
-        setFilteredTasks(updatedTasks);
+        const today = new Date();
+        const dateDone = today.toISOString().slice(0,10);
+
+        // Construct ISO format date (YYYY-MM-DD)
+
+
+        setNewTask({
+            "fld_t_TaskID_pk": taskData[0],
+            "fld_t_Comments": taskData[8],
+           "fld_t_DateDue": dateDue,
+            "fld_fs_FarmerID_fk": taskData[2] ,
+            "fld_l_LocationID_fk": taskData[3],
+            CropID: '' || '',
+           "fld_tt_TaskTypeID_fk": taskData[4],
+            NewTaskType: '',
+            "fld_t_TaskIconPath": taskData[9],
+            "fld_t_IsCompleted": 0b1,
+            "fld_t_DateCompleted": dateDone,
+        });
+        setEditTask(true)
+        setSaveTask(true)
     };
     // Function to add a new task type
     const addNewTaskType = (uniqueID, newTaskType) => {
@@ -240,6 +265,8 @@ const todo = () => {
 
                 setEditTask(false)
                 setSaveTask(false)
+                setCurrentTask({})
+                setCurrentTaskID(null)
               }catch(error){
                   console.error("Error:", error)
               }
@@ -251,14 +278,24 @@ const todo = () => {
     useEffect(() =>{
         const saveTasks = async () =>{
             if(saveTask & addNewTask){
+                console.log("Task to Add: \n\n\n:". newTask) 
               try{
-                  response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addTask`,{method: 'GET', headers: {'Content-Type':'application/json'}, body: JSON.stringify({subID:subID, taskUpdate: newTask})})
+                  response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addTask`,{method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({
+                    subID:subID, 
+                    newTask: newTask, 
+                    taskTypeID:newTask["fld_tt_TaskTypeID_fk"], 
+                    farmerID: newTask["fld_fs_FarmerID_fk"], 
+                    locationID: newTask["fld_l_LocationID_fk"]
+                })})
                   if(!response.ok){
                       console.error("HTTP ERROR:")
                       throw new Error;
                   }
                 setAddNewTask(false)
+                setSaveTask(false)
                 setNewTask({})
+                setCurrentTask({})
+                setCurrentTaskID(null)
               }catch(error){
                   console.error("Error:", error)
               }
@@ -284,7 +321,7 @@ const todo = () => {
             }
         }
         fetchLocations()
-    }, [])
+    }, [subID])
 
     useEffect(()=>{
         const fetchFarmers = async () =>{
@@ -324,22 +361,23 @@ const todo = () => {
         return null;
     }
 
-    console.log(tasks)
+
     return (
-        <View style={styles.topContainer}>
-            <StatusBar backgroundColor={Colors.WHITE_SMOKE} />
-            <View style={styles.btnGridContainer}>
+        <View style={[styles.topContainer, isDarkMode && styles.darkTopContainer]}>
+            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE} />
+            <View style={[styles.btnGridContainer, isDarkMode && styles.darkGridContainer]}>
                 <Row height={80}>
                     <Col relativeColsCovered={2} alignItems='center'>
                         <AppButton title="To-Do" specifiedStyle={styles.oval} onPress={() => router.replace('/todo')} />
                     </Col>
                     <Col relativeColsCovered={2} alignItems='center'>
-                        <AppButton title="Notebook" specifiedStyle={styles.ovals} onPress={() => router.replace('/notebook')} />
+                        <AppButton title="Notebook" specifiedStyle={[styles.ovals, isDarkMode && styles.ovalsDark]} onPress={() => router.replace('/notebook')} />
                     </Col>
                 </Row>
             </View>
-            <View style={styles.container}>
+            <View style={[styles.container, isDarkMode && styles.darkContainer]}>
                 <DropDownPicker
+                    theme={isDarkMode ? 'DARK' : 'LIGHT'}
                     open={open}
                     value={value}
                     items={items}
@@ -347,6 +385,8 @@ const todo = () => {
                     setValue={setValue}
                     setItems={setItems}
                     containerStyle={styles.dropdownContainer}
+                    dropDownContainerStyle={isDarkMode && {borderColor: Colors.WHITE_SMOKE, backgroundColor: Colors.IRIDIUM}}
+                    style={isDarkMode && {borderColor: Colors.WHITE_SMOKE, backgroundColor: Colors.IRIDIUM}}
                 />
             </View>
             <View style={styles.FlatListView}>
@@ -358,15 +398,24 @@ const todo = () => {
                     renderItem={({ item }) => (
                         //<View style={styles.entryContainer }>
                         <TouchableOpacity
-                            style={[styles.taskContainer, { opacity: item[5] == 1 ? 0.6 : 1 }]}
+                            style={[styles.taskContainer, isDarkMode && styles.darkTaskContainer, { opacity: item[5] == 1 ? 0.6 : 1 }]}
                             // onPress={() => handleTaskTap(item)}
                             onLongPress={() => handleTaskLongPress(item)}
                         >
-                            <Text>Assigned Farmer ID: {item[11]}</Text>
-                            <Text>Task Type: {item[10]}</Text>
-                            <Text>Location ID: {item[12]}</Text>
-                            <Text>Comments: {item[8]}</Text>
-                            <Text>Due Date: {item[6]}</Text>
+                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Assigned Farmer ID: {item[11]}</Text>
+                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Task Type: {item[10]}</Text>
+                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Location ID: {item[12]}</Text>
+                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Comments: {item[8]}</Text>
+                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Due Date: {item[6]?.slice(0, 2)}/{item[6]?.slice(2, 4)}/{item[6]?.slice(4)}</Text>
+
+                            {/* Display the icon at the top right corner */}
+                            <View style={styles.iconContainer}>
+                                <MaterialCommunityIcons
+                                    name={item.iconName} // Assuming iconName is the key holding the icon name
+                                    size={20}
+                                    color="black" 
+                                />
+                            </View>
                         </TouchableOpacity>
                         // </View>
                     )}
@@ -380,7 +429,7 @@ const todo = () => {
                 //onClose={() => setIsSpeedDialOpen(false)}
                 transitionDuration= {0}
                 onClose={() => { setIsSpeedDialOpen(false); clearSelectedEntry(); }}
-                buttonStyle={{ backgroundColor: 'green' }}
+                buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                 style={styles.speedDial}
             >
                 <SpeedDial.Action
@@ -392,20 +441,19 @@ const todo = () => {
                         setNewTask(true)
                         setModalVisible(true);
                     }}
-                    buttonStyle={{ backgroundColor: 'green' }}
+                    buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                 />
                 <SpeedDial.Action
                     icon={{ name: 'edit', color: 'white' }}
                     title="Edit Task"
                     onPress={() => {
                         if (currentTask) {
-                            console.log(currentTask);
                             handleOpenModal(currentTask);
                         } else {
                             Alert.alert("Select a task to edit.");
                         }
                     }}
-                    buttonStyle={{ backgroundColor: 'green' }}
+                    buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                 />
                 <SpeedDial.Action
                     icon={{ name: 'check', color: 'white' }}
@@ -413,12 +461,12 @@ const todo = () => {
                     //onPress={() => handleCheckboxChange(currentTask?.TaskID)}
                     onPress={() => {
                         if (currentTask) {
-                           // handleCheckboxChange(currentTask.TaskID);
+                            handleCheckboxChange(currentTask);
                         } else {
                             Alert.alert("Select a task to mark as complete.");
                         }
                     }}
-                    buttonStyle={{ backgroundColor: 'green' }}
+                    buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                 />
                 <SpeedDial.Action
                     icon={<MaterialCommunityIcons name="export" size={24} color="white" />}
@@ -431,7 +479,7 @@ const todo = () => {
                             Alert.alert("Select a task to export.");
                         }
                     }}
-                    buttonStyle={{ backgroundColor: 'green' }}
+                    buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                 />
                 <SpeedDial.Action
                     icon={{ name: 'delete', color: 'white' }}
@@ -444,7 +492,7 @@ const todo = () => {
                             Alert.alert("Select a task to delete.");
                         }
                     }}
-                    buttonStyle={{ backgroundColor: 'green' }}
+                    buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                 />
             </SpeedDial>
 
@@ -457,8 +505,11 @@ const todo = () => {
                 locations={locations}
                 crops={crops}
                 taskTypes={taskTypes}
-                onAddNewTaskType={addNewTaskType}  // Pass addNewTaskType as prop
-                initialTaskData={currentTask}  // This should contain the current task details for editing
+                onAddNewTaskType={addNewTaskType}
+                initialTaskData={{
+                    ...currentTask,
+                    date: currentTask?.date ? `${String(currentTask.date).padStart(2, '0')}` : null
+                }}
             />
 
             <NavBar notebookSelected darkMode={isDarkMode} />
@@ -468,7 +519,7 @@ const todo = () => {
 
 const styles = StyleSheet.create({
     entryContainer: {
-        backgroundColor: 'red', // set to a tan color
+        backgroundColor: Colors.ALMOND_TAN, // set to a tan color
         marginBottom: 5,
         borderWidth: 1,
         borderRadius: 5,
@@ -476,6 +527,27 @@ const styles = StyleSheet.create({
 
 
 
+    },
+    darkEntryContainer: {
+        backgroundColor: Colors.BALTIC_SEA,
+    },
+    darkGridContainer: {
+        backgroundColor: Colors.CHARCOAL,
+    },
+    darkContainer: {
+        backgroundColor: Colors.CHARCOAL,
+    },
+    darkTaskContainer: {
+        backgroundColor: Colors.IRIDIUM,
+    },
+    taskItemText: {
+        color: Colors.CHARCOAL,
+    },
+    taskItemTextDark: {
+        color: Colors.WHITE_SMOKE,
+    },
+    darkTopContainer: {
+        backgroundColor: Colors.BALTIC_SEA
     },
     FlatListView: {
         //backgroundColor: 'green', // set to transparent
@@ -521,6 +593,11 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginBottom: 3
     },
+    iconContainer: {
+        position: 'absolute',
+        top: 10,  // Adjust top and right values as needed
+        right: 10,
+    },
     dropdownContainer: {
         width: '70%',
         marginHorizontal: '15%',
@@ -542,7 +619,7 @@ const styles = StyleSheet.create({
         flexDirection: 'vertical'
     },
     oval: {
-        backgroundColor: Colors.IRISH_GREEN,
+        backgroundColor: Colors.MALACHITE,
         width: 180,
         height: 180,
         borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
@@ -563,8 +640,12 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Domine-Regular',
     },
+    ovalsDark: {
+        backgroundColor: Colors.CHARCOAL,
+        color: Colors.WHITE_SMOKE,
+    },
     topContainer: { // overall page container
-        backgroundColor: Colors.PERIWINKLE_GRAY,
+        backgroundColor: Colors.SANTA_GRAY,
         //backgroundColor:'pink',
         flex: 1,
         alignItems: 'flex-start',
