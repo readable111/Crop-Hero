@@ -50,6 +50,8 @@ const todo = () => {
     const [taskTypes, setTaskTypes] = useState([]);
     const [editTask, setEditTask] = useState(false)
     const [saveTask, setSaveTask] = useState(false)
+    const [newTask, setNewTask] = useState({})
+    const [addNewTask, setAddNewTask] = useState(false)
     const [crops, setCrops] = useState([]);
 
     const [open, setOpen] = useState(false);
@@ -104,18 +106,18 @@ const todo = () => {
         console.log("old tasks: ", tasks)
 
         if (currentTaskID) {
+            setNewTask(taskData)
             setEditTask(true)
+            setSaveTask(true)
         } else {
             console.log(taskData)
             // Add new task
-            const newTask = { ...taskData, TaskID: newTaskID };
+            setNewTask(taskData);
+            setAddNewTasl(true)
             setSaveTask(true)            
-            newTasks = [...tasks, newTask];
             console.log("newTasks", newTasks)
         }
 
-        setTasks(newTasks);
-        setFilteredTasks(newTasks);
         //onEditTask(updatedTask);
         setModalVisible(false);  // Close the modal
         setCurrentTaskID(null);  // Reset the task ID
@@ -210,7 +212,7 @@ const todo = () => {
     useEffect(()=>{
         const fetchTasks = async () =>{
             try{
-                response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listTasks/${subID}`,{method: 'GET'})
+                response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listTasksVerbose/${subID}`,{method: 'GET'})
                 if(!response.ok){
                     console.error("HTTP ERROR:")
                     throw new Error;
@@ -226,39 +228,46 @@ const todo = () => {
 
     useEffect(() =>{
         const editTasks = async () =>{
-            if(editTask){
+            if(editTask & saveTask){
               try{
-                  response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/editTask`,{method: 'GET', headers: {'Content-Type':'application/json'}, body: JSON.stringify({subID:subID, taskUpdate: currentTask, taskID: currentTaskID})})
+
+                    console.log("Task to edit: \n\n", newTask)
+                  response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/editTask`,{method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({subID:subID, taskUpdate: newTask, taskID: newTask["fld_t_TaskID_pk"]})})
                   if(!response.ok){
                       console.error("HTTP ERROR:")
                       throw new Error;
                   }
+
+                setEditTask(false)
+                setSaveTask(false)
               }catch(error){
                   console.error("Error:", error)
               }
         }
     }
         editTasks()
-        setEditTask(false)
-    }, [editTask])
+    }, [editTask, saveTask])
 
     useEffect(() =>{
         const saveTasks = async () =>{
-            if(saveTask){
+            if(saveTask & addNewTask){
               try{
-                  response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addTask`,{method: 'GET', headers: {'Content-Type':'application/json'}, body: JSON.stringify({subID:subID, taskUpdate: currentTask})})
+                  response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addTask`,{method: 'GET', headers: {'Content-Type':'application/json'}, body: JSON.stringify({subID:subID, taskUpdate: newTask})})
                   if(!response.ok){
                       console.error("HTTP ERROR:")
                       throw new Error;
                   }
+                setAddNewTask(false)
+                setNewTask({})
               }catch(error){
                   console.error("Error:", error)
               }
         }
     }
         saveTasks()
-        setEditTask(false)
-    }, [saveTask])
+    }, [saveTask, newTask])
+
+
 
     useEffect(()=>{
         const fetchLocations = async () =>{
@@ -315,7 +324,7 @@ const todo = () => {
         return null;
     }
 
-
+    console.log(tasks)
     return (
         <View style={styles.topContainer}>
             <StatusBar backgroundColor={Colors.WHITE_SMOKE} />
@@ -353,9 +362,9 @@ const todo = () => {
                             // onPress={() => handleTaskTap(item)}
                             onLongPress={() => handleTaskLongPress(item)}
                         >
-                            <Text>Assigned Farmer ID: {item[2]}</Text>
+                            <Text>Assigned Farmer ID: {item[11]}</Text>
                             <Text>Task Type: {item[10]}</Text>
-                            <Text>Location ID: {item[3]}</Text>
+                            <Text>Location ID: {item[12]}</Text>
                             <Text>Comments: {item[8]}</Text>
                             <Text>Due Date: {item[6]}</Text>
                         </TouchableOpacity>
@@ -380,6 +389,7 @@ const todo = () => {
                     onPress={() => {
                         setCurrentTask(null); // Reset current task
                         setCurrentTaskID(null); // Reset currentTaskID to signal new task creation
+                        setNewTask(true)
                         setModalVisible(true);
                     }}
                     buttonStyle={{ backgroundColor: 'green' }}
@@ -448,7 +458,7 @@ const todo = () => {
                 crops={crops}
                 taskTypes={taskTypes}
                 onAddNewTaskType={addNewTaskType}  // Pass addNewTaskType as prop
-                initialTaskDataaskData={currentTask}  // This should contain the current task details for editing
+                initialTaskData={currentTask}  // This should contain the current task details for editing
             />
 
             <NavBar notebookSelected darkMode={isDarkMode} />

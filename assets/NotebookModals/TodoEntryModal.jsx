@@ -25,43 +25,45 @@ const TodoEntryModal = ({
     crops,
     taskTypes,
     icons,
-    onAddNewTaskType
+    onAddNewTaskType,
+    
 }) => {
     const [taskData, setTaskData] = useState({
-        TaskID: taskID || null,
-        Comments: '',
-        DueDate: '',
-        AssignedFarmerID: '',
-        LocationID: '',
+        "fld_t_TaskID_pk": taskID || null,
+        "fld_t_Comments": '',
+        "fld_t_DateDue": '',
+        "fld_fs_FarmerID_fk": '',
+        "fld_l_LocationID_fk": '',
         CropID: '',
-        TaskType: '',
-        NewTaskType: '',
-        TaskIconPath: '',
-        IsCompleted: false,
-        CompletedDate: '',
+        "fld_tt_TaskTypeID_fk": '',
+        NewTask: '',
+        "fld_t_TaskIconPath": '',
+        "fld_t_IsCompleted": false,
+        "fld_t_DateCompleted": '',
     });
-
+    
     useEffect(() => {
         if (!initialTaskData) return; // Guard clause for initialTaskData  
         // Set task data once when the modal opens
         setTaskData({
-            TaskID: initialTaskData[0] || taskID,
-            Comments: initialTaskData[8] || '',
-            DueDate: initialTaskData[6] || '',
-            AssignedFarmerID: initialTaskData[2] || '',
-            LocationID: initialTaskData[3]|| '',
+           "fld_t_TaskID_pk": initialTaskData[0] || taskID,
+            "fld_t_Comments": initialTaskData[8] || '',
+           "fld_t_DateDue": initialTaskData[6] || '',
+            "fld_fs_FarmerID_fk": initialTaskData[2] || '',
+            "fld_l_LocationID_fk": initialTaskData[3]|| '',
             CropID: '' || '',
-            TaskType: initialTaskData[4] || '',
+           "fld_tt_TaskTypeID_fk": initialTaskData[4] || '',
             NewTaskType: '',
-            TaskIconPath: initialTaskData[9] || '',
-            IsCompleted: initialTaskData[5] || 0b0,
-            CompletedDate: initialTaskData[7] || '',
+            "fld_t_TaskIconPath": initialTaskData[9] || '',
+            "fld_t_IsCompleted": initialTaskData[5] || 0b0,
+            "fld_t_DateCompleted": initialTaskData[7] || '',
         });
     }, [visible]); // Only run when `visible` changes
-
+    console.log("Current Task Data: \n\n",taskData)
+    console.log(initialTaskData)
     const handleDateChange = (type, value) => {
         // Splitting DueDate to allow month, day, and year selection
-        const dateParts = taskData.DueDate.split(' ');
+        const dateParts = taskData["fld_t_DateDue"].split(' ');
         let newDate = '';
 
         if (type === 'month') {
@@ -72,7 +74,7 @@ const TodoEntryModal = ({
             newDate = `${dateParts[0] || ''} ${dateParts[1] || ''} ${value}`;
         }
 
-        setTaskData(prevData => ({ ...prevData, DueDate: newDate.trim() }));
+        setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": newDate.trim() }));
     };
 
     const handleChange = (name, value) => {
@@ -108,17 +110,17 @@ const TodoEntryModal = ({
 
     const resetForm = () => {
         setTaskData({
-            TaskID: null,
-            Comments: '',
-            DueDate: '',
-            AssignedFarmerID: '',
-            LocationID: '',
-            CropID: '',
-            TaskType: '',
-            NewTaskType: '',
-            TaskIconPath: '',
-            IsCompleted: false,
-            CompletedDate: '',
+        "fld_t_TaskID_pk": null,
+        "fld_t_Comments": '',
+        "fld_t_DateDue": '',
+        "fld_fs_FarmerID_fk": '',
+        "fld_l_LocationID_fk": '',
+        CropID: '',
+        "fld_tt_TaskTypeID_fk": '',
+        NewTask: '',
+        "fld_t_TaskIconPath": '',
+        "fld_t_IsCompleted": false,
+        "fld_t_DateCompleted": 0b0,
         });
     };
        return (
@@ -130,7 +132,7 @@ const TodoEntryModal = ({
                     <Text style={styles.label}>Assigned Farmer</Text>
                     <Picker
                         selectedValue={taskData.AssignedFarmerID}
-                        onValueChange={(itemValue) => handleChange('AssignedFarmerID', itemValue)}
+                        onValueChange={(itemValue) => handleChange("fld_fs_FarmerID_fk", itemValue)}
                         style={styles.picker}
                     >
                         {farmers.length > 0 ? (
@@ -148,7 +150,7 @@ const TodoEntryModal = ({
                     <Text style={styles.label}>Location</Text>
                     <Picker
                         selectedValue={taskData.LocationID}
-                        onValueChange={(itemValue) => handleChange('LocationID', itemValue)}
+                        onValueChange={(itemValue) => handleChange("fld_l_LocationID_fk", itemValue)}
                         style={styles.picker}
                     >
                         {locations.length > 0 ? (
@@ -186,12 +188,12 @@ const TodoEntryModal = ({
                     <Text style={styles.label}>Task Type</Text>
                     <Picker
                         selectedValue={taskData.TaskType}
-                        onValueChange={(itemValue) => handleChange('TaskType', itemValue)}
+                        onValueChange={(itemValue) => handleChange("fld_tt_TaskTypeID_fk", itemValue)}
                         style={styles.picker}
                     >
                         {taskTypes.length > 0 ? (
                             taskTypes.map((taskType) => (
-                                <Picker.Item key={taskType[0]} label={taskType[3]} value={taskType[3]} />
+                                <Picker.Item key={taskType[0]} label={taskType[3]} value={taskType[0]} />
                             ))
                         ) : (
                             <Picker.Item label="No task types available" value="" />
@@ -211,7 +213,7 @@ const TodoEntryModal = ({
                     <Text style={styles.label}>Due Date</Text> 
                     <View style={styles.dateRow}>
                         <Picker
-                            selectedValue={taskData.DueDate.split(' ')[0] || 'January'}
+                            selectedValue={taskData["fld_t_DateDue"].split(' ')[0] || 'January'}
                             onValueChange={(itemValue) => handleDateChange('month', itemValue)}
                             style={styles.datePicker}
                             itemStyle={{backgroundColor: Colors.IRISH_GREEN}}
@@ -221,7 +223,7 @@ const TodoEntryModal = ({
                             ))}
                         </Picker>
                         <Picker
-                            selectedValue={taskData.DueDate.split(' ')[1] || '1'}
+                            selectedValue={taskData["fld_t_DateDue"].split(' ')[1] || '1'}
                             onValueChange={(itemValue) => handleDateChange('day', itemValue)}
                             style={styles.datePicker}
                         >
@@ -230,7 +232,7 @@ const TodoEntryModal = ({
                             ))}
                         </Picker>
                         <Picker
-                            selectedValue={taskData.DueDate.split(' ')[2] || `${new Date().getFullYear()}`}
+                            selectedValue={taskData["fld_t_DateDue"].split(' ')[2] || `${new Date().getFullYear()}`}
                             onValueChange={(itemValue) => handleDateChange('year', itemValue)}
                             style={styles.datePicker}
                         >
@@ -248,7 +250,7 @@ const TodoEntryModal = ({
                         style={styles.input}
                         placeholder="Enter comments"
                         value={taskData.Comments}
-                        onChangeText={(text) => handleChange('Comments', text)}
+                        onChangeText={(text) => handleChange("fld_t_Comments", text)}
                         multiline
                     />
                 </View>
