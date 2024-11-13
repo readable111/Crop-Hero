@@ -30,7 +30,7 @@ const todayDayLookup = {
 	"Sunday": "Saturday",
 }
 
-/*
+
 //Mock data as an example
 const test_data = [
 	{
@@ -57,8 +57,8 @@ const test_data = [
 	  line2Label: 'Soil Moisture',
 	  line2: ' 0.2wfv',
 	}
-];*/
-const test_data = [
+];
+/*const test_data = [
 	{
 	  key: '1',
 	  image: icons.hourglass_green,
@@ -83,7 +83,7 @@ const test_data = [
 	  line2Label: 'Soil Moisture',
 	  line2: 'Loading',
 	}
-];
+];*/
 
 const Home = () =>{ 
 	let defaultZip = "76131"
@@ -291,11 +291,19 @@ console.log(cropData)
 		return null;
 	}	
 
-
-
-  
-	// Fetch initial crop data
-
+	function parseDate(dateString) {
+		const [month, day, year] = dateString.trim().split("/");
+		return new Date(year, month - 1, day); //month is zero-based
+	}
+	
+	/*let twentyNewestCrops = cropData
+		.slice() // Create a shallow copy to avoid modifying the original array
+		.sort((a, b) => {
+			const dateA = parseDate(a.datePlanted);
+			const dateB = parseDate(b.datePlanted);
+			return dateB - dateA;
+		})
+		.slice(0, 20); // Take only the top 20 items*/
 
 	return(
 	<View style = {[styles.container, isDarkMode && styles.containerDark]}>	
