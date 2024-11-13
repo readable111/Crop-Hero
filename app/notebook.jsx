@@ -92,6 +92,7 @@ const Notebook = () => {
             entry.EntryID = entries.length > 0 ? Math.max(...entries.map(e => e.EntryID)) + 1 : 1;
             setEntries(prevEntries => [...prevEntries, entry]);
         }
+        setOpen(false)
     };
 
     const openModalForEdit = (entry) => {
