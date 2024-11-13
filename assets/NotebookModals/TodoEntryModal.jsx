@@ -44,7 +44,7 @@ const TodoEntryModal = ({
         "fld_t_DateCompleted": '',
     });
 
-    const [isDark, setIsDarkMode] = useState(false);
+    const [isDark, setIsDark] = useState(false);
     useEffect(() => {
         // declare the async data fetching function
         const fetchDarkModeSetting = async () => {
@@ -62,7 +62,7 @@ const TodoEntryModal = ({
                 }
                 console.log("colorScheme: " + result)
             }
-            setIsDarkMode(result)
+            setIsDark(result)
         }
 
         // call the function
@@ -184,14 +184,15 @@ const TodoEntryModal = ({
                     <Picker
                         selectedValue={taskData["fld_fs_FarmerID_fk"]}
                         onValueChange={(itemValue) => handleChange("fld_fs_FarmerID_fk", itemValue)}
-                        style={styles.picker}
+                        style={isDark ? styles.darkPicker : styles.picker}
+                        dropdownIconColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
                     >
                         {farmers.length > 0 ? (
                             farmers.map((farmer) => (
-                                <Picker.Item key={farmer[0]} label={farmer[3]} value={farmer[0]} />
+                                <Picker.Item style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}} key={farmer[0]} label={farmer[3]} value={farmer[0]} />
                             ))
                         ) : (
-                            <Picker.Item label="No farmers available" value="" />
+                            <Picker.Item style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}} label="No farmers available" value="" />
                         )}
                     </Picker>
                 </View>
@@ -202,15 +203,16 @@ const TodoEntryModal = ({
                     <Picker
                         selectedValue={taskData["fld_l_LocationID_fk"]}
                         onValueChange={(itemValue) => handleChange("fld_l_LocationID_fk", itemValue)}
-                        style={styles.picker}
+                        style={isDark ? styles.darkPicker : styles.picker}
+                        dropdownIconColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
                     >
                         {locations.length > 0 ? (
                             locations.map((location) => (
-                                <Picker.Item key={location[0]} label={location[4]} value={location[0]} />
+                                <Picker.Item style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}} key={location[0]} label={location[4]} value={location[0]} />
                             )
                         )
                         ) : (
-                            <Picker.Item label="No locations available" value="" />
+                            <Picker.Item style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}} label="No locations available" value="" />
                         )}
                     </Picker>
                 </View>
@@ -221,14 +223,15 @@ const TodoEntryModal = ({
                     <Picker
                         selectedValue={taskData.CropID}
                         onValueChange={(itemValue) => handleChange('CropID', itemValue)}
-                        style={styles.picker}
+                        style={isDark ? styles.darkPicker : styles.picker}
+                        dropdownIconColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
                     >
                         {crops.length > 0 ? (
                             crops.map((crop) => (
-                                <Picker.Item key={crop.id} label={crop.name} value={crop.id} />
+                                <Picker.Item style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}} key={crop.id} label={crop.name} value={crop.id} />
                             ))
                         ) : (
-                            <Picker.Item label="No crops available" value="" />
+                            <Picker.Item style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}} label="No crops available" value="" />
                         )}
                     </Picker>
                 </View>
@@ -239,14 +242,15 @@ const TodoEntryModal = ({
                     <Picker
                         selectedValue={taskData["fld_tt_TaskTypeID_fk"]}
                         onValueChange={(itemValue) => handleChange("fld_tt_TaskTypeID_fk", itemValue)}
-                        style={styles.picker}
+                        style={isDark ? styles.darkPicker : styles.picker}
+                        dropdownIconColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
                     >
                         {taskTypes.length > 0 ? (
                             taskTypes.map((taskType) => (
-                                <Picker.Item key={taskType[0]} label={taskType[3]} value={taskType[0]} />
+                                <Picker.Item style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}} key={taskType[0]} label={taskType[3]} value={taskType[0]} />
                             ))
                         ) : (
-                            <Picker.Item label="No task types available" value="" />
+                            <Picker.Item style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}} label="No task types available" value="" />
                         )}
                     </Picker>
                     <TextInput
@@ -376,6 +380,10 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 5,
         backgroundColor: '#fff',
+    },
+    darkPicker: {
+        backgroundColor: Colors.IRIDIUM,
+        color: Colors.WHITE_SMOKE,
     },
     dateRow: {
         flexDirection: 'row',
