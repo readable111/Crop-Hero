@@ -75,8 +75,9 @@ const addCrops = () => {
         const [newOption, setNewOption] = useState('');
         const [selectedType, setSelectedType] = useState()
         const [addLocationAdded, setLocationAdded] = useState(false)
-        const [addTypeAdded, setTypeAdded] = useState(false)
+        const [addTypeAdded, setAddTypeAdded] = useState(false)
         const [locationNameOption, setLocationNameOption] = useState()
+        const [typeNameOption, setTypeNameOption] = useState()
         const handleOpenDropdown = (id) => {
                 setOpen(open === id ? null : id)
         }
@@ -90,11 +91,10 @@ const addCrops = () => {
         }
         
         const handleNewType = () => {
-                if(newOption.trim() !== '')
+                if(typeNameOption.trim() !== '')
                 {
-                        setType([...types, {label: newOption, value: newOption.toLowerCase().replace(/\+/g, '')}])
+                        setAddTypeAdded(true)
                         setTypeModalVisible(false);
-                        setNewOption('');
                 }
         }
 
@@ -254,6 +254,8 @@ const addCrops = () => {
                 }
                 fetchLocations()
         },[addLocationAdded])
+
+
         useEffect(()=>{
                 const fetchMediums = async () =>{
                         try{
@@ -279,6 +281,7 @@ const addCrops = () => {
                                              throw new Error(`HTTP error! Status: ${response.status}`);
                                         }
                                         setLocationNameOption('')
+                                        setAddLocationAdded(false)
                                 }catch(error){
                                         console.error("Error:", error)
                                 }
@@ -286,6 +289,24 @@ const addCrops = () => {
                 }
                 addLocation()
         }, [addLocationAdded])
+
+        useEffect(()=>{
+                const addType = async () =>{
+                        if(addTypeAdded){
+                                try{
+                                        const response = await fetch('https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addCropType',{method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({cropData: typeNameOption, farmID: 1, subID: "sub123"})})
+                                        if (!response.ok) {
+                                             throw new Error(`HTTP error! Status: ${response.status}`);
+                                        }
+                                        setTypeNameOption('')
+                                        setAddTypeAdded(false)
+                                }catch(error){
+                                        console.error("Error:", error)
+                                }
+                        }
+                }
+                addType()
+        }, [addTypeAdded])
 
         useEffect(()=>{
                 const fetchCropTypes = async () =>{
@@ -301,7 +322,7 @@ const addCrops = () => {
                         }
                 }
                 fetchCropTypes()
-        },[])
+        },[addTypeAdded])
 
         const mutableLocations = useMemo(() => {
                 return locations.map((location) => ({
@@ -389,7 +410,7 @@ const addCrops = () => {
                                 <TouchableOpacity style={[styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
                                         <Text style={styles.locationText}>Add Location</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setModalVisible(true)}>
+                                <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setTypeModalVisible(true)}>
                                         <Text style={styles.typeText}>Add Type</Text>
                                 </TouchableOpacity>
                                 
@@ -434,12 +455,12 @@ const addCrops = () => {
                         >  
                                 <View style={styles.modalContainer}>
                                         <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
-                                                <Text style={styles.modalTitle}>Enter a New Location</Text>
+                                                <Text style={styles.modalTitle}>Enter a New Medium</Text>
                                                 <Input
                                                         style={styles.input}
                                                         placeholder="Type new option"
-                                                        value={newOption}
-                                                        onChangeText={setNewOption}
+                                                        value={typeNameOption}
+                                                        onChangeText={setTypeNameOption}
                                                 />
                                                 <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
                                                         <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
