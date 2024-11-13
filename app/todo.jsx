@@ -259,7 +259,7 @@ const todo = () => {
         const saveTasks = async () =>{
             if(saveTask & addNewTask){
               try{
-                  response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addTask`,{method: 'GET', headers: {'Content-Type':'application/json'}, body: JSON.stringify({subID:subID, taskUpdate: newTask})})
+                  response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addTask`,{method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({subID:subID, taskUpdate: newTask})})
                   if(!response.ok){
                       console.error("HTTP ERROR:")
                       throw new Error;
@@ -291,7 +291,7 @@ const todo = () => {
             }
         }
         fetchLocations()
-    }, [])
+    }, [subID])
 
     useEffect(()=>{
         const fetchFarmers = async () =>{

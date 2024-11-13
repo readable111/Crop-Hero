@@ -87,7 +87,14 @@ const TodoEntryModal = ({
         const newDate = `${year}-${month}-${day}`;
         setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": newDate }));
     };
-                                                                     
+    
+    
+    const handleChange = (name, value) => {
+        console.log(name, value)
+        setTaskData(prevData => ({ ...prevData, [name]: value }));
+    };
+
+    console.log("Locations to render: \n\n",locations)     
 
     const handleAddTaskType = () => {
         const newTaskType = taskData.NewTaskType.trim();
@@ -138,7 +145,7 @@ const TodoEntryModal = ({
                 <View style={styles.listContainer}>
                     <Text style={styles.label}>Assigned Farmer</Text>
                     <Picker
-                        selectedValue={taskData.AssignedFarmerID}
+                        selectedValue={taskData["fld_fs_FarmerID_fk"]}
                         onValueChange={(itemValue) => handleChange("fld_fs_FarmerID_fk", itemValue)}
                         style={styles.picker}
                     >
@@ -156,16 +163,15 @@ const TodoEntryModal = ({
                 <View style={styles.listContainer}>
                     <Text style={styles.label}>Location</Text>
                     <Picker
-                        selectedValue={taskData.LocationID}
+                        selectedValue={taskData["fld_l_LocationID_fk"]}
                         onValueChange={(itemValue) => handleChange("fld_l_LocationID_fk", itemValue)}
                         style={styles.picker}
                     >
                         {locations.length > 0 ? (
-                            locations.map((location) => {(
+                            locations.map((location) => (
                                 <Picker.Item key={location[0]} label={location[4]} value={location[0]} />
                             )
-                            console.log(location)
-                        })
+                        )
                         ) : (
                             <Picker.Item label="No locations available" value="" />
                         )}
@@ -194,7 +200,7 @@ const TodoEntryModal = ({
                 <View style={styles.listContainer}>
                     <Text style={styles.label}>Task Type</Text>
                     <Picker
-                        selectedValue={taskData.TaskType}
+                        selectedValue={taskData["fld_tt_TaskTypeID_fk"]}
                         onValueChange={(itemValue) => handleChange("fld_tt_TaskTypeID_fk", itemValue)}
                         style={styles.picker}
                     >
