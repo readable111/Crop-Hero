@@ -269,29 +269,29 @@ const TodoEntryModal = ({
                         <Picker
                             selectedValue={taskData["fld_t_DateDue"].split(' ')[0] || 'January'}
                             onValueChange={(itemValue) => handleDateChange('month', itemValue)}
-                            style={styles.datePicker}
+                            style={[styles.datePicker, isDark && styles.datePickerDark]}
                             itemStyle={{backgroundColor: Colors.IRISH_GREEN}}
                         >
-                            {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((month) => (
-                                <Picker.Item key={month} label={month} value={month} style={{fontSize: 16}}/>
+                            {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((month) => (
+                                <Picker.Item key={month} label={month} value={month} style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}}/>
                             ))}
                         </Picker>
                         <Picker
                             selectedValue={taskData["fld_t_DateDue"].split(' ')[1] || '1'}
                             onValueChange={(itemValue) => handleDateChange('day', itemValue)}
-                            style={styles.datePicker}
+                            style={[styles.datePicker, isDark && styles.datePickerDark]}
                         >
                             {[...Array(31)].map((_, i) => (
-                                <Picker.Item key={i} label={`${i + 1}`} value={`${i + 1}`} style={{fontSize: 16}}/>
+                                <Picker.Item key={i} label={`${i + 1}`} value={`${i + 1}`} style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}}/>
                             ))}
                         </Picker>
                         <Picker
                             selectedValue={taskData["fld_t_DateDue"].split(' ')[2] || `${new Date().getFullYear()}`}
                             onValueChange={(itemValue) => handleDateChange('year', itemValue)}
-                            style={styles.datePicker}
+                            style={[styles.datePicker, isDark && styles.datePickerDark]}
                         >
                             {[...Array(21)].map((_, i) => (
-                                <Picker.Item key={i} label={`${new Date().getFullYear() + i}`} value={`${new Date().getFullYear() + i}`} style={{fontSize: 16}}/>
+                                <Picker.Item key={i} label={`${new Date().getFullYear() + i}`} value={`${new Date().getFullYear() + i}`} style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}}/>
                             ))}
                         </Picker>
                     </View>
@@ -379,7 +379,8 @@ const styles = StyleSheet.create({
     picker: {
         height: 50,
         borderRadius: 5,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.WHITE_SMOKE,
+        color: Colors.ALMOST_BLACK,
     },
     darkPicker: {
         backgroundColor: Colors.IRIDIUM,
@@ -392,8 +393,13 @@ const styles = StyleSheet.create({
     datePicker: {
         flex: 1,
         marginRight: 10,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.WHITE_SMOKE,
+        color: Colors.ALMOST_BLACK,
         height: 50,
+    },
+    datePickerDark: {
+        backgroundColor: Colors.IRIDIUM,
+        color: Colors.WHITE_SMOKE,
     },
     iconPickerContainer: {
         flexDirection: 'row',
