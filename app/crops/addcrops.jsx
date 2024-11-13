@@ -75,6 +75,7 @@ const addCrops = () => {
         const [newOption, setNewOption] = useState('');
         const [selectedType, setSelectedType] = useState()
         const [addLocationAdded, setLocationAdded] = useState(false)
+        const [selectedMedium, setSelectedMedium] = useState(false)
         const [addTypeAdded, setAddTypeAdded] = useState(false)
         const [locationNameOption, setLocationNameOption] = useState()
         const [typeNameOption, setTypeNameOption] = useState()
@@ -111,14 +112,14 @@ const addCrops = () => {
         {
                 setCropData({
                         ...cropData,
-                        "fld_l_MediumID_fk": value
+                        "fld_m_MediumID_fk": value
                 })
         }
 
         const handleTypeChange = (value) =>{
                 setCropData({
                         ...cropData,
-                        "fld_m_MediumID_fk": value
+                        "fld_ct_CropTypes": value
                 })
         }
 
@@ -519,7 +520,7 @@ const addCrops = () => {
                                         value={selectedLocation}
                                         setValue={setSelectedLocation}
                                         items={mutableLocations}
-                                        onChangeValue = {(selectedLocation) => handleChange('fld_l_LocationID_fk', selectedLocation)}
+                                        onChangeValue = {(selectedLocation) => handleLocationChange(selectedLocation)}
                                         placeholder="Location?"
                                         listMode='SCROLLVIEW'
 					dropDownDirection='BOTTOM'
@@ -630,7 +631,7 @@ const addCrops = () => {
                                         value={selectedType}
                                         setValue={setSelectedType}
                                         items={mutableCropTypes}
-                                        onChangeValue={handleTypeChange}
+                                        onChangeValue={(selectedType)=> handleTypeChange(selectedType)}
                                         placeholder="Type"
                                         listMode='SCROLLVIEW'
 					dropDownDirection='TOP'
@@ -661,10 +662,10 @@ const addCrops = () => {
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'mediums'}
                                         setOpen={() => handleOpenDropdown('mediums')}
-                                        value={selectedVisible}
-                                        setValue={setSelectedVisible}
+                                        value={selectedMedium}
+                                        setValue={setSelectedMedium}
                                         items={mutableMediums}
-                                        onChangeValue={handleMediumChange}
+                                        onChangeValue={selectedMedium=>handleMediumChange(selectedMedium)}
                                         placeholder="Medium"
                                         listMode='SCROLLVIEW'
 					dropDownDirection='TOP'
