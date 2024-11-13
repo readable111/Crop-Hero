@@ -58,6 +58,7 @@ const AddCrops = () => {
         const [selectedLocation, setSelectedLocation] = useState(cropData.location)
         const [selectedActive, setSelectedActive] = useState(cropData.active)
         const [selectedVisible, setSelectedVisible] = useState(cropData.visible)
+        const [selectedMedium, setSelectedMedium] = useState(cropData.medium)
         const [items, setItems] = useState([
                 {label: 'Yes', value: 'Yes' },
                 {label: 'No', value: 'No'}
@@ -67,7 +68,7 @@ const AddCrops = () => {
                 {label: 'Nocturnal', value: 'Nocturnal'},
         ])
         const [locations, setLocation] = useState([
-                {label: 'Mound 1', value: 'Mound1' },
+                {label: 'Mound 1', value: 'Mound 1' },
                 {label: 'Greenhouse 2', value: 'Greenhouse 2'}
         ])
         const [modalVisible, setModalVisible] = useState(false);
@@ -255,13 +256,19 @@ const AddCrops = () => {
                                 <View style={styles.back}>
                                         <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                 </View>
+                                <View style={{flexDirection: 'row', marginRight: '20%', marginLeft: '2%'}}>
+                                        <TouchableOpacity style={[styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
+                                                <Text style={styles.locationText}>Location</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setModalVisible(true)}>
+                                                <Text style={styles.typeText}>Type</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={[styles.medContainer, isDark && styles.medContainerDark]} onPress = {() => setModalVisible(true)}>
+                                                <Text style={styles.medText}>Medium</Text>
+                                        </TouchableOpacity>
+                                </View>
                                 
-                                <TouchableOpacity style={[styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
-                                        <Text style={styles.locationText}>Add Location</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setModalVisible(true)}>
-                                        <Text style={styles.typeText}>Add Type</Text>
-                                </TouchableOpacity>
+                                
                                 
                                 <View style={styles.save}>
                                         <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
@@ -487,13 +494,30 @@ const AddCrops = () => {
 
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Medium</Text>
-                                <Input
-                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        placeholder = 'Medium'
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
-                                        maxLength={64}
-                                        onChangeText={(text) => handleChange('medium', text)}
-
+                                <DropDownPicker
+                                        theme={isDark ? 'DARK' : 'LIGHT'}
+                                        open={open === 'medium'}
+                                        setOpen={() => handleOpenDropdown('medium')}
+                                        value={selectedMedium}
+                                        setValue={setSelectedMedium}
+                                        items={items}
+                                        onChangeValue={(selectedMedium) => handleChange('medium', selectedMedium)}
+                                        placeholder="Insert Medium"
+                                        listMode='SCROLLVIEW'
+					dropDownDirection='BOTTOM'
+                                        scrollViewProps={{
+					        nestedScrollEnabled: true
+					}}
+                                        props={{
+						activeOpacity: 1,
+					}}
+                                        containerStyle={{
+						width: '94%',
+						zIndex: 40,
+						marginBottom: 40,
+					}}
+                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
                                 <Input
@@ -614,9 +638,10 @@ const styles = StyleSheet.create({
                 backgroundColor: Colors.MALACHITE,
                 justifyContent: "center",
                 alignItems: "center",
+                marginRight: '5%'
         },
         back:{
-                marginLeft: '5%',
+                marginLeft: '2%',
                 width: 40,
                 height: 40,
                 justifyContent: "center",
@@ -632,7 +657,7 @@ const styles = StyleSheet.create({
                 borderRadius: 20,
                 borderColor: '#20232a',
                 borderWidth: 1,
-                marginRight: '5%'
+                marginRight: '1%'
         },
         locationContainerDark:{
                 backgroundColor: Colors.LICHEN
@@ -651,12 +676,31 @@ const styles = StyleSheet.create({
                 borderRadius: 20,
                 borderColor: '#20232a',
                 borderWidth: 1,
-                marginRight: '40%',
+                marginRight: '1%'
+        },
+        typeText:{
+                fontFamily: 'Domine-Medium',
+                fontSize: 20
         },
         typeContainerDark:{
                 backgroundColor: Colors.LICHEN
         },
-        typeText:{
+        medContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: 11,
+                paddingHorizontal: 10,
+                backgroundColor: Colors.SCOTCH_MIST_TAN, // Light background color around the toggle
+                borderRadius: 20,
+                borderColor: '#20232a',
+                borderWidth: 1,
+                marginRight: '1%'
+        },
+        medContainerDark:{
+                backgroundColor: Colors.LICHEN
+        },
+        medText:{
                 fontFamily: 'Domine-Medium',
                 fontSize: 20
         },
@@ -728,8 +772,10 @@ const styles = StyleSheet.create({
         topContainer: {
                 flexDirection: "row",
                 alignItems: "center",
+                justifyContent: 'flex-end',
                 marginTop: '1%',
-                marginBottom: '1%'
+                marginBottom: '1%',
+                marginLeft: '1%'
         },
         spaceBetween:
         {
