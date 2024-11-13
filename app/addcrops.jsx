@@ -520,12 +520,12 @@ const AddCrops = () => {
                                         dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
+                                <Text style={[styles.label, styles.labelDark, styles.labelDisabled]}>HRF Number</Text>
                                 <Input
-                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
+                                        inputContainerStyle = {[styles.textBox, styles.disabledTextBox]}
                                         value={cropData.hrfNum.toString()}
                                         editable={false}
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
+                                        style={[styles.inputText, styles.inputTextDark]}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Yield</Text>
                                 <Input
@@ -719,6 +719,9 @@ const styles = StyleSheet.create({
                 borderRadius: 12,
                 zIndex: 1,
         },
+        disabledTextBox: {
+                backgroundColor: '#95989c',
+        },
         textBoxDark:{
                 backgroundColor: Colors.IRIDIUM,
                 borderColor: Colors.WHITE_SMOKE,
@@ -741,6 +744,9 @@ const styles = StyleSheet.create({
 		borderColor: 'white',
                 paddingLeft: 5,
                 paddingRight: 5,
+        },
+        labelDisabled: {
+                backgroundColor: '#95989c',
         },
         dropdownLabel:{
 		zIndex: 30,
