@@ -408,7 +408,7 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         alignContent: 'flex-start',
         width: '100%',
-        height: '7%', 
+        height: '9%', 
         marginTop: 5,
         marginBotton: 3,
         alignSelf: 'center'
@@ -430,7 +430,7 @@ const styles = StyleSheet.create({
        // height: '10%'
     },
     picker: { // two drop down elements overall contained in filterContainer
-        height: '20%',
+        height: '80%',
         width: 200,
         borderColor: 'black',
         borderWidth: 1,
