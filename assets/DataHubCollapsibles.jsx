@@ -6,13 +6,16 @@
  * Transferred stuff from main file here for testing purposes
  ***/
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Platform, Text, StyleSheet, StatusBar, ScrollView, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import Colors from './Color.js';
 import NavBar from './NavBar.jsx';
 import {SearchInput} from './SearchFeature.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ViewShot from 'react-native-view-shot';
+import { PermissionsAndroid } from 'react-native';
+import CameraRoll from '@react-native-community/cameraroll';
 
 const defaultDataset = {
   "labels": ["D", "E", "F", "A", "U", "L", "T"],
@@ -39,6 +42,44 @@ const screenWidth = Dimensions.get("window").width;
 
 export const CollapsibleSection = ({ title, chartData, chartConfig, isDark }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const viewShotRef = useRef(null); // Reference for the ViewShot
+
+const exportGraph = async () => {
+  console.log('Export button pressed');
+  try {
+    if (Platform.OS === 'android') {
+      const permission = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Storage Permission Required',
+          message: 'This app needs access to your storage to save images',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        }
+      );
+
+      if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
+        alert('Permission to access storage was denied');
+        return;
+      }
+    }
+
+    const uri = await viewShotRef.current.capture();
+    if (!uri) {
+      console.error("Failed to capture URI");
+      return;
+    }
+    console.log('Captured URI:', uri);
+    await CameraRoll.save(uri, { type: 'photo', album: 'YourAppCharts' });
+    alert('Chart saved to library!');
+  } catch (error) {
+    console.error("Error saving image:", error);
+    alert('Failed to save chart');
+  }
+};
+
+
   return (
     <View style={[styles.collapsibleContainer, isDark && styles.collapsibleContainerDark]}>
       <TouchableOpacity onPress={() => setIsOpen(!isOpen)} style={[styles.header, isDark && styles.headerDark]}>
@@ -48,8 +89,10 @@ export const CollapsibleSection = ({ title, chartData, chartConfig, isDark }) =>
 
       {isOpen && chartData && (
         <View style={styles.chartContainer}>
-          <ChartComponent chartData={chartData} chartConfig={chartConfig} isDark={isDark} />
-          <TouchableOpacity style={[styles.exportButton, isDark && styles.exportButtonDark]}>
+          <ViewShot ref={viewShotRef} options={{ format: "png", quality: 0.9 }}>
+            <ChartComponent chartData={chartData} chartConfig={chartConfig} isDark={isDark} />
+          </ViewShot>
+          <TouchableOpacity onPress={exportGraph} style={[styles.exportButton, isDark && styles.exportButtonDark]}>
             <Text style={[styles.exportButtonText, isDark && styles.exportButtonTextDark]}>Export Data</Text>
           </TouchableOpacity>
         </View>
@@ -72,7 +115,7 @@ const ChartComponent = ({ chartData, isDark }) => {
       strokeWidth: "2",
       stroke: Colors.MALACHITE,
     },
-    propsForLabels: {fontSize: 12,},
+    propsForLabels: { fontSize: 12 },
   };
 
   const lightChartConfig = {
@@ -88,14 +131,17 @@ const ChartComponent = ({ chartData, isDark }) => {
       strokeWidth: "2",
       stroke: Colors.IRIDIUM,
     },
-    propsForLabels: {fontSize: 10,},
+    propsForLabels: { fontSize: 10 },
   };
 
   if (!Array.isArray(chartData.labels) || !chartData.labels.length) {
     return (
       <View style={[styles.collapsibleContent, isDark && styles.collapsibleContentDark]}>
         <LineChart
-          data={defaultDataset}
+          data={{
+            labels: ["D", "E", "F", "A", "U", "L", "T"],
+            datasets: [{ data: [1, 2, 3, 4, 5, 6, 7] }],
+          }}
           width={screenWidth - 80}
           height={220}
           yAxisInterval={4}
