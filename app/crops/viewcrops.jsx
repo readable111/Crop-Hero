@@ -156,7 +156,7 @@ const ViewCrops = () => {
                         <View style={[styles.container, isDark && styles.containerDark]}>
                                 <View style={[styles.topContainer, styles.spaceBetween]}>
                                         <View style={styles.back}>
-                                                <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.push('./crops', {relativeToDirectory:true})}/>
+                                                <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.push('/crops/crops')}/>
                                         </View>
                                         <View style={[styles.toggleContainer, isDark && styles.toggleContainerDark]}>
                                                 <Text style={styles.toggleLabel}>Toggle Delete</Text>

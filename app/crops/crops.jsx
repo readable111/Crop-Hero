@@ -56,12 +56,12 @@ const [isDark, setIsDarkMode] = useState(false)
       </View>
       {/*<View style={styles.circle}></View>*/} 
         <View style={ [ styles.button, isDark && styles.buttonDark ] }>
-          <Pressable testID = "addCrops" onPress={() => router.push("./addcrops", {relativeTopDirectory: true})}>
+          <Pressable testID = "addCrops" onPress={() => router.push("crops/addcrops")}>
             <Text style={styles.buttonText}>Add Crop</Text>
           </Pressable>
         </View>
         <View style={[ styles.button, isDark && styles.buttonDark ]}>
-          <Pressable onPress = {() => router.push("./viewcrops", {relativeToDirectory: true})}>
+          <Pressable onPress = {() => router.push("crops/viewcrops")}>
             <Text style={styles.buttonText}>View Crop</Text>
           </Pressable>
         </View>
