@@ -325,7 +325,7 @@ const todo = () => {
                         <AppButton title="To-Do" specifiedStyle={styles.oval} onPress={() => router.replace('/todo')} />
                     </Col>
                     <Col relativeColsCovered={2} alignItems='center'>
-                        <AppButton title="Notebook" specifiedStyle={[styles.ovals, isDarkMode && styles.darkOvals]} onPress={() => router.replace('/notebook')} />
+                        <AppButton title="Notebook" specifiedStyle={styles.ovals} onPress={() => router.replace('/notebook')} />
                     </Col>
                 </Row>
             </View>
@@ -349,15 +349,15 @@ const todo = () => {
                     renderItem={({ item }) => (
                         //<View style={styles.entryContainer }>
                         <TouchableOpacity
-                            style={[styles.taskContainer, { opacity: item[5] == 1 ? 0.6 : 1 }]}
+                            style={[styles.taskContainer, isDarkMode && styles.darkTaskContainer, { opacity: item[5] == 1 ? 0.6 : 1 }]}
                             // onPress={() => handleTaskTap(item)}
                             onLongPress={() => handleTaskLongPress(item)}
                         >
-                            <Text>Assigned Farmer ID: {item[2]}</Text>
-                            <Text>Task Type: {item[10]}</Text>
-                            <Text>Location ID: {item[3]}</Text>
-                            <Text>Comments: {item[8]}</Text>
-                            <Text>Due Date: {item[6]}</Text>
+                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Assigned Farmer ID: {item[2]}</Text>
+                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Task Type: {item[10]}</Text>
+                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Location ID: {item[3]}</Text>
+                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Comments: {item[8]}</Text>
+                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Due Date: {item[6]}</Text>
                         </TouchableOpacity>
                         // </View>
                     )}
@@ -371,7 +371,7 @@ const todo = () => {
                 //onClose={() => setIsSpeedDialOpen(false)}
                 transitionDuration= {0}
                 onClose={() => { setIsSpeedDialOpen(false); clearSelectedEntry(); }}
-                buttonStyle={{ backgroundColor: 'green' }}
+                buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                 style={styles.speedDial}
             >
                 <SpeedDial.Action
@@ -382,7 +382,7 @@ const todo = () => {
                         setCurrentTaskID(null); // Reset currentTaskID to signal new task creation
                         setModalVisible(true);
                     }}
-                    buttonStyle={{ backgroundColor: 'green' }}
+                    buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                 />
                 <SpeedDial.Action
                     icon={{ name: 'edit', color: 'white' }}
@@ -395,7 +395,7 @@ const todo = () => {
                             Alert.alert("Select a task to edit.");
                         }
                     }}
-                    buttonStyle={{ backgroundColor: 'green' }}
+                    buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                 />
                 <SpeedDial.Action
                     icon={{ name: 'check', color: 'white' }}
@@ -408,7 +408,7 @@ const todo = () => {
                             Alert.alert("Select a task to mark as complete.");
                         }
                     }}
-                    buttonStyle={{ backgroundColor: 'green' }}
+                    buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                 />
                 <SpeedDial.Action
                     icon={<MaterialCommunityIcons name="export" size={24} color="white" />}
@@ -421,7 +421,7 @@ const todo = () => {
                             Alert.alert("Select a task to export.");
                         }
                     }}
-                    buttonStyle={{ backgroundColor: 'green' }}
+                    buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                 />
                 <SpeedDial.Action
                     icon={{ name: 'delete', color: 'white' }}
@@ -434,7 +434,7 @@ const todo = () => {
                             Alert.alert("Select a task to delete.");
                         }
                     }}
-                    buttonStyle={{ backgroundColor: 'green' }}
+                    buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                 />
             </SpeedDial>
 
@@ -458,14 +458,11 @@ const todo = () => {
 
 const styles = StyleSheet.create({
     entryContainer: {
-        backgroundColor: 'Colors.ALMOND_TAN', // set to a tan color
+        backgroundColor: Colors.ALMOND_TAN, // set to a tan color
         marginBottom: 5,
         borderWidth: 1,
         borderRadius: 5,
         borderColor: 'black',
-
-
-
     },
     darkEntryContainer: {
         backgroundColor: Colors.BALTIC_SEA,
@@ -496,7 +493,7 @@ const styles = StyleSheet.create({
         height: '13%',
     },
     darkGridContainer: {
-        backgroundColor: Colors.BALTIC_SEA,
+        backgroundColor: Colors.CHARCOAL,
     },
     scroll: {
         width: '100%',
@@ -518,7 +515,7 @@ const styles = StyleSheet.create({
         marginBottom: 3
     },
     darkContainer: {
-        backgroundColor: Colors.PERIWINKLE_GRAY,
+        backgroundColor: Colors.CHARCOAL,
     },
     dropdownContainer: {
         width: '70%',
@@ -532,19 +529,23 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     darkTaskContainer: {
-        backgroundColor: Colors.ALMOST_BLACK,
+        backgroundColor: Colors.IRIDIUM,
+    },
+    taskItemText: {
+        color: Colors.CHARCOAL,
+    },
+    taskItemTextDark: {
+        color: Colors.WHITE_SMOKE,
     },
     speedDial: {
         position: 'absolute',
         bottom: 60,
         right: 5,
-        //color: Colors.HOT_GREEN,
-        //flex: 5,
         zIndex: 1000,
         flexDirection: 'vertical'
     },
     oval: {
-        backgroundColor: Colors.IRISH_GREEN,
+        backgroundColor: Colors.MALACHITE,
         width: 180,
         height: 180,
         borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
@@ -555,7 +556,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Domine-Regular',
     },
     ovals: {
-        backgroundColor: Colors.ALMOND_TAN,
+        backgroundColor: Colors.SOFT_GREEN,
         width: 180,
         height: 180,
         borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
@@ -564,9 +565,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'center',
         fontFamily: 'Domine-Regular',
-    },
-    darkOvals: {
-        backgroundColor: Colors.RIVER_BED,
     },
     topContainer: { // overall page container
         backgroundColor: Colors.PERIWINKLE_GRAY,
