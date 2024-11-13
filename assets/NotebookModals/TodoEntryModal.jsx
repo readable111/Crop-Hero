@@ -349,8 +349,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.PERIWINKLE_GRAY,
         flex: 1,
         fontFamily: 'Domine-Regular',
-        height: '95%'
-
+        height: '100%',
+        paddingBottom: 500,
 
     },
     darkModalContainer: {
