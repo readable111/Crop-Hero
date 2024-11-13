@@ -579,7 +579,7 @@ const styles = StyleSheet.create({
     },
 
 	ovals: {
-		backgroundColor: Colors.SOFT_GREEN,
+		backgroundColor: Colors.ALMOND_TAN,
 		width: 180,
 		height: 180,
 		borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
@@ -590,7 +590,8 @@ const styles = StyleSheet.create({
 		fontFamily: 'Domine-Regular',
     },
     darkOvals: {
-        backgroundColor: Colors.SOFT_GREEN,
+        backgroundColor: Colors.CHARCOAL,
+        color: Colors.WHITE_SMOKE,
         //backgroundColor: Colors.ALMOND_TAN,
         width: 180,
         height: 180,
