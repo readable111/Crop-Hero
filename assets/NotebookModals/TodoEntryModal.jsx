@@ -98,8 +98,8 @@ const TodoEntryModal = ({
         };
 
         // Split the current date parts or default to current year
-        const newDate = new Date(taskData["fld_t_DateDue"]).toISOString().slice(0,10);
-
+        const newDate = new Date(value).toISOString().slice(0,10);
+    
         // Construct ISO format date (YYYY-MM-DD)
         setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": newDate }));
     };
