@@ -43,9 +43,36 @@ const TodoEntryModal = ({
         "fld_t_IsCompleted": false,
         "fld_t_DateCompleted": '',
     });
-    
+
+    const [isDark, setIsDarkMode] = useState(false);
     useEffect(() => {
-        if (!initialTaskData) return; // Guard clause for initialTaskData  
+        // declare the async data fetching function
+        const fetchDarkModeSetting = async () => {
+            const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
+            let result = null
+            if (JSON_VALUE && JSON_VALUE !== "") {
+                result = JSON.parse(JSON_VALUE)
+                console.log("Async: " + result)
+            } else {
+                colorScheme = Appearance.getColorScheme()
+                if (colorScheme == 'dark') {
+                    result = true
+                } else {
+                    result = false
+                }
+                console.log("colorScheme: " + result)
+            }
+            setIsDarkMode(result)
+        }
+
+        // call the function
+        fetchDarkModeSetting()
+            // make sure to catch any error
+            .catch(console.error);
+    }, [])
+
+    useEffect(() => {
+        if (!initialTaskData) return; // Guard clause for initialTaskData
         // Set task data once when the modal opens
         setTaskData({
            "fld_t_TaskID_pk": initialTaskData[0] || taskID,
@@ -149,10 +176,10 @@ const TodoEntryModal = ({
     };
        return (
         <Modal visible={visible} animationType="slide">
-            <ScrollView style={styles.modalContainer} contentContainerStyle={styles.scrollContent}>
+            <ScrollView style={[styles.modalContainer, isDark && styles.darkModalContainer]} contentContainerStyle={styles.scrollContent}>
 
                 {/* Assigned Farmer Picker */}
-                <View style={styles.listContainer}>
+                <View style={[styles.listContainer, isDark && styles.darkListContainer]}>
                     <Text style={styles.label}>Assigned Farmer</Text>
                     <Picker
                         selectedValue={taskData["fld_fs_FarmerID_fk"]}
@@ -170,7 +197,7 @@ const TodoEntryModal = ({
                 </View>
 
                 {/* Location Picker */}
-                <View style={styles.listContainer}>
+                <View style={[styles.listContainer, isDark && styles.darkListContainer]}>
                     <Text style={styles.label}>Location</Text>
                     <Picker
                         selectedValue={taskData["fld_l_LocationID_fk"]}
@@ -189,7 +216,7 @@ const TodoEntryModal = ({
                 </View>
 
                 {/* Crop Picker */}
-                <View style={styles.listContainer}>
+                <View style={[styles.listContainer, isDark && styles.darkListContainer]}>
                     <Text style={styles.label}>Crop</Text>
                     <Picker
                         selectedValue={taskData.CropID}
@@ -207,7 +234,7 @@ const TodoEntryModal = ({
                 </View>
 
                 {/* Task Type Picker */}
-                <View style={styles.listContainer}>
+                <View style={[styles.listContainer, isDark && styles.darkListContainer]}>
                     <Text style={styles.label}>Task Type</Text>
                     <Picker
                         selectedValue={taskData["fld_tt_TaskTypeID_fk"]}
@@ -232,8 +259,8 @@ const TodoEntryModal = ({
                 </View>
 
                 {/* Due Date Section */}
-                <View style={styles.listContainer}>
-                    <Text style={styles.label}>Due Date</Text> 
+                <View style={[styles.listContainer, isDark && styles.darkListContainer]}>
+                    <Text style={styles.label}>Due Date</Text>
                     <View style={styles.dateRow}>
                         <Picker
                             selectedValue={taskData["fld_t_DateDue"].split(' ')[0] || 'January'}
@@ -293,7 +320,7 @@ const TodoEntryModal = ({
                        </View>
                    </Modal>
                 {/* Comments */}
-                <View style={styles.listContainer}>
+                <View style={[styles.listContainer, isDark && styles.darkListContainer]}>
                     <Text style={styles.label}>Comments</Text>
                     <TextInput
                         style={styles.input}
@@ -326,6 +353,9 @@ const styles = StyleSheet.create({
 
 
     },
+    darkModalContainer: {
+        backgroundColor: Colors.BALTIC_SEA,
+    },
     listContainer: {
         marginBottom: 20,
         backgroundColor: Colors.ALMOND_TAN,
@@ -333,6 +363,9 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderRadius: 5,
         padding: 10,
+    },
+    darkListContainer: {
+        backgroundColor: Colors.PERIWINKLE_GRAY
     },
     label: {
         fontSize: 16,
