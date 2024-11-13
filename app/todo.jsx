@@ -371,7 +371,7 @@ const todo = () => {
                         <AppButton title="To-Do" specifiedStyle={styles.oval} onPress={() => router.replace('/todo')} />
                     </Col>
                     <Col relativeColsCovered={2} alignItems='center'>
-                        <AppButton title="Notebook" specifiedStyle={styles.ovals} onPress={() => router.replace('/notebook')} />
+                        <AppButton title="Notebook" specifiedStyle={[styles.ovals, isDarkMode && styles.ovalsDark]} onPress={() => router.replace('/notebook')} />
                     </Col>
                 </Row>
             </View>
@@ -630,7 +630,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Domine-Regular',
     },
     ovals: {
-        backgroundColor: Colors.SOFT_GREEN,
+        backgroundColor: Colors.ALMOND_TAN,
         width: 180,
         height: 180,
         borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
@@ -639,6 +639,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'center',
         fontFamily: 'Domine-Regular',
+    },
+    ovalsDark: {
+        backgroundColor: Colors.CHARCOAL,
+        color: Colors.WHITE_SMOKE,
     },
     topContainer: { // overall page container
         backgroundColor: Colors.SANTA_GRAY,

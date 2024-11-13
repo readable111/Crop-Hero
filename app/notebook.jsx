@@ -92,6 +92,7 @@ const Notebook = () => {
             entry.EntryID = entries.length > 0 ? Math.max(...entries.map(e => e.EntryID)) + 1 : 1;
             setEntries(prevEntries => [...prevEntries, entry]);
         }
+        setOpen(false)
     };
 
     const openModalForEdit = (entry) => {
@@ -533,7 +534,7 @@ const styles = StyleSheet.create({
 		marginBottom: 30,
     },
 	topContainer: { // overall page container
-        backgroundColor: Colors.PERIWINKLE_GRAY,
+        backgroundColor: Colors.SANTA_GRAY,
         //backgroundColor:'pink',
 		flex: 1,
 		alignItems: 'flex-start',
@@ -578,7 +579,7 @@ const styles = StyleSheet.create({
     },
 
 	ovals: {
-		backgroundColor: Colors.SOFT_GREEN,
+		backgroundColor: Colors.ALMOND_TAN,
 		width: 180,
 		height: 180,
 		borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
@@ -589,7 +590,8 @@ const styles = StyleSheet.create({
 		fontFamily: 'Domine-Regular',
     },
     darkOvals: {
-        backgroundColor: Colors.SOFT_GREEN,
+        backgroundColor: Colors.CHARCOAL,
+        color: Colors.WHITE_SMOKE,
         //backgroundColor: Colors.ALMOND_TAN,
         width: 180,
         height: 180,

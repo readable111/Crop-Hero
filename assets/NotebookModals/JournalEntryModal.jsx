@@ -111,62 +111,67 @@ const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
     //const screenWidth = Dimensions.get('window').width;
     return (
         <Modal visible={visible} animationType="slide">
-            <View style={[styles.modalContainer, isDarkMode && styles.darkModalContainer]}>
-                <Text style={[styles.title, isDarkMode && styles.darkText]}>Journal Entry</Text>
+            <View style={isDarkMode ? {backgroundColor: Colors.BALTIC_SEA, height: '100%'} : {backgroundColor: Colors.SANTA_GRAY, height: '100%'}}>
+                <View style={[styles.modalContainer, isDarkMode && styles.darkModalContainer]}>
+                    <Text style={[styles.title, isDarkMode && styles.darkText]}>Journal Entry</Text>
 
-                <View style={styles.dateContainer}>
-                    <Text style={[styles.dateLabel, isDarkMode && styles.darkText]}>Entry Date:</Text>
-                    <View style={[styles.datePicker, isDarkMode && styles.darkDatePicker]}>
-                        <Picker
-                            selectedValue={month}
-                            style={styles.picker}
-                            onValueChange={(itemValue) => setMonth(itemValue)}
-                        >
-                            {[...Array(12).keys()].map((i) => (
-                                <Picker.Item key={i} label={(i + 1).toString().padStart(2, '0')} value={(i + 1).toString().padStart(2, '0')} />
-                            ))}
-                        </Picker>
+                    <View style={[styles.dateContainer, isDarkMode && styles.dateContainerDark]}>
+                        <Text style={styles.dateLabel}>Entry Date:</Text>
+                        <View style={[styles.datePicker, isDarkMode && styles.darkDatePicker]}>
+                            <Picker
+                                selectedValue={month}
+                                style={styles.picker}
+                                dropdownIconColor={Colors.CHARCOAL}
+                                onValueChange={(itemValue) => setMonth(itemValue)}
+                            >
+                                {[...Array(12).keys()].map((i) => (
+                                    <Picker.Item style={isDarkMode ? {backgroundColor: Colors.LICHEN, color: Colors.CHARCOAL} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}} key={i} label={(i + 1).toString().padStart(2, '0')} value={(i + 1).toString().padStart(2, '0')} />
+                                ))}
+                            </Picker>
 
-                        <Picker
-                            selectedValue={day}
-                            style={styles.picker}
-                            onValueChange={(itemValue) => setDay(itemValue)}
-                        >
-                            {[...Array(31).keys()].map((i) => (
-                                <Picker.Item key={i} label={(i + 1).toString()} value={(i + 1).toString()} />
-                            ))}
-                        </Picker>
+                            <Picker
+                                selectedValue={day}
+                                style={styles.picker}
+                                dropdownIconColor={Colors.CHARCOAL}
+                                onValueChange={(itemValue) => setDay(itemValue)}
+                            >
+                                {[...Array(31).keys()].map((i) => (
+                                    <Picker.Item style={isDarkMode ? {backgroundColor: Colors.LICHEN, color: Colors.CHARCOAL} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}} key={i} label={(i + 1).toString()} value={(i + 1).toString()} />
+                                ))}
+                            </Picker>
 
-                        <Picker
-                            selectedValue={year}
-                            style={styles.picker}
-                            onValueChange={(itemValue) => setYear(itemValue)}
-                        >
-                            {Array.from({ length: 10 }, (_, i) => (
-                                <Picker.Item key={i} label={(new Date().getFullYear() + i).toString()} value={(new Date().getFullYear() + i).toString()} />
-                            ))}
-                        </Picker>
-                        
+                            <Picker
+                                selectedValue={year}
+                                style={styles.picker}
+                                dropdownIconColor={Colors.CHARCOAL}
+                                onValueChange={(itemValue) => setYear(itemValue)}
+                            >
+                                {Array.from({ length: 10 }, (_, i) => (
+                                    <Picker.Item style={isDarkMode ? {backgroundColor: Colors.LICHEN, color: Colors.CHARCOAL} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}} key={i} label={(new Date().getFullYear() + i).toString()} value={(new Date().getFullYear() + i).toString()} />
+                                ))}
+                            </Picker>
+                            
+                        </View>
                     </View>
-                </View>
 
-                <View style={styles.entryContainer}>
-                    <Text style={[styles.entryLabel, isDarkMode && styles.darkText]}>Entry:</Text>
-                    <TextInput
-                        style={[styles.input, styles.textArea]}
-                        value={contents}
-                        onChangeText={setContents}
-                        multiline
-                        textAlignVertical="top"
-                    />
-                </View>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={onClose}>
-                        <Text style={styles.buttonText}>Cancel</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSave}>
-                        <Text style={styles.buttonText}>Save</Text>
-                    </TouchableOpacity>
+                    <View style={styles.entryContainer}>
+                        <Text style={[styles.entryLabel, isDarkMode && styles.darkText]}>Entry:</Text>
+                        <TextInput
+                            style={[styles.input, styles.textArea, isDarkMode && styles.inputDark]}
+                            value={contents}
+                            onChangeText={setContents}
+                            multiline
+                            textAlignVertical="top"
+                        />
+                    </View>
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={[styles.button]} onPress={onClose}>
+                            <Text style={styles.buttonText}>Cancel</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.button]} onPress={handleSave}>
+                            <Text style={styles.buttonText}>Save</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         </Modal>
@@ -174,8 +179,6 @@ const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
 };
 
 const styles = StyleSheet.create({
-    
-
     entryContainer: {
         width: '100%',
         marginBottom: 15,
@@ -195,11 +198,6 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.ALMOND_TAN,
         margin: 20,
         elevation: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
-        shadowColor: Colors.PERIWINKLE_GRAY,
     },
     darkModalContainer: {
         flex: 1,
@@ -207,17 +205,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         borderRadius: 20,
-        backgroundColor: Colors.BALTIC_SEA,
+        backgroundColor: Colors.RIVER_BED,
         margin: 20,
         elevation: 10,
-        //shadowColor: '#000',
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: .9,
-        shadowRadius: 100,
-        shadowColor: 'black',
-        elevation: 10
-        //shadowColor: Colors.PERIWINKLE_GRAY,
-       // color: 'white'
+        elevation: 10,
+        color: 'white'
     },
     title: {
         fontSize: 24,
@@ -225,8 +217,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Domine-Regular',
     },
-    darkText: {
-        color: 'white'
+    dateLabel: {
+        paddingLeft: 10,
     },
     dateContainer: {
         alignSelf: 'flex-start',
@@ -235,8 +227,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         borderRadius: 5,
-        backgroundColor: Colors.PERIWINKLE_GRAY
-
+        backgroundColor: Colors.PERIWINKLE_GRAY,
+    },
+    dateContainerDark: {
+        backgroundColor: Colors.LICHEN,
     },
     datePicker: {
         flexDirection: 'row',
@@ -253,7 +247,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         //paddingHorizontal: 5, // Reduced padding
-        backgroundColor: Colors.PERIWINKLE_GRAY,
+        backgroundColor: Colors.LICHEN,
         borderRadius: 5,
     },
     picker: {
@@ -275,6 +269,9 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.PERIWINKLE_GRAY,
         fontFamily: 'Domine-Regular',
     },
+    inputDark: {
+        backgroundColor: Colors.LICHEN,
+    },
     textArea: {
         height: 100,
     },
@@ -292,11 +289,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: 'black',
         borderWidth: 1,
-    },
-    cancelButton: {
-        backgroundColor: Colors.PERIWINKLE_GRAY,
-    },
-    saveButton: {
         backgroundColor: Colors.PERIWINKLE_GRAY,
     },
     buttonText: {
