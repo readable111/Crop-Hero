@@ -7,7 +7,7 @@
 import { StatusBar } from 'expo-status-bar';
 import Colors from '../assets/Color'
 import React, { useState, useEffect } from 'react';
-import { Pressable, StyleSheet, Text, View, ScrollView, Alert, Appearance } from 'react-native';
+import { Pressable, StyleSheet, Text, View, ScrollView, Alert, Appearance, TouchableOpacity, Button, Modal} from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input } from 'react-native-elements';
 import AppButton from '../assets/AppButton.jsx';
@@ -22,6 +22,34 @@ const CropsPage = () => {
 
         {/* Grabs variable form viewcrops page for use */}
         let [crop, setCropData] = useState(useLocalSearchParams());
+        const [open, setOpen] = useState(null);
+        const [selectedIndoors, setSelectedIndoors] = useState(crop.indoors)
+        const [selectedLocation, setSelectedLocation] = useState(crop.location)
+        const [selectedActive, setSelectedActive] = useState(crop.active)
+        const [selectedVisible, setSelectedVisible] = useState(crop.visible)
+        const [modalVisible, setModalVisible] = useState(false);
+        const [typeModalVisible, setTypeModalVisible] = useState(false);
+        const [items, setItems] = useState([
+                {label: 'Yes', value: 'Yes' },
+                {label: 'No', value: 'No'}
+        ]);
+        const [types, setType] = useState([
+                {label: 'Standard', value: 'Standard'},
+                {label: 'Nocturnal', value: 'Nocturnal'},
+                {label: crop.type, value: crop.type}
+        ])
+        const [locations, setLocation] = useState([
+                {label: 'Mound 1', value: 'Mound1' },
+                {label: 'Greenhouse 2', value: 'Greenhouse 2'},
+                {label: crop.location, value: crop.location }
+        ])
+        const [newOption, setNewOption] = useState('');
+        
+
+        const handleOpenDropdown = (id) => {
+                setOpen(open === id ? null : id)
+        }
+        const [isVisible, setIsVisible] = useState(false);
         //If crop.name couldn't be retrieved, assume that ?param= was used
         if(!crop.name) {
                 console.log("?param passed")
@@ -89,7 +117,82 @@ const CropsPage = () => {
                                 <View style={styles.back}>
                                         <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                 </View>
+                                
+                                
+                                <View style={{flexDirection: 'row', marginRight: '20%', marginLeft: '2%'}}>
+                                        <TouchableOpacity style={[isVisible && styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
+                                                {isVisible && <Text style={styles.locationText}>Location</Text>}
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={[isVisible && styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setTypeModalVisible(true)}>
+                                                {isVisible && <Text style={styles.typeText}>Type</Text>}
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={[isVisible&&styles.medContainer, isDark && styles.medContainerDark]} onPress = {() => setModalVisible(true)}>
+                                                        {isVisible&&<Text style={styles.medText}>Medium</Text>}
+                                        </TouchableOpacity>        
+                                </View>
+                                
+                                
+                                
+                                <View style={[isVisible && styles.save]}>
+                                        {isVisible && <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>}
+                                </View>
                         </View>
+                        <Modal
+                                visible = {modalVisible}
+                                animationType = 'slide'
+                                transparent = {true}
+                                onRequestClose={() => setModalVisible(false)}
+                        >  
+                                <View style={styles.modalContainer}>
+                                        <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
+                                                <Text style={styles.modalTitle}>Enter a New Location</Text>
+                                                <Input
+                                                        style={styles.input}
+                                                        placeholder="Type new option"
+                                                        value={newOption}
+                                                        onChangeText={setNewOption}
+                                                />
+                                                <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
+                                                        <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
+                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewLocation} />
+                                                        </View>
+                                                        <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
+                                                                <Button title="Cancel" onPress={() => setModalVisible(false)} />
+                                                        
+                                                        </View>
+                                                </View>
+                                        </View>
+                                </View>
+
+                        </Modal>
+                        <Modal
+                                visible = {typeModalVisible}
+                                animationType = 'slide'
+                                transparent = {true}
+                                onRequestClose={() => setTypeModalVisible(false)}
+                        >  
+                                <View style={styles.modalContainer}>
+                                        <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
+                                                <Text style={styles.modalTitle}>Enter a New Location</Text>
+                                                <Input
+                                                        style={styles.input}
+                                                        placeholder="Type new option"
+                                                        value={newOption}
+                                                        onChangeText={setNewOption}
+                                                />
+                                                <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
+                                                        <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
+                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewType} />
+                                                        </View>
+                                                        <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
+                                                                <Button title="Cancel" onPress={() => setTypeModalVisible(false)} />
+                                                        
+                                                        </View>
+                                                </View>
+                                        </View>
+                                </View>
+
+                        </Modal>
                         <ScrollView> 
                                 <View style={styles.spacer}/>
                                 <StatusBar style={{backgroundColor: 'white'}}/>
@@ -327,9 +430,135 @@ const styles = StyleSheet.create({
                 fontSize: 16,
                 fontWeight: 'bold',
               },
-              icon:{
-      
-              }
+              topContainer: {
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: '1%',
+                marginBottom: '1%',
+                paddingVertical:3
+        },
+        spaceBetween:
+        {
+                justifyContent: "space-between"
+        },
+        locationContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: 11,
+                paddingHorizontal: 10,
+                backgroundColor: Colors.SCOTCH_MIST_TAN, // Light background color around the toggle
+                borderRadius: 20,
+                borderColor: '#20232a',
+                borderWidth: 1,
+                marginRight: '1%'
+        },
+        locationContainerDark:{
+                backgroundColor: Colors.LICHEN
+        },
+        locationText:{
+                fontFamily: 'Domine-Medium',
+                fontSize: 20
+        },
+        typeContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: 11,
+                paddingHorizontal: 10,
+                backgroundColor: Colors.SCOTCH_MIST_TAN, // Light background color around the toggle
+                borderRadius: 20,
+                borderColor: '#20232a',
+                borderWidth: 1,
+                marginRight: '1%'
+        },
+        typeText:{
+                fontFamily: 'Domine-Medium',
+                fontSize: 20
+        },
+        typeContainerDark:{
+                backgroundColor: Colors.LICHEN
+        },
+        medContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: 11,
+                paddingHorizontal: 10,
+                backgroundColor: Colors.SCOTCH_MIST_TAN, // Light background color around the toggle
+                borderRadius: 20,
+                borderColor: '#20232a',
+                borderWidth: 1,
+                marginRight: '1%'
+        },
+        medContainerDark:{
+                backgroundColor: Colors.LICHEN
+        },
+        medText:{
+                fontFamily: 'Domine-Medium',
+                fontSize: 20
+        },
+        dropDownContainer: {
+                borderWidth: 2,
+		borderColor: Colors.CHARCOAL,
+		backgroundColor: Colors.WHITE_SMOKE,
+		borderRadius: 12,
+		zIndex: 50,
+                marginTop: -10,
+                width: '90%',
+                marginLeft: '8%',
+                marginRight: '5%',
+        },
+        dropDownContainerDark: {
+                borderColor: Colors.WHITE_SMOKE, 
+                backgroundColor: Colors.IRIDIUM
+        },
+        dropDownStyle: {
+                borderColor: Colors.CHARCOAL,
+                borderWidth: 2,
+                borderRadius: 12,
+                height: 52,
+                backgroundColor: Colors.WHITE_SMOKE,
+                width: '90%',
+                marginLeft: '8%',
+                marginRight: '5%',
+                height: 40,
+                zIndex: 1,
+        },
+        dropDownStyleDark: {
+                borderColor: Colors.WHITE_SMOKE, 
+                backgroundColor: Colors.IRIDIUM
+        },
+        modalContainer: {
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        },
+        modalContent: {
+                width: 300,
+                backgroundColor: Colors.SCOTCH_MIST_TAN,
+                padding: 20,
+                borderRadius: 10,
+                alignItems: 'center',
+        },
+        modalContentDark:{
+                backgroundColor: Colors.LICHEN
+        },
+        modalTitle: {
+                fontSize: 18,
+                fontFamily: 'Domine-Medium',
+                marginBottom: 10,
+        },
+        input: {
+                width: '100%',
+                height: 40,
+                borderColor: 'black',
+                borderWidth: 1,
+                borderRadius: 12,
+                marginBottom: 20,
+                paddingLeft: 10,
+        },
 
 
 

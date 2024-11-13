@@ -52,10 +52,25 @@ const AddCrops = () => {
         const [open, setOpen] = useState(false);
         const [selectedIndoors, setSelectedIndoors] = useState(cropData.type)
         const [selectedActive, setSelectedActive] = useState(cropData.active)
+        const [selectedVisible, setSelectedVisible] = useState(cropData.visible)
+        const [selectedMedium, setSelectedMedium] = useState(cropData.medium)
+        
+        const [modalVisible, setModalVisible] = useState(false);
+        const [typeModalVisible, setTypeModalVisible] = useState(false);
+        const [selectedImage, setSelectedImage] = useState(null);
+        const [newOption, setNewOption] = useState('');
         const [items, setItems] = useState([
                 {label: 'Yes', value: 'Yes' },
                 {label: 'No', value: 'No'}
         ]);
+        const [types, setType] = useState([
+                {label: 'Standard', value: 'Standard'},
+                {label: 'Nocturnal', value: 'Nocturnal'},
+        ])
+        const [locations, setLocation] = useState([
+                {label: 'Mound 1', value: 'Mound 1' },
+                {label: 'Greenhouse 2', value: 'Greenhouse 2'}
+        ])
 
 
         const handleIndoorsChange = (value) =>
@@ -169,6 +184,82 @@ const AddCrops = () => {
                                 </View>
                         </View>
                         {/* Body (Scrollable inputs)*/}
+                        <View style={[styles.topContainer, styles.spaceBetween]}>
+                                <View style={styles.back}>
+                                        <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
+                                </View>
+                                <View style={{flexDirection: 'row', marginRight: '20%', marginLeft: '2%'}}>
+                                        <TouchableOpacity style={[styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
+                                                <Text style={styles.locationText}>Location</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setTypeModalVisible(true)}>
+                                                <Text style={styles.typeText}>Type</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={[styles.medContainer, isDark && styles.medContainerDark]} onPress = {() => setModalVisible(true)}>
+                                                <Text style={styles.medText}>Medium</Text>
+                                        </TouchableOpacity>
+                                </View>
+                                
+                                
+                                
+                                <View style={styles.save}>
+                                        <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
+                                </View>
+                                
+                        </View>
+                        <Modal
+                                visible = {modalVisible}
+                                animationType = 'slide'
+                                transparent = {true}
+                                onRequestClose={() => setModalVisible(false)}
+                        >  
+                                <View style={styles.modalContainer}>
+                                        <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
+                                                <Text style={styles.modalTitle}>Enter a New Location</Text>
+                                                <Input
+                                                        style={styles.input}
+                                                        placeholder="Type new option"
+                                                        value={newOption}
+                                                        onChangeText={setNewOption}
+                                                />
+                                                <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
+                                                        <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
+                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewLocation} />
+                                                        </View>
+                                                        <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
+                                                                <Button title="Cancel" onPress={() => setModalVisible(false)} />
+                                                        
+                                                        </View>
+                                                </View>
+                                        </View>
+                                </View>
+
+                        </Modal>
+                        <Modal
+                                visible = {typeModalVisible}
+                                animationType = 'slide'
+                                transparent = {true}
+                                onRequestClose={() => setTypeModalVisible(false)}
+                        >  
+                                <View style={styles.modalContainer}>
+                                        <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
+                                                <Text style={styles.modalTitle}>Enter a New Type</Text>
+                                                <Input
+                                                        style={styles.input}
+                                                        placeholder="Type new option"
+                                                        value={newOption}
+                                                        onChangeText={setNewOption}
+                                                />
+                                                <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
+                                                        <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
+                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewType} />
+                                                        </View>
+                                                        <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
+                                                                <Button title="Cancel" onPress={() => setTypeModalVisible(false)} />
+                                                        
+                                                        </View>
+                                                </View>
+                                        </View>
                         <View>
                                 <View style={styles.save}>
                                         <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
@@ -280,12 +371,12 @@ const AddCrops = () => {
                                         onChangeText={(text) => handleChange('medium', text)}
 
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
+                                <Text style={[styles.label, styles.labelDark, styles.labelDisabled]}>HRF Number</Text>
                                 <Input
-                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
+                                        inputContainerStyle = {[styles.textBox, styles.disabledTextBox]}
                                         value={cropData.hrfNum.toString()}
                                         editable={false}
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
+                                        style={[styles.inputText, styles.inputTextDark]}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Yield</Text>
                                 <Input
@@ -297,6 +388,32 @@ const AddCrops = () => {
 
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Visible</Text>
+                                <DropDownPicker
+                                        theme={isDark ? 'DARK' : 'LIGHT'}
+                                        open={open === 'visible'}
+                                        setOpen={() => handleOpenDropdown('visible')}
+                                        value={selectedVisible}
+                                        setValue={setSelectedVisible}
+                                        items={items}
+                                        onChangeValue={handleVisibleChange}
+                                        placeholder="Crop Visible?"
+                                        listMode='SCROLLVIEW'
+					dropDownDirection='TOP'
+                                        scrollViewProps={{
+					        nestedScrollEnabled: true
+					}}
+                                        props={{
+						activeOpacity: 1,
+					}}
+                                        containerStyle={{
+						width: '94%',
+						zIndex: 60,
+						marginBottom: 40,
+					}}
+                                        dropDownContainerStyle={[styles.dropDownBottomContainer, isDark && styles.dropDownContainerDark]}
+                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
+                                />
+                                {/*}
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Visibility'
@@ -396,6 +513,9 @@ const styles = StyleSheet.create({
                 borderRadius: 12,
                 zIndex: 1,
         },
+        disabledTextBox: {
+                backgroundColor: '#95989c',
+        },
         textBoxDark:{
                 backgroundColor: Colors.IRIDIUM,
                 borderColor: Colors.WHITE_SMOKE,
@@ -416,6 +536,15 @@ const styles = StyleSheet.create({
 		fontSize: 16,
                 fontFamily: 'Domine-Regular',
 		borderColor: 'white',
+                paddingLeft: 5,
+                paddingRight: 5,
+        },
+        labelDisabled: {
+                backgroundColor: '#95989c',
+        },
+        dropdownLabel:{
+		zIndex: 30,
+                elevation: (Platform.OS === 'android') ? 9999 : 0,
         },
         labelDark:{
                 backgroundColor: Colors.IRIDIUM,
@@ -430,12 +559,105 @@ const styles = StyleSheet.create({
         },
         inputText:{
                 fontSize: 16,
+                marginLeft: "2%",
+                zIndex: 0
         },
         inputTextDark:{
                   color: Colors.WHITE_SMOKE
         },
-        icon:{
-
+        AddMedia:{
+                textAlign: 'center',
+                fontSize: 21,
+                fontFamily: 'Domine-Medium',
+                marginTop: '10%'
+        },
+        topContainer: {
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: 'flex-end',
+                marginTop: '1%',
+                marginBottom: '1%',
+                marginLeft: '1%'
+        },
+        spaceBetween:
+        {
+                justifyContent: "space-between"
+        },
+        modalContainer: {
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        },
+        modalContent: {
+                width: 300,
+                backgroundColor: Colors.SCOTCH_MIST_TAN,
+                padding: 20,
+                borderRadius: 10,
+                alignItems: 'center',
+        },
+        modalContentDark:{
+                backgroundColor: Colors.LICHEN
+        },
+        modalTitle: {
+                fontSize: 18,
+                fontFamily: 'Domine-Medium',
+                marginBottom: 10,
+        },
+        input: {
+                width: '100%',
+                height: 40,
+                borderColor: 'black',
+                borderWidth: 1,
+                borderRadius: 12,
+                marginBottom: 20,
+                paddingLeft: 10,
+        },
+        dropDownContainer: {
+                borderWidth: 2,
+		borderColor: Colors.CHARCOAL,
+		backgroundColor: Colors.WHITE_SMOKE,
+		borderRadius: 12,
+		zIndex: 80,
+                marginTop: -10,
+                width: '90%',
+                marginLeft: '8%',
+                marginRight: '5%',
+        },
+        dropDownContainerDark: {
+                borderColor: Colors.WHITE_SMOKE, 
+                backgroundColor: Colors.IRIDIUM
+        },
+        dropDownBottomContainer: {
+                borderWidth: 2,
+		borderColor: Colors.CHARCOAL,
+		backgroundColor: Colors.WHITE_SMOKE,
+		borderRadius: 12,
+		zIndex: 50,
+                marginBottom: -10,
+                width: '90%',
+                marginLeft: '8%',
+                marginRight: '5%',
+        },
+        dropDownBottomContainerDark: {
+                borderColor: Colors.WHITE_SMOKE, 
+                backgroundColor: Colors.IRIDIUM
+        },
+        dropDownStyle: {
+                borderColor: Colors.CHARCOAL,
+                borderWidth: 2,
+                borderRadius: 12,
+                height: 52,
+                backgroundColor: Colors.WHITE_SMOKE,
+                width: '90%',
+                marginLeft: '8%',
+                marginRight: '5%',
+                height: 40,
+                zIndex: 1,
+        },
+        dropDownStyleDark: {
+                borderColor: Colors.WHITE_SMOKE, 
+                backgroundColor: Colors.IRIDIUM
         }
 
 
