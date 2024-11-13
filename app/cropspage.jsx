@@ -299,7 +299,7 @@ const CropsPage = () => {
                                         disabled= {readOnly}
                                         items={items}
                                         onChangeValue={handleIndoorsChange}
-                                        placeholder="Started Indoors?"
+                                        placeholder= {crop.indoors}
                                         listMode='SCROLLVIEW'
 					dropDownDirection='BOTTOM'
                                         scrollViewProps={{
@@ -326,7 +326,7 @@ const CropsPage = () => {
                                         disabled= {readOnly}
                                         items={items}
                                         onChangeValue={handleActiveChange}
-                                        placeholder="Active?"
+                                        placeholder={crop.active}
                                         listMode='SCROLLVIEW'
 					dropDownDirection='BOTTOM'
                                         scrollViewProps={{
@@ -351,6 +351,33 @@ const CropsPage = () => {
                                         maxLength={64}
                                         readOnly = {readOnly}
                                         onChangeText={(text) => handleChange('type' , text)}
+                                />
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Medium</Text>
+                                <DropDownPicker
+                                        theme={isDark ? 'DARK' : 'LIGHT'}
+                                        open={open === 'medium'}
+                                        setOpen={() => handleOpenDropdown('medium')}
+                                        value={selectedActive}
+                                        setValue={setSelectedActive}
+                                        disabled= {readOnly}
+                                        items={items}
+                                        onChangeValue={handleActiveChange}
+                                        placeholder= {crop.medium}
+                                        listMode='SCROLLVIEW'
+					dropDownDirection='BOTTOM'
+                                        scrollViewProps={{
+					        nestedScrollEnabled: true
+					}}
+                                        props={{
+						activeOpacity: 1,
+					}}
+                                        containerStyle={{
+						width: '94%',
+						zIndex: 50,
+						marginBottom: 40,
+					}}
+                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
                                 <Input
@@ -380,7 +407,7 @@ const CropsPage = () => {
                                         disabled= {readOnly}
                                         items={items}
                                         onChangeValue={handleVisibleChange}
-                                        placeholder="Crop Visible?"
+                                        placeholder= {crop.visible}
                                         listMode='SCROLLVIEW'
 					dropDownDirection='TOP'
                                         scrollViewProps={{
@@ -508,6 +535,7 @@ const styles = StyleSheet.create({
               },
               inputText:{
                       fontSize: 16,
+                      marginLeft: "2%"
               },
               inputTextDark:{
                         color: Colors.WHITE_SMOKE
