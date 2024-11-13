@@ -89,7 +89,6 @@ const TodoEntryModal = ({
         });
     }, [visible]); // Only run when `visible` changes
     console.log("Current Task Data: \n\n",taskData)
-    console.log(initialTaskData)
     const handleDateChange = (type, value) => {
         // Mapping months to their numeric equivalents
         const monthMap = {
@@ -119,11 +118,10 @@ const TodoEntryModal = ({
     
     
     const handleChange = (name, value) => {
-        console.log(name, value)
         setTaskData(prevData => ({ ...prevData, [name]: value }));
     };
-
-    console.log("Locations to render: \n\n",locations)     
+    
+    
     // Initialize the icon picker visibility state
     const [iconPickerVisible, setIconPickerVisible] = useState(false);                                                   
     const handleIconSelect = (iconName) => {
@@ -135,13 +133,11 @@ const TodoEntryModal = ({
     };
     const handleAddTaskType = () => {
         const newTaskType = taskData.NewTaskType.trim();
-        console.log(taskData)
         console.log("New Task Type Trimmed: " + newTaskType)
         if (newTaskType !== '') {
             const uniqueID = `${Math.floor(Math.random()*1000000000).toString()}`;
             const updatedTaskTypes = [...taskTypes, [uniqueID, 1, newTaskType, newTaskType]];
             taskTypes = updatedTaskTypes
-            console.log(taskTypes)
             onAddNewTaskType(uniqueID, newTaskType);
             handleChange('TaskType', uniqueID);
             handleChange('NewTaskType', '');

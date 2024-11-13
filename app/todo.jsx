@@ -92,25 +92,34 @@ const todo = () => {
     const handleSaveTask = (taskData) => {
 
         // Format date fields in MMDDYYYY before saving, assuming taskData.date exists
-        if (taskData.date) {
-            const date = new Date(taskData.date);
-            const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}${date.getFullYear()}`;
-            taskData.date = formattedDate;
-        }
-        let newTasks;
-        console.log("old tasks: ", tasks)
+     //   if (taskData["fld_t_DateDue"]) {
+       //     const date = new Date(taskData.date);
+         //   const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}${date.getFullYear()}`;
+           // taskData["fld_t_DateDue"] = formattedDate;
+       // }
 
-        if (currentTaskID) {
+        if (currentTaskID!==null){
+            if(!taskData["fld_t_IsCompleted"]){
+                setNewTask({
+                    ...taskData,
+                    "fld_t_DateCompleted":"1990-01-01" 
+                })
+            }else{  
             setNewTask(taskData)
+            }
             setEditTask(true)
             setSaveTask(true)
         } else {
-            console.log(taskData)
-            // Add new task
-            setNewTask(taskData);
+            if(!taskData["fld_t_IsCompleted"]){
+                setNewTask({
+                    ...taskData,
+                    "fld_t_DateCompleted":"1990-01-01" 
+                })
+            }else{  
+            setNewTask(taskData)
+            }
             setAddNewTask(true)
             setSaveTask(true)            
-            console.log("newTasks", newTasks)
         }
 
         //onEditTask(updatedTask);
@@ -177,19 +186,40 @@ const todo = () => {
         setCurrentTask(task);  // Set the task to edit (pass all the task data)
         setModalVisible(true);  // Open the modal
     };
-    const handleCheckboxChange = async (taskID) => {
-        const taskToUpdate = tasks.find(task => task.TaskID === taskID);
-        const updatedTask = {
-            ...taskToUpdate,
-            IsCompleted: !taskToUpdate.IsCompleted,
+
+
+    const handleCheckboxChange = (taskData) => {
+        const monthMap = {
+            "January": "01", "February": "02", "March": "03", "April": "04",
+            "May": "05", "June": "06", "July": "07", "August": "08",
+            "September": "09", "October": "10", "November": "11", "December": "12"
         };
 
-        const updatedTasks = tasks.map(task =>
-            task.TaskID === taskID ? updatedTask : task
-        );
+        // Split the current date parts or default to current year
+        const date = new Date(taskData[6])
+        const dateDue = date.toISOString().slice(0,10)
 
-        setTasks(updatedTasks);
-        setFilteredTasks(updatedTasks);
+        const today = new Date();
+        const dateDone = today.toISOString().slice(0,10);
+
+        // Construct ISO format date (YYYY-MM-DD)
+
+
+        setNewTask({
+            "fld_t_TaskID_pk": taskData[0],
+            "fld_t_Comments": taskData[8],
+           "fld_t_DateDue": dateDue,
+            "fld_fs_FarmerID_fk": taskData[2] ,
+            "fld_l_LocationID_fk": taskData[3],
+            CropID: '' || '',
+           "fld_tt_TaskTypeID_fk": taskData[4],
+            NewTaskType: '',
+            "fld_t_TaskIconPath": taskData[9],
+            "fld_t_IsCompleted": 0b1,
+            "fld_t_DateCompleted": dateDone,
+        });
+        setEditTask(true)
+        setSaveTask(true)
     };
     // Function to add a new task type
     const addNewTaskType = (uniqueID, newTaskType) => {
@@ -235,6 +265,8 @@ const todo = () => {
 
                 setEditTask(false)
                 setSaveTask(false)
+                setCurrentTask({})
+                setCurrentTaskID(null)
               }catch(error){
                   console.error("Error:", error)
               }
@@ -246,14 +278,24 @@ const todo = () => {
     useEffect(() =>{
         const saveTasks = async () =>{
             if(saveTask & addNewTask){
+                console.log("Task to Add: \n\n\n:". newTask) 
               try{
-                  response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addTask`,{method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({subID:subID, taskUpdate: newTask})})
+                  response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addTask`,{method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({
+                    subID:subID, 
+                    newTask: newTask, 
+                    taskTypeID:newTask["fld_tt_TaskTypeID_fk"], 
+                    farmerID: newTask["fld_fs_FarmerID_fk"], 
+                    locationID: newTask["fld_l_LocationID_fk"]
+                })})
                   if(!response.ok){
                       console.error("HTTP ERROR:")
                       throw new Error;
                   }
                 setAddNewTask(false)
+                setSaveTask(false)
                 setNewTask({})
+                setCurrentTask({})
+                setCurrentTaskID(null)
               }catch(error){
                   console.error("Error:", error)
               }
@@ -319,7 +361,7 @@ const todo = () => {
         return null;
     }
 
-    console.log(tasks)
+
     return (
         <View style={[styles.topContainer, isDarkMode && styles.darkTopContainer]}>
             <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE} />
@@ -406,7 +448,6 @@ const todo = () => {
                     title="Edit Task"
                     onPress={() => {
                         if (currentTask) {
-                            console.log(currentTask);
                             handleOpenModal(currentTask);
                         } else {
                             Alert.alert("Select a task to edit.");
@@ -420,7 +461,7 @@ const todo = () => {
                     //onPress={() => handleCheckboxChange(currentTask?.TaskID)}
                     onPress={() => {
                         if (currentTask) {
-                           // handleCheckboxChange(currentTask.TaskID);
+                            handleCheckboxChange(currentTask);
                         } else {
                             Alert.alert("Select a task to mark as complete.");
                         }
