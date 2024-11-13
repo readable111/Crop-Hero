@@ -76,17 +76,20 @@ const TodoEntryModal = ({
     };
 
     const handleChange = (name, value) => {
+        console.log(name, value)
         setTaskData(prevData => ({ ...prevData, [name]: value }));
     };
 
     const handleAddTaskType = () => {
         const newTaskType = taskData.NewTaskType.trim();
         console.log(taskData)
-        console.log(taskData.NewTaskType)
+        console.log("New Task Type Trimmed: " + newTaskType)
         if (newTaskType !== '') {
-            const uniqueID = `${newTaskType}-${Math.floor(Math.random()*100).toString()}`;
-            const updatedTaskTypes = [...taskTypes, { id: uniqueID, name: newTaskType }];
-            onAddNewTaskType(updatedTaskTypes);
+            const uniqueID = `${Math.floor(Math.random()*1000000000).toString()}`;
+            const updatedTaskTypes = [...taskTypes, [uniqueID, 1, newTaskType, newTaskType]];
+            taskTypes = updatedTaskTypes
+            console.log(taskTypes)
+            onAddNewTaskType(uniqueID, newTaskType);
             handleChange('TaskType', uniqueID);
             handleChange('NewTaskType', '');
         }
@@ -188,7 +191,7 @@ const TodoEntryModal = ({
                     >
                         {taskTypes.length > 0 ? (
                             taskTypes.map((taskType) => (
-                                <Picker.Item key={taskType[0]} label={taskType[3]} value={taskType[0]} />
+                                <Picker.Item key={taskType[0]} label={taskType[3]} value={taskType[3]} />
                             ))
                         ) : (
                             <Picker.Item label="No task types available" value="" />
