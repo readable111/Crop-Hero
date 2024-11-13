@@ -292,8 +292,8 @@ const TodoEntryModal = ({
                         </Picker>
                     </View>
                 </View>
- {/* Icon Picker Section */}
-                   <View style={styles.listContainer}>
+                    {/* Icon Picker Section */}
+                   <View style={[styles.listContainer, isDark && styles.darkListContainer]}>
                        <Text style={styles.label}>Select Task Icon</Text>
                        <TouchableOpacity onPress={() => setIconPickerVisible(true)} style={styles.iconPickerContainer}>
                            {taskData.fld_t_TaskIconPath ? (
@@ -346,7 +346,7 @@ const TodoEntryModal = ({
 const styles = StyleSheet.create({
     modalContainer: {
         padding: 20,
-        backgroundColor: Colors.PERIWINKLE_GRAY,
+        backgroundColor: Colors.SANTA_GRAY,
         flex: 1,
         fontFamily: 'Domine-Regular',
         height: '100%',
@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     darkListContainer: {
-        backgroundColor: Colors.PERIWINKLE_GRAY
+        backgroundColor: Colors.LICHEN
     },
     label: {
         fontSize: 16,
@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         height: 50,
     },
-       iconPickerContainer: {
+    iconPickerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: '1%',
@@ -414,6 +414,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         fontFamily: 'Domine-Regular',
+        paddingBottom: 100,
     },
 });
 

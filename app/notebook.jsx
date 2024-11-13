@@ -533,7 +533,7 @@ const styles = StyleSheet.create({
 		marginBottom: 30,
     },
 	topContainer: { // overall page container
-        backgroundColor: Colors.PERIWINKLE_GRAY,
+        backgroundColor: Colors.SANTA_GRAY,
         //backgroundColor:'pink',
 		flex: 1,
 		alignItems: 'flex-start',
