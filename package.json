@@ -14,7 +14,9 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.3",
     "@react-native-async-storage/async-storage": "1.23.1",
-    "@react-native-picker/picker": "^2.7.5",
+    "@react-native-camera-roll/camera-roll": "^7.8.3",
+    "@react-native-community/cameraroll": "^4.1.2",
+    "@react-native-picker/picker": "2.7.5",
     "@react-navigation/native": "^6.1.17",
     "@rneui/base": "^4.0.0-rc.7",
     "@rneui/themed": "^4.0.0-rc.8",
@@ -36,6 +38,7 @@
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-dropdown-select-list": "^2.0.5",
     "react-native-elements": "^3.4.3",
+    "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.16.1",
     "react-native-pager-view": "^6.4.1",
     "react-native-reanimated": "^3.16.1",
@@ -44,13 +47,15 @@
     "react-native-skia": "^0.0.1",
     "react-native-svg": "15.8",
     "react-native-vector-icons": "^10.0.3",
+    "react-native-view-shot": "^3.8.0",
     "react-router-dom": "^6.22.3",
     "stemmer": "^2.0.1",
     "typescript": "~5.3.3",
     "unidecode": "^1.0.1",
     "victory-native": "^40.1.1",
     "whatwg-url": "^14.0.0",
-    "wink-lemmatizer": "^3.0.4"
+    "wink-lemmatizer": "^3.0.4",
+    "expo-media-library": "~16.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

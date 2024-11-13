@@ -3,32 +3,26 @@
  * @reviewer Daniel Moreno
  * @tester 
  * 
- * UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 11_10_2024
+ * UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 4_30_2024
  * This  page is meant to keep track of what was done that day for future reference if needed
  ***/
-import { React, useState, useEffect } from 'react';
-import { 
-    View, 
-    Text, 
-    FlatList, 
-    Button, 
-    StyleSheet, 
-    Alert, 
-    StatusBar, 
-    TouchableOpacity, 
-    Appearance 
-} from 'react-native';
-import { useFonts } from 'expo-font';
-import { router } from 'expo-router';
-import { Col, Row } from '../assets/Grid.jsx';
-import Colors from '../assets/Color';
-import AppButton from '../assets/AppButton.jsx';
-import { Picker } from '@react-native-picker/picker';
-import { SpeedDial } from '@rneui/themed';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import NavBar from '../assets/NavBar';
-import JournalEntryModal from '../assets/NotebookModals/JournalEntryModal';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { React, useState } from 'react';
+import {
+	StyleSheet,
+	View,
+	StatusBar,
+	Alert,
+	ScrollView,
+} from 'react-native'
+import { useFonts } from 'expo-font'
+import { router } from 'expo-router'
+import { Col, Row } from '../assets/Grid.jsx'
+import Colors from '../assets/Color'
+import AppButton from '../assets/AppButton.jsx'
+import { Input } from 'react-native-elements'
+import DropDownPicker from 'react-native-dropdown-picker'
+import NavBar from '../assets/NavBar.jsx'
 
 const Notebook = () => {
     const subID ="sub123"
@@ -313,224 +307,6 @@ const Notebook = () => {
 
 {/*define all of the custom styles for this page*/ }
 const styles = StyleSheet.create({
-
-
-
-    outsideEntryBox: { // outside box of the entries
-        backgroundColor: Colors.SCOTCH_MIST_TAN, 
-       // height: '90%',
-        width: '90%',
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: 'black',
-        alignItems: 'center',
-        marginTop: 15,
-        //marginBotton: 15,
-        alignSelf: 'center',
-        marginLeft: 10,
-        marginRight: 10
-
-
-    },
-    scrollContainer: { //holds outsideEntrybox>entryContainer
-        flex: 1,
-        width: '100%',
-        //height: 'auto',
-        //marginTop: 60,
-       // backgroundColor: 'red',
-        backgroundColor: 'transparent',
-        //alignContent: 'center'
-        //borderRadius: 5,
-       // borderWidth: 1,
-        //borderColor: 'black',
-        marginTop: 15,
-        alignSelf: 'center'
-        
-        
-    },
-    entryContainer: { //should be the box surrounding each entry individually
-        width: '90%',
-       // height: '80%',
-        backgroundColor: 'white',
-        padding: 5,
-        marginBottom: 27,
-        marginTop: 20,
-        border: 'black',
-        borderWidth: 1,
-        borderRadius: 5,
-        alignSelf: 'center',
-
-    },
-    darkEntryContainer: {
-        width: '90%',
-        // height: '80%',
-        backgroundColor: Colors.PERIWINKLE_GRAY,
-        padding: 5,
-        marginBottom: 27,
-        marginTop: 20,
-        border: 'black',
-        borderWidth: 1,
-        borderRadius: 5,
-        alignSelf: 'center',
-
-    },
-    entryInsideContainer: {
-        width: '90%',
-        // height: '80%',
-        backgroundColor: Colors.ALMOND_TAN,
-        padding: 5,
-        marginBottom: 27,
-        marginTop: 20,
-        border: 'black',
-        borderWidth: 1,
-        borderRadius: 5,
-        alignSelf: 'center',
-
-    },
-    darkEntryInsideContainer: {
-        width: '90%',
-        // height: '80%',
-        backgroundColor: Colors.LICHEN,
-        padding: 5,
-        marginBottom: 27,
-        marginTop: 20,
-        border: 'black',
-        borderWidth: 1,
-        borderRadius: 5,
-        alignSelf: 'center',
-
-    },
-    filterContainer: { // holds picker
-        flexDirection: 'row',
-        backgroundColor: Colors.ALMOND_TAN,
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: 'black',
-        alignContent: 'flex-start',
-        width: '100%',
-        height: '7%', 
-        marginTop: 5,
-        marginBotton: 3,
-        alignSelf: 'center'
-      
-
-    },
-    darkFilterContainer: {
-        flexDirection: 'row',
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: 'black',
-        alignContent: 'flex-start',
-        width: '100%',
-        height: '7%',
-        marginTop: 5,
-        marginBotton: 3,
-        alignSelf: 'center'
-    },
-    picker: { // two drop down elements overall contained in filterContainer
-        height: '20%',
-        width: 200,
-        borderColor: 'black',
-        borderWidth: 1,
-        borderRadius: 5,
-        backgroundColor: Colors.ALMOND_TAN,
-        //marginBottom: 20,
-       // marginTop: 20,
-        flexDirection: 'row',
-        alignSelf: 'center'
-    },
-    darkPicker: {
-        height: '20%',
-        width: 200,
-        borderColor: 'black',
-        borderWidth: 1,
-        borderRadius: 5,
-        backgroundColor: Colors.CHARCOAL,
-        color: Colors.WHITE_SMOKE,
-        //marginBottom: 20,
-        // marginTop: 20,
-        flexDirection: 'row',
-        alignSelf: 'center'
-
-    },
-   
-    entryText: {
-        fontSize: 16,
-        backgroundColor: 'white',
-        marginBottom: 5,
-
-    },
-    darkText: {
-        fontSize: 16,
-        backgroundColor: Colors.LICHEN,
-        marginBottom: 5,
-    },
-    pickerItem: {
-        backgroundColor: Colors.HOT_GREEN
-    },
-    btnGridContainer: {
-        marginHorizontal: "auto",
-        width: '100%',
-        backgroundColor: Colors.ALMOND_TAN,
-        borderRadius: 5,
-        borderColor: 'black',
-        borderWidth: 1,
-        height: '13%'
-    },
-    darkBtnGridContainer: {
-        marginHorizontal: "auto",
-        width: '100%',
-        backgroundColor: Colors.CHARCOAL,
-        borderRadius: 5,
-        borderColor: 'black',
-        borderWidth: 1,
-        height: '13%'
-    },
-  
-    container: { // took out used to be above filter container but was blocking everything
-        flex: 4,
-        //padding: 20,
-        //backgroundColor: 'blue',
-        //backgroundColor: Colors.ALMOND_TAN,
-        width: '90%',
-        marginTop: 5,
-        borderColor: 'black',
-        borderRadius: 5,
-        borderWidth: 1,
-        height: '100%',
-        
-        
-
-
-    },
-    pickerItemStyle: {
-        backgroundColor: Colors.SCOTCH_MIST_TAN, 
-        color: Colors.ALMOST_BLACK
-    },
-    pickerItemStyleDark: {
-        backgroundColor: Colors.CHARCOAL, 
-        color: Colors.WHITE_SMOKE
-    },
-
-  
-   
-    speedDialContainer: { // didnt end up needing this
-        backgroundColor: 'purple',
-        //height: '80%',
-        width: '100%',
-        //zIndex: 20,
-       // marginBottom: -65
-    
-    },
-    speedDial: {
-        position: 'absolute',
-        bottom: 60,
-        right: 5,
-        color: Colors.HOT_GREEN,
-        flex: 5,
-        zIndex: 100,
-        flexDirection: 'vertical'
-    },
 	fstContainer: {
 		width: '90%',
 		backgroundColor: Colors.SCOTCH_MIST_TAN,
@@ -556,22 +332,36 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'flex-start',
 		flexDirection: 'column',
-		//zIndex: -1,
-		height:'90%',
+		zIndex: -1,
+		height:20
+	},
+	inputBox: {
+		backgroundColor: "white",
+		borderWidth: 2,
+		borderRadius: 5,
+		borderColor: 'black',
+		overflow: 'hidden',
+		borderBottomWidth: 2,
+		fontFamily: 'WorkSans-Regular',
+		fontSize: 16,
+		paddingLeft: 5,
+		zIndex: 5,
+		flex: 3,
+		marginTop: 35,
+		marginBottom: -15
+	},
+	inputDateStyle: {
+		paddingBottom: 20,
     },
-    darkContainer: { // dark mode version of topContainer
-        backgroundColor: Colors.BALTIC_SEA,
-        //backgroundColor:'pink',
-        flex: 1,
-        alignItems: 'flex-start',
-        flexDirection: 'column',
-        //zIndex: -1,
-        height: '90%',
-    },
-
-	
+	inputBoxStyle: {
+		fontFamily: 'WorkSans-Regular',
+		fontSize: 16,
+		color: 'black',
+		paddingLeft: 1,
+		padding:2
+	},
 	oval: {
-		backgroundColor: Colors.MALACHITE,
+		backgroundColor: Colors.IRISH_GREEN,
 		width: 180,
 		height: 180,
 		borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
@@ -580,22 +370,9 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		textAlign: 'center',
 		fontFamily: 'Domine-Regular',		
-    },
-    darkOval: {
-        backgroundColor: Colors.MALACHITE,
-        width: 180,
-        height: 180,
-        borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
-        paddingTop: 120,
-        marginTop: -90,
-        fontSize: 18,
-        textAlign: 'center',
-        fontFamily: 'Domine-Regular',
-
-
-    },
-
+	},
 	ovals: {
+		backgroundColor: Colors.ALMOND_TAN,
 		backgroundColor: Colors.ALMOND_TAN,
 		width: 180,
 		height: 180,
@@ -624,3 +401,8 @@ const styles = StyleSheet.create({
 })
 
 export default Notebook;
+
+
+
+				
+				

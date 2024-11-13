@@ -1,27 +1,20 @@
 import { React, useState, useEffect, useCallback } from 'react';
 import {
-    StyleSheet,
-    View,
-    StatusBar,
-    Alert,
-    FlatList,
-    Modal,
-    TouchableOpacity,
-    Text,
-    Appearance
-} from 'react-native';
-import { useFonts } from 'expo-font';
-import { router } from 'expo-router';
-import { Col, Row } from '../assets/Grid.jsx';
-import Colors from '../assets/Color';
-import AppButton from '../assets/AppButton.jsx';
-import { SpeedDial } from 'react-native-elements';
-import DropDownPicker from 'react-native-dropdown-picker';
-import NavBar from '../assets/NavBar.jsx';
-import TodoEntryModal from '../assets/NotebookModals/TodoEntryModal';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+	StyleSheet,
+	View,
+	StatusBar,
+	Alert,
+	ScrollView,
+} from 'react-native'
+import { useFonts } from 'expo-font'
+import { router } from 'expo-router'
+import { Col, Row } from '../assets/Grid.jsx'
+import Colors from '../assets/Color'
+import AppButton from '../assets/AppButton.jsx'
+import { Input,CheckBox } from 'react-native-elements'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import DropDownPicker from 'react-native-dropdown-picker'
+import NavBar from '../assets/NavBar.jsx'
 
 const todo = () => {
     const [index, setIndex] = useState(0);
@@ -517,6 +510,7 @@ const todo = () => {
     );
 };
 
+{/*define all of the custom styles for this page*/ }
 const styles = StyleSheet.create({
     entryContainer: {
         backgroundColor: Colors.ALMOND_TAN, // set to a tan color
@@ -656,3 +650,7 @@ const styles = StyleSheet.create({
 });
 
 export default todo;
+
+
+
+
