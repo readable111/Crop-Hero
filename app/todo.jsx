@@ -102,6 +102,13 @@ const todo = () => {
     };
 
     const handleSaveTask = (taskData) => {
+
+        // Format date fields in MMDDYYYY before saving, assuming taskData.date exists
+        if (taskData.date) {
+            const date = new Date(taskData.date);
+            const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}${date.getFullYear()}`;
+            taskData.date = formattedDate;
+        }
         let newTasks;
         console.log("old tasks: ", tasks)
 
@@ -113,7 +120,7 @@ const todo = () => {
             console.log(taskData)
             // Add new task
             setNewTask(taskData);
-            setAddNewTasl(true)
+            setAddNewTask(true)
             setSaveTask(true)            
             console.log("newTasks", newTasks)
         }
@@ -366,7 +373,8 @@ const todo = () => {
                             <Text>Task Type: {item[10]}</Text>
                             <Text>Location ID: {item[12]}</Text>
                             <Text>Comments: {item[8]}</Text>
-                            <Text>Due Date: {item[6]}</Text>
+                            <Text>Due Date: {item[6]?.slice(0, 2)}/{item[6]?.slice(2, 4)}/{item[6]?.slice(4)}</Text>
+
                         </TouchableOpacity>
                         // </View>
                     )}
@@ -457,8 +465,11 @@ const todo = () => {
                 locations={locations}
                 crops={crops}
                 taskTypes={taskTypes}
-                onAddNewTaskType={addNewTaskType}  // Pass addNewTaskType as prop
-                initialTaskData={currentTask}  // This should contain the current task details for editing
+                onAddNewTaskType={addNewTaskType}
+                initialTaskData={{
+                    ...currentTask,
+                    date: currentTask?.date ? `${String(currentTask.date).padStart(2, '0')}` : null
+                }}
             />
 
             <NavBar notebookSelected darkMode={isDarkMode} />
