@@ -109,7 +109,7 @@ const todo = () => {
             console.log(taskData)
             // Add new task
             const newTask = { ...taskData, TaskID: newTaskID };
-            setSaveTask(true)            
+            setSaveTask(true)
             newTasks = [...tasks, newTask];
             console.log("newTasks", newTasks)
         }
@@ -125,7 +125,7 @@ const todo = () => {
     const handleTaskLongPress = (task) => {
         setCurrentTask(task);
         setCurrentTaskID(task[0]);
-        
+
         setIsSpeedDialOpen(true);
     };
 
@@ -317,19 +317,19 @@ const todo = () => {
 
 
     return (
-        <View style={styles.topContainer}>
+        <View style={[styles.topContainer, isDarkMode && styles.darkTopContainer]}>
             <StatusBar backgroundColor={Colors.WHITE_SMOKE} />
-            <View style={styles.btnGridContainer}>
+            <View style={[styles.btnGridContainer, isDarkMode && styles.darkGridContainer]}>
                 <Row height={80}>
                     <Col relativeColsCovered={2} alignItems='center'>
                         <AppButton title="To-Do" specifiedStyle={styles.oval} onPress={() => router.replace('/todo')} />
                     </Col>
                     <Col relativeColsCovered={2} alignItems='center'>
-                        <AppButton title="Notebook" specifiedStyle={styles.ovals} onPress={() => router.replace('/notebook')} />
+                        <AppButton title="Notebook" specifiedStyle={[styles.ovals, isDarkMode && styles.darkOvals]} onPress={() => router.replace('/notebook')} />
                     </Col>
                 </Row>
             </View>
-            <View style={styles.container}>
+            <View style={[styles.container, isDarkMode && styles.darkContainer]}>
                 <DropDownPicker
                     open={open}
                     value={value}
@@ -458,7 +458,7 @@ const todo = () => {
 
 const styles = StyleSheet.create({
     entryContainer: {
-        backgroundColor: 'red', // set to a tan color
+        backgroundColor: 'Colors.ALMOND_TAN', // set to a tan color
         marginBottom: 5,
         borderWidth: 1,
         borderRadius: 5,
@@ -466,6 +466,9 @@ const styles = StyleSheet.create({
 
 
 
+    },
+    darkEntryContainer: {
+        backgroundColor: Colors.BALTIC_SEA,
     },
     FlatListView: {
         //backgroundColor: 'green', // set to transparent
@@ -492,6 +495,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         height: '13%',
     },
+    darkGridContainer: {
+        backgroundColor: Colors.BALTIC_SEA,
+    },
     scroll: {
         width: '100%',
         backgroundColor: 'transparent',
@@ -511,6 +517,9 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginBottom: 3
     },
+    darkContainer: {
+        backgroundColor: Colors.PERIWINKLE_GRAY,
+    },
     dropdownContainer: {
         width: '70%',
         marginHorizontal: '15%',
@@ -521,6 +530,9 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 8,
         elevation: 5,
+    },
+    darkTaskContainer: {
+        backgroundColor: Colors.ALMOST_BLACK,
     },
     speedDial: {
         position: 'absolute',
@@ -553,6 +565,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Domine-Regular',
     },
+    darkOvals: {
+        backgroundColor: Colors.RIVER_BED,
+    },
     topContainer: { // overall page container
         backgroundColor: Colors.PERIWINKLE_GRAY,
         //backgroundColor:'pink',
@@ -561,6 +576,9 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         //zIndex: -1,
         height: '90%',
+    },
+    darkTopContainer: {
+        backgroundColor: Colors.BALTIC_SEA
     },
 });
 
