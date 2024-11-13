@@ -1,7 +1,7 @@
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester 
+ * @tester Daniel Moreno
  ***/
 
 import { useState, useEffect } from 'react';
@@ -19,22 +19,62 @@ import { router } from 'expo-router'
 import { Input } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Col, Row } from '../assets/Grid.jsx'
+import { Col, Row } from '../assets/Grid'
 import Colors from '../assets/Color'
-import Icons from '../assets/icons/Icons.js'
-import AppButton from '../assets/AppButton.jsx'
-import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
+import Icons from '../assets/icons/Icons'
+import AppButton from '../assets/AppButton'
+import UploadImage from '../assets/ProfilePageImages/UploadImage'
+import {cleanText, cleanNumbers} from '../assets/sanitizer'
 
 
 const EditProfile = () =>{ 
-	const [fontsLoaded, fontError] = useFonts({
-	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
-	'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
-	});
+	const [first, setFirst] = useState("")
+	const [last, setLast] = useState("")
+	const [awAPIKey, setAWAPIKey] = useState("")
+	const [awAppKey, setAWAppKey] = useState("")
+	const [awMACAddrKey, setAWMACAddrKey] = useState("")
 
-	if (!fontsLoaded && !fontError) {
-		return null;
-	}
+	const handleSave = async() =>{
+		console.log("Saved. First: " + cleanText(first, noStopwords=false, noSQL=true, textOnly=true) + "\t Last: " + cleanText(last, noStopwords=false, noSQL=true, textOnly=true));
+		console.log("'" + cleanText(awAPIKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true) + "'\t AppKey: '" + cleanText(awAppKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true) + "'\t MAC: '" + cleanText(awMACAddrKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true) + "'")
+		await AsyncStorage.setItem('aw_api_key', cleanText(awAPIKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true))
+		await AsyncStorage.setItem('aw_app_key', cleanText(awAppKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true))
+		await AsyncStorage.setItem('aw_device_mac', cleanText(awMACAddrKey, noStopwords=false, noSQL=true, textOnly=false, hexCode=true))
+
+		await AsyncStorage.setItem('first_name', cleanText(first, noStopwords=false, noSQL=true, textOnly=true))
+		await AsyncStorage.setItem('last_name', cleanText(last, noStopwords=false, noSQL=true, textOnly=true))
+	};
+
+	useEffect(() => {
+		// declare the async data fetching function
+		const fetchInputFieldData = async () => {
+			const api = await AsyncStorage.getItem('aw_api_key');
+			const app = await AsyncStorage.getItem('aw_app_key');
+			const mac = await AsyncStorage.getItem('aw_device_mac');
+			const firstName = await AsyncStorage.getItem('first_name');
+			const lastName = await AsyncStorage.getItem('last_name');
+
+			if (!firstName) {
+				await AsyncStorage.setItem('first_name', "Zina")
+				setFirst("Zina")
+			}
+			if (!lastName) {
+				await AsyncStorage.setItem('last_name', "Townley")
+				setLast("Townley")
+			}
+
+			setAWAPIKey(api)
+			setAWAppKey(app)
+			setAWMACAddrKey(mac)
+			setFirst(firstName)
+			setLast(lastName)
+		}
+	  
+		// call the function
+		fetchInputFieldData()
+		  	// make sure to catch any error
+		  	.catch(console.warn);
+	}, [])
 
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
@@ -65,8 +105,16 @@ const EditProfile = () =>{
 		
 	{/*TODO: retrieve data from local storage or database*/}
 	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
-	initialFirstName = "Zina"
-	initialLastName = "Townley"
+
+
+	const [fontsLoaded, fontError] = useFonts({
+		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+		'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
+	});
+
+	if (!fontsLoaded && !fontError) {
+		return null;
+	}
 
 	return(
 	<ScrollView style = {styles.container}>
@@ -78,13 +126,13 @@ const EditProfile = () =>{
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
 					{/*create the arrow to unwind the stack and go back one page*/}
-					<AppButton title="" icon={isDarkMode ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
+					<AppButton testID={"back-arrow"} title="" icon={isDarkMode ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
 				</Col>
 				<Col relativeColsCovered={8}></Col>
 				<Col relativeColsCovered={2}>
 					{/*TODO: link save button to get input field contents and save them to the database*/}
 					{/*TODO: when picture is saved, it is compressed via react-native-compressor library & https://stackoverflow.com/questions/37639360/how-to-optimise-an-image-in-react-native before being put into proper field*/}
-					<AppButton title="" mci="content-save" mciSize={30} mciColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={() => Alert.alert('Save icon button pressed')}/>
+					<AppButton testID={"save"} title="" mci="content-save" mciSize={30} mciColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
 				</Col>
 			</Row>
 		</View>
@@ -100,26 +148,72 @@ const EditProfile = () =>{
 				{/*first name input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>First Name</Text>
 				<Input
+					testID={"first-name-input"}
 					leftIcon={<AntDesign name="user" size={24} color={Colors.SOFT_GREEN}/>}
 					inputContainerStyle={[styles.inputBox, isDarkMode && styles.inputBoxDark]}
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					placeholder='John'
-					defaultValue={initialFirstName}
+					defaultValue={first}
 					autoComplete='name'
 					maxLength={256}
+					onChangeText={value => {setFirst(value);}}
 				/>
 				{/*last name input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Last Name</Text>
 				<Input
+					testID={"last-name-input"}
 					leftIcon={<AntDesign name="user" size={24} color={Colors.SOFT_GREEN}/>}
 					inputContainerStyle={[styles.inputBox, isDarkMode && styles.inputBoxDark]}
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					placeholder='Doe'
-					defaultValue={initialLastName}
+					defaultValue={last}
 					autoComplete='name'
 					maxLength={256}
+					onChangeText={value => {setLast(value);}}
+				/>
+				{/*Ambient Weather API key*/}
+				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Ambient Weather API Key</Text>
+				<Input
+					testID={"api-key-input"}
+					leftIcon={<AntDesign name="user" size={24} color={Colors.SOFT_GREEN}/>}
+					inputContainerStyle={[styles.inputBox, isDarkMode && styles.inputBoxDark]}
+					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
+					selectionColor={Colors.SANTA_GRAY}
+					placeholder='API Key: ...ed875ac750daf92e...'
+					defaultValue={awAPIKey}
+					autoComplete='off'  //autoComplete is off because a hex string will just cause issues with any autocomplete algorithms
+					maxLength={256}
+					onChangeText={value => {setAWAPIKey(value);}}
+				/>
+				{/*Ambient Weather App key*/}
+				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Ambient Weather App Key</Text>
+				<Input
+					testID={"app-key-input"}
+					leftIcon={<AntDesign name="user" size={24} color={Colors.SOFT_GREEN}/>}
+					inputContainerStyle={[styles.inputBox, isDarkMode && styles.inputBoxDark]}
+					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
+					selectionColor={Colors.SANTA_GRAY}
+					placeholder='App Key: ...59391b4f41d88b8a...'
+					defaultValue={awAppKey}
+					autoComplete='off'	//autoComplete is off because a hex string will just cause issues with any autocomplete algorithms
+					maxLength={256}
+					onChangeText={value => {setAWAppKey(value);}}
+				/>
+				{/*Ambient Weather MAC Addr*/}
+				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Ambient Weather MAC Addr</Text>
+				<Input
+					testID={"mac-addr-input"}
+					leftIcon={<AntDesign name="user" size={24} color={Colors.SOFT_GREEN}/>}
+					inputContainerStyle={[styles.inputBox, isDarkMode && styles.inputBoxDark]}
+					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
+					selectionColor={Colors.SANTA_GRAY}
+					placeholder='MAC Address: ...3cff8cdbae849a83...'
+					defaultValue={awMACAddrKey}
+					autoComplete='off'	//autoComplete is off because a hex string will just cause issues with any autocomplete algorithms
+					maxLength={256}
+					onChangeText={value => {setAWMACAddrKey(value);}}
 				/>
 				{/*new password input box*/}
 				<Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Change Password</Text>
@@ -130,7 +224,7 @@ const EditProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					secureTextEntry={true}
-					placeholder='•••••••••••• - disabled till Phase 2'
+					placeholder='•••••••••••• - disabled'
 					contextMenuHidden={true}
 					editable={false}
 					readOnly={true}
@@ -144,7 +238,7 @@ const EditProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					secureTextEntry={true}
-					placeholder='•••••••••••• - disabled till Phase 2'
+					placeholder='•••••••••••• - disabled'
 					contextMenuHidden={true}
 					editable={false}
 					readOnly={true}
@@ -182,7 +276,7 @@ const styles = StyleSheet.create({
 	rect: {
 		backgroundColor: Colors.SANTA_GRAY,
 		width: '100%',
-		height: 540,
+		height: '90%',
 		marginTop: -300,
 		alignItems: 'center',
 	},
@@ -239,9 +333,10 @@ const styles = StyleSheet.create({
 	btnGridContainer: {
 		flex: 12, // # of columns
     	marginHorizontal: "auto",
-    	width: '100',
+    	width: '100%',
 		marginTop: 7,
-	},
+		marginBottom: 10,
+	}
 })
 
 export default EditProfile;

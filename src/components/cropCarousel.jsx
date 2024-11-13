@@ -27,10 +27,10 @@ const Carousel = ({data, isDarkMode=false}) => {
         <Pressable onPress = {() => router.push({pathname:'/cropspage', params: item})}>
           <View style={[styles.item, isDarkMode && styles.itemDark]}>
             <Image source = {require("../../assets/icons/cropDefaultImage.png")}/>
-            <Text> Name: {item.name}</Text> 
-            <Text> Medium: {item.medium}</Text>
-            <Text> Loction: {item.location}</Text>
-            <Text> Start Date: {item.date}</Text>
+            <Text>Name: {item.name}</Text> 
+            <Text>Medium: {item.medium}</Text>
+            <Text>Location: {item.location}</Text>
+            <Text>Start Date: {item.datePlanted}</Text>
           </View>
         </Pressable>
         )}
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   item: {
     width: 151,
     height: 232,
-    backgroundColor: Colors.ALMOND_TAN,
+    backgroundColor: Colors.SCOTCH_MIST_TAN,
     borderRadius: 10,
     marginLeft: 10,
     marginRight: 10,

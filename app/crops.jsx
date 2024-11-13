@@ -1,19 +1,19 @@
 /****
  * @author Isaac Boodt
  * @reviewer Daniel Moreno
- * @tester 
+ * @tester Isaac Boodt
  ***/
 
 import { StatusBar } from 'expo-status-bar';
 import { React, useEffect, useState} from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useRouter } from 'expo-router'
+import { Pressable, StyleSheet, Text, View, Appearance } from 'react-native';
+import { router, useRouter } from 'expo-router'
 import NavBar from '../assets/NavBar.jsx'
 import Colors from '../assets/Color';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
-const crops = () => {
-  const router = useRouter();
+const Crops = () => {
+  //const router = useRouter();
   const [fontsLoaded, fontError] = useFonts({
     'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
     'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
@@ -31,7 +31,7 @@ const [isDark, setIsDarkMode] = useState(false)
                         }
                         else
                         {
-                                useColorScheme.Appearence.getColorScheme()
+                                colorScheme = Appearance.getColorScheme()
                                 if(colorScheme == 'dark')
                                 {
                                         result = true;
@@ -50,7 +50,10 @@ const [isDark, setIsDarkMode] = useState(false)
   return (
     <View style={[ styles.container, isDark && styles.containerDark]}>
       <View style={[styles.titleCard, isDark && styles.titleCarddark]}>
-        <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>My Crops</Text>
+        <View style={styles.titleContainer}>
+          <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>My Crops</Text>
+          <View style={styles.semicircle}></View>
+        </View>
       </View>
       {/*<View style={styles.circle}></View>*/} 
         <View style={ [ styles.button, isDark && styles.buttonDark ] }>
@@ -69,7 +72,7 @@ const [isDark, setIsDarkMode] = useState(false)
   );
 }
 
-export default crops;
+export default Crops;
 
 const styles = StyleSheet.create({
   container: {
@@ -79,11 +82,21 @@ const styles = StyleSheet.create({
   containerDark:{
     backgroundColor: Colors.BALTIC_SEA
 },
-  circleBlock:{
-    backgroundColor: 'white',
+  semicircle:{
     position: 'absolute',
-    marginTop: -20,
-
+    top: -19,
+    left: 0,
+    width: 140,
+    height: 70,
+    backgroundColor: Colors.MALACHITE,
+    borderBottomLeftRadius: 140,
+    borderBottomRightRadius: 140,
+    overflow: 'hidden',
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative', 
   },
   titleCard:{
     backgroundColor: Colors.ALMOND_TAN,
@@ -98,7 +111,8 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     fontSize: 42,
     fontFamily: 'Domine-Medium',
-    alignContent: 'center'
+    alignContent: 'center',
+    flex: 1,
   },
   backdrop:{
     flex: 10,

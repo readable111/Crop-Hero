@@ -14,9 +14,10 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
       style={
         {
           "flex": 12,
+          "marginBottom": 10,
           "marginHorizontal": "auto",
           "marginTop": 7,
-          "width": "100",
+          "width": "100%",
         }
       }
     >
@@ -82,6 +83,7 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID="back-arrow"
           >
             <Image
               source={1}
@@ -154,6 +156,7 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID="save"
           >
             <Text
               allowFontScaling={false}
@@ -289,6 +292,7 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                 "width": 50,
               }
             }
+            testID="open"
           >
             <Text
               allowFontScaling={false}
@@ -409,6 +413,7 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
               defaultValue="Zina"
               editable={true}
               maxLength={256}
+              onChangeText={[Function]}
               placeholder="John"
               placeholderTextColor="#86939e"
               selectionColor="#97A5BF"
@@ -421,7 +426,7 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                   "minHeight": 40,
                 }
               }
-              testID="RNE__Input__text-input"
+              testID="first-name-input"
               underlineColorAndroid="transparent"
             />
           </View>
@@ -531,6 +536,7 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
               defaultValue="Townley"
               editable={true}
               maxLength={256}
+              onChangeText={[Function]}
               placeholder="Doe"
               placeholderTextColor="#86939e"
               selectionColor="#97A5BF"
@@ -543,7 +549,7 @@ exports[`Dark Mode <EditProfile/> renders correctly 1`] = `
                   "minHeight": 40,
                 }
               }
-              testID="RNE__Input__text-input"
+              testID="last-name-input"
               underlineColorAndroid="transparent"
             />
           </View>
@@ -887,9 +893,10 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
       style={
         {
           "flex": 12,
+          "marginBottom": 10,
           "marginHorizontal": "auto",
           "marginTop": 7,
-          "width": "100",
+          "width": "100%",
         }
       }
     >
@@ -955,6 +962,7 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID="back-arrow"
           >
             <Image
               source={1}
@@ -1027,6 +1035,7 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID="save"
           >
             <Text
               allowFontScaling={false}
@@ -1162,6 +1171,7 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
                 "width": 50,
               }
             }
+            testID="open"
           >
             <Text
               allowFontScaling={false}
@@ -1282,6 +1292,7 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
               defaultValue="Zina"
               editable={true}
               maxLength={256}
+              onChangeText={[Function]}
               placeholder="John"
               placeholderTextColor="#86939e"
               selectionColor="#97A5BF"
@@ -1294,7 +1305,7 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
                   "minHeight": 40,
                 }
               }
-              testID="RNE__Input__text-input"
+              testID="first-name-input"
               underlineColorAndroid="transparent"
             />
           </View>
@@ -1404,6 +1415,7 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
               defaultValue="Townley"
               editable={true}
               maxLength={256}
+              onChangeText={[Function]}
               placeholder="Doe"
               placeholderTextColor="#86939e"
               selectionColor="#97A5BF"
@@ -1416,7 +1428,7 @@ exports[`Light Mode <EditProfile/> renders correctly 1`] = `
                   "minHeight": 40,
                 }
               }
-              testID="RNE__Input__text-input"
+              testID="last-name-input"
               underlineColorAndroid="transparent"
             />
           </View>
@@ -1760,9 +1772,10 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
       style={
         {
           "flex": 12,
+          "marginBottom": 10,
           "marginHorizontal": "auto",
           "marginTop": 7,
-          "width": "100",
+          "width": "100%",
         }
       }
     >
@@ -1828,6 +1841,7 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID="back-arrow"
           >
             <Image
               source={1}
@@ -1900,6 +1914,7 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID="save"
           >
             <Text
               allowFontScaling={false}
@@ -2035,6 +2050,7 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
                 "width": 50,
               }
             }
+            testID="open"
           >
             <Text
               allowFontScaling={false}
@@ -2155,6 +2171,7 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
               defaultValue="Zina"
               editable={true}
               maxLength={256}
+              onChangeText={[Function]}
               placeholder="John"
               placeholderTextColor="#86939e"
               selectionColor="#97A5BF"
@@ -2167,7 +2184,7 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
                   "minHeight": 40,
                 }
               }
-              testID="RNE__Input__text-input"
+              testID="first-name-input"
               underlineColorAndroid="transparent"
             />
           </View>
@@ -2277,6 +2294,7 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
               defaultValue="Townley"
               editable={true}
               maxLength={256}
+              onChangeText={[Function]}
               placeholder="Doe"
               placeholderTextColor="#86939e"
               selectionColor="#97A5BF"
@@ -2289,7 +2307,7 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
                   "minHeight": 40,
                 }
               }
-              testID="RNE__Input__text-input"
+              testID="last-name-input"
               underlineColorAndroid="transparent"
             />
           </View>
@@ -2617,4 +2635,890 @@ exports[`No Async <EditProfile/> renders correctly 1`] = `
     </View>
   </View>
 </RCTScrollView>
+`;
+
+exports[`Test <UploadImage/> renders correctly after hitting remove 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "height": 130,
+        "width": 200,
+      },
+      {
+        "marginBottom": 40,
+        "marginTop": -100,
+      },
+    ]
+  }
+>
+  <Image
+    source={1}
+    style={
+      {
+        "borderRadius": 75,
+        "borderWidth": 2,
+        "height": 130,
+        "width": 130,
+      }
+    }
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#00AF33",
+        "borderRadius": 25,
+        "height": 50,
+        "justifyContent": "center",
+        "marginLeft": 130,
+        "marginTop": -50,
+        "opacity": 1,
+        "width": 50,
+      }
+    }
+    testID="open"
+  >
+    <Text
+      allowFontScaling={false}
+      selectable={false}
+      style={
+        [
+          {
+            "color": "#0A0A0A",
+            "fontSize": 30,
+          },
+          undefined,
+          {
+            "fontFamily": "material-community",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          {},
+        ]
+      }
+    >
+      󱇤
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Test <UploadImage/> renders correctly with edit turned off 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "height": 130,
+        "width": 200,
+      },
+      {
+        "marginBottom": 40,
+        "marginTop": -100,
+      },
+    ]
+  }
+>
+  <Image
+    source={1}
+    style={
+      {
+        "borderRadius": 75,
+        "borderWidth": 2,
+        "height": 130,
+        "width": 130,
+      }
+    }
+  />
+</View>
+`;
+
+exports[`Test <UploadImage/> renders correctly with edit turned on in back camera mode 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "height": 130,
+        "width": 200,
+      },
+      {
+        "marginBottom": 40,
+        "marginTop": -100,
+      },
+    ]
+  }
+>
+  <Image
+    source={1}
+    style={
+      {
+        "borderRadius": 75,
+        "borderWidth": 2,
+        "height": 130,
+        "width": 130,
+      }
+    }
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#00AF33",
+        "borderRadius": 25,
+        "height": 50,
+        "justifyContent": "center",
+        "marginLeft": 130,
+        "marginTop": -50,
+        "opacity": 1,
+        "width": 50,
+      }
+    }
+    testID="open"
+  >
+    <Text
+      allowFontScaling={false}
+      selectable={false}
+      style={
+        [
+          {
+            "color": "#0A0A0A",
+            "fontSize": 30,
+          },
+          undefined,
+          {
+            "fontFamily": "material-community",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          {},
+        ]
+      }
+    >
+      󱇤
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Test <UploadImage/> renders correctly with edit turned on in gallery mode 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "height": 130,
+        "width": 200,
+      },
+      {
+        "marginBottom": 40,
+        "marginTop": -100,
+      },
+    ]
+  }
+>
+  <Image
+    source={1}
+    style={
+      {
+        "borderRadius": 75,
+        "borderWidth": 2,
+        "height": 130,
+        "width": 130,
+      }
+    }
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#00AF33",
+        "borderRadius": 25,
+        "height": 50,
+        "justifyContent": "center",
+        "marginLeft": 130,
+        "marginTop": -50,
+        "opacity": 1,
+        "width": 50,
+      }
+    }
+    testID="open"
+  >
+    <Text
+      allowFontScaling={false}
+      selectable={false}
+      style={
+        [
+          {
+            "color": "#0A0A0A",
+            "fontSize": 30,
+          },
+          undefined,
+          {
+            "fontFamily": "material-community",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          {},
+        ]
+      }
+    >
+      󱇤
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Test <UploadImage/> renders correctly with edit turned on in selfie mode 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "height": 130,
+        "width": 200,
+      },
+      {
+        "marginBottom": 40,
+        "marginTop": -100,
+      },
+    ]
+  }
+>
+  <Image
+    source={1}
+    style={
+      {
+        "borderRadius": 75,
+        "borderWidth": 2,
+        "height": 130,
+        "width": 130,
+      }
+    }
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#00AF33",
+        "borderRadius": 25,
+        "height": 50,
+        "justifyContent": "center",
+        "marginLeft": 130,
+        "marginTop": -50,
+        "opacity": 1,
+        "width": 50,
+      }
+    }
+    testID="open"
+  >
+    <Text
+      allowFontScaling={false}
+      selectable={false}
+      style={
+        [
+          {
+            "color": "#0A0A0A",
+            "fontSize": 30,
+          },
+          undefined,
+          {
+            "fontFamily": "material-community",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          {},
+        ]
+      }
+    >
+      󱇤
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Test <UploadImage/> renders correctly with edit turned on with back press 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "height": 130,
+        "width": 200,
+      },
+      {
+        "marginBottom": 40,
+        "marginTop": -100,
+      },
+    ]
+  }
+>
+  <Image
+    source={1}
+    style={
+      {
+        "borderRadius": 75,
+        "borderWidth": 2,
+        "height": 130,
+        "width": 130,
+      }
+    }
+  />
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#00AF33",
+        "borderRadius": 25,
+        "height": 50,
+        "justifyContent": "center",
+        "marginLeft": 130,
+        "marginTop": -50,
+        "opacity": 1,
+        "width": 50,
+      }
+    }
+    testID="open"
+  >
+    <Text
+      allowFontScaling={false}
+      selectable={false}
+      style={
+        [
+          {
+            "color": "#0A0A0A",
+            "fontSize": 30,
+          },
+          undefined,
+          {
+            "fontFamily": "material-community",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          {},
+        ]
+      }
+    >
+      󱇤
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Test <UploadModal/> renders correctly 1`] = `
+<Modal
+  animationType="fade"
+  hardwareAccelerated={false}
+  transparent={true}
+  visible={true}
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "rgba(0, 0, 0, 0.7)",
+        "height": "100%",
+        "justifyContent": "center",
+        "width": "100%",
+      }
+    }
+    testID="back"
+  >
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "borderRadius": 25,
+            "height": 130,
+            "width": "80%",
+          },
+          {
+            "backgroundColor": "#F1DDBF",
+          },
+        ]
+      }
+    >
+      <Text
+        style={
+          {
+            "color": "black",
+            "fontFamily": "Domine-Medium",
+            "fontSize": 24,
+            "marginTop": 10,
+          }
+        }
+      >
+        Profile Photo
+      </Text>
+      <View
+        style={
+          {
+            "flex": 12,
+            "marginHorizontal": "auto",
+            "marginTop": 5,
+            "width": "100%",
+          }
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "flexDirection": "row",
+              },
+              null,
+              {
+                "height": 70,
+              },
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "flex": 4,
+                },
+                {
+                  "justifyContent": "center",
+                  "paddingLeft": 5,
+                },
+                {
+                  "alignItems": "center",
+                },
+              ]
+            }
+          >
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#FFFADA",
+                  "borderRadius": 12,
+                  "height": 60,
+                  "justifyContent": "center",
+                  "opacity": 1,
+                  "width": 60,
+                }
+              }
+              testID="camera"
+            >
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#00AF33",
+                      "fontSize": 30,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "material-community",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                󰵝
+              </Text>
+              <Text
+                style={
+                  {
+                    "color": "black",
+                    "fontFamily": "WorkSans-Regular",
+                    "fontSize": 10,
+                    "marginTop": 4,
+                  }
+                }
+              >
+                Camera
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              [
+                {
+                  "flex": 4,
+                },
+                {
+                  "justifyContent": "center",
+                  "paddingLeft": 5,
+                },
+                {
+                  "alignItems": "center",
+                },
+              ]
+            }
+          >
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#FFFADA",
+                  "borderRadius": 12,
+                  "height": 60,
+                  "justifyContent": "center",
+                  "opacity": 1,
+                  "width": 60,
+                }
+              }
+              testID="gallery"
+            >
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#00AF33",
+                      "fontSize": 30,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "material-community",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                󰥶
+              </Text>
+              <Text
+                style={
+                  {
+                    "color": "black",
+                    "fontFamily": "WorkSans-Regular",
+                    "fontSize": 10,
+                    "marginTop": 4,
+                  }
+                }
+              >
+                Gallery
+              </Text>
+            </View>
+          </View>
+          <View
+            style={
+              [
+                {
+                  "flex": 4,
+                },
+                {
+                  "justifyContent": "center",
+                  "paddingLeft": 5,
+                },
+                {
+                  "alignItems": "center",
+                },
+              ]
+            }
+          >
+            <View
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#FFFADA",
+                  "borderRadius": 12,
+                  "height": 60,
+                  "justifyContent": "center",
+                  "opacity": 1,
+                  "width": 60,
+                }
+              }
+              testID="remove"
+            >
+              <Text
+                allowFontScaling={false}
+                selectable={false}
+                style={
+                  [
+                    {
+                      "color": "#1E1E1E",
+                      "fontSize": 30,
+                    },
+                    undefined,
+                    {
+                      "fontFamily": "material-community",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    {},
+                  ]
+                }
+              >
+                󰩺
+              </Text>
+              <Text
+                style={
+                  {
+                    "color": "black",
+                    "fontFamily": "WorkSans-Regular",
+                    "fontSize": 10,
+                    "marginTop": 4,
+                  }
+                }
+              >
+                Remove
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</Modal>
 `;

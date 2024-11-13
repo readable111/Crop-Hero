@@ -1,11 +1,11 @@
 /****
  * @author Isaac Boodt
  * @reviewer Daniel Moreno
- * @tester 
+ * @tester Isaac Boodt
  ***/
 
 import React, { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, StatusBar, Text, View, ScrollView, Image, TextInput, FlatList, TouchableOpacity, Alert} from 'react-native';
+import { Pressable, Switch, StyleSheet, StatusBar, Text, View, Appearance, ScrollView, Image, TextInput, FlatList, TouchableOpacity, Alert} from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input, colors } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,20 +16,10 @@ import { useFonts } from 'expo-font'
 
 
 
-const viewCrops = () => {
+const ViewCrops = () => {
         {/* Array of objects, used to differentiate picked items */}
         const [selectedItem, setItem] = useState(null);
 
-        //Fonts
-        const [fontsLoaded, fontError] = useFonts({
-                'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
-                'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
-                'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
-        });
-
-        if(!fontsLoaded && !fontError){
-                return null;
-        }
         const [isDark, setIsDarkMode] = useState(false)
         useEffect(() => {
                 const fetchDarkModeSetting = async () => {
@@ -42,7 +32,7 @@ const viewCrops = () => {
                         }
                         else
                         {
-                                useColorScheme.Appearence.getColorScheme()
+                                colorScheme = Appearance.getColorScheme()
                                 if(colorScheme == 'dark')
                                 {
                                         result = true;
@@ -65,13 +55,13 @@ const viewCrops = () => {
                 {label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', datePlanted: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' , medium: 'Hugel Mound', hrfNum: '945304', visible:'not visible', yield:'large'},
                 {label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", datePlanted: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard', medium: 'Hugel Mound', hrfNum: '835242', visible:'visible', yield:'medium' },
                 {label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
-                {label: 'Tomato2', name: "Tomato2", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
-                {label: 'Tomato3', name: "Tomato3", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
-                {label: 'Tomato4', name: "Tomato4", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
-                {label: 'Tomato5', name: "Tomato5", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
-                {label: 'Tomato6', name: "Tomato6", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
-                {label: 'Tomato7', name: "Tomato7", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
-                {label: 'Tomato8', name: "Tomato8", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
+                {label: 'Tomato2', name: "Tomato2", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999991', visible:'not visible', yield:'small' },
+                {label: 'Tomato3', name: "Tomato3", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999998', visible:'not visible', yield:'small' },
+                {label: 'Tomato4', name: "Tomato4", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999997', visible:'not visible', yield:'small' },
+                {label: 'Tomato5', name: "Tomato5", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999996', visible:'not visible', yield:'small' },
+                {label: 'Tomato6', name: "Tomato6", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999995', visible:'not visible', yield:'small' },
+                {label: 'Tomato7', name: "Tomato7", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999994', visible:'not visible', yield:'small' },
+                {label: 'Tomato8', name: "Tomato8", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999993', visible:'not visible', yield:'small' },
         
         
         ]);
@@ -89,7 +79,6 @@ const viewCrops = () => {
                         }
         }, [newCrop]);
         console.log(crops);
-               
         {/* Was testing something, leaving for now
         const handleChange = (itemValue, itemIndex) =>
         {
@@ -99,6 +88,12 @@ const viewCrops = () => {
 
         //Testing functions now
 
+        //Delete toggle
+        const [isDelete, setIsDelete] = useState(false);
+
+        const deleteItem = (hrfNum) => {
+                setCrops((prevItems) => prevItems.filter(item => item.hrfNum !== hrfNum))
+        }
         {/* Deals with rendering the items (In this case, selectables) in the flatlist */}
 
         const renderItem = ({ item }) => 
@@ -112,17 +107,53 @@ const viewCrops = () => {
 
         const handlePress = (item) => 
         {
-                console.log('Item pressed:');
-                router.push({pathname: '/cropspage', params: item})
+                if(isDelete)
+                {
+                        Alert.alert(`Delete Item`, `Are you sure you want to delete "${item.name}"?`,
+                                [
+                                        { text: "Delete", onPress: () => deleteItem(item.hrfNum) },
+                                        { text: "Cancel", style: "cancel"}
+                                ]
+                        )
+                        
+                }
+                else{
+
+                        console.log('Item pressed:');
+                        router.push({pathname: '/cropspage', params: item})
+                }
         }
+
+        {/*load in all fonts used for this page*/}
+	const [fontsLoaded, fontError] = useFonts({
+		'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
+		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+	});
+	{/*return an error if the fonts fail to load*/}
+	if (!fontsLoaded && !fontError) {
+		return null;
+	}
+
         return (
                 <View style={styles.wrapper}>
                         <View style={[ styles.title, isDark && styles.titleDark ]}>
-                                <Text style = {[styles.titleText, isDark && styles.darkTitleText]}>View Crops</Text>
+                                <View style={styles.titleContainer}>
+                                        <Text style = {[styles.titleText, isDark && styles.darkTitleText]}>View Crops</Text>
+                                        <View style={styles.semicircle}></View>
+                                </View>
                         </View>
                         <View style={[styles.container, isDark && styles.containerDark]}>
-                                <View style={styles.back}>
-                                        <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.push('/crops')}/>
+                                <View style={[styles.topContainer, styles.spaceBetween]}>
+                                        <View style={styles.back}>
+                                                <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.push('/crops')}/>
+                                        </View>
+                                        <View style={[styles.toggleContainer, isDark && styles.toggleContainerDark]}>
+                                                <Text style={styles.toggleLabel}>Toggle Delete</Text>
+                                                <Switch
+                                                        value={isDelete}
+                                                        onValueChange={setIsDelete}
+                                                />
+                                        </View>
                                 </View>
                                 <FlatList
                                         data={crops}
@@ -134,7 +165,7 @@ const viewCrops = () => {
         )
 }
 
-export default viewCrops;
+export default ViewCrops;
 
 const styles = StyleSheet.create({
         container: {
@@ -144,6 +175,22 @@ const styles = StyleSheet.create({
         },
         containerDark:{
                 backgroundColor: Colors.BALTIC_SEA
+        },
+        semicircle:{
+                position: 'absolute',
+                top: -19,
+                left: 0,
+                width: 140,
+                height: 70,
+                backgroundColor: Colors.MALACHITE,
+                borderBottomLeftRadius: 140,
+                borderBottomRightRadius: 140,
+                overflow: 'hidden',
+        },
+        titleContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                position: 'relative', 
         },
         title:{
                 backgroundColor: Colors.ALMOND_TAN,
@@ -158,9 +205,10 @@ const styles = StyleSheet.create({
         },
         titleText:{
                 textAlign: 'right',
-                fontSize: 42,
+                fontSize: 38,
                 fontFamily: 'Domine-Medium',
-                alignContent: 'center'
+                alignContent: 'center',
+                flex: 1,
         },
         darkTitleText:{
                 color: Colors.WHITE_SMOKE
@@ -207,5 +255,35 @@ const styles = StyleSheet.create({
         },
         wrapper:{
                 flex:1
+        },
+        toggleContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: 5,
+                paddingHorizontal: 5,
+                backgroundColor: Colors.SCOTCH_MIST_TAN, // Light background color around the toggle
+                borderRadius: 20,
+                borderColor: '#20232a',
+                borderWidth: 2,
+                margin: 10,
+                marginRight: "5%"
+        },
+        toggleContainerDark:
+        {
+                backgroundColor: Colors.LICHEN
+        },
+        toggleLabel: {
+                
+                fontSize: 18,
+                marginRight: 0,
+        },
+        topContainer: {
+                flexDirection: "row",
+                alignItems: "center"
+        },
+        spaceBetween:
+        {
+                justifyContent: "space-between"
         }
 });

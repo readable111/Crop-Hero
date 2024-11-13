@@ -1,7 +1,7 @@
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester 
+ * @tester Daniel Moreno
  ***/
 
 import { React, useState, useEffect } from 'react';
@@ -21,8 +21,11 @@ import Colors from '../assets/Color'
 import AppButton from '../assets/AppButton.jsx'
 import UploadImage from '../assets/ProfilePageImages/UploadImage.jsx'
 import NavBar from '../assets/NavBar.jsx'
+import { toTitleCase } from '../assets/sanitizer.jsx'
 
 const Profile = () =>{ 
+	const [username, setUsername] = useState("")
+
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
 		// declare the async data fetching function
@@ -50,6 +53,30 @@ const Profile = () =>{
 		  	.catch(console.error);
 	}, [])
 
+	useEffect(() => {
+		// declare the async data fetching function
+		const fetchUsername = async () => {
+			firstName = await AsyncStorage.getItem('first_name');
+			lastName = await AsyncStorage.getItem('last_name');
+
+			if (!firstName) {
+				firstName = "zina"
+			}
+			if (!lastName) {
+				lastName = "townley"
+			}
+
+			capitalizedUsername = toTitleCase(firstName + " " + lastName)
+
+			setUsername(capitalizedUsername)
+		}
+	  
+		// call the function
+		fetchUsername()
+		  	// make sure to catch any error
+		  	.catch(console.warn);
+	}, [])
+
 	{/*load in all fonts used for this page*/}
 	const [fontsLoaded, fontError] = useFonts({
 		'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
@@ -68,23 +95,23 @@ const Profile = () =>{
 		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
 		{/*green oval at the top to denote profile picture and name*/}
 		<Text style = {styles.oval}></Text>
-		<Text style = {styles.profileName}>Zina Townley</Text>
+		<Text style = {styles.profileName}>{username}</Text>
 		{/*TODO: set image to display profile picture after retrieving it*/}
 		<UploadImage style={styles.avatarImg} isEditable={false} />
 		{/*add edit profile button*/}
-		<AppButton title="Edit Profile" specifiedStyle={styles.editProfileBtn} backgroundColor={isDarkMode ? Colors.MALACHITE : Colors.SCOTCH_MIST_TAN} onPress={() => router.push('/profile-editprofile')}/>
+		<AppButton testID={"edit-profile"} title="Edit Profile" specifiedStyle={styles.editProfileBtn} backgroundColor={isDarkMode ? Colors.MALACHITE : Colors.SCOTCH_MIST_TAN} onPress={() => router.push('/profile-editprofile')}/>
 		{/*add grid of profile options*/}
 		<View style={styles.btnGridContainer}>
 			{/*row for profile settings*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" ad="setting" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => router.push('/profile-settings')}/>
+					<AppButton testID={"settings-icon"} title="" ad="setting" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => router.push('/profile-settings')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={[styles.optionTxt, isDarkMode && {color: Colors.WHITE_SMOKE}]}>    Settings</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" ad="right" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => router.push('/profile-settings')}/>
+					<AppButton testID={"settings-arrow"} title="" ad="right" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => router.push('/profile-settings')}/>
 				</Col>
 			</Row>
 			{/*spacer row*/}
@@ -103,13 +130,13 @@ const Profile = () =>{
 			{/*info needed for billing: merchant stuff (email, business addr., company name, logo), customer name, customer email, invoice date, due date, payment terms like late fees, itemized list of goods/services, subtotal, taxes/fees/discounts, total due*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" ad="creditcard" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => router.push('/profile-billingdetails')}/>
+					<AppButton testID={"billing-icon"} title="" ad="creditcard" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => router.push('/profile-billingdetails')}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={[styles.optionTxt, isDarkMode && {color: Colors.WHITE_SMOKE}]}>    Billing Details</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" ad="right" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => router.push('/profile-billingdetails')}/>
+					<AppButton testID={"billing-arrow"} title="" ad="right" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => router.push('/profile-billingdetails')}/>
 				</Col>
 			</Row>
 			{/*spacer row*/}
@@ -128,13 +155,13 @@ const Profile = () =>{
 			{/*TODO: add logout functionality once accounts are added*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton title="" ad="logout" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => Alert.alert('Disabled until Phase 2')}/>
+					<AppButton testID={"logout-icon"} title="" ad="logout" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => {Alert.alert('Disabled until Phase 2'); console.log("logout pressed")}}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={[styles.optionTxt, isDarkMode && {color: Colors.WHITE_SMOKE}]}>    Log Out</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton title="" ad="right" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => Alert.alert('Disabled until Phase 2')}/>
+					<AppButton testID={"logout-arrow"} title="" ad="right" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => {Alert.alert('Disabled until Phase 2'); console.log("logout pressed")}}/>
 				</Col>
 			</Row>
 		</View>

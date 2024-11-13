@@ -1,3 +1,9 @@
+/****
+ * @author Daniel Moreno
+ * @reviewer
+ * @tester 
+ ***/
+
 import React from "react";
 import {
     render,
@@ -19,7 +25,12 @@ jest.mock('expo-font', ()=>({
     useFonts: jest.fn(),
     loadAsync: jest.fn().mockResolvedValue(true),
     isLoaded: jest.fn(()=>true)
-  }))
+}))
+jest.mock('expo-router', () => ({
+    router: {
+        back: jest.fn(),
+    }
+}));
 
 it('Light Mode <BillingDetailsProfile/>', async () =>{
     await AsyncStorage.setItem("dark_mode_setting", "false");
@@ -63,6 +74,109 @@ it('No Async <BillingDetailsProfile/>', async () =>{
     })
 })
 
+describe('Unit Tests <Profile/>', () =>{
+    beforeEach(async () => {
+        await AsyncStorage.setItem("dark_mode_setting", "false");
+        Font.useFonts.mockReturnValue([true, false])
+        const [fontsLoaded, fontError] = Font.useFonts()
+        expect(fontsLoaded).toBe(true)
+        expect(fontError).toBe(false)
+    });
 
-/*const button container.querySelector('div');
-  expect(button.innerHTML).toEqual('Start'); */
+    test('can click back arrow', () =>{
+        const { getByTestId } = render(
+            <BillingDetailsProfile/>
+        );
+
+        const button = getByTestId('back-arrow');
+        fireEvent.press(button);
+        expect(require('expo-router').router.back).toHaveBeenCalled();
+    })
+
+    test('can click save button', () =>{
+        const logSpy = jest.spyOn(console, 'log');
+        const { getByTestId } = render(
+            <BillingDetailsProfile/>
+        );
+
+        const button = getByTestId('save');
+        fireEvent.press(button);
+        expect(logSpy).toHaveBeenCalledWith(
+            expect.any(String)
+        );
+    })
+
+    test('can open dropdown and options render', () =>{
+        const { getByTestId } = render(
+            <BillingDetailsProfile/>
+        );
+
+        const button = getByTestId('submodel-dropdown');
+        fireEvent.press(button);
+        expect(getByTestId('free')).not.toBeNull();
+    })
+
+    test('can type in email input', async() =>{
+        const { getByTestId } = render(
+            <BillingDetailsProfile/>
+        );
+
+        const input = getByTestId('email-input');
+        fireEvent.changeText(input, {
+            target: {
+                defaultValue: "placeholder@cropally.com"
+            }
+        })
+        await waitFor(() => {
+            expect(input._fiber.alternate.pendingProps.defaultValue.target.defaultValue).toBe("placeholder@cropally.com")
+        })
+    })
+
+    test('can type in phone input', async() =>{
+        const { getByTestId } = render(
+            <BillingDetailsProfile/>
+        );
+
+        const input = getByTestId('phone-input');
+        fireEvent.changeText(input, {
+            target: {
+                defaultValue: "+1 (987) 654-3210"
+            }
+        })
+        await waitFor(() => {
+            expect(input._fiber.alternate.pendingProps.defaultValue.target.defaultValue).toBe("+1 (987) 654-3210")
+        })
+    })
+
+    test('can type in zip input', async() =>{
+        const { getByTestId } = render(
+            <BillingDetailsProfile/>
+        );
+
+        const input = getByTestId('zip-input');
+        fireEvent.changeText(input, {
+            target: {
+                defaultValue: "98765"
+            }
+        })
+        await waitFor(() => {
+            expect(input._fiber.alternate.pendingProps.defaultValue.target.defaultValue).toBe("98765")
+        })
+    })
+
+    test('can type in state input', async() =>{
+        const { getByTestId } = render(
+            <BillingDetailsProfile/>
+        );
+
+        const input = getByTestId('state-input');
+        fireEvent.changeText(input, {
+            target: {
+                defaultValue: "Rhode Island"
+            }
+        })
+        await waitFor(() => {
+            expect(input._fiber.alternate.pendingProps.defaultValue.target.defaultValue).toBe("Rhode Island")
+        })
+    })
+})

@@ -1,7 +1,7 @@
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester  Tyler Bowen 
+ * @tester  Daniel Moreno
  ***/
 
 import { 
@@ -45,36 +45,36 @@ const NavBar = ({ homeSelected=false, cropsSelected=false, notebookSelected=fals
                 <View style={styles.btnGridContainerBottom}>
                     <Row height={35}>
                             <Col relativeColsCovered={4} alignItems='center'>
-                                <AppButton testID = "crops" role="button" title="" mci="grass" mciSize={35} mciColor={cropsSelected ? Colors.MALACHITE : Colors.SPANISH_GREEN} onPress={() => router.replace('/crops')}/>
+                                <AppButton testID={"crops-icon"} title="" mci="grass" mciSize={35} mciColor={cropsSelected ? Colors.MALACHITE : Colors.SPANISH_GREEN} onPress={() => router.replace('/crops')}/>
                             </Col>
-                            <Col testID = "todo" relativeColsCovered={4} alignItems='center'>
-                                <AppButton  testID = "todo" title="" mci={notebookSelected ? "notebook-edit" : "notebook-edit-outline"} mciSize={30} mciColor={notebookSelected ? Colors.MALACHITE : Colors.SPANISH_GREEN} onPress={() => router.replace('/todo')}/>
+                            <Col relativeColsCovered={4} alignItems='center'>
+                                <AppButton testID={"notebook-icon"} title="" mci={notebookSelected ? "notebook-edit" : "notebook-edit-outline"} mciSize={30} mciColor={notebookSelected ? Colors.MALACHITE : Colors.SPANISH_GREEN} onPress={() => router.replace('/todo')}/>
                             </Col>
-                            <Col testID = "home-button" relativeColsCovered={4} alignItems='center'>
-                                <AppButton testID="home-button" role="button" title="" opacity={0.8} specifiedStyle={homeSelected ? styles.btnCircleSelected : styles.btnCircle} mci={homeSelected ? "home" : "home-outline"} mciSize={35} mciColor={homeSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/home')}/>
+                            <Col relativeColsCovered={4} alignItems='center'>
+                                <AppButton testID={"home-icon"} title="" opacity={0.8} specifiedStyle={homeSelected ? styles.btnCircleSelected : styles.btnCircle} mci={homeSelected ? "home" : "home-outline"} mciSize={35} mciColor={homeSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/home')}/>
                             </Col>
-                            <Col testID = "datahub" relativeColsCovered={4} alignItems='center'>
-                                <AppButton testID="datahub" title="" mci={dataHubSelected ? "chart-box" : "chart-box-outline"} mciSize={35} mciColor={dataHubSelected ? Colors.MALACHITE : Colors.SPANISH_GREEN} onPress={() => router.replace('/datahub')}/>
+                            <Col relativeColsCovered={4} alignItems='center'>
+                                <AppButton testID={"datahub-icon"} title="" mci={dataHubSelected ? "chart-box" : "chart-box-outline"} mciSize={35} mciColor={dataHubSelected ? Colors.MALACHITE : Colors.SPANISH_GREEN} onPress={() => router.replace('/datahub')}/>
                             </Col>
-                            <Col testID = "profile" relativeColsCovered={4} alignItems='center'>
-                                <AppButton role="button" testID="profile" title="" mci={profileSelected ? "account" : "account-outline"} mciSize={35} mciColor={profileSelected ? Colors.MALACHITE : Colors.SPANISH_GREEN} onPress={() => router.replace('/profile')}/>
+                            <Col relativeColsCovered={4} alignItems='center'>
+                                <AppButton testID={"profile-icon"} title="" mci={profileSelected ? "account" : "account-outline"} mciSize={35} mciColor={profileSelected ? Colors.MALACHITE : Colors.SPANISH_GREEN} onPress={() => router.replace('/profile')}/>
                             </Col>
                     </Row>
                     <Row height={25}>
                         <Col relativeColsCovered={4} alignItems='center'>
-                            <AppButton title="Crops" specifiedStyle={cropsSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/crops')}/>
+                            <AppButton testID={"crops-txt"} title="Crops" specifiedStyle={cropsSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/crops')}/>
                         </Col>
                         <Col relativeColsCovered={4} alignItems='center'>
-                            <AppButton title="Notebook" specifiedStyle={notebookSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/todo')}/>
+                            <AppButton testID={"notebook-txt"} title="Notebook" specifiedStyle={notebookSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/todo')}/>
                         </Col>
                         <Col relativeColsCovered={4} alignItems='center'>
-                            <AppButton title="Home" specifiedStyle={homeSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/home')}/>
+                            <AppButton testID={"home-txt"} title="Home" specifiedStyle={homeSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/home')}/>
                         </Col>
                         <Col relativeColsCovered={4} alignItems='center'>
-                            <AppButton title="Data Hub" specifiedStyle={dataHubSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/datahub')}/>
+                            <AppButton testID={"datahub-txt"} title="Data Hub" specifiedStyle={dataHubSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/datahub')}/>
                         </Col>
                         <Col relativeColsCovered={4} alignItems='center'>
-                            <AppButton title="Profile" specifiedStyle={profileSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/profile')}/>
+                            <AppButton testID={"profile-txt"} title="Profile" specifiedStyle={profileSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/profile')}/>
                         </Col>
                     </Row>
                 </View>
@@ -97,36 +97,36 @@ const NavBar = ({ homeSelected=false, cropsSelected=false, notebookSelected=fals
                 <View style={styles.btnGridContainerBottomDark}>
                     <Row height={35}>
                             <Col relativeColsCovered={4} alignItems='center'>
-                                <AppButton testID = "crops" title="" mci="grass" mciSize={35} mciColor={cropsSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/crops')}/>
+                                <AppButton testID={"crops-icon-dark"} title="" mci="grass" mciSize={35} mciColor={cropsSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/crops')}/>
                             </Col>
                             <Col relativeColsCovered={4} alignItems='center'>
-                                <AppButton testID = "todo" title="" mci={notebookSelected ? "notebook-edit" : "notebook-edit-outline"} mciSize={30} mciColor={notebookSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/todo')}/>
+                                <AppButton testID={"notebook-icon-dark"} title="" mci={notebookSelected ? "notebook-edit" : "notebook-edit-outline"} mciSize={30} mciColor={notebookSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/todo')}/>
                             </Col>
                             <Col relativeColsCovered={4} alignItems='center'>
-                                <AppButton testID = "home-button" title="" opacity={0.8} specifiedStyle={homeSelected ? styles.btnCircleSelectedDark : styles.btnCircleDark} mci={homeSelected ? "home" : "home-outline"} mciSize={35} mciColor={homeSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/home')}/>
+                                <AppButton testID={"home-icon-dark"} title="" opacity={0.8} specifiedStyle={homeSelected ? styles.btnCircleSelectedDark : styles.btnCircleDark} mci={homeSelected ? "home" : "home-outline"} mciSize={35} mciColor={homeSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/home')}/>
                             </Col>
                             <Col relativeColsCovered={4} alignItems='center'>
-                                <AppButton testID = "datahub" title="" mci={dataHubSelected ? "chart-box" : "chart-box-outline"} mciSize={35} mciColor={dataHubSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/datahub')}/>
+                                <AppButton testID={"datahub-icon-dark"} title="" mci={dataHubSelected ? "chart-box" : "chart-box-outline"} mciSize={35} mciColor={dataHubSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/datahub')}/>
                             </Col>
                             <Col relativeColsCovered={4} alignItems='center'>
-                                <AppButton testID="profile" title="" mci={profileSelected ? "account" : "account-outline"} mciSize={35} mciColor={profileSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/profile')}/>
+                                <AppButton testID={"profile-icon-dark"} title="" mci={profileSelected ? "account" : "account-outline"} mciSize={35} mciColor={profileSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/profile')}/>
                             </Col>
                     </Row>
                     <Row height={25}>
                         <Col relativeColsCovered={4} alignItems='center'>
-                            <AppButton title="Crops" specifiedStyle={cropsSelected ? styles.selectedTextDark : styles.unselectedTextDark} onPress={() => router.replace('/crops')}/>
+                            <AppButton testID={"crops-txt-dark"} title="Crops" specifiedStyle={cropsSelected ? styles.selectedTextDark : styles.unselectedTextDark} onPress={() => router.replace('/crops')}/>
                         </Col>
                         <Col relativeColsCovered={4} alignItems='center'>
-                            <AppButton title="Notebook" specifiedStyle={notebookSelected ? styles.selectedTextDark : styles.unselectedTextDark} onPress={() => router.replace('/todo')}/>
+                            <AppButton testID={"notebook-txt-dark"} title="Notebook" specifiedStyle={notebookSelected ? styles.selectedTextDark : styles.unselectedTextDark} onPress={() => router.replace('/todo')}/>
                         </Col>
                         <Col relativeColsCovered={4} alignItems='center'>
-                            <AppButton title="Home" specifiedStyle={homeSelected ? styles.selectedTextDark : styles.unselectedTextDark} onPress={() => router.replace('/home')}/>
+                            <AppButton testID={"home-txt-dark"} title="Home" specifiedStyle={homeSelected ? styles.selectedTextDark : styles.unselectedTextDark} onPress={() => router.replace('/home')}/>
                         </Col>
                         <Col relativeColsCovered={4} alignItems='center'>
-                            <AppButton title="Data Hub" specifiedStyle={dataHubSelected ? styles.selectedTextDark : styles.unselectedTextDark} onPress={() => router.replace('/datahub')}/>
+                            <AppButton testID={"datahub-txt-dark"} title="Data Hub" specifiedStyle={dataHubSelected ? styles.selectedTextDark : styles.unselectedTextDark} onPress={() => router.replace('/datahub')}/>
                         </Col>
                         <Col relativeColsCovered={4} alignItems='center'>
-                            <AppButton title="Profile" specifiedStyle={profileSelected ? styles.selectedTextDark : styles.unselectedTextDark} onPress={() => router.replace('/profile')}/>
+                            <AppButton testID={"profile-txt-dark"} title="Profile" specifiedStyle={profileSelected ? styles.selectedTextDark : styles.unselectedTextDark} onPress={() => router.replace('/profile')}/>
                         </Col>
                     </Row>
                 </View>

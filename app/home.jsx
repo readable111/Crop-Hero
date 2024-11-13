@@ -1,98 +1,24 @@
 /****
  * @author Tyler Bowen, Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester 
+ * @tester Daniel Moreno
  * 
  * Secondary Author (Daniel) added general weather forecast info, dark mode, and new carousel for ambient weather display
  ***/
 
 import { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, StatusBar, Appearance } from 'react-native'
+import { StyleSheet, View, StatusBar, Appearance } from 'react-native'
 import { useFonts } from 'expo-font'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Colors from '../assets/Color'
 import CropCarousel from '../src/components/cropCarousel.jsx'
-import SearchInput from '../assets/SearchFeature.jsx'
+import {SearchInput} from '../assets/SearchFeature.jsx'
 import NavBar from '../assets/NavBar.jsx'
-import ZipLookup from '../assets/zip_codes.js';
-import { getWeatherIcon } from '../assets/WeatherTypes.tsx';
 import icons from '../assets/icons/Icons.js';
 import { WeatherSlider } from '../src/components/WeatherSlider';
-
-//eventually transfer this to account creation pages so that it can be cached in the database
-async function getGridpoints(zipcode) {
-	if (!(zipcode in ZipLookup)) {
-		return {
-			status: 406, //invalid zip code
-			gridpoint: ''
-		};
-	}
-
-	let coords = ZipLookup[zipcode]
-	let lat = coords[0]
-	let long = coords[1]
-  
-	try {
-		const response = await fetch(
-			`https://api.weather.gov/points/${lat},${long}`
-		).then((res) => res.json());
-
-		forecastURL = response.properties.forecast
-		urlParts = forecastURL.split('/')
-		gridpoint = urlParts[4] + '/' + urlParts[5]
-	
-		return {
-			status: 200,
-			gridpoint: gridpoint
-		};
-	} catch (error) {
-		return {
-			status: 500,
-			gridpoint: ''
-		};
-	}
-}
-
-//
-const WeatherIcon = ({ forecastVal="clear", day="Mon" , isDarkMode=false}) => {
-	//get the proper weather icon based on the forecast value
-	weatherIconDetails = getWeatherIcon(forecastVal)
-	image_url = weatherIconDetails[0]
-	prob_val = weatherIconDetails[1]
-
-	currentStyle = null
-	onlyPossible = false
-	if (prob_val == "None") {
-		currentStyle = styles.noneProb
-		onlyPossible = false
-	}
-	else if (prob_val == "Slight") {
-		currentStyle = styles.slightProb
-		onlyPossible = true
-	}
-	else if (prob_val == "Chance") {
-		currentStyle = styles.chanceProb
-		onlyPossible = true
-	}
-	else if (prob_val == "Likely") {
-		currentStyle = styles.likelyProb
-		onlyPossible = true
-	}
-
-	return (
-		<TouchableOpacity activeOpacity={1} style={styles.weatherIconContainer}>
-			<Image 
-				style={[styles.weatherIcon, currentStyle]}
-				source={image_url}
-			/>
-			{onlyPossible && <Image 
-				source={isDarkMode ? icons.percent_white : icons.percent_black}
-				style={styles.percentImg}
-			/> }
-			<Text style={[styles.weatherDayLabel, isDarkMode && styles.weatherDayLabelDark]}>{day}</Text>
-		</TouchableOpacity>
-	)
-}
+import {getGridpoints, WeatherIcon} from '../assets/HomeWeatherFunctions'
+import { fetchWeatherData } from '../src/components/AmbientWeatherService';
+import CROPS from '../test_data/testCropData.json'
 
 const todayDayLookup = {
 	"Monday": "Sunday",
@@ -104,6 +30,8 @@ const todayDayLookup = {
 	"Sunday": "Saturday",
 }
 
+
+//Mock data as an example
 const test_data = [
 	{
 	  key: '1',
@@ -130,8 +58,35 @@ const test_data = [
 	  line2: ' 0.2wfv',
 	}
 ];
+/*const test_data = [
+	{
+	  key: '1',
+	  image: icons.hourglass_green,
+	  line1Label: 'Temperature',
+	  line1: 'Loading',
+	  line2Label: 'Feels Like',
+	  line2: 'Loading',
+	},
+	{
+	  key: '2',
+	  image: icons.hourglass_green,
+	  line1Label: 'Wind Speed',
+	  line1: 'Loading',
+	  line2Label: 'Rainfall',
+	  line2: 'Loading',
+	},
+	{
+	  key: '3',
+	  image: icons.hourglass_green,
+	  line1Label: 'Humidity',
+	  line1: 'Loading',
+	  line2Label: 'Soil Moisture',
+	  line2: 'Loading',
+	}
+];*/
 
 const Home = () =>{ 
+	let defaultZip = "76131"
 	const [forecastDataDay1, setforecastDataDay1] = useState(null);
 	const [dayName1, setDayName1] = useState(null);
 	const [forecastDataDay2, setforecastDataDay2] = useState(null);
@@ -146,12 +101,22 @@ const Home = () =>{
 	const [dayName6, setDayName6] = useState(null);
 	const [forecastDataDay7, setforecastDataDay7] = useState(null);
 	const [dayName7, setDayName7] = useState(null);
+	const [ambientWeatherData, setAmbientWeatherData] = useState(test_data);
 
 	useEffect(() => {
 		// declare the async data fetching function
 		const fetchData = async () => {
+		  //
+		  const zipCodeVal = await AsyncStorage.getItem('zip_code');
+			let resultZipCode = null
+    		if (zipCodeVal && zipCodeVal !== "") {
+				resultZipCode = zipCodeVal
+			} else {
+				resultZipCode = defaultZip
+		  }
+
 		  // get the data from the api
-		  const data = await getGridpoints('76131');
+		  const data = await getGridpoints(resultZipCode);
 		  // convert the data to json
 		  if (data.status == 200) {
 			const response = await fetch(
@@ -202,6 +167,7 @@ const Home = () =>{
 		  }
 		  else {
 			console.log("bad")
+			console.log(data.status)
 		  }
 		}
 	  
@@ -210,6 +176,57 @@ const Home = () =>{
 		  // make sure to catch any error
 		  .catch(console.error);
 	}, [])
+
+	useEffect(() => {
+		const getWeatherData = async () => {
+		  try {
+			apiKey = await AsyncStorage.getItem('aw_api_key');
+			appKey = await AsyncStorage.getItem('aw_app_key');
+			deviceMacAddress = await AsyncStorage.getItem('aw_device_mac');
+			console.log(apiKey, appKey, deviceMacAddress)
+			//ensure that all of those were set
+			if (!apiKey || !apiKey.length || !appKey || !appKey.length || !deviceMacAddress || !deviceMacAddress.length) {
+				setAmbientWeatherData(test_data); 
+			} else {
+				const data = await fetchWeatherData(apiKey, appKey, deviceMacAddress);
+				//Assuming the response is an array of weather data entries, sorted with the newest at the start
+				usefulData = data[0]
+				const weatherData = [
+					{
+						key: '1',
+						image: icons.thermometer_santa_gray,
+						line1Label: 'Temperature',
+						line1: usefulData.tempf + '°F',
+						line2Label: 'Feels Like',
+						line2: usefulData.feels_like + '°F',
+					},
+					{
+						key: '2',
+						image: icons.rainfall_black,
+						line1Label: 'Wind Speed',
+						line1: usefulData.windspeedmph + 'mph',
+						line2Label: 'Rainfall',
+						line2: usefulData.dailyrainin + 'in',
+					},
+					{
+						key: '3',
+						image: icons.humidity_santa_gray,
+						line1Label: 'Humidity',
+						line1: usefulData.humidity + '%',
+						line2Label: 'Soil Moisture',
+						line2: usefulData.soilmoisture + 'wfv',
+					}
+				];
+				console.log(weatherData)
+				setAmbientWeatherData(weatherData); 
+			}
+		  } catch (error) {
+			console.warn('Failed to fetch weather data:', error);
+		  }
+		};
+	
+		getWeatherData();
+	  }, []);
 
 	const [isDarkMode, setIsDarkMode] = useState(false)
     useEffect(() => {
@@ -245,23 +262,25 @@ const Home = () =>{
 
 	if (!fontsLoaded && !fontError) {
 		return null;
+	}	
+
+	function parseDate(dateString) {
+		const [month, day, year] = dateString.trim().split("/");
+		return new Date(year, month - 1, day); //month is zero-based
 	}
-		
-	const weather = [{id:1, day: "Mo", weather: "rainy"},{id:2,day: "Tu", weather: "pcloudy"},{id:3,day: "We", weather: "cloudy"},{id:4,day: "Th", weather: "sunny"},{id:5,day: "Fr", weather: "sunny"},{id:6,day: "Sat", weather: "rainy"},{id:7,day: "Sun", weather: "snow"}]
 	
+	let twentyNewestCrops = CROPS
+		.slice() // Create a shallow copy to avoid modifying the original array
+		.sort((a, b) => {
+			const dateA = parseDate(a.datePlanted);
+			const dateB = parseDate(b.datePlanted);
+			return dateB - dateA;
+		})
+		.slice(0, 20); // Take only the top 20 items
 
-        const crops = [
-                { label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', date: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard'},
-                { label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', date: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' },
-                { label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", date: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard' },
-                { label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", date: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard' }
-        ]
-
-	const temp = [{temp: 70, perc: 80},{temp: 68, perc:68}, {temp: 70, perc: 72}]
-	
 	return(
 	<View style = {[styles.container, isDarkMode && styles.containerDark]}>	
-		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
+		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE} />
 		<View style = {[styles.weatherContainer, isDarkMode && styles.weatherContainerDark]}>
 			<WeatherIcon forecastVal={forecastDataDay1} day={dayName1} isDarkMode={isDarkMode}/>
 			<WeatherIcon forecastVal={forecastDataDay2} day={dayName2} isDarkMode={isDarkMode}/>
@@ -272,12 +291,12 @@ const Home = () =>{
 			<WeatherIcon forecastVal={forecastDataDay7} day={dayName7} isDarkMode={isDarkMode}/>
 		</View>
 		<View style = {styles.weatherCarousel}>
-			<WeatherSlider intro_data={test_data} isDarkMode={isDarkMode}/>
+			<WeatherSlider intro_data={ambientWeatherData} isDarkMode={isDarkMode}/>
 		</View>
 		<View style = {styles.Search}>
 			<SearchInput isDarkMode={isDarkMode} />
 		</View>
-			<CropCarousel crops = {crops} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
+			<CropCarousel crops = {twentyNewestCrops} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
 		<NavBar homeSelected darkMode={isDarkMode}/>
 	</View>)
 };
@@ -406,4 +425,4 @@ const styles = StyleSheet.create({
 	},
 })
 
-export default Home;
+export default Home

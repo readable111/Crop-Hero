@@ -1,3 +1,9 @@
+/****
+ * @author Daniel Moreno
+ * @reviewer
+ * @tester 
+ ***/
+
 import React from "react";
 import {
     render,
@@ -14,6 +20,7 @@ jest.useFakeTimers();
 describe('<WeatherSlider/>', () =>{
     test('renders correctly', () =>{
         const tree = render(<WeatherSlider/>).toJSON();
+
         expect(tree).toMatchSnapshot();
     })
 })

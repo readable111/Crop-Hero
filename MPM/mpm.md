@@ -27,15 +27,41 @@
     1. [Purpose of MPM & Document Conventions](#mpm_purpose)
     1. [Client Overview & Intended Audience](#audience)
 1. [In-Depth System Overview](#indepth_overview)
+    1. [System Diagrams](#system_diagrams)
+        1. [ERD](#erd)
     1. [Home Page](#indepth_home)
         1. [General Weather Forecast](#weather_forecast)
+        1. [Weather Slider](#weather_slider)
+        1. [Ambient Weather](#ambient_weather)
+        1. [Crop Carousel](#crop_carousel)
+     1. [Crops Page](#my_crops_page)
+        1. [My Crops](#my_crops)
+        1. [Add Crops](#add_crops)
+        1. [View Crops](#view_crops)
+        1. [Individual Crop](#ind_crop)
     1. [Notebook Page](#notebook_page)
         1. [Background](#notebook_background)
+        1. [General Trouble Shooting](#notebook_troubleshooting)
     1. [To-Do Page](#todo_page)
         1. [Background](#todo_background)
+        2. [General Trouble Shooting](#todo_troubleshooting)
+        3. [Adding Filtering Years](#todo_yearfilters)
+    1. [Profile Page](#profile_page)
+        1. [Base Page](#base_profile)
+        1. [Edit Profile Page](#edit_profile)
+        1. [Settings Page](#settings_profile)
+        1. [Billing Details Page](#billing_details_profile)
+    1. [Data Hub Page](#datahub_page)
     1. [Components & Assets](#components_n_assets)
         1. [Rows & Columns](#grid)
         1. [AppButton Component](#appbutton)
+        1. [NavBar Component](#navbar)
+        1. [Fonts](#fonts)
+        1. [Icons](#icons)
+        1. [Colors](#colors)
+        1. [Sanitizers](#sanitizers)
+        1. [Profile Image Handler](#profile_img_handler)
+            1. [What is a URI?](#define_uri)
     1. [Search Bar](#search_bar)
         1. [Background](#search_bar_bkgd)
         1. [Search Bar Component](#search_bar_component)
@@ -54,32 +80,57 @@
         1. [First and Last Letter Section](#1st_last_letter)
         1. [Syllable Counting](#syllables)
         1. [Common Prefix and Suffix](#common_prefix_suffix)
+        1. [Floyd-Rivest Sorting Algorithm](#sorting_for_search)
     1. [Backend Services](#backend_overview) 
         1. [Database](#database_overview)
-        1. [Backend Server](#backend_overview)
+        1. [Backend Server](#backend_server)
         1. [Writing Endpoints](#writing_endpoints)
         1. [Pushing to the GitHub](#push_to_github_backend)
+        1. [User Authentication](#user_authentication)
 1. [Installation & Setup](#setup)
+    1. [Preparing The Development Environment](#prep_dev_environ)
+        1. [Installing Android Studio](#install_android_studio)
+        1. [Set Up an Android Emulator](#setup_emulator)
+        1. [Installing NPM](#install_npm)
+        1. [Installing Expo](#install_expo)
     1. [Package Management](#pkg_mgmt)
         1. [Importing Libraries](#import_libs)
+        1. [Updating Libraries](#update_libs)
     1. [Running The Program](#run_program)
         1. [Starting Expo Go](#start_expo)
         1. [Starting The Test Suite](#start_tests)
 1. [Maintenance Tasks](#maint)
+    1. [Maintenance Schedule](#maint_sched)
+    1. [Fixing Bugs & Crashes](#fix_bugs_crashes)
+    1. [Code Validation](#code_validation)
     1. [Adding a New Page](#add_page)
+        1. [The Status Bar](#status_bar)
         1. [Adding Dark Mode](#add_dark_mode)
         1. [Expanding the Navbar](#expand_navbar)
         1. [Importing the Search Bar](#import_search)
+    1. [Security Validation](#security_validation)
+    1. [Performance & Availability Monitoring](#performance_availability_monitoring)
+    1. [Updating the Design & Enhancing Features](#update_designs_features)
+    1. [App Compatibility Audit](#app_comp_audit)
 1. [Troubleshooting](#trblsht)
     1. [Emulator Errors](#emulator_errors)
         1. [Cannot Open Emulator](#cant_open_em)
         1. [Emulator Says "The system UI isn't responding"](#ui_not_responding)
         1. [Emulator Says "Something went wrong. Can't connect to Internet."](#no_internet)
         1. [Emulator Reloads When I Try to Type 'R' Into an Input Field](#reloads_on_r)
+        1. [VT-X/AMD-V is Disabled](#vt-x_disabled)
+        1. [Emulator Says "Something went wrong. Sorry about that"](#something_went_wrong)
     1. [Expo Errors](#expo_errors)
         1. [Expo-CLI is Deprecated / Legacy Expo-CLI](#cli_deprecated)
+        1. [Expo Keeps Stopping](#expo_stops)
+        1. [Android is Disabled](#disabled_android)
     1. [Common React Native Compilation Errors](#rn_compilation_err)
         1. [Error due to Different Number of Hooks Between Renders](#different_number_hooks)
+        1. [Computer Restarts When Loading App in Emulator](#computer_restarts)
+        1. [Infinite Number of Rerenders](#infinite_rerenders)
+        1. [VirtualizedLists Nested In a ScrollView](#nested_virtualizedlists)
+        1. [Invariant Violation Error](#invariant_violation)
+        1. [Destructuring Issue](#destructuring_issues)
     1. [Jest Errors](#jest_errors)
         1. [General Troubleshooting Advice For Jest](#general_ts_advice)
         1. [No Tests Found](#no_tests)
@@ -89,7 +140,11 @@
         1. [Snap File is Mostly Empty](#empty_snap_file)
         1. [Expected String or Class/Function But Got Undefined](#undefined_not_string_class)
         1. [Error About Act Wrapping](#act_wrapping)
+        1. [Unable to Find Component With Test ID](#testid_not_found)
 1. [Tools & Resources](#tools)
+    1. [General Docs](#general_docs)
+    1. [Testing Utilities](#testing_utilities)
+    1. [Ambient Weather](#ambient_weather)
 1. [Appendices](#appendices)
     1. [Appendix A: Understanding React Native](#react_native)
         1. [File Types](#file_types)
@@ -97,6 +152,7 @@
         1. [Import Types](#import_types)
         1. [Inter-Page Routing](#routing)
     1. [Appendix B: Glossary](#b_glossary)
+    1. [Appendix C: Future Improvements](#c_future_improvements)
 
 ## Introduction <a name="intro"></a>
 ### Purpose of Project <a name="project_purpose"></a>
@@ -119,25 +175,132 @@ The client is Zina Townley, a current product owner and release train engineer a
 This maintenance manual is meant to help the client and any future developers on this project. The MPM will help the developers to understand the project's structure as they are onboarded. In addition, the MPM will provide details regarding any maintenance tasks, troubleshooting tips, and useful resources for those developers.
 
 ## In-Depth System Overview <a name="indepth_overview"></a>
+
+### System Diagrams <a name="system_diagrams"></a>
+#### ERD <a name="erd"></a>
+*Author: Daniel*
+
+![Entity-Relationship Diagram](./images/erd.png "ERD designed by Daniel and Tyler")
+
+The ERD reflects the 11 tables within the database that the application requires along with the relationships linking them.  As a group, we discussed the possibility of further merging the tables. This level of separation allows us to create 2NF and 3NF relationships. Also, attributes were placed in a distinct table if they would be tied to the subscriber account and needed to be accessed by multiple elements of another table. This allows them to be more easily altered, tracked, and shared for a subscriber or farm. The tables were primarily dictated by the client’s suggestions. Custom attributes are associated with a subscriber account and can be assigned to a crop. Media, Locations, Crop Types, Custom Attributes, and Task Types are distinct tables linked to a subscriber or a farm, allowing their contents to be used by multiple instances within other tables through a dropdown. The distinct Farm and Farmer tables allow a subscriber to have several farms and multiple farmers linked to each farm. The Journal Entry, Task, and Crop tables store individual task, journal entry, and crop instances.
+
+A PK is used to indicate a primary key, and an FK indicates that the field is a foreign key. A FULLTEXT indicates that those fields have been included in a FULLTEXT index. The FULLTEXT index will allow for more efficient searches of the Crops table. Each table has a primary key or ID field that is either an unsigned integer or a varchar with a maximum length of 16. Unsigned integers will be used when 4 billion possibilities are sufficient and when sequential numbering makes logical sense. A varchar will be a number generated by a PRNG and encoded in base64, allowing for about 8 x 1028 non-sequential possibilities.
+
+Most tables use a composite primary key to prevent issues from repeating IDs by relying on mechanisms that ensure unique subscriber IDs. This is done with a SubID field which consists of the full, concatenated composite primary key of a table with the SubscriberID foreign key. Also, the Crops tables contain a special field called HRFNumber. At the client’s request, this field will contain a human-readable integer that will primarily used by search features within the app. Multiple subscribers can have a crop with the same HRFNumber. Multiple farms associated with a subscriber can have a crop with the same HRFNumber. However, a single farm cannot have multiple crops with the same HRFNumber. Ultimately, the HRFNumber functions as a user-friendly primary key for a farm’s crops.
+
+Whenever an object may be associated with 0 to many other objects, an Enum is used to store a list of foreign keys that are associated with that table. A set is used for dropdowns that will not be modified. Names were made nvarchar with a maximum length of 256 to account for Unicode characters, as a 4-character Japanese name in UTF-8 could require the same storage space as 12 English characters. Finally, the Source field in the Crops table was made TINYTEXT, allowing the user to enter “a cutting from another crop” or a URL to the website where it was purchased.
+
+The maximum length for each field is taken to the minimum, before being rounded up to the nearest power of 2. For the Subscribers table, all lengths are based on the recommendations in the UK Data Standards Catalogue, RFC 3696, E.164, PBX extensions, 3GPP TS 11.11, and the specifications for Facebook proxy emails. Also, the longest state name in the US was Rhode Island with 51 characters: The State of Rhode Island and Providence Plantations.
+
 ### Home Page <a name="indepth_home"></a>
 #### General Weather Forecast <a name="weather_forecast"></a>
 *Author: Daniel*
 
 At the top of the Home page is a bar with 7 icons on it and an abbreviated day of the week underneath each icon. Within the page’s functional component is a useEffect hook, the hook that allows for asynchronous requests. First, I call a getGridpoints function which converts a zipcode into gridpoints that can be understood by the National Weather Service’s API. This function checks the passed zipcode against a dictionary that I created. I found the USPS zipcode database and then used a Python script to create a dictionary of lat-long coordinates with the zipcodes functioning as keys. The lat-long coordinates are sent to the NWS API to receive the gridpoints. 
 
-Afterwards, I pass the gridpoints to the NWS API and fetch the weather forecast based on that. If the first forecast date is labelled as This Afternoon, then I store the forecast information for today and the next 6 days in 7 state variables. If the first forecast date is labelled as Tonight, I store the forecast information for 7 days, starting with the next day. Since this is a farming app, this process will always ignore night-time forecasts. 
+Afterwards, I pass the gridpoints to the NWS API and fetch the weather forecast based on that. If the first forecast date is labelled as This Afternoon, then I store the forecast information for today and the next 6 days in 7 state variables. If the first forecast date is labelled as Tonight, I store the forecast information for 7 days, starting with the next day. Since this is a farming app, this process will always ignore night-time forecasts. Since the API labels the current day as tonight or today, a simple lookup table is used to determine today's name based on tomorrow.
 
-At render, the forecast information and day name are passed to 7 WeatherIcon components. The forecast information gets passed to a function in WeatherTypes.jsx. The function takes the shortened forecast, gets rid of anything after the “then” as that is in the future, and evaluates the text. Unfortunately, the NWS API has never established a standardized list of potential values, much to the annoyance of a lot of people. As such, substantial research was done by Group 7 to determine the general terms that they use and to condense them down into 10 categories: Clear (0-10% cloud coverage), a Few Clouds (10-30% cloud coverage), Partly Cloudy (30-60% cloud coverage), Mostly Cloudy (60-90% cloud coverage), Overcast (90-100% cloud coverage), Rainy, Stormy, Snowy (includes sleet and hail), Misty (includes drizzling and foggy), and Dusty. The terms are combined into enumerations that are treated as regex to evaluate the forecast. This passes the image’s URI from the Icons constant list. Additional details are added to the evaluated result if the forecast includes the terms Slight Chance (0-30% chance), Chance (30-60% chance), or Likely (60-80%). Slight Chance is given an opacity of 0.4 and Chance is given an opacity of 0.7. If any of the chance indicators are found, a black/white percent sign (based on dark mode setting) is added to the forecast icon, and styling is used to ensure that it overlaps with the forecast icon. 
+At render, the forecast information and day name are passed to 7 WeatherIcon components. The forecast information gets passed to a function in WeatherTypes.jsx. The function takes the shortened forecast, gets rid of anything after the “then” as that is in the future, and evaluates the text. Unfortunately, the NWS API has never established a standardized list of potential values, much to the annoyance of a lot of people. As such, substantial research was done by Group 7 to determine the general terms that they use and to condense them down into 10 categories: Clear (0-10% cloud coverage), a Few Clouds (10-30% cloud coverage), Partly Cloudy (30-60% cloud coverage), Mostly Cloudy (60-90% cloud coverage), Overcast (90-100% cloud coverage), Rainy, Stormy, Snowy (includes sleet and hail), Misty (includes drizzling and foggy), and Dusty. The terms are combined into enumerations that are treated as regex to evaluate the forecast. This passes the image’s URI from the Icons constant list. Additional details are added to the evaluated result if the forecast includes the terms Slight Chance (0-30% chance), Chance (30-60% chance), or Likely (60-80%). Slight Chance is given an opacity of 0.4 and Chance is given an opacity of 0.7. If any of the chance indicators are found, a black/white percent sign (based on dark mode setting) is added to the forecast icon, and styling is used to ensure that it overlaps with the forecast icon. All of the display is handled by the WeatherIcon component which is based the forecast, day, and dark mode boolean.
+
+#### Weather Slider <a name="weather_slider"></a>
+*Author: Daniel*
+
+Below the weather forecast bar, there is a carousel or slider which is used to display various information retrieved from the Ambient Weather API. Specifically, the carousel displays the actual temperature, the feels-like temperature, the wind speed, the rainfall, the humidity, and the soil moisture. All of the data is passed to the carousel as a JSON object.
+
+At its core, the WeatherSlider component uses a PagerView from the `react-native-pager-view library`. The PagerView is then animated with the `react-native-reanimated library` and wrapped in a SafeAreaView component. Within the AnimatedPagerView, I use the map function to create multiple pages for each of entries in the JSON. A FlatList might create an error due to nesting different list types, depending on the page that imports the slider. As such, I chose to use the map function instead, just as I did with the search bar. Below the AnimatedPagerView is a component called PagingDots which displays a simple meatball menu at the bottom of the carousel to indicate which item in the list is currently displayed. This is done with an `onPageScroll` prop which triggers a custom handler function. The handler function alters two variables called `positionSharedValue` and `scrollOffsetSharedValue` which are used to calculate a variable called `scrollX`, a variable that is then passed to the PagingDots component. `positionSharedValue` and `scrollOffsetSharedValue` are shared variables from the `react-native-reanimated` library which hold the states for animated values. When calculating `scrollX`, the input range is `[0, intro_data.length]` and the output range is `[0, intro_data.length * width]` where intro_data is the JSON passed to the component and width refers to the window's width. The interpolater sums `positionSharedValue` and `scrollOffsetSharedValue`, maps the sum to a range that corresponds to the total width of the intro_data items, and clamps the input such that if it exceeds the accepted input range, it is mapped to the highest possible output value to prevent `intro_data.length * width` from ever being exceeded.
+
+The custom page scroll handler function is based on a custom function defined in another file called `usePagerScrollHandler`. The handler use the `GeneralHandler` interface and `GeneralHandlers` type as a parameter. It is based on a useEvent hook which automatically optimizes the code as it waits for the scroll event to be triggered. You'll also see the `worklet` directive which defines the function as a worklet, meaning it's optimized to run on the native/UI thread in Reanimated. This makes animations and event handling more efficient. Basically, all of it allows me to define custom events when the page is scrolled.
+
+The `PagingDots` component uses the map function again to create one dot for every item in the lost. Each dot is a ScalingDot component which is passed any props passed to `PagingDots` that it does not already use. These props are defined in as a type so that I could specify which props existed and their type. While the props are copy-pasted from the ScalingDot file, ScalingDot only works properly with default exports so I could not export the props. The ScalingDot component basically just displays an animated circle with the color, opacity, and size changing based on whether it is the currently selected dot. All of the animated restyling is handled by more interpolation and clamping which function just like above. As one note, there are several lines like `inActiveDotColor: inActiveDotColor || '#347af0'`. This line means that the `inActiveDotColor` prop is used normally but allows the line to default to  '#347af0' when the prop is null.
+
+#### Ambient Weather <a name="ambient_weather"></a>
+*Author: Daniel*
+
+While the previous section discusses how the WeatherSlider component functions, this section focuses on how the information is obtained. First, the API key, app key, and device MAC address are fetched from AsyncStorage. If any of those values have not been set (meaning that they are equivalent to null or are zero-length), then the default JSON is used. Since this if block will trigger before the async functions fetch the values, the default JSON provides loading icons. Once the information has been fetched, it is passed to the `fetchWeatherData` function which returns an array. From the array, I retrieve the first entry and then construct the slider's JSON from specific fields. Specifically, I use the temperature in Fahrenheit (tempf), the feels-like temperature (feels_like), the wind speed in mph (windspeedmph), the amount of rain today in inches (dailyrainin), the humidity percent (humidity), and the soil moisture (soilmoisture).
+
+The `fetchWeatherData` function is wrapped by the `rateLimiter` function. The `rateLimiter` function checks whether the last request occurred within the past 1000ms or past 1 second (the maximum rate permitted by Ambient Weather). If the request is too soon, it is ignored and the Promise is resolved to null. Otherwise, the timestamp for the last request is updated, and the original function is called with the original arguments. The `fetchWeatherData` function receives the API key, app key, and MAC address. The function basically wraps an axios call which makes a GET request to Ambient Weather's RESTful API. The API and app keys are passed as params and are required to gain access to the API. The MAC address is passed as part of the URL which targets the data provided by a specific sensor. Without the MAC address, I would need to fetch a list of all sensors associated with that account, determine which ones provide useful information, and extract it.
+
+#### Crop Carousel <a name="crop_carousel"></a>
+*Author: Daniel*
+
+The CropCarousel component is far simpler than the WeatherSlider, just calling the Carousel component with a special name and passing over the props. The Carousel component is just a FlatList which renders multiple pressable views, one for each item passed in the JSON object. The Pressable uses the expo-router to push a new page when a user selects a crop.
+
+### My Crops Page <a name="my_crops_page"></a>
+#### My Crops <a name="my_crops"></a>
+*Author: Isaac*
+
+The initial purpose behind this section is to have the user be able to create, manage, and delete crops that they may have. The user should be able to manage what crops they have and also be able to view and/or edit any relevant information about said crops. This starts with our base page, the "My Crops" page. This page is treated mostly just as a navigation tool between two more pages, Add Crops and View Crops. With this, the user should be able to select and press one of two buttons, and that button should connect to the correct page. This is also the page that the user will return to once they are done with either of the two pages. Also, My Crops contains the navbar to lead to other pages. 
+
+#### Add Crops <a name="add_crops"></a>
+*Author: Isaac*
+
+The purpose of this page is to create the crops that will be used and managed by the user. The user will be brought to a page with various fields to put information. They will have to fill out fields for the name, medium, location, type, variety, source, date planted, and more. The HRF number that will be used by the user to identify the crop is also created using this page, but the HRF number is assigned a randomized 6-digit number when the page is first opened. When the user is done filling out all the fields, they may hit the save button located in the top right. The save button will check to make sure every field is filled out, with no blanks. When that is confirmed, it will create an object and send it back to where the rest of the crops are stored, effectively saving the new crop. If failed, the page will prompt to the user that there are fields that are left unfilled, and will not save the object, but rather return to the add crops page so that the user may fill out the remaining fields. The input fields also go through sanitization, which is covered later by Daniel. All of this ensures that the inputs are valid and that nothing malicious or incorrect is saved.
+
+#### View Crops <a name="view_crops"></a>
+*Author: Isaac*
+
+The View Crops page is used to present all created crops to the user. This is presented through a scrollable list, with each crop being presented. The objects will only show their name, and the way that they are identified in the list is through the created HRF number. The user should be able to scroll through the list and select any crop that they wish to view more information about. On selection (press), the user will be sent to a mimic of the Add crops page where the crop information will be presented in the input boxes. There are plans to add search and sort functions as well, where the user will be able to search for specific crops and be able to sort crops based on location or name. The purpose for this page is to present every object in an orderly fashion to the user.
+
+#### Individual Crop Page <a name="ind_crop"></a>
+*Author: Isaac*
+
+The individual crop page is created from the View Crops page, where the user has selected a crop to view more information about. This page will look very similar to the Add Crops page, with a similar layout and input boxes, where the main difference is that the information is already filled out and the boxes start uneditable. The user will be able to scroll up and down to view all information about the crop that has been selected. On the bottom of the screen the user will be able to see and edit button. This button makes it so that the user may edit the selected crop so that they may change specifics on information. Every field except the HRF number will be editable, and when the edit is done it should change the information about the crop. 
 
 ### Notebook Page <a name="notebook_page"></a>
 #### Background <a name="notebook_background"></a>
 *Author: McKenna*
 
-The intended purpose of the notebook page is for the user to be able to document daily proceedings as to what has been happening that day on the farm. The user will add in entries via a pop-up modal and will be able to sort entries by month and year. 
+ The intended purpose of the notebook page is for the user to be able to document daily proceedings regarding what has happened that day on the farm. The user will add entries via a pop-up modal and will be able to sort entries by month and year. The notebook page is the default page that is displayed when the user selects the notebook icon from the bottom navigation bar. At the top of the screen, two green ovals are displayed that allow the user to swap between the To-Do page and the Notebook page. Within the Notebook page, the user is given filters displayed along the top underneath the page toggles to allow for filtering entries made by the user for better a better viewing experience. All other interactions are initiated with the speed dial located at the bottom right that allows the user to add an entry. The speed dial is further used on a long press of an entry that allows the user to edit, delete, or export the long pressed entry.
+#### General Troubleshooting <a name="notebook_troubleshooting"></a>
+*Author: McKenna*
+
+To make sure an entry is selected for editing, exporting, or deleting, a long press and hold is required for the system to capture the entry as selected. If the user recieves an error that no entry is selected, the user should acknowledge the confirmation and long press the entry once again.
 
 ### To-Do Page <a name="todo_page"></a>
 #### Background <a name="todo_background"></a>
 *Author: McKenna* 
+
+The purpose of the To-Do page is allowing the user to track tasks that need to be accomplished around their farming/planting environment. The user is able to assign things such as farmer, task type, crop type, icons, and more to the task entry for easy tracking and filtering. The To-Do page is a secondary page that can be accessed when the user selects the Notebook page from the bottom navigation bar and then toggles to the To-Do page by selecting the corresponding green oval at the top left of the screen. At the top of the screen, two green ovals are displayed that allow the user to swap between the To-Do page and the Notebook page. Within the To-Do page, the user is given filters displayed along the top underneath the page toggles to allow for filtering entries made by the user for better a better viewing experience. All other interactions are initiated with the speed dial located at the bottom right that allows the user to add an entry. The speed dial is further used on a long press of an entry that allows the user to edit, delete, mark complete, or export the long pressed entry.
+
+#### General Troubleshooting <a name="todo_troubleshooting"></a>
+*Author: McKenna*
+
+To make sure an entry is selcted for editing, exporting, marking complete, or deleting, a long press and hold is required for the system to capture the entry as slected. If the user recieves an error that no entry is selected, the user should acknowledge the confirmation and long press the entry once again.
+
+#### Adding Additional Filtering Years <a name="todo_yearfilters"></a>
+*Author: McKenna*
+
+Should the application need more years added for entry adding and therefore filtering, more years can be added by simply navigating to the years section in the code and adding additional years to the list. 
+
+### Profile Page <a name="profile_page"></a>
+#### Base Page <a name="base_profile"></a>
+*Author: Daniel*
+
+The base Profile page functions as a central hub which allows a user to easily access the several subpages. At the top, there is a green oval which is laid over a Santa Gray background. The oval was created with a larger height than width, a large border radius, and a scaleX transformer. Then, the oval is moved upwards and folded over the top of the screen to create a half-circle. On this oval, I display the user's name and the profile picture. The profile picture uses the UploadImage component in read-only mode, simplifying the process of storing and using the selected image's URI. Below that, there is a button to edit the profile and a grid of buttons, with all of these buttons linking to other pages. These buttons are based on the AppButton component and use AntDesign icons. Only the icons and arrows are buttons, not the text.
+
+#### Edit Profile Page <a name="edit_profile"></a>
+*Author: Daniel*
+
+At the top of the page is a Santa Gray oval which is laid over an Irish Green background. On the circle is a back arrow which unwinds the stack and a save button. The save button triggers a specific function which sanitizes the input before saving it to the database or AsyncStorage. Below that, an UploadImage component allows users to select images for their profile picture. Then, there are a bunch of input fields to retrieve the user's name, keys for their Ambient Weather devices, and a new password. The Ambient Weather fields are auto-populated based on the saved values.
+
+The names are sanitized as `noSQL` and `textOnly`. The Ambient Weather API key, App key, and MAC address are sanitized as `noSQL` and `hexCode`.
+
+#### Settings Page <a name="settings_profile"></a>
+*Author: Daniel*
+
+At the top of this page is a back arrow which unwinds the stack and the page's title. Then, the page is divided into two Scotch Mist Tan sections: User Preferences and Account Details. User Preferences allows people to set the color mode, the default visibility for crops, and whether push notifications should be enabled. The buttons and their labels are organized by the Grid components. The color mode is controlled by a toggle switch that can set Dark Mode to true, though it technically works by inverting the switch's previous state in the onValueChange function. The default visibility is controlled by a toggle switch and determines whether crops default to a private or public visibility depending on the user's preferences. The push notifications are enabled generally by a toggle switch. When the notification switch is enabled, separate checkboxes are displayed to enable notifications specifically for upcoming tasks and payments.
+
+The Account Details section first allows the user to select the current farmer. The dropdown picker is set to Modal mode to prevent clipping issues and ensures that the full list of farmers can always be displayed. In addition, the addCustomItem prop allows the user to save and select what they have typed in if it isn't already in the list. In the future, the Account Sync button will generate a numeric code or QR code which allows users to sign into their account without needing to enter any information. Then, there are two buttons which redirect to the Terms of Service and Privacy Policy pages. While unnecessary for this project, they would be critical aspects of rolling the app out as a commercial product. Finally, the app's version is a number fetched from the package.json file to reduce how many things would have to be changed with each app update.
+
+#### Billing Details Page <a name="billing_details_profile"></a>
+*Author: Daniel*
+
+At the top of the page is a back arrow which unwinds the stack and a save button. The save button triggers a specific function which sanitizes the input before saving it to the database or AsyncStorage. There is another UploadImage component in read-only mode. Then, there is a dropdown box which opens a scrollview box that contains the different subscription models. Afterwards, there are 4 input fields for the user's email, phone number, zip code and state. The zip code is used by the Home page to determine the weather forecast which is why the save function verifies that the zip code is valid.
+
+### Data Hub Page <a name="datahub_page"></a>
+*Author: Matthew*
+
+The main functionality of the Data Hub Page is to use react-native-chart-kit to display relevant graphs about the user's crops. This is the page where the user may get a history of their activity on the app. The secondary functionality of the page is to provide a way for the user to export their compiled data to their phone's local storage or posting to Facebook. The graphs are all contained within collapsible sections, or drop downs, that require the user to press to open. There is a search bar that allows the user to specifically input certain kinds of crops and have the graphs display the relevent information about them. The export functionality uses a form of html2canvas to turn the drop down components into a saved PNG image file.
 
 ### Components & Assets <a name="components_n_assets"></a>
 #### Rows & Columns <a name="grid"></a>
@@ -158,11 +321,66 @@ The AppButton component was created to provide a standardized button component f
 
 Use the icon prop if you want to specify an image in the Icons folder. Use the mci prop if you want to specify an icon from MaterialCommunityIcons. Use the ad prop if you want to specify an icon from AntDesign. You can use [this website](https://icons.expo.fyi/Index) to find the icon strings for MaterialCommunityIcons and AntDesign. Use the associated size and color props to specify the pixel size and color code of the icon.
 
+#### NavBar Component <a name="navbar"></a>
+*Author: Daniel*
+
+The NavBar component is used on all of the major pages and allows the user to navigate between the pages. The NavBar is split into 3 rows with 5 columns in each row, 1 column for each major page. The first row is in a separate View component and exists solely to provide the tan circle that juts up from the bar. The second row provides the icons for each page, along with the green circle behind the Home icon. The third and final row provides the text label for each page. Both the icons and the text use the AppButton component to route people to the selected page, preventing issues where the user may click one but not the other.
+
+When the component is called, a prop like `homeSelected` should be specified in it, though it does not require a value. Since these selected props are boolean props, they are automatically set to true if they are specified without a value. That prop tells the component to change the color of the associated page's icon and text.
+
+#### Fonts <a name="fonts"></a>
+*Author: Daniel*
+
+All font files must be in the assets/fonts/ folder. Once you have done this, you can use the expo-fonts library to import and use those fonts. After the font is loaded, the assigned font name can be used for the fontFamily field for styling.
+
+~~~jsx
+const [fontsLoaded, fontError] = useFonts({
+	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf')
+});
+
+if (!fontsLoaded && !fontError) {
+    return null;
+}
+~~~
+
+This code will load the specified fonts with the useFonts hook provided by the expo-fonts library. If the fonts fail to load, the page is not rendered due to the conditional return. Importantly, don't bother to directly load the bold and italic font variants. A font error won't be generated, but a font will not be successfully created which means that the default font will be applied instead. Since the default font is sans-serif, this is easiest to demonstrate with a serif font.
+
+Throughout the CropAlly app, the two standard fonts are Domine (serif) and WorkSans (sans-serif).
+
+#### Icons <a name="icons"></a>
+*Author: Daniel*
+
+The entire app uses the Icons dictionary to handle any local images. Each named image can be called as a property which simplifies accessing and passing it. Without this dictionary, images would need to be called locally with the require function and assigned to a variable for it to share the same functionality.
+
+#### Colors <a name="colors"></a>
+*Author: Daniel*
+
+The entire app uses a single standardized color palette. The color palette is a JavaScript dictionary with named fields for each color. Use a website like [this](https://colors.artyclick.com/color-name-finder/) to determine the name. We generally preferred paint-like names over standard names as it allows for multiple similar colors since you can't have overlapping names. For example, both ALMOST_BLACK, IRIDIUM, and CHARCOAL can be called dark gray but that would have been confusing. Also, IRIDIUM was selected over Dune, a better match according to the tool, because iridium gives you a sense for the color while dune implies a brown. Each named color is assigned a hex code string which can be called as properties when setting colors with style variables.
+
+#### Sanitizers <a name="sanitizers"></a>
+*Author: Daniel*
+
+As of right now, there are two sanitizing functions with the first parameter of each being the string that will be sanitized. They then return the cleaned text string based on the instructions set in the other boolean parameters. Beginning with `cleanText`, this function offers three options: no stopwords, no SQL, and only text. Firstly, it decodes any Unicode characters into their ASCII equivalents before converting it to lowercase to prevent regex issues. Double dashes are always removed, and a whitelist approach is taken to remove any characters other than `[a-z0-9'.@+()\- ]`. If stopwords were removed, then the sanitizer removes any words that are 2 or fewer characters long or are of 35 specific words. Azure MySQL servers use the InnoDB engine which stops any searching attempts when it encounters one of [35 specific stopwords](https://dev.mysql.com/doc/refman/8.4/en/fulltext-stopwords.html). There is also some useful information in [this StackOverflow thread](https://stackoverflow.com/questions/43319480/fulltext-index-match-string-with-period-mysql). These stopwords are defined in a list and then recursively removed which prevents 'bbye' from causing any issues. If SQL was removed, certain especially problematic SQL keywords are recursively removed to prevent multi-level SQL injection attacks like 'ALTALTERER' which triggers SQL injection if the sanitizer is only applied onced. Finally, the text-only option removes everything except letters, the @ symbol, and the period.
+
+The `cleanNumbers` function also has three optional parameters. By default, decimals are allowed which means that dots are only removed if they are not between two digits. However, this can be disabled. By default, negatives are allowed which means that dashes are only removed if there are two of them, if they do not precede a number, and if they are not the first character in the string. These two removals are performed recursively just like the text sanitizer. Finally, the phone parameter is mutually exclusive with the other two parameters, removing everything except numbers, dashes, parantheses, spaces, and the plus sign.
+
+#### Profile Image Handler <a name="profile_img_handler"></a>
+*Author: Daniel*
+
+The Profile Image Handler has two modes: read-only and editable. In read-only mode, this component is a basic Image component which either displays the selected and saved image URI or the placeholder avatar image. When editable, this component includes the same Image component to display the selected or placeholder avatar image. The image URI is stored and retrieved from AsyncStorage. An AppButton component with a MaterialCommunityIcon is displayed in the lower-right corner and can be clicked to trigger the UploadModal.
+
+When loaded, the UploadModal is a translucent gray background which obscures the background with a Scotch Mist Tan box in the center. That central box contains 3 buttons with icons from the MaterialCommunityIcons library. The UploadModal takes 5 props which are a boolean to control its visibility and 4 functions defined in UploadImage. The `onBackPress` function will be triggered when the user taps outside of the modal on the translucent gray background and is set to hide the modal. The `onCameraPress` function will be triggered when the user taps the Camera button in the modal. This function passes a prop from UploadImage to the `uploadImage` function, determining whether it will trigger the front/selfie camera or the back camera. In either case, the function will check whether the app has permission to access the camera. If it does not have access, the function will trigger the phone's built-in permission manager to request access only this time or forever. Once permissions are granted, the appropriate camera will be launched. The basic compression and quality level is set to 1 which is the maximum level of quality and minimum level of compression; the default would have been 0.2. To ensure a similar experience across all platforms, the aspect ratio is set to 1x1 for Android as iOs doesn't allow for aspect ratio configuration and locks it to 1x1. Also, editing is enabled which allows the user to crop, rotate, and flip the image after a picture has been taken. The `onGalleryPress` prop of UploadModal calls the `uploadImage` function in gallery mode which is extremely similar but requests access to the gallery and launches the gallery rather than the camera. The quality, aspect ratio, and editing settings are all set to the same option. At the end of `uploadImage` function is a simple statement to save an image if one was chosen. If the user selected an image in the camera or gallery, the image's URI will be saved in the result variable and then passed to the `saveImage` function. I should note that the assets attribute is a list because these functions can be configured to allow a user to select multiple images at the same time. If the system UI elements (camera, gallery, or permissions) are closed without selecting an image, the `canceled` boolean attribute is set to true, and an image is not saved. The `onRemovePress` prop of UploadModal calls the `saveImage` function with an empty string. If anything other than an empty string is passed to it, the `saveImage` function will save the selected URI with a state hook and in AsyncStorage before hiding the modal. If an empty string is passed, the state hook and AsyncStorage key are set to empty strings, meaning that the placeholder image will be used.
+
+##### What is a URI? <a name="define_uri"></a>
+*Author: Daniel*
+
+The acronym URI stands for Universal Resource Identifier. URI is an extremely broad term which includes URLs (which are only used by HTTP/HTTPS, FTP, or LDAP traffic like `https://stackoverflow.com/` or `ldap://[2001:db8::7]/c=GB?objectClass?one`), email addresses in a certain format (like `mailto:John.Doe@example.com`), telephone numbers (like `tel:+1-816-555-1212`), and local files (like `file:////something.png`). In the case of the UploadImage component, URI is used to refer to the path to a local file. Namely, it contains the path to the selected profile picture in the phone's local storage. Even if the camera is launched by the app, the picture will not use the space allocated to the app by the system as it will be placed in the phone's image storage.
+
 ### Search Bar <a name="search_bar"></a>
 #### Background <a name="search_bar_bkgd"></a>
 *Author: Daniel*
 
-In several places throughout the app, a search bar is necessary. A user should be able to search for a specific crop by its name or HRFNum. The user will be typing on a mobile keyboard, possibly while wearing gloves. As such, the search bar needs to provide error correction or possible matches for the user's input. This is where fuzzy searching comes into the equation. Fuzzy searching is the usage of one or more algorithms to find strings in the database and suggest it to the user, boosting the relevance of search options. For most cases, substring matches are sufficient which just checks whether the input is present within any database strings. However, this does not allow for error correction, a necessity for this use case. Many companies prefer machine learning approaches because pre-existing solutions can be quickly bought and used. Since this is school assignment, a custom algorithm is necessary, and machine learning is too complex for this situation. Another approach to fuzzy searching is synonym, grammar, and dictionary-based approaches, but those do not work well when searching numbers and names. As such, this left partial word matching, edit distances, similarity coefficients or indices, and n-gram matching. 
+In several places throughout the app, a search bar is necessary. A user should be able to search for a specific crop by its name or HRFNum. The user will be typing on a mobile keyboard, possibly while wearing gloves. As such, the search bar needs to provide error correction or possible matches for the user's input. This is where fuzzy searching comes into the equation. Fuzzy searching is the usage of one or more algorithms to find strings in the database and suggest it to the user, boosting the relevance of search options. For most cases, substring matches are sufficient which just checks whether the input is present within any database strings. However, this does not allow for error correction, a necessity for this use case. Many companies prefer machine learning approaches because pre-existing solutions can be quickly bought and used. Since this is a school assignment, a custom algorithm is necessary, and machine learning is too complex for this situation. Another approach to fuzzy searching is synonym, grammar, and dictionary-based approaches, but those do not work well when searching numbers and names. As such, this left partial word matching, edit distances, similarity coefficients or indices, and n-gram matching. 
 
 The idea of placing the Search Bar section under the Components and Assets section was considered. However, it was decided to make the Search Bar portion into a separate section due to its length and complexity. 
 
@@ -235,7 +453,7 @@ Initially, I was using a JSON file with 8 entries. My first version of compareSt
 
 Based on that, I decided to create my own test cases. First, I found a list of crops grown in Texas on the Department of Agriculture's website. Then, I created a basic Python program to generate JSON entries for each crop and export them to a usable file. Afterwards, I set up some code to randomly assign plausible values for the other fields. Also, I used a function that creates the plural form of a word as the database could have "Blackberry" and "Blackberries". I would like to credit it, but I found the function years ago and have been using it for some time. The pluralizer may not be perfect, but it has always met my needs. 
 
-Since this semester kept me very busy and the program didn't need to be perfect, I just threw it together in about 30 minutes. As an example it has been included here. 
+Since this semester kept me very busy and the program didn't need to be perfect, I just threw it together in about 30 minutes. As an example, it has been included here. 
 
 ~~~python
 import json 
@@ -332,7 +550,7 @@ def pluralize(word):
     # Words ending in x, s, z, ch, sh -> add es 
     if search(r"[xsxz]$", word) or search(r"[cs]h$", word): 
         return word + ENDINGS.SPECIAL 
- 
+  
     # Words ending in y with a consonant before it -> change y to i and add es 
     if search(r"[^aeiou]y$", word): 
         return word[:-1] + "i" + ENDINGS.SPECIAL 
@@ -497,7 +715,7 @@ With this done, I could finally test my search bar properly. While decently fast
 
 At this point, I discovered an [article on ForrestTheWoods' blog](https://www.forrestthewoods.com/blog/reverse_engineering_sublime_texts_fuzzy_match/) about Sublime Text's fuzzy search algorithm. Sublime Text uses their algorithm to suggest keywords to programmers as they type. According to him, Sublime Text tries to match each character in the user's input and assigns a bonus to the match score for specific characters that are worth more points. Then, the algorithm returns the match with the highest final score. Based on some other blogs I found, I decided that it was still a good idea to combine multiple algorithms but as part of a weighted fuzzy search. Also, I found that multiple algorithms would decrease the likelihood of encountering the [birthday paradox](https://pudding.cool/2018/04/birthday-paradox/), though my use case helped to further reduce this potential problem. All of this led to another version of compareStrings and a change to searchFunction to place the strings with the highest score at the top of the list. 
 
-As denoted by the PROFILING comments, the function can now by broken up into general sections. Preprocessing removes Unicode characters with a transliteration library, changes all letters to uppercase, checks for an exact match which permits an early return, and stores each string's length. The Sørensen-Dice Coefficient (SDC) section calculates the coefficient, multiplies it by 100, rounds it to the nearest integer, and makes that the initial match score. The First and Last Letter section gives a bonus score if the first letter, last letter, or the letters after each space matches. The Length & Syllable section gives a bonus if the two strings are the same number of syllables and a penalty if a different length. The Prefix Match section provides a bonus if the second string starts with the first string. The Damerau-Levenshtein Edit Distance (DLED) section compares the two strings, though I also use it earlier in the First and Last Letter section. The Jaro-Winkler Similarity (JWS) section provides a bonus based on the strings' similarity with an extra bonus for matching prefixes. The final two sections lemmatize the two words, retrieve approximate phonetic encodings for the new words, and then provide a bonus if the encodings match. In a later section, I will explain what all of these terms mean. 
+As denoted by the PROFILING comments, the function can now be broken up into general sections. Preprocessing removes Unicode characters with a transliteration library, changes all letters to uppercase, checks for an exact match which permits an early return, and stores each string's length. The Sørensen-Dice Coefficient (SDC) section calculates the coefficient, multiplies it by 100, rounds it to the nearest integer and makes that the initial match score. The First and Last Letter section gives a bonus score if the first letter, last letter, or the letters after each space matches. The Length & Syllable section gives a bonus if the two strings are the same number of syllables and a penalty if a different length. The Prefix Match section provides a bonus if the second string starts with the first string. The Damerau-Levenshtein Edit Distance (DLED) section compares the two strings, though I also use it earlier in the First and Last Letter section. The Jaro-Winkler Similarity (JWS) section provides a bonus based on the strings' similarity with an extra bonus for matching prefixes. The final two sections lemmatize the two words, retrieve approximate phonetic encodings for the new words, and then provide a bonus if the encodings match. In a later section, I will explain what all of these terms mean. 
 
 #### Initial Optimizations <a name="init_optimizations"></a>
 *Author: Daniel*
@@ -736,54 +954,177 @@ First, I will discuss how I determined the length of the common prefix. A for lo
 
 Second, I will discuss how I determined the length of the common suffix. This function uses a while loop to assess the strings. The while loop has two conditions. The first condition ensures that the found suffix length is less than the length of the shortest string. The second condition compares two characters, one from each string. The character’s index is equal to the string’s length minus 1 and minus the found suffix length, meaning that the while loop starts at the end when the found suffix length is 0 and moves forward. I multiply the final found suffix length by –1 as I need a negative length to properly slice up the strings. 
 
+#### Floyd-Rivest Sorting Algorithm <a name="sorting_for_search"></a>
+*Author: Daniel*
+
+After all of the other optimizations, the search algorithm achieved an average runtime of 267ms for an input size of about 600. Slightly over 60% of the runtime was attributable to the sorting algorithm which was sorting the crops such that the highest match scores would be at the top.
+
+To correct this, I looked into algorithms that only cared about the Kth biggest or smallest elements. During this research, I found [an interesting article](https://blog.mischel.com/2011/10/25/when-theory-meets-practice/) about the QuickSelect and HeapSelect algorithms. HeapSelect has a complexity of O(N log K). Initially, I thought that HeapSelect would be the best choice since it is faster than QuickSelect when K is less than 1% of N. In addition, HeapSelect does not require the entire list to be loaded into memory and does not alter the original list. However, when I actually implemented it, HeapSelect was slower than the default sorting algorithm and experienced intermittent errors that I could never properly track down. Besides, HeapSelect is best for streaming data rather than when you have all of it. The implementation for the custom comparator was based on some information from [this article](https://www.geeksforgeeks.org/how-to-sort-an-array-in-typescript/).
+
+As such, I implemented a very naive version of QuickSelect which was slightly faster and did not experience any errors. I conducted further research into QuickSelect and any related algorithms, such as Floyd-Rivest. [This article](https://danlark.org/2020/11/11/miniselect-practical-and-generic-selection-algorithms/), [this Reddit post](https://www.reddit.com/r/rust/comments/145xn00/turboselect_faster_than_quickselect/), and [this StackOverflow post](https://stackoverflow.com/questions/29592546/floyd-rivest-vs-introselect-algorithm-performance) are all interesting and useful reads on the topic. Importantly, they led me to the conclusion that Floyd-Rivest would be a better choice than QuickSelect, especially since it minimizes the number of comparisons which is a massive time sink in my case. For my initial implementation, the [original paper](https://people.csail.mit.edu/rivest/pubs/FR75b.pdf) provides a really clear code snippet which I could use. I simply had to translate it from Algol to TypeScript.
+
+At this point, I simply needed to optimize the Floyd-Rivest sorting algorithm. I based my optimizations of the code on what I saw [here](https://github.com/mourner/quickselect) and [here](https://softwareengineering.stackexchange.com/questions/284767/kth-selection-routine-floyd-algorithm-489/284858#284858). Based on my understanding, recursive code is slower and harder to optimize. As such, my first step was turning the function into an iterative design rather than a recursive design. Secondly, I borrowed the median-of-3 strategy from QuickSelect. While proportion-of-s may have been faster, I could not find any good explanations of its implementation, leading me back to the median-of-3 approach. In QuickSelect, you would look at the first, middle, and last elements of an array and choose the median of those 3 points to serve as the pivot. To prevent issues with the next recursive call in QuickSelect, those three points are then sorted. Specifically, this prevents the situation where an array is completely sorted except for having the smallest/largest element as the first/last point on the wrong side of the array. Basically, median-of-3 ensures that fully sorted data remains optimal, decreases the number of worst cases, and removes any PRNG calls which are extremely slow. For an iterative Floyd-Rivest, I look at the first, Kth, and last elements of the array. Rather than choosing the median as a pivot since I don't need a pivot, I simply swap and sort them. I will note that median-of-3 would traditionally use XOR like `if ((a > b) ^ (a > c)) {...} else if ((b < a) ^ (b < c)) {...} else {...}`, but I am not always comparing numbers which makes this unviable. Then, I removed the natural logs, exponentation, and square root functions as they were causing unnecessary slowdowns. Since it is not recursive and due to the median-of-3 approach, the if statement now compares `right - left` against K rather than right. That being said, I ended up commenting out the if statement. Originally, it was used to shrink the subset for the recursive calls, but it is no longer being used. I didn't delete it because I wanted to preserve the removal of the math functions and because I saw it being used for quintary partitions. While I lack the ability to understand and implement quintary partitioning per [Kiwiel's article](https://core.ac.uk/download/pdf/82672439.pdf), I would love to see it being applied in the future.
+
+The new, optimized sorting algorithm substantially decreased the average runtime from 267ms to 98ms. Interestingly, about 70% of the runtime is still coming from the sorting algorithm or an average of 69ms.
+
+| Section                   | % of Overall Runtime (97.9918ms) |
+| :-----------------------: | :------------------------------: |
+| Cleaning                  | 0.22%                            |
+| Preprocessing             | 7.24%                            |
+| SDC                       | 1.75%                            |
+| Check 1st/Last            | 3.99%                            |
+| Length/Syllable           | 1.63%                            |
+| Prefix Match              | 7.23%                            |
+| DLED                      | 1.02%                            |
+| JWS                       | 2.04%                            |
+| Lemmatizer                | 4.07%                            |
+| Double Metaphone          | 0.54%                            |
+| Other (sorting algorithm) | 70.27%                           |
+
 ### Backend Services <a name="backend_overview"></a>
 #### Database <a name="database_overview"></a>
 *Author: Tyler*
 
-The database is deployed on Azure MySQL flexible server. Connecting to the database can be done either through MySQL's command line tools, or it can be done through the Azure portal. Once we have set up the database connected to the client's account, you can handle maintenance tasks using the Azure Portal. These tasks include log and read-write monitoring, as well as viewing the database in PowerBI.
+The database is deployed on Azure MySQL flexible server. Connecting to the database can be done either through MySQL's command line tools or through the Azure portal. Once we have set up the database connected to the client's account, you can handle maintenance tasks using the Azure Portal. These tasks include log and read-write monitoring, as well as viewing the database in PowerBI.
 
-The database is connected to the app using a Node.JS Express server backend which will also be deployed on the Azure Portal through the App Services. The database consists of 11 tables, each having their own primary keys. If you wish to see more on the Database structure, please see the Project Plan Document or Design Document. If you wish to alter these tables, please run `ALTER TABLE SQL` query. If you wish to insert custom values or fields into the database, run the `CREATE TABLE` query, and be sure to add the `fld_s_<tableletter>_subscriberID_pk` to the table if it needs another primary key to ensure unique values. 
+The database is connected to the app using a Python Flask backend which will also be deployed on the Azure Portal through the App Services. The database consists of 11 tables, each having its own primary keys. If you wish to see more on the Database structure, please see the Project Plan Document or Design Document. If you wish to alter these tables, please run `ALTER TABLE SQL` query. If you wish to insert custom values or fields into the database, run the `CREATE TABLE` query, and be sure to add the `fld_s_<tableletter>_subscriberID_pk` to the table if it needs another primary key to ensure unique values. 
 
-If you wish to add your own custom endpoints to the backend, we have our backend deployed using Azure App services CI/CD pipeline. It is set up to track a GitHub repo for pushes to the master branch, and then build and deploy the app to Azure App Services. If you wish to write a custom endpoint, please clone the repository using git, and then add your new endpoint. Please remember to pass the `<user>` object to the backend when you call the endpoint, as we use the user object to structure the SQL queries needed to fetch data. 
-
+Be aware that our third-party user authentication service, Auth0, has an action written so that upon a user sign-up, it will send that userID token to the database and create a new Subscriber entry
 #### Backend Server <a name="backend_overview"></a>
 *Author: Tyler*
 
-Our backend interacts with 2 key services: the database and our user authentication service, Auth0. 
+The backend mainly consists of 2 entities, CAbackend, which is our backend server deployed on an Azure App Service. Due to some issues with the compatibility of Node.js and Azure App Service, our backend is written in python using the Flask library. When logging into the Azure App Service, we can manage the resource through the overview tab, and can see more of the capabilities and capacity in this tab as well. It is important to note that sometimes the container takes some time to start up. If the URLs for the endpoints are not behaving as expected, connect to the log stream through the Azure App Service, and check to see that the container is going through its startup procedure.
 
-Auth0 is a third-party user authentication service that is built on the Oauth architecture. Oauth simply allows apps and services to host user management and authentication on their platform. Users can sign in through many providers, including Google, Microsoft, Facebook, and other similar social media sites. This simplifies the user authentication process.
+There are some quirks when dealing with Azure App Service. If you run into any errors(as I have ran into several), please ensure that you have set up all environment variables needed. There may also be an issue with the configuration of the connection between the server and the database, as that has proven to be more than finicky to set up. As it is currently, The two are set up on an Azure virtual network, with a private endpoint that the backend can use to access the server. The values used to actually connect to the database, such as username and password, are stored in environment variables in the backend server itself, not the code. There are several resources online that are useful when debugging Azure service issues, and if all else fails you can contact the Azure Support team for resources.
 
-To get the backend code, contact me (Tyler Bowen) to be added as a contributor, and then clone the repo using git clone `tjb0264@<repository address>`. This will clone the repository that contains the backend code.
+Our backend code is hosted on github, and if you wish to change something or add a new method to the backend then you can push the repository, and the github action will build and deploy it for you. The action will trigger upon pushing to the main branch. Be aware that there may be some azure OneDeploy issues that cause the action to fail, in this case, I found that re-running the action on the github repositories' actions tab usually works. Keep in mind that after deployment it takes a couple of minutes in order for the new container to start on the backend server
 
-This is also a node.js project, so please run the `npm install` command to download the dependencies described in package.json. 
-
-Once the `npm install` command is finished running, we can start a local instance of the server using either `npm start` or `npm run dev`. It is important to note that this instance is local, and changes to your local files do not affect the actual server.
 
 #### Writing Endpoints <a name="writing_endpoints"></a>
 *Author: Tyler*
+Our Backend is written in Python, using the Flask library. The format for writing an endpoint goes as follows.
+```py
+@app.route('/route_path/<paramType: param>', methods=['GET'])
+def route_path(param):
+    #initialize the request parameter
+    try:
+        cur = conn.cursor() #conn is the variable that holds our connection to the database, the cursor() method is called when we want to open a connection 
+        query = """WRITE SQL QUERY HERE ACCESS VALUES WITH %s"""
+        cur.execute(query, (value1, value2)) #if using only one value, then be sure to format it like `(value,)` with the comma at the end to ensure that it is formatted as a tuple
+        results = cur.fetchone() #or fetchall()
+        
+        #if you are writting to the database, be sure to write a conn.commit() line
+        return jsonify(results), 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return "Error message", 500
+```
+The format can change depending on the method of the endpoint, POST or GET, but the general layout remains pretty much the same.
 
-If you want to write your own custom API endpoints to handle user data, to add new queries to the database, or handle some data/function on the server side, you will need to use the following syntax and add it to the server.js file.
+#### General Debbugging <a name="Debugging The backend"></a>
+*Author: Tyler*
 
-~~~node
-app.(get/post)('/path_for_callback', (req, res) =>{
-    //do some dta function here
-})
-~~~
+1. Restart the backend server and check the logs
+2. If container restart fails, try once more
+1. If the second restart fails, continue
+3. Re-deploy the backend code by running the GitHub action
+4. Monitor Containment Logs
+5. Ensure that python code is bug free
+6. Ensure that environment variables are set up correctly in Azure App Service
+7. See resources for the Azure App Service here to get more help on the info URL: https://learn.microsoft.com/en-us/azure/app-service/
 
-We are declaring the method of the endpoint, whether that is a GET method from the client requesting data, or it is a POST methid from the user pushing data to an entity. We then declare the second parameter as a callback function with two parameters: request, containing the request information, and the response, which is what we will eventually send to the client with the desired data.
 #### Pushing to the GitHub <a name="push_to_github_backend"></a>
 *Author: Tyler*
 
-To push your changes to the server, use either the git cli, or the git GUI that can be downloaded. Add your modified files to be commited, run the `git commit` command, and then push to the remote branch desired using `git push origin <branch>`
+To push your changes to the server, use either the git cli, or the git GUI that can be downloaded. Add your modified files to be committed, run the `git commit` command, and then push to the remote branch desired using `git push origin <branch>`
+
+#### User Authentication <a name="user_authentication">
+*Author: Tyler*
+
+User Authentication is notoriously difficult and a large security risk. Rather than risk leaking emails, passwords, and other PII, the app uses a third-party authentication service called Auth0. Auth0 uses several verified services in order to verify user identity, such as Google or Microsoft.
+
+On the Auth0 dashboard, we can manage the users in our systems and their information. By hosting the user authentication on a trusted third party service, we avoid the problem of having our small team writing a vulnerablility into the system, and we leave the storage of sensitive information in the hands of a trusted service.
+
+The documentation for the Auth0 authentication services can be found [here](https://auth0.github.io/react-native-auth0/) and additional documentation located [here](https://auth0.com/docs/quickstart/native/react-native/interactive). Essentially, we check if the user is logged in upon entering the entry point for the app, and if the user access token exists in the Async Storage, we redirect them to the user's home page. From there we can access the user object through the API, we use the userID as a primary key for our subscribers.
 
 ## Installation & Setup <a name="setup"></a>
+### Preparing The Development Environment <a name="prep_dev_environ"></a>
+#### Installing Android Studio <a name="install_android_studio"></a>
+*Author: Daniel*
+
+This guide will assume that you are using a Windows environment.
+1. Go to the [Android Developer page for Android Studio](https://developer.android.com/studio)
+1. Download the latest version as an .exe file
+1. Open Android Studio Setup. Under Select Components to install, select Android Studio and Android Virtual Device and then click Next
+1. In the Android Studio Setup Wizard, under Install Type, select Standard and click Next
+1. The Android Studio Setup Wizard will ask you to verify the settings, such as the version of Android SDK, platform-tools, and so on. Click Next after you have verified
+1. Accept licenses for all available components
+1. Configure the `ANDROID_HOME` environment variable
+    1. Go to Windows Control Panel > User Accounts > User Accounts (again) > Change my environment variables
+    1. Click `New` to create a new `ANDROID_HOME` user variable
+    1. Enter path to your Android SDK like `C:\Users\Home\AppData\Local\Android\Sdk`
+        * To find it, the default path is `%LOCALAPPDATA%\Android\Sdk`
+        * Alternatively, go into Android Studio and Settings > Languages & Frameworks > Android SDK
+1. Configure the `Path` environment variable
+    1. Go to Windows Control Panel > User Accounts > User Accounts (again) > Change my environment variables
+    1. Select `Path` in `User Variables`
+    1. Click Edit to open a dialog box
+    1. Select New
+    1. Enter path to your platform tools like `C:\Users\Home\AppData\Local\Android\Sdk\platform-tools`
+1. Verify that you can run adb by executing `adb --version` in the command line
+
+#### Set Up an Android Emulator <a name="setup_emulator"></a>
+*Author: Daniel*
+
+1. On the Android Studio main screen, click More Actions
+1. Select Virtual Device Manager in the dropdown
+1. Click the Create device button
+1. Under Select Hardware, choose the type of hardware you'd like to emulate
+    * Which you select will depend on your needs. I recommend the newest Pixel device as a good default.
+1. Select an OS version to load on the emulator & download the image by pressing the Download button
+1. Click the Next button
+1. Keep the rest of the defaults and press Finish
+
+#### Installing NPM  <a name="install_npm"></a>
+*Author: Daniel*
+
+1. Check if you already have npm and node installed as they are often used for many different applications
+    * Check with `npm -v` and `node -v`
+1. Select the proper options on the [Node.js page](https://nodejs.org/en/download/package-manager)
+1. Use the commands or download and execute the installer to get node and npm
+1. Use `npm -v` and `node -v` again to verify a successful installation
+1. Execute `npm install -g npx` to install npx within npm
+
+#### Installing Expo  <a name="install_expo"></a>
+*Author: Daniel*
+
+1. Try the auto-install option with `npx install-expo-modules@latest`
+1. Check it with `npx expo -v`
+1. If that didn't work, start the manual installation with `npm install expo`
+1. Since you are maintaining a pre-existing project, there are no further steps for the manual installation
+
 ### Package Management <a name="pkg_mgmt"></a>
 #### Importing Libraries <a name="import_libs"></a>
 *Author: Daniel*
 
-When you need to import/install a new library, please use either `npm install --save <YourLibrary>` or `npm install --save-dev <YourLibrary>`. The former will add it to the dependencies list in package.json while the latter adds it to the devDependencies list.
+When you need to import/install a new library, please use either `npm install --save <YourLibrary>` or `npm install --save-dev <YourLibrary>`. The former will add it to the dependencies list in package.json while the latter will add it to the devDependencies list.
 
 There are two other commands which can import libraries but which should not be used. Namely, they are `npx expo install <YourLibrary>` and `yarn add <YourLibrary>`. These commands do not properly save the libraries in package.json and use a different package manager. While expo can handle having both the npm and yarn package managers, it can create some conflicts with jest and requires that you import every library twice.
+
+As an important note, some libraries will ask you to use a linker like `npm link`. However, that is not necessary if you are using react-native@0.60 or newer. Newer versions of react-native contain an auto-linker which makes `npm link` unnecessary.
+
+#### Updating Libraries <a name="update_libs"></a>
+*Author: Daniel*
+
+Unsurprisingly, libraries will go out of date over time. Use the following commands to update your libraries.
+
+* `npm outdated`: list all outdated libraries
+* `npm update -g`: update all global npm packages
+* `npx update -g`: update all global npx packages
+* `npm update --save`: update all project dependencies and save the new values to package.json
+* `npm update react-native --save`: update the specified project dependency (react-native in this case) and save the new value to package.json
+* `npm update react-native@0.74.5 --save`: update/downgrade the specified project dependency (react-native in this case) to version 0.74.5 and save the new value to package.json
+* `npx expo start`: lists any conflicting dependency versions for critical dependencies before starting Expo Go
 
 ### Running The Program <a name="run_program"></a>
 #### Starting Expo Go <a name="start_expo"></a>
@@ -795,13 +1136,50 @@ Start Expo Go by executing `npx expo start` from a command line at the root dire
 
 Start the full test suite by executing `npm test` from a command line at the root directory of the repo.
 
-To run only a specific test fil, execute `npm test -- BillingDetails.test.jsx` from a command line at the root directory of the repo. Since this file is in \_\_tests\_\_ which is in the root directory, a directory is not necessary in the command.
+To run only a specific test file, execute `npm test -- BillingDetails.test.jsx` from a command line at the root directory of the repo. Since this file is in \_\_tests\_\_ which is in the root directory, a directory is not necessary in the command.
 
 If you want to update the snapshots, you can execute either `npm run updateTestSnapshots` or `npm test -- -u BillingDetails.test.jsx` from a command line at the root directory of the repo.
 
 ## Maintenance Tasks <a name="maint"></a>
+
+### Maintenance Schedule <a name="maint_sched"></a>
+*Author: Daniel*
+
+|       Tasks                              |  Frequency   |
+| :--------------------------------------- | :----------: |
+| Fixing Bugs & Crashes                    | Daily/Weekly |
+| Code Validation                          | Monthly      |
+| Adding a New Page                        | Quarterly    |
+| Security Validation                      | Quarterly    |
+| Performance & Availability Monitoring    | Quarterly    |
+| Updating the Design & Enhancing Features | Quarterly    |
+| App Compatibility Audit                  | Annual       |
+
+### Fixing Bugs & Crashes <a name="fix_bugs_crashes"></a>
+*Author: Daniel*
+
+On a weekly basis, bugs should be addressed with crashes being handled on a daily basis. Bugs can quickly annoy users and drive them away from an app if not fixed within a certain timeframe. However, crashes are far more problematic because they completely prevent the app from being utilized and may result in the loss of data. As a result, they are substantially more annoying for users and must be addressed as quickly as possible. Executing a specific test file and reviewing the Troubleshooting section of the MPM may help to pin down the issue. After identifying the issue, remember to add it to the test suite and to the Troubleshooting section to prevent a future reoccurrence.
+
+### Code Validation <a name="code_validation"></a>
+*Author: Daniel*
+
+On a monthly basis, the functionality and validity of all code should be tested. The Jest test suite will handle this by executing multiple unit, integration, and snapshot tests to identify potential errors. An ideal result will be a coverage of 80% or higher for both statement and branch coverage, though a lower percentage is acceptable so long as the core functionality encountered by most users has been thoroughly tested.
+
+Statement coverage reflects the percentage of statements that have been executed at least once during the tests. Line coverage is similar but less useful, especially for JavaScript which allows for multi-line statements. Those multi-line statements will inflate the line coverage and render it less useful than statement coverage. Even statement coverage is only useful to prove that functionality is being tested, rather than proving the quality of those tests.
+
+Branch coverage reflects the number of conditional branches which have been explored and tested. As such, branch coverage indicates the logical coverage and is useful to prove the test quality by showing how many possible inputs have been considered.
+
 ### Adding a New Page <a name="add_page"></a>
-Maintenance Type: Perfective Maintenance Task
+#### The Status Bar <a name="status_bar"></a>
+*Author: Daniel*
+
+At the top of each page, you need to place the StatusBar component. This component ensures that the device's status bar is always displayed, even if you have an element is flush with the top or goes off of the page at the top. As an example of the latter, the Profile page achieves the rounded semicircle at the top by having half of the circle go off of the screen using negative margins. Beyond preventing the status bar from being hidden, this component also ensures that the status bar's theme matches the rest of the page. Here is how to import and use the StatusBar component.
+
+~~~jsx
+import { StatusBar } from 'react-native'
+<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE} />
+~~~
+
 #### Adding Dark Mode <a name="add_dark_mode"></a>
 *Author: Daniel*
 
@@ -868,7 +1246,7 @@ After the previous useEffect hook, you can use the `isDarkMode` state variable a
 }, isDarkMode && (hasNotificationsEnabled ? {color: Colors.HOT_GREEN} : {color: Colors.ALMOST_BLACK})]}> 
 ~~~
 
-To provide some extra help, here is the code for adding dark mode to the status bar and navbar as they are two components frequently reused throughout the program. The navbar is especially easy since it takes a boolean, just keep in mind that this navbar example is meant for the profile page. Don't forget to the change the selected page to your page.
+To provide some extra help, here is the code for adding dark mode to the status bar and navbar as they are two components frequently reused throughout the program. The navbar is especially easy since it takes a boolean, just keep in mind that this navbar example is meant for the profile page. Don't forget to change the navbar's selected page to your page.
 
 ~~~jsx
 <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/> 
@@ -891,6 +1269,26 @@ If you call the `<SearchInput />` tag, this will default to the dropdown mode. T
 
 ![Search Bar in Dropdown Mode](./images/Screenshot%202024-08-30%20090816.png "Dropdown Mode")
 ![Search Bar in Modal Mode](./images/Screenshot%202024-08-30%20091416.png "Modal Mode")
+
+### Security Validation <a name="security_validation"></a>
+*Author: Daniel*
+
+On a quarterly basis, all security aspects of the app must be tested, validated, and verified to ensure proper functionality. Since this is an app meant for laypeople and is connected to various APIs and databases, security controls to prevent accidential and malicious attacks are critical. A vulnerability scan should be run to identify common flaws in the code and to see if any new, important vulnerabilities have been identified in key dependencies. To be published on an app store, the app needs to be signed with an authorized certificate. As such, that certificate needs to be renewed. All input fields should be tested against at least Level 1 injection attacks and ideally, Level 2 or 3 attacks as well. If applicable, attempt a MITM attack against any communication with APIs or the backend to verify the traffic's encryption.
+
+### Performance & Availability Monitoring <a name="performance_availability_monitoring"></a>
+*Author: Daniel*
+
+On a quarterly basis, the performance and availability of the app and its dependencies must be tested. This will likely include a review of all logs and user feedback reports to identify areas that frequently cause issues or experience difficulties. If using Expo Go, open the menu from the command line and select the JS Debugger option. From that menu, you can use Chrome Dev Tools to record performance profiles and to create flame graphs. You may also find the Low Orbit Ion Cannon (LOIC) tool useful to conduct stress testing on the backend. To evaluate percentage availability, it can be calculated with `(MTBF / (MTBF + MTTR)) X 100` where the goal to maximize availability can be achieved by reducing MTTR and increasing MTBF. This may also include cleaning up the database to remove old and unnecessary data, thereby improving performance and decreasing costs.
+
+### Updating the Design & Enhancing Features <a name="update_designs_features"></a>
+*Author: Daniel*
+
+On a quarterly basis, one should check whether any features need to be enhanced and whether the design needs to be updated. Initially, this will mean reviewing user feedback to identify and prioritize needs. That feedback can be collected from app store reviews, user ratings, in-app surveys, user testing sessions, social media, and customer support enquiries. Based on that feedback, new pages might be added, new features created, or unused/disliked functionality removed to lower operating costs.
+
+### App Compatibility Audit <a name="app_comp_audit"></a>
+*Author: Daniel*
+
+The CropAlly app depends on a variety of languages, interpreters, libraries, databases, APIs, and OSs. Most of the time, CropAlly can afford to not update itself to the latest versions, continuing to run on its current versions. On an annual basis, it is recommended to conduct an audit of all dependencies and external pieces. Since Android and iOS updates are generally released in the 3rd Quarter, aim to conduct your annual audit in the 3rd Quarter and to release your update in the 4th Quarter. Keep in mind that Apple and Google remove apps from their app stores if the app has not been updated in the past 2-3 years or that can't handle OSs above a certain minimum level. As part of the audit process, determine whether you should upgrade to be compatible with the newer versions. If so, you will need to upgrade all dependencies as listed in package.json and then verify that the code still functions properly. Performing a code validation may be useful for this.
 
 ## Troubleshooting <a name="trblsht"></a>
 Assumes that you are using a Windows OS
@@ -941,6 +1339,38 @@ Assumes that you are using a Windows OS
 1. Type in the values more slowly or use the emulator's keyboard.
     - If you type with the keyboard too quickly, the emulator can't register it as an input so the value gets sent to the command line which interprets it as a reload command
 
+#### VT-X/AMD-V is Disabled <a name="vt-x_disabled"></a>
+*Author: Daniel*
+
+1. Get into your BIOS/UEFI screen
+    1. Click Start and then select Settings
+    1. Click Update & Security
+    1. On the left side, click Recovery
+    1. Under Advanced start-up, click Restart Now
+    1. Click Troubleshoot
+    1. Click Advanced options
+    1. Select UEFI Firmware Settings
+    1. Click Restart to restart the computer and enter BIOS/UEFI
+1. Check the CPU Configurations, System Configurations, Advanced, and Security tabs for a setting labeled Virtualization Technology or Intel Virtualization Technology
+1. Enable the option
+1. Save the new config and boot into your OS
+
+#### Emulator Says "Something went wrong. Sorry about that" <a name="something_went_wrong"></a>
+*Author: Daniel*
+
+1. Close every instance of Expo on the emulator
+    * Make sure that there aren't any tabs remaining in the background
+1. Go to Settings
+1. Select the Apps button
+1. Select the All Apps button
+1. Select the Expo Go app
+1. Select the Display over other apps button
+1. Toggle Allow display over other apps to On
+1. Return to the Home screen
+1. Enter the Expo Go app like a normal mobile app through the app list or a shortcut on the phone's home screen
+1. Hit 'a' on the command line to open the CropAlly app
+1. Repeat these steps (except for enabling Display over other apps) until it works
+
 ### Expo Errors <a name="expo_errors"></a>
 
 #### Expo-CLI is Deprecated / Legacy Expo-CLI <a name="cli_deprecated"></a>
@@ -950,20 +1380,118 @@ Assumes that you are using a Windows OS
 
 An alternate solution involves installing yarn and then executing `yarn add expo`. However, the addition of yarn will cause other issues with libraries like jest and with our other package manager, npm.
 
+#### Expo Keeps Stopping <a name="expo_stops"></a>
+*Author: Daniel*
+
+This error is due to a syntax issue with the styling or the imports.
+* If it is a styling issue, look for typos like `"100%;"` instead of `"100%";`
+* If it is an import issue, look for places where you import two different components/functions from the same source on different lines
+    * Like `import { StyleSheet } from 'react-native'; import { TouchableOpacity } from 'react-native';` should be written as `import { StyleSheet, TouchableOpacity } from 'react-native';`
+
+#### Android is Disabled <a name="disabled_android"></a>
+*Author: Daniel*
+
+This error is indicated by issues like the 'Press a │ open Android' text being greyed out or the message of 'Android is disabled, enable it by adding android to the platforms array in your app.json or app.config.js' when trying to open the emulator via Expo. This has a variety of different solutions depending on the cause.
+
+* Solution 1: Use 's' to swap between development build and some other stuff until it says "Using Expo Go"
+* Solution 2: Try using the tunnel with `npx expo start --tunnel`
+* Solution 3: Check your dependencies for react, react-native, and expo. They don't need to be the newest version, but they do need to be versions compatible with each other.
+* Solution 4: Try deleting and recreating your Android emulator.
+* Solution 5: Ensure that app.json is not included in the .gitignore file as Expo Go/NPM obeys the .gitignore file
+* Solution 6: Delete the android folder and regenerate it
+* Solution 7: Go to app.json in the root directory and ensure that it has the following text, though the text in package and versionCode can be anything. Make sure it is nested in the `"expo"` key and below the `"name"` key
+
+~~~json
+"android": {
+  	"package": "com.yourcompany.yourappname",
+  	"versionCode": 1
+}
+~~~
+
 ### Common React Native Compilation Errors <a name="rn_compilation_err"></a>
 
 #### Error due to Different Number of Hooks Between Renders <a name="different_number_hooks"></a>
 *Author: Daniel*
 
-1. Find all return/render statements within an if-else block or a loop (called conditional returns)
+1. Figure out which type of hook triggered the error
+1. Look for instances of that hook
+1. Move that hook before any conditional returns
+1. If the issue persists, find all return/render statements within an if-else block or a loop (called conditional returns)
 1. Find all instances of the useState() and useEffect() functions
 1. Move all instances of the useState() and useEffect() functions before any conditional returns. You may need to move other hooks too, but these are the most common sources of issues.
+
+#### Computer Restarts When Loading App in Emulator <a name="computer_restarts"></a>
+*Author: Daniel*
+
+1. Wait for your computer to reboot
+1. Try to load up the emulator again
+1. If the issue persists, check your code for any instances where hooks might be rerendered in an infinite loop
+1. Try to load up the emulator again
 
 #### Infinite Number of Rerenders <a name="infinite_rerenders"></a>
 *Author: Daniel*
 
 1. Check this page's functional components for a setState hook outside of another hook or the return statement.
     - If the setState hook is outside of those, the hook is called multiple times every time that React Native rerenders the page.
+
+#### VirtualizedLists Nested In a ScrollView <a name="nested_virtualizedlists"></a>
+*Author: Daniel*
+
+This section is useful when you see a warning like "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead." Basically, this happens when you use a VirtualizedList-based component, like FlatList, inside of ScrollView components. This is because the app doesn't know which list is being targeted by a scroll gesture. There are a lot of different solutions to this.
+
+* Use the .map function instead of a VirtualizedList to display the list within the ScrollView
+* Make the ScrollView and VirtualizedList scroll in different directions (vertical vs. horizontal)
+* Disable the scrollable feature on either the VirtualizedList or the ScrollView
+* Use a component like VirtualizedScrollView instead of ScrollView
+* Use the FlatList props instead of ScrollView to provide headers and footers
+* Check if your nested component has a prop/mode to fix this
+
+#### Invariant Violation Error <a name="invariant_violation"></a>
+*Author: Daniel*
+
+This section will be useful if you see an error message like `"Invariant Violation: Picker has been removed from React Native. It can now be installed and imported from '@react-native-picker/picker' instead of 'react-native'"`. However, you will still find it useful for any kind of invariant violation. 
+
+###### Solution 1: The Recommended Way
+1. Install the library specified in the error message
+1. Check all react-native imports in your files for any reference to the component mentioned in the error message, like Picker.
+1. Replace all such imports with imports based on the library specified in the error message
+
+###### Solution 2: The Patchy Way
+1. Install the library specified in the error message like '@react-native-picker/picker'
+1. Open index.js in node_modules/react-native
+1. Replace any instances of the following text
+~~~jsx
+invariant(
+    false,
+    "DatePickerAndroid has been removed from React Native. It can now be installed and imported from '@react-native-community/datetimepicker' instead of 'react-native'. See https://github.com/react-native-datetimepicker/datetimepicker",
+);
+~~~
+OR
+~~~jsx
+invariant(
+    false,
+    ........ DatePicker ..........
+);
+~~~
+with
+~~~jsx
+return require('@react-native-picker/picker') 
+~~~
+1. Run `npx patch-package react-native` to patch up the react-native folder and the index file you just altered
+
+#### Destructuring Issue <a name="destructuring_issues"></a>
+*Author: Daniel*
+
+This section will offer the most common causes for the following error message. 
+~~~bash
+Invalid attempt to destructure non-iterable instance.
+In order to be iterable, non-array objects must have a [Symbol.iterator]() method.
+~~~
+
+* Cause 1: You have something like `[aaa,bbb] = somefunc()` where somefunc() returns `{ 'some': 'object'}` which can't be destructured into a list
+* Cause 2: You have something like `const [text, by, order] = opts;` if `opts` doesn't contain 3 items that can be unrolled
+* Cause 3: You have something like `const [state, setState] = useEffect(defaultValue);` which is a typo since you should be using the useState() hook
+* Cause 4: You have something like `const [ data, isLoading ] = useContext(null);` instead of `const { data, isLoading } = useContext(null);` as context requires curly braces
 
 ### Jest Errors <a name="jest_errors"></a>
 
@@ -1102,7 +1630,51 @@ await waitForElementToBeRemoved(() => queryByText("Loading ..."));
 ##### Case 4: Formik Updates
 Like Case 3, Case 4 is a variant of Case 1. In this case, the test simulates events to change values in form inputs like changing the value in a text input. If the form input is managed by Formik, your test will have a chance to run into this error. Just like Case 1, you can solve it by just waiting for it to complete.
 
+#### Unable to Find Component With Test ID <a name="testid_not_found"></a>
+*Author: Daniel*
+
+This is a common issue where you are unable to find any component with the desired test ID, which is especially annoying when dealing with @rneu/themed. You'll probably notice it because you are getting errors about trying to call functions on "null" or "undefined" values. Here are some troubleshooting steps.
+
+1. Try to render the component as a snapshot test
+    * If you get exports[`<YourComponent/> renders correctly 1`] = `<YourComponent />` or exports[`<YourComponent/> renders correctly 1`] = null, then you have an error with the component. Check the other sections in the MPM on how to troubleshoot this specific error.
+    * Otherwise, continue through the steps
+1. Follow the general troubleshooting advice in this section to identify the problematic component
+1. Check whether the `testID` prop is properly passed
+    * This can be an issue if you are dealing with a component that you wrote
+1. Check whether the problematic library needs to be ignored in the Jest transformer
+    * To ignore the library, go to jest.config.js and add the library to the 'transformIgnorePatterns' list
+1. Check whether the problematic component has been mocked as an empty component like `<></>`
+1. Mock the problematic component if it has not already been mocked
+    * Just make sure not to use an empty component here, per the previous step
+
 ## Tools & Resources <a name="tools"></a>
+*Author: Daniel*
+
+### General Docs <a name="general_docs"></a>
+*Author: Daniel*
+
+* Expo Docs: [https://docs.expo.dev/](https://docs.expo.dev/)
+* Jest Docs: [https://jestjs.io/docs/getting-started](https://jestjs.io/docs/getting-started)
+* React Native Docs: [https://reactnative.dev/docs/getting-started](https://reactnative.dev/docs/getting-started)
+* Types of Autocomplete for Input Fields: [https://reactnative.dev/docs/textinput#autocomplete](https://reactnative.dev/docs/textinput#autocomplete)
+* Visual Examples of Input Keyboard Types: [https://www.lefkowitz.me/visual-guide-to-react-native-textinput-keyboardtype-options/](https://www.lefkowitz.me/visual-guide-to-react-native-textinput-keyboardtype-options/)
+    * If an image is not in both columns, it means that keyboard type is not available for the missing column's OS type.
+
+### Testing Utilities <a name="testing_utilities"></a>
+*Author: Daniel*
+
+* Color Blindness Simulator: [https://daltonlens.org/colorblindness-simulator](https://daltonlens.org/colorblindness-simulator)
+* Luminance Contrast Ratio Calculator: [https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php](https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php)
+
+### Ambient Weather <a name="ambient_weather"></a>
+*Author: Daniel*
+
+* Ambient Weather RESTful API Docs: [https://ambientweather.docs.apiary.io](https://ambientweather.docs.apiary.io)
+* APIB Version of RESTful API Docs: [https://github.com/ambient-weather/api-docs/blob/master/apiary.apib](https://github.com/ambient-weather/api-docs/blob/master/apiary.apib)
+* Sample Station Response from the API for the Tempest App as an Example: [https://github.com/tidbyt/community/blob/main/apps/tempest/sample_station_response.json](https://github.com/tidbyt/community/blob/main/apps/tempest/sample_station_response.json)
+* Example Code using Ambient Weather for a Tidbyt Applet: [https://github.com/tidbyt/community/blob/main/apps/ambientweather/ambient_weather.star](https://github.com/tidbyt/community/blob/main/apps/ambientweather/ambient_weather.star)
+* Node.JS Wrapper Library for Ambient Weather: [https://github.com/owise1/ambient-weather-api](https://github.com/owise1/ambient-weather-api)
+    - This project uses React Native, not Node.JS. As such, the library itself cannot be used, but it can be used as examples of how to access the API and to handle the responses. The src/ and examples/ folders are particularly useful.
 
 ## Logs & Records <a name="logs"></a>
 
@@ -1169,7 +1741,7 @@ import Component from "./MyModule"
 #### Inter-Page Routing <a name="routing"></a>
 *Author: Daniel*
 
-The CropAlly app uses the [expo-router library](https://docs.expo.dev/router/navigating-pages/) and the index.js file. The index.js file determines the default page when a user opens up the app for the first time. To specify the page, import the page component and then call the component in the Page function’s return statement. For example, the following code in index.js makes the Home page into the default page. 
+The CropAlly app uses the [expo-router library](https://docs.expo.dev/router/navigating-pages/) and the index.js file. The index.js file determines the default page when a user opens up the app for the first time. To specify the page, import the page component and then call the component in the Page function's return statement. For example, the following code in index.js makes the Home page into the default page. 
 
 ~~~jsx
 import Home from './home.jsx' 
@@ -1181,11 +1753,11 @@ export default function Page() {
 } 
 ~~~
 
-Besides being versatile, this library is bundled with Expo which is also the library that we use to access our emulator. The Link tag exists to navigate between the app’s pages. However, this tag has limited options and can only be implemented in specific situations. As such, I recommend utilizing the router function instead. 
+Besides being versatile, this library is bundled with Expo which is also the library that we use to access our emulator. The Link tag exists to navigate between the app's pages. However, this tag has limited options and can only be implemented in specific situations. As such, I recommend utilizing the router function instead. 
 
 The router object has 6 available functions: navigate, push, replace, back, canGoBack, and setParams. Before describing the functions, I want to quickly mention that Expo Router uses a stack to track all pages that have been loaded or displayed. The navigate function only pushes a new page if the new route is different, ignoring the search parameters and the hash. Otherwise, the current screen rerenders with the new parameters. If you navigate to a route that is in the history, the stack will pop any pages to that route. The push function always pushes the new page on to the top of the stack and displays it. You can push the current route multiple times or with new parameters. The replace function pops the current page before pushing the new page, making it useful for redirects. The back function pops the current page and displays the page below the current one in the stack. The canGoBack function returns true only if a valid page history stack exists and if the current page can be popped. The setParams function can update the query parameters for the currently selected page. 
 
-The Expo Router library will automatically generate statically typed routes for any new files in the app/ folder. As such, you can use a route immediately after creating the page’s file. The route is always the file’s full name, except for the file extension. 
+The Expo Router library will automatically generate statically typed routes for any new files in the app/ folder, provided that the file contains a default export. As such, you can use a route immediately after creating the page's file. The route is always the file's full name, except for the file extension. Once again, just remember that it will recognize a page's existence if it is a default export.
 
 ### Appendix B: Glossary <a name="b_glossary"></a>
 - Adaptive Maintenance: maintenance tasks after a change in the operating environment such as the OS, language, hardware, or compliance requirements; in most cases, this kind of maintenance cannot be scheduled and will not occur on a regular basis
@@ -1199,3 +1771,24 @@ The Expo Router library will automatically generate statically typed routes for 
 - Unit Test: this test focuses on testing the functionality of a single function, class, or component; ensures that each individual part works before trying to combine them which allows issues to be isolated
 - Usability Test: this test focuses on asking the user to perform certain tasks and assessing whether they are capable of achieving this task in a reasonable amount of time
 - User Acceptance Test (UAT): this test focuses on the user's experience and whether the client is content with the product rather than how usable the product is
+
+#### Appendix C: Future Improvements <a name="c_future_improvements"></a>
+*Author: Daniel*
+
+* Add livestock tracking to the app by expanding the crop tracking features
+* Add a subscription model, likely based on a freemium model
+    * Charge via PayPal or Square to offload security considerations and PCI DSS requirements
+    * Includes writing a proper Terms of Service and Privacy Policy, for legal reasons
+* Expand social media integration
+* Allow crop sharing between app users as part of data aggregation for the Data Hub graphs
+    * This would be connected to crop visibility where only crops set to visible will be included in the data aggregation
+    * Includes implementation of the default visibility toggle switch
+* Improve the speed and efficiency of calls to APIs or the backend
+* Add GPS functionality and/or geotagging to identify specific crops or locations
+    * Perhaps add a map of the area with zones and markers
+* Add a desktop computer-focused website interface for the mobile app
+    * May be an option provided by React Native and Expo's interpreters, with Expo allowing both statically and client rendered websites
+* Increase the number of components that can tied to images
+* Add push notifications for upcoming tasks and payments
+    * May include crops, livestock, tasks, task types, locations, etc.
+* Further improve Floyd-Rivest sorting algorithm per [https://core.ac.uk/download/pdf/82672439.pdf](https://core.ac.uk/download/pdf/82672439.pdf) and [https://github.com/koskinev/turboselect](https://github.com/koskinev/turboselect)

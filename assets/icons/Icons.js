@@ -31,6 +31,7 @@ const icons = {
 
     zip_mail_green: require('./zip-mail-green.png'),
     flag_country_green: require('./flag-country-green.png'),
+    hourglass_green: require('./hourglass-green.png'),
 
     weather_clear_gold: require('./weather_clear_gold.png'),
     weather_fewclouds_yellow: require('./weather_fewclouds_yellow.png'),

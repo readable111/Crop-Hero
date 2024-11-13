@@ -2,7 +2,7 @@ import icons from "./icons/Icons"
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester 
+ * @tester Daniel Moreno
  * 
  * NWS hopes to create proper codes eventually, they just haven't yet
  * Possibly based on WMO codes: https://www.nodc.noaa.gov/archive/arc0021/0002199/1.1/data/0-data/HTML/WMO-CODE/WMO4677.HTM
@@ -95,7 +95,7 @@ export function getWeatherIcon(forecastDesc) {
     let matchedKeyProb = -1
 
     if (!forecastDesc) {
-        return [icons.progress_clock_black, "None"]
+        return [icons.hourglass_green, "None"]
     }
 
     //get just the stuff before 'then', and remove any spaces or capitals
@@ -118,7 +118,7 @@ export function getWeatherIcon(forecastDesc) {
 
     let image_url = ""
     if (matchedKeyWeather < 0) {
-        image_url = icons.progress_clock_black
+        image_url = icons.hourglass_green
     }
     else {
         switch(keysWeather[matchedKeyWeather]) { 
@@ -163,7 +163,7 @@ export function getWeatherIcon(forecastDesc) {
                 break; 
             }
             default: { 
-                image_url = icons.progress_clock_black
+                image_url = icons.hourglass_green
                 break; 
             } 
         } 

@@ -1,7 +1,7 @@
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester 
+ * @tester Daniel Moreno
  ***/
 
 import { 
@@ -28,18 +28,9 @@ const UploadModal = ({
     isLoading = false,
 }) => {
 
-    const [fontsLoaded, fontError] = useFonts({
-        'Domine-Regular': require('../fonts/Domine-Regular.ttf'),
-        'WorkSans-Regular': require('../fonts/WorkSans-Regular.ttf'),
-    });
-    
-    if (!fontsLoaded && !fontError) {
-        return null;
-    }
-
     return (
         <Modal animationType='fade' visible={modalVisible} transparent={true}>
-            <Pressable style={styles.container} onPress={onBackPress}>
+            <Pressable testID={"back"} style={styles.container} onPress={onBackPress}>
                 {isLoading && <ActivityIndicator size={70} color={Colors.MEDIUM_TAUPE} />}
 
                 { !isLoading && (
@@ -48,19 +39,19 @@ const UploadModal = ({
                         <View style={styles.decisionRow}>
                             <Row height={70}>
                                 <Col relativeColsCovered={4} alignItems='center'>
-                                    <TouchableOpacity style={styles.optionBtn} onPress={onCameraPress} activeOpacity={0.65}>
+                                    <TouchableOpacity testID={"camera"} style={styles.optionBtn} onPress={onCameraPress} activeOpacity={0.65}>
                                         <MaterialCommunityIcons name="camera-outline" size={30} color={Colors.IRISH_GREEN} />
                                         <Text style={DOMStyles.Caption}>Camera</Text>
                                     </TouchableOpacity>
                                 </Col>
                                 <Col relativeColsCovered={4} alignItems='center'>
-                                    <TouchableOpacity style={styles.optionBtn} onPress={onGalleryPress} activeOpacity={0.65}>
+                                    <TouchableOpacity testID={"gallery"} style={styles.optionBtn} onPress={onGalleryPress} activeOpacity={0.65}>
                                         <MaterialCommunityIcons name="image-outline" size={30} color={Colors.IRISH_GREEN} />
                                         <Text style={DOMStyles.Caption}>Gallery</Text>
                                     </TouchableOpacity>
                                 </Col>
                                 <Col relativeColsCovered={4} alignItems='center'>
-                                    <TouchableOpacity style={styles.optionBtn} onPress={onRemovePress} activeOpacity={0.65}>
+                                    <TouchableOpacity testID={"remove"} style={styles.optionBtn} onPress={onRemovePress} activeOpacity={0.65}>
                                         <MaterialCommunityIcons name="trash-can-outline" size={30} color={Colors.CHARCOAL} />
                                         <Text style={DOMStyles.Caption}>Remove</Text>
                                     </TouchableOpacity>

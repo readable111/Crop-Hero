@@ -1,7 +1,7 @@
 /****
  * @author Daniel Moreno
  * @reviewer Daniel Moreno
- * @tester 
+ * @tester Daniel Moreno
  ***/
 
 import { React, Component, useState } from 'react';
@@ -24,6 +24,7 @@ import Colors from './Color.js'
 import { useRouter, Link, useLocalSearchParams } from 'expo-router'
 import { doubleMetaphone } from 'double-metaphone'
 import { lemmatize } from 'wink-lemmatizer'
+import {cleanText, cleanNumbers} from './sanitizer.jsx'
 import CROPS from '../test_data/testCropData.json'
 
 //initialize to a bunch of weird, random values that will make it obvious if it is used
@@ -37,7 +38,7 @@ var damerauLevenshteinDistance_cache = {}
 var euclideanDistance_cache = {}
 var jaroWinklerSimilarity_cache = {}
 var doubleMetaphone_cache = {}
-this["genCacheKey"] = function(funcName, firstArg, ...args) {
+function genCacheKey(funcName, firstArg, ...args) {
 	cacheKey = `${funcName}:${firstArg}:`
 	for (const arg of args) {
 		cacheKey += String(arg)
@@ -48,7 +49,7 @@ this["genCacheKey"] = function(funcName, firstArg, ...args) {
 
 
 
-const SearchModal = ({
+export const SearchModal = ({
     modalVisible,
     onBackPress,
     isLoading = false,
@@ -59,15 +60,6 @@ const SearchModal = ({
 }) => {
 
 	const [searchBarTxt, setSearchBarTxt] = useState(searchValue);
-
-    const [fontsLoaded, fontError] = useFonts({
-        'Domine-Regular': require('./fonts/Domine-Regular.ttf'),
-        'WorkSans-Regular': require('./fonts/WorkSans-Regular.ttf'),
-    });
-    
-    if (!fontsLoaded && !fontError) {
-        return null;
-    }
 
 	//create a copy of the array
 	global.dataArray = JSON.parse(JSON.stringify(originalData))
@@ -80,14 +72,14 @@ const SearchModal = ({
 					{isLoading && <ActivityIndicator size={70} color={Colors.MEDIUM_TAUPE} />}
 
 					{ !isLoading && (
-					<View style={[styles.modalView, isDarkMode ? {backgroundColor: Colors.BALTIC_SEA} : {backgroundColor: Colors.SANTA_GRAY}]} > 
+					<View testID={"modal-view"} style={[styles.modalView, isDarkMode ? {backgroundColor: Colors.BALTIC_SEA} : {backgroundColor: Colors.SANTA_GRAY}]} > 
 							{/*Display the search bar which looks identical to the dropdown search bar but works slightly differents*/}
 							<SearchBar 
 								placeholder="Search Crops..."
 								showCancel
 								round 
 								value={searchBarTxt} 
-								onChangeText={(text) => {searchFunction(text, originalData); setSearchBarTxt(text)}}  //call the search function and set searchBarTxt to whatever has been entered
+								onChangeText={(text) => {searchFunction(text, originalData, searchBarTxt); setSearchBarTxt(text)}}  //call the search function and set searchBarTxt to whatever has been entered
 								autoCorrect={true} 
 								keyboardType='default'
 								style={ isDarkMode ? {
@@ -146,7 +138,7 @@ const SearchModal = ({
 								showCancel
 								round 
 								value={searchBarTxt} 
-								onChangeText={(text) => {searchFunction(text, originalData); setSearchBarTxt(text)}}  //call the search function and set searchBarTxt to whatever has been entered
+								onChangeText={(text) => {searchFunction(text, originalData, searchBarTxt); setSearchBarTxt(text)}}  //call the search function and set searchBarTxt to whatever has been entered
 								autoCorrect={true} 
 								keyboardType='default'
 								style={ isDarkMode ? {
@@ -174,9 +166,9 @@ const SearchModal = ({
 								}}
 								placeholderTextColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
 							/> 
-							{/*Display a list of the 10 best matches*/}
+							{/*Display a list of the 8 best matches*/}
 							<View style={[styles.modalListStyle, isDarkMode && styles.modalListStyleDark]}>
-								{searchBarTxt && dataArray.slice(0,10).map((crop, key) => (
+								{searchBarTxt && dataArray.slice(0,8).map((crop, key) => (
 									<Pressable key={key} style={[styles.item, isDarkMode && styles.itemDark]} onPress={()=>{handlePress(crop); setSearchBarTxt(""); onBackPress()}}>
 										<View style={{flex: 0.8, flexShrink: 1, flexGrow: 1, flexWrap:'wrap', flexDirection: 'row',}}>
 											<Text style={{flex: 0.8, flexShrink: 1, flexWrap:'wrap', flexDirection: 'row',}}>Name: {crop.name} | Crop Number: {crop.hrfNum}</Text> 
@@ -204,120 +196,137 @@ var dmTime = 0
 
 
 //the search function specifically for the modal version of the search bar
-searchFunction = (text, arr) => { 
+export const searchFunction = (text, arr, searchBarTxt) => { 
 	//clean up the text based on whether or not it is a number
 	var cleanedTxt = ""
 	var updatedData = []
 	if (isNumeric(text)) {
-		cleanedTxt = text.cleanNumForSearch();
-		//sort array in descending order (find highest value) based on DLED
-		updatedData = arr.sort(function(a,b){ 
-			return compareStrings(b.hrfNum,cleanedTxt) - compareStrings(a.hrfNum,cleanedTxt); 
-		});
+		cleanedTxt = cleanNumbers(text, decimalsAllowed=false, negativesAllowed=false)
+		if (cleanedTxt === cleanNumbers(searchBarTxt, noStopwords=true, noSQL=true, textOnly=true)) {
+			return
+		}
+		//sort array in descending order (find highest value)
+		quickselect(arr, 8, arr.length, function(a,b){ 
+			difference = compareStrings(b.hrfNum, cleanedTxt) - compareStrings(a.hrfNum,cleanedTxt)
+			if (difference > 0) {
+				return 1
+			}
+			if (difference < 0) {
+				return -1
+			}
+			return 0
+		})
+		updatedData = arr.slice(0,8)
+		
 	} else {
-		cleanedTxt = text.cleanTextForSearch();
-		updatedData = arr.sort(function(a,b){ 
-			return compareStrings(b.name,cleanedTxt) - compareStrings(a.name,cleanedTxt); 
-		});
+		cleanedTxt = cleanText(text, noStopwords=true, noSQL=true)
+		if (cleanedTxt === cleanText(searchBarTxt, noStopwords=true, noSQL=true)) {
+			return
+		}
+		quickselect(arr, 8, arr.length, function(a,b){ 
+			difference = compareStrings(b.name, cleanedTxt) - compareStrings(a.name,cleanedTxt)
+			if (difference > 0) {
+				return 1
+			}
+			if (difference < 0) {
+				return -1
+			}
+			return 0
+		})
+		updatedData = arr.slice(0,8)
 	}
 	//TODO: make FULLTEXT SELECT search of database using cleaned text and store results in arrayholder
 
 	dataArray = updatedData
 }; 
 
-//functions to support the custom sort algorithm of Floyd-Wirth
+//functions to support the custom sort algorithm
 function swap(arr, i, j) {
     const tmp = arr[i];
     arr[i] = arr[j];
     arr[j] = tmp;
 }
-function signum(x) {
-    if (x < 0) {
-        return -1
-    } else if (x > 0) {
-        return 1
-    } else {
-        return x
-    }
-}
 function defaultCompare(a, b) {
     return a < b ? -1 : a > b ? 1 : 0;
 }
 
-//new custom sort algorithm
-function FloydWirth_kth(arr, length, kTHvalue, compare = defaultCompare) {
-    let left = 0;       
-    let right = length - 1;     
-    let left2 = 0;
-    let right2 = length - 1;
-
-    while (left < right) {        
-        if(compare(arr[right2], arr[left2]) < 0) {
-            swap(arr, left2, right2)
-        };
-        if(compare(arr[right2], arr[kTHvalue]) < 0) {
-            swap(arr, kTHvalue, right2)
-        };
-        if(compare(arr[kTHvalue], arr[left2]) < 0) {
-            swap(arr, left2, kTHvalue)
-        };
-
-        let rightleft = right - left;
-
-        if (rightleft < kTHvalue) {
-            let n = right - left + 1;
-            let ii = kTHvalue - left + 1;
-            let s = (n + n) / 3;
-            let sd = (n * s * (n - s) / n) * signum(ii - n / 2);
-            left2 = Math.max(left, kTHvalue - ii * s / n + sd);
-            right2 = Math.min(right, kTHvalue + (n - ii) * s / n + sd);              
+//new custom sort algorithm which is extremely fast and works in every situation except this one for now because of an issue with how it interacts with the custom comparator
+/**
+ * Rearranges items so that all items in the [left, k] are the smallest.
+ * The k-th element will have the (k - left + 1)-th smallest value in [left, right].
+ */
+function quickselect(arr, k, right = arr.length, compare = defaultCompare) {
+    let left = 0
+    let i = 0
+    right = right - 1
+    let rr = right
+    let ll = left
+  
+    while (right > left) {
+        if (compare(arr[k], arr[left]) < 0) {
+          swap(arr, left, k)
         }
-
-        let x = arr[kTHvalue];
-
-        while ((right2 > kTHvalue) && (left2 < kTHvalue)) {
-            left2++;
-            while (compare(arr[left2], x) < 0) {
-                left2++;
-            }
-
-            right2--;
-            while (compare(arr[right2], x) > 0) {
-                right2--;
-            }
-
-            swap(arr, left2, right2);
+        if (compare(arr[right], arr[left]) < 0) {
+          swap(arr, left, right)
         }
-        left2++;
-        right2--;
-
-        if (right2 < kTHvalue) {
-            while (compare(arr[left2], x) < 0) {
-                left2++;
-            }
-            left = left2;
-            right2 = right;
+        if (compare(arr[right], arr[left]) < 0) {
+          swap(arr, k, right)
         }
+      
+        /* Preserved as necessary for certain optimizations beyond my ability
+	if (right - left > k) {
+            const n = right - left + 1;
+            i = k - left + 1;
+            const s = (2 * n / 3);
+            const sd = (n * s * (n - s) / n) * (i - n / 2 < 0 ? -1 : 1);
+            // Biased slightly so that the (k - left + 1)-th element is expected to lie in the smallest set after partitioning
+            ll = Math.max(left, k - i * s / n + sd);
+            rr = Math.min(right, k + (n - i) * s / n + sd);
+        }*/
 
-        if (kTHvalue < left2) {
-            while (compare(arr[right2], x) > 0) {
-                right2--;
-            }
+        //partition elements from arr[left : right] around t (which is set to the kth element)
+        //basically a faster version of traditional partition function or subscript range fetching as subscript range checking on i and j has been removed
+        const t = arr[k];
+        i = left;
+        let j = right;
 
-            right = right2;
-            left2 = left;
-        }
-
-        if(compare(arr[left], arr[right]) < 0) {
+        swap(arr, left, k);
+        if (compare(arr[right], t) > 0) {
             swap(arr, right, left)
+        }
+
+        //Move up left pointer and down right pointer
+        while (i < j) {
+            swap(arr, i, j);
+            i++;
+            j--;
+            while (compare(arr[i], t) < 0) {
+                i++
+            }
+            while (compare(arr[j], t) > 0) {
+                j--
+            }
+        }
+
+        if (compare(arr[left], t) === 0) {
+            swap(arr, left, j)
+        }
+        else {
+            j++;
+            swap(arr, j, right);
+        }
+
+        if (j <= k) {
+            left = j + 1
+        };
+        if (k <= j) {
+            right = j - 1
         };
     }
-
-    return arr[kTHvalue];
 }
 
 //Function that takes two strings and outputs value reflecting similarity; High score = good
-this["compareStrings"] = function(s, t) {
+export function compareStrings(s, t) {
 	let startTime = performance.now()
 	//remove diacretics and other unicodes by turning them into ASCII-equivalent
 	sASCII = unidecode(s)
@@ -333,8 +342,8 @@ this["compareStrings"] = function(s, t) {
 
 	//if exact match, return highest possible score
 	if (matchExact(sUpper,tUpper)) {
-		compareStrings_cache[compareStringsCacheKey] = 1000
-		return 1000
+		compareStrings_cache[compareStringsCacheKey] = 5000
+		return 5000
 	}
 
 	//store the length of each passed string
@@ -347,21 +356,21 @@ this["compareStrings"] = function(s, t) {
 	//give bonus score if first letters match as least likely letter to be wrong
 	startTime = performance.now()
 	if (sUpper.charAt(0) === tUpper.charAt(0)) {
-		matchScore += 18
+		matchScore += 90
 	}
-	//give bonus score if last letters match as still less likely to be wrong
+	//give a small bonus score if last letters match as still less likely to be wrong
 	if (sUpper.charAt(sL - 1) === tUpper.charAt(tL - 1)) {
-		matchScore += 5
+		matchScore += 25
 	}
 	//check the first letter after each space for both words by getting all of them, merging them into one string, and sending them through SDC as they are less likely to be wrong
 	if (sUpper.indexOf(' ') >= 0 && tUpper.indexOf(' ') >= 0) {
-		matchScore += 10 //if both have spaces, provide a bonus
+		matchScore += 75 //if both have spaces, provide a bonus
 		let sAcronym = sUpper.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
 		let tAcronym = tUpper.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
-		matchScore += customRound(15 * sorensenDiceCoefficient(sAcronym,tAcronym)) //multiply by X to determine score so diminishing bonus with increasing distance, approaching 0
+		matchScore += customRound(25 * sorensenDiceCoefficient(sAcronym,tAcronym)) //multiply by X to determine score so diminishing bonus with increasing distance, approaching 0
 	}
 	else if ((sUpper.indexOf(' ') >= 0 && tUpper.indexOf(' ') < 0) || (sUpper.indexOf(' ') < 0 && tUpper.indexOf(' ') >= 0)) {
-		matchScore -= 10 //if only one has a space, apply a penalty
+		matchScore -= 500 //if only one has a space, apply a penalty
 	}
 	endTime = performance.now()
 	firstLastLetterTime += endTime - startTime
@@ -371,16 +380,20 @@ this["compareStrings"] = function(s, t) {
 	corrected_strings = removeCommonPrefixAndSuffix(sUpper, tUpper)
 	sShortened = corrected_strings[0]
 	tShortened = corrected_strings[1]
-	//3 chars removed from both so boost score by 24 total
-	matchScore += ((sL - sShortened)*4)
-	matchScore += ((tL - tShortened)*4)
+	//Example: 3 chars removed from both so boost score by 30+30=60 total
+	if (sShortened.length > 0) {
+		matchScore += ((sL - sShortened.length)*10)
+	}
+	if (tShortened.length > 0) {
+		matchScore += ((tL - tShortened.length)*10)
+	}
 	endTime = performance.now()
 	prefixMatchTime += endTime - startTime
 
 	//get the SDC value and multiply by 100 to get score and round to nearest whole number to eliminate decimals; high number is good
 	startTime = performance.now()
-	matchScore += customRound(sorensenDiceCoefficient(sUpper,tUpper) * 100)	
-	if (matchScore < 30) {
+	matchScore += customRound(sorensenDiceCoefficient(sUpper,tUpper) * 200)	
+	if (matchScore < 40) {
 		compareStrings_cache[compareStringsCacheKey] = matchScore
 		return matchScore
 	}
@@ -390,11 +403,11 @@ this["compareStrings"] = function(s, t) {
 	//give penalty if different length
 	startTime = performance.now()
 	if (sL !== tL) {
-		matchScore -= customAbs(sL - tL)
+		matchScore -= (customAbs(sL - tL) * 10)
 	}
 	//give bonus if same number of syllables
 	if (syllableCount(sUpper) === syllableCount(tUpper)) {
-		matchScore += 5
+		matchScore += 25
 	}
 	endTime = performance.now()
 	lengthSyllableTime += endTime - startTime
@@ -402,7 +415,7 @@ this["compareStrings"] = function(s, t) {
 	//apply penalty to score equal to the DLED value times a constant
 	//uses the shortened versions of the strings to cut down on string size
 	startTime = performance.now()
-	matchScore -= (damerauLevenshteinDistance(sShortened,tShortened, 5) * 3)
+	matchScore -= (damerauLevenshteinDistance(sShortened,tShortened, 5) * 20)
 	if (matchScore < 40) {
 		compareStrings_cache[compareStringsCacheKey] = matchScore
 		return matchScore
@@ -413,8 +426,8 @@ this["compareStrings"] = function(s, t) {
 	//apply bonus from Jaro-Winkler Similarity which counts transpositions and matching characters with scaling bonus for prefix match
 	startTime = performance.now()
 	jws = jaroWinklerSimilarity(sUpper, tUpper)
-	matchScore += (jws * 15)
-	if (matchScore < 50) {
+	matchScore += (jws * 65)
+	if (matchScore < 80) {
 		compareStrings_cache[compareStringsCacheKey] = matchScore
 		return matchScore
 	}
@@ -448,28 +461,32 @@ this["compareStrings"] = function(s, t) {
 	startTime = performance.now()
 	//compare both primary codes; only give bonus if exact match
 	if (sMetaphoneCodes[0] === tMetaphoneCodes[0]) {
-		matchScore += 15
+		matchScore += 45
 	}
 	//compare s primary with t secondary; only give bonus if exact match
 	if (sMetaphoneCodes[0] === tMetaphoneCodes[1]) {
-		matchScore += 12
+		matchScore += 30
 	}
 	//compare s secondary with t primary; only give bonus if exact match
 	if (sMetaphoneCodes[1] === tMetaphoneCodes[0]) {
-		matchScore += 11
+		matchScore += 20
 	}
 	//compare s secondary with s secondary; only give bonus if exact match
 	if (sMetaphoneCodes[1] === tMetaphoneCodes[1]) {
-		matchScore += 10
+		matchScore += 15
 	}
 	endTime = performance.now()
 	dmTime += endTime - startTime
 
+	if(!matchScore) {
+		compareStrings_cache[compareStringsCacheKey] = 0
+		return 0
+	}
 	compareStrings_cache[compareStringsCacheKey] = matchScore
 	return matchScore
 }
 
-this["matchExact"] = function(s, t) {
+function matchExact(s, t) {
 	//ensure that s and t are defined and the same length
 	if (typeof(s) === 'undefined' || typeof(t) === 'undefined') {
 		return false
@@ -488,7 +505,7 @@ this["matchExact"] = function(s, t) {
 	return match && t === match[0];
 }
 
-this["syllableCount"] = function(s) {
+function syllableCount(s) {
 	//ensure that s is defined and has a length
 	if (typeof(s) === 'undefined' || s.length === 0) {
 		return 0
@@ -525,7 +542,7 @@ this["syllableCount"] = function(s) {
 
 //Function that is a Javascript translation of Miguel Serrano's C-based version and Lars Garshol's Java-based version of the Jaro-Winkler Similarity algorithm to achieve O(len(s)*len(a)) time complexity
 //returns a value between 0 and 1 with 0 being no match and 1 being exact match
-this["jaroWinklerSimilarity"] = function(s, a, p_val=0.16, min_score=0.7) {
+function jaroWinklerSimilarity(s, a, p_val=0.16, min_score=0.7) {
 	//return early if either are undefined
 	if (typeof(s) === 'undefined' || typeof(a) === 'undefined') {
 		return 0.0
@@ -607,26 +624,26 @@ this["jaroWinklerSimilarity"] = function(s, a, p_val=0.16, min_score=0.7) {
 }
 
 //write some custom math functions to speed stuff up
-this["customMax"] = function(x, y) {
+function customMax(x, y) {
 	return x > y ? x : y
 }
-this["customMin"] = function(x, y) {
+function customMin(x, y) {
 	return x < y ? x : y
 }
-this["customRound"] = function(x) {
+function customRound(x) {
 	return (x + (x>0?0.5:-0.5)) << 0;
 }
-this["customAbs"] = function(x) {
+function customAbs(x) {
 	return (x + (x >> 31)) ^ (x >> 31);
 }
-this["customSqrt"] = function(x) {
+function customSqrt(x) {
 	return x ** 0.5;
 }
 
 //Function that uses Ka-Weihe Fast Sorensen-Dice Coefficient (SDC) algorithm to quickly calculate value in nearly O(len(s) + len(t)) time complexity
 //Returns value in range of [0, 1] with 1 being a perfect match
 //This function was copied in rather than being imported from the library due to issues with outdated npm; comments are mine; original at www.npmjs.com/package/fast-dice-coefficient
-this["sorensenDiceCoefficient"] = function(s, t, ngram_len=2) {
+function sorensenDiceCoefficient(s, t, ngram_len=2) {
 	//if a variable is undefined, just return 0
 	if (typeof(s) === 'undefined' || typeof(t) === 'undefined') {
 		return 0;
@@ -716,7 +733,7 @@ keyboardCartesianCoords = {
     'M': {'y': 3, 'x': 7.25},
 }
 //based the keyboardCartesianCoords, it will output a value of 0 or a decimal between 1 and 9 (inclusive)
-this["euclideanDistance"] = function(a, b, maxDistance=50) {
+function euclideanDistance(a, b, maxDistance=50) {
 	if (typeof(a) === 'undefined' || typeof(b) === 'undefined') {
 		return maxDistance
 	}
@@ -742,7 +759,7 @@ this["euclideanDistance"] = function(a, b, maxDistance=50) {
 //Also applies Euclidean Distance between keys on a QWERTY keyboard to penalize certain combinations
 //Stored using this[] to improve size compression during compilation without it getting shrunk down to nothingness
 //Returns distance in range of [0, maxDistance]
-this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
+function damerauLevenshteinDistance(s, t, maxDistance=50) {
 	//Step 0: test to see if it should exit prematurely
 	//if a variable is undefined, just return maxDistance
 	if (typeof(s) === 'undefined' || typeof(t) === 'undefined') {
@@ -839,7 +856,11 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
 				}
 
 				// Step 6: store the minimum
-				d[i][j] = mi; 
+				if (!mi) {
+					d[i][j] = maxDistance; 
+				} else {
+					d[i][j] = mi; 
+				}
 			}
 
 			col_min = customMin(col_min, d[i][j]);
@@ -857,7 +878,7 @@ this["damerauLevenshteinDistance"] = function(s, t, maxDistance=50) {
 };
 
 //Return modified strings with the common prefixes and suffixes between them removed
-this["getCommonPrefix"] = function(first, last) {
+function getCommonPrefix(first, last) {
 	let prefix_len = 0
     for(let i = 0; i < customMin(first.length,last.length); i++){
         if(first[i] != last[i]){
@@ -867,7 +888,7 @@ this["getCommonPrefix"] = function(first, last) {
     }
 	return prefix_len
 }
-this["getCommonSuffix"] = function(first, last) {
+function getCommonSuffix(first, last) {
 	let suffix_len = 0;
     while (suffix_len < customMin(first.length,last.length) && first[first.length - 1 - suffix_len] === last[last.length - 1 - suffix_len]) {
         suffix_len++;
@@ -875,7 +896,7 @@ this["getCommonSuffix"] = function(first, last) {
     suffix_len = -1 * suffix_len;
 	return suffix_len
 }
-this["removeCommonPrefixAndSuffix"] = function(first, last) {
+function removeCommonPrefixAndSuffix(first, last) {
 	cacheKey = genCacheKey("removeCommonPrefixAndSuffix", first, last)
 	if (cacheKey in removeCommonPrefixAndSuffix_cache) {
 		return removeCommonPrefixAndSuffix_cache[cacheKey]
@@ -894,21 +915,7 @@ this["removeCommonPrefixAndSuffix"] = function(first, last) {
 //check if input is numeric
 const isNumeric = (num) => (typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num);
 
-//clean up input specifically for search function
-//list of stopwords for InnoDB with space following it to ensure it only hits words
-const StopWords = ['a ', 'about ', 'an ', 'are ', 'as ', 'at ', 'be ', 'by ', 'com ', 'de ', 'en ', 'for ', 'from ', 'how ', 'i ', 'in ', 'is ', 'it ', 'la ', 'of ', 'on ', 'or ', 'that ', 'the ', 'this ', 'to ', 'was ', 'what ', 'when ', 'where ', 'who ', 'will ', 'with ', 'und ', 'the ', 'www ']
-String.prototype.cleanTextForSearch = function(){
-	newVal = this.toUpperCase() //make all characters uppercase
-	newVal = newVal.replace(/[^A-Z ]/g, ""); //remove all characters that aren't a letter or space
-	let regex = new RegExp("\\b"+StopWords.join('|')+"\\b","gi") //remove all stopwords
-	return newVal.replace(regex, '');
-}
-String.prototype.cleanNumForSearch = function(){
-	newVal = this.replace(/[^0-9]/g, ""); //remove all characters that aren't a letter or space
-	return newVal;
-}
-
-class SearchInput extends Component { 
+export class SearchInput extends Component { 
 	constructor(props) { 
 		super(props); 
 		this.state = { 
@@ -933,17 +940,55 @@ class SearchInput extends Component {
 			//if the first character is a number, assume that the user wants to enter a number
 			let firstChar = text.charAt(0)
 			if (firstChar <= '9' && firstChar >= '0') {
-				cleanedTxt = text.cleanNumForSearch();
-				//sort array in descending order (find highest value) based on DLED
-				updatedData = this.arrayholder.sort(function(a,b){ 
-					return compareStrings(b.hrfNum,cleanedTxt) - compareStrings(a.hrfNum,cleanedTxt); 
-				});
+				cleanStartTime = performance.now()
+				cleanedTxt = cleanNumbers(text, decimalsAllowed=false, negativesAllowed=false)
+				cleanEndTime = performance.now()
+				console.log("Cleaning time   : " + (cleanEndTime - cleanStartTime) + "ms")
+				//early return if no change
+				if (cleanedTxt === cleanNumbers(this.state.searchValue, noStopwords=true, noSQL=true, textOnly=true)) {
+					this.setState({ searchValue: text }); 
+					let searchEndTime = performance.now()
+					console.log("Sort Time       : " + (searchEndTime - searchStartTime) + "ms")
+					searchStartTime = searchEndTime = 0
+					return
+				}
+				//sort array in descending order (find highest value)
+				quickselect(this.arrayholder, 3, this.arrayholder.length, function(a,b){ 
+					difference = compareStrings(b.hrfNum, cleanedTxt) - compareStrings(a.hrfNum,cleanedTxt)
+					if (difference > 0) {
+						return 1
+					}
+					if (difference < 0) {
+						return -1
+					}
+					return 0
+				})
+				updatedData = this.arrayholder.slice(0,3)
 			} else {
-				cleanedTxt = text.cleanTextForSearch();
-				//sort array in descending order (find highest value) based on DLED
-				updatedData = this.arrayholder.sort(function(a,b){ 
-					return compareStrings(b.name,cleanedTxt) - compareStrings(a.name,cleanedTxt); 
-				});
+				cleanStartTime = performance.now()
+				cleanedTxt = cleanText(text, noStopwords=true, noSQL=true, textOnly=true)
+				cleanEndTime = performance.now()
+				console.log("Cleaning time   : " + (cleanEndTime - cleanStartTime) + "ms")
+				//early return if no change
+				if (cleanedTxt === cleanText(this.state.searchValue, noStopwords=true, noSQL=true, textOnly=true)) {
+					this.setState({ searchValue: text }); 
+					let searchEndTime = performance.now()
+					console.log("Sort Time       : " + (searchEndTime - searchStartTime) + "ms")
+					searchStartTime = searchEndTime = 0
+					return
+				}
+				//sort array in descending order (find highest value)
+				quickselect(this.arrayholder, 3, this.arrayholder.length, function(a,b){ 
+					difference = compareStrings(b.name, cleanedTxt) - compareStrings(a.name,cleanedTxt)
+					if (difference > 0) {
+						return 1
+					}
+					if (difference < 0) {
+						return -1
+					}
+					return 0
+				})
+				updatedData = this.arrayholder.slice(0,3)
 			}
 			let searchEndTime = performance.now()
 			//TODO: make FULLTEXT SELECT search of database using cleaned text and store results in arrayholder
@@ -980,7 +1025,7 @@ class SearchInput extends Component {
 			const setIsModalVisible = isModalVisible => this.setState({ isModalVisible });
 			return ( 
 				<View style={styles.container}> 
-					<TouchableOpacity activeOpacity={0.8} onPress={() => setIsModalVisible(true)}>
+					<TouchableOpacity testID={"search-modal"} activeOpacity={0.8} onPress={() => setIsModalVisible(true)}>
 						<SearchBar 
 							placeholder="Search Crops..."
 							round 
@@ -1228,6 +1273,3 @@ const styles = StyleSheet.create({
         borderRadius: 25,
     },
 });
-
-
-export default SearchInput;
