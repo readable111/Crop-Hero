@@ -318,7 +318,7 @@ const todo = () => {
 
     return (
         <View style={[styles.topContainer, isDarkMode && styles.darkTopContainer]}>
-            <StatusBar backgroundColor={Colors.WHITE_SMOKE} />
+            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE} />
             <View style={[styles.btnGridContainer, isDarkMode && styles.darkGridContainer]}>
                 <Row height={80}>
                     <Col relativeColsCovered={2} alignItems='center'>
@@ -331,6 +331,7 @@ const todo = () => {
             </View>
             <View style={[styles.container, isDarkMode && styles.darkContainer]}>
                 <DropDownPicker
+                    theme={isDarkMode ? 'DARK' : 'LIGHT'}
                     open={open}
                     value={value}
                     items={items}
@@ -338,6 +339,8 @@ const todo = () => {
                     setValue={setValue}
                     setItems={setItems}
                     containerStyle={styles.dropdownContainer}
+                    dropDownContainerStyle={isDarkMode && {borderColor: Colors.WHITE_SMOKE, backgroundColor: Colors.IRIDIUM}}
+                    style={isDarkMode && {borderColor: Colors.WHITE_SMOKE, backgroundColor: Colors.IRIDIUM}}
                 />
             </View>
             <View style={styles.FlatListView}>

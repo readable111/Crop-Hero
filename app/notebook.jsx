@@ -176,7 +176,7 @@ const Notebook = () => {
 
     return (
         <View style={[styles.topContainer, isDarkMode && styles.darkContainer]}>
-            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={isDarkMode ? Colors.ALMOST_BLACK : Colors.WHITE_SMOKE} />
+            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE} />
             <View style={isDarkMode ? styles.darkBtnGridContainer : styles.btnGridContainer}>
                 <Row height={80}>
                     <Col relativeColsCovered={2} alignItems='center'>
@@ -192,22 +192,24 @@ const Notebook = () => {
                 <Picker
                     selectedValue={selectedMonth}
                     style={isDarkMode ? styles.darkPicker : styles.picker}
+                    dropdownIconColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
                     onValueChange={(itemValue) => setSelectedMonth(itemValue)}
                 >
-                    <Picker.Item label="Month" value="All" />
+                    <Picker.Item label="Month" value="All" style={isDarkMode ? {backgroundColor: Colors.CHARCOAL, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.ALMOND_TAN, color: Colors.ALMOST_BLACK}} />
                     {[...Array(12)].map((_, i) => (
-                        <Picker.Item key={i} label={`${i + 1}`.padStart(2, '0')} value={`${i + 1}`.padStart(2, '0')} />
+                        <Picker.Item style={isDarkMode ? {backgroundColor: Colors.CHARCOAL, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.ALMOND_TAN, color: Colors.ALMOST_BLACK}} key={i} label={`${i + 1}`.padStart(2, '0')} value={`${i + 1}`.padStart(2, '0')} />
                     ))}
                 </Picker>
 
                 <Picker
                     selectedValue={selectedYear}
                     style={isDarkMode ? styles.darkPicker : styles.picker}
+                    dropdownIconColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
                     onValueChange={(itemValue) => setSelectedYear(itemValue)}
                 >
-                    <Picker.Item label="Year" value="All" />
+                    <Picker.Item style={isDarkMode ? {backgroundColor: Colors.CHARCOAL, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.ALMOND_TAN, color: Colors.ALMOST_BLACK}} label="Year" value="All" />
                     {[2023, 2024, 2025, 2026].map(year => (
-                        <Picker.Item key={year} label={year.toString()} value={year.toString()} />
+                        <Picker.Item style={isDarkMode ? {backgroundColor: Colors.CHARCOAL, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.ALMOND_TAN, color: Colors.ALMOST_BLACK}} key={year} label={year.toString()} value={year.toString()} />
                     ))}
                 </Picker>
             </View>
@@ -225,13 +227,13 @@ const Notebook = () => {
                 openIcon={{ name: 'close', color: 'white' }}
                 onOpen={() => setOpen(!open)}
                 onClose={() => { setOpen(false); clearSelectedEntry(); }}
-                buttonStyle={{ backgroundColor: 'green' }}
+                buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                 style={styles.speedDial}
             >
                 <SpeedDial.Action
                     icon={<MaterialCommunityIcons name="plus" size={24} color="white" />}
                     title="Add"
-                    buttonStyle={{ backgroundColor: 'green' }}
+                    buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                     onPress={() => {
                         setEditingEntry(null); // Reset editingEntry for new entry
                         setModalVisible(true); // Open modal to add new entry
@@ -249,12 +251,12 @@ const Notebook = () => {
                             Alert.alert("Select an Entry to export.");
                         }
                     } }
-                    buttonStyle={{ backgroundColor: 'green' }}
+                    buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                 />
                 <SpeedDial.Action
                     icon={<MaterialCommunityIcons name="pencil" size={24} color="white" />}
                     title="Edit"
-                    buttonStyle={{ backgroundColor: 'green' }}
+                    buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                     onPress={() => {
                         if (selectedEntry) {
                             openModalForEdit(selectedEntry);
@@ -266,7 +268,7 @@ const Notebook = () => {
                 <SpeedDial.Action
                     icon={<MaterialCommunityIcons name="delete" size={24} color="white" />}
                     title="Delete"
-                    buttonStyle={{ backgroundColor: 'green' }}
+                    buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                     onPress={() => {
                         if (selectedEntry) {
                             handleDelete(selectedEntry.EntryID); // Delete the selected entry
@@ -397,7 +399,6 @@ const styles = StyleSheet.create({
     },
     darkFilterContainer: {
         flexDirection: 'row',
-        backgroundColor: Colors.PERIWINKLE_GRAY,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: 'black',
@@ -426,7 +427,8 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderWidth: 1,
         borderRadius: 5,
-        backgroundColor: Colors.PERIWINKLE_GRAY,
+        backgroundColor: Colors.CHARCOAL,
+        color: Colors.WHITE_SMOKE,
         //marginBottom: 20,
         // marginTop: 20,
         flexDirection: 'row',
@@ -460,7 +462,7 @@ const styles = StyleSheet.create({
     darkBtnGridContainer: {
         marginHorizontal: "auto",
         width: '100%',
-        backgroundColor: Colors.BALTIC_SEA,
+        backgroundColor: Colors.CHARCOAL,
         borderRadius: 5,
         borderColor: 'black',
         borderWidth: 1,
@@ -482,6 +484,14 @@ const styles = StyleSheet.create({
         
 
 
+    },
+    pickerItemStyle: {
+        backgroundColor: Colors.SCOTCH_MIST_TAN, 
+        color: Colors.ALMOST_BLACK
+    },
+    pickerItemStyleDark: {
+        backgroundColor: Colors.CHARCOAL, 
+        color: Colors.WHITE_SMOKE
     },
 
   
@@ -543,7 +553,7 @@ const styles = StyleSheet.create({
 
 	
 	oval: {
-		backgroundColor: Colors.IRISH_GREEN,
+		backgroundColor: Colors.MALACHITE,
 		width: 180,
 		height: 180,
 		borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
@@ -554,7 +564,7 @@ const styles = StyleSheet.create({
 		fontFamily: 'Domine-Regular',		
     },
     darkOval: {
-        backgroundColor: Colors.IRISH_GREEN,
+        backgroundColor: Colors.MALACHITE,
         width: 180,
         height: 180,
         borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
@@ -568,7 +578,7 @@ const styles = StyleSheet.create({
     },
 
 	ovals: {
-		backgroundColor: Colors.ALMOND_TAN,
+		backgroundColor: Colors.SOFT_GREEN,
 		width: 180,
 		height: 180,
 		borderRadius: 180 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
@@ -579,7 +589,7 @@ const styles = StyleSheet.create({
 		fontFamily: 'Domine-Regular',
     },
     darkOvals: {
-        backgroundColor: Colors.RIVER_BED,
+        backgroundColor: Colors.SOFT_GREEN,
         //backgroundColor: Colors.ALMOND_TAN,
         width: 180,
         height: 180,
