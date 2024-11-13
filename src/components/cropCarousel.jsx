@@ -28,9 +28,9 @@ const Carousel = ({data, isDarkMode=false}) => {
           <View style={[styles.item, isDarkMode && styles.itemDark]}>
             <Image source = {require("../../assets/icons/cropDefaultImage.png")}/>
             <Text>Name: {item.name}</Text> 
-            <Text>Medium: {item.medium}</Text>
+            <Text>Medium: {item.media}</Text>
             <Text>Location: {item.location}</Text>
-            <Text>Start Date: {item.datePlanted}</Text>
+            <Text>Start Date: {item.date}</Text>
           </View>
         </Pressable>
         )}
