@@ -79,6 +79,7 @@ const addCrops = () => {
         const [addTypeAdded, setAddTypeAdded] = useState(false)
         const [locationNameOption, setLocationNameOption] = useState()
         const [typeNameOption, setTypeNameOption] = useState()
+        const [addLocationAdded, setAddLocationAdded] = useState(false)
         const handleOpenDropdown = (id) => {
                 setOpen(open === id ? null : id)
         }
