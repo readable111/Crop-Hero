@@ -62,25 +62,32 @@ const TodoEntryModal = ({
     console.log("Current Task Data: \n\n",taskData)
     console.log(initialTaskData)
     const handleDateChange = (type, value) => {
-        // Splitting DueDate to allow month, day, and year selection
-        const dateParts = taskData["fld_t_DateDue"].split(' ');
-        let newDate = '';
+        // Mapping months to their numeric equivalents
+        const monthMap = {
+            "January": "01", "February": "02", "March": "03", "April": "04",
+            "May": "05", "June": "06", "July": "07", "August": "08",
+            "September": "09", "October": "10", "November": "11", "December": "12"
+        };
+
+        // Split the current date parts or default to current year
+        const dateParts = taskData["fld_t_DateDue"].split('-');
+        let year = dateParts[0] || `${new Date().getFullYear()}`;
+        let month = dateParts[1] || '01';
+        let day = dateParts[2] || '01';
 
         if (type === 'month') {
-            newDate = `${value} ${dateParts[1] || ''} ${dateParts[2] || ''}`;
+            month = monthMap[value];
         } else if (type === 'day') {
-            newDate = `${dateParts[0] || ''} ${value} ${dateParts[2] || ''}`;
+            day = value.padStart(2, '0'); // Ensure day is two digits
         } else if (type === 'year') {
-            newDate = `${dateParts[0] || ''} ${dateParts[1] || ''} ${value}`;
+            year = value;
         }
 
-        setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": newDate.trim() }));
+        // Construct ISO format date (YYYY-MM-DD)
+        const newDate = `${year}-${month}-${day}`;
+        setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": newDate }));
     };
-
-    const handleChange = (name, value) => {
-        console.log(name, value)
-        setTaskData(prevData => ({ ...prevData, [name]: value }));
-    };
+                                                                     
 
     const handleAddTaskType = () => {
         const newTaskType = taskData.NewTaskType.trim();
