@@ -208,12 +208,19 @@ const CropsPage = () => {
                                         <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                 </View>
                                 
-                                <TouchableOpacity style={[isVisible && styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
-                                        {isVisible && <Text style={styles.locationText}>Add Location</Text>}
-                                </TouchableOpacity>
-                                <TouchableOpacity style={[isVisible && styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setModalVisible(true)}>
-                                        {isVisible && <Text style={styles.typeText}>Add Type</Text>}
-                                </TouchableOpacity>
+                                
+                                <View style={{flexDirection: 'row', marginRight: '20%', marginLeft: '2%'}}>
+                                        <TouchableOpacity style={[isVisible && styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
+                                                {isVisible && <Text style={styles.locationText}>Location</Text>}
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={[isVisible && styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setModalVisible(true)}>
+                                                {isVisible && <Text style={styles.typeText}>Type</Text>}
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={[isVisible&&styles.medContainer, isDark && styles.medContainerDark]} onPress = {() => setModalVisible(true)}>
+                                                        {isVisible&&<Text style={styles.medText}>Medium</Text>}
+                                        </TouchableOpacity>        
+                                </View>
+                                
                                 
                                 
                                 <View style={[isVisible && styles.save]}>
@@ -308,7 +315,7 @@ const CropsPage = () => {
                                         disabled= {readOnly}
                                         items={items}
                                         onChangeValue={handleIndoorsChange}
-                                        placeholder="Started Indoors?"
+                                        placeholder= {crop.indoors}
                                         listMode='SCROLLVIEW'
 					dropDownDirection='BOTTOM'
                                         scrollViewProps={{
@@ -335,7 +342,7 @@ const CropsPage = () => {
                                         disabled= {readOnly}
                                         items={items}
                                         onChangeValue={handleActiveChange}
-                                        placeholder="Active?"
+                                        placeholder={crop.active}
                                         listMode='SCROLLVIEW'
 					dropDownDirection='BOTTOM'
                                         scrollViewProps={{
@@ -360,6 +367,33 @@ const CropsPage = () => {
                                         maxLength={64}
                                         readOnly = {readOnly}
                                         onChangeText={(text) => handleChange('type' , text)}
+                                />
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Medium</Text>
+                                <DropDownPicker
+                                        theme={isDark ? 'DARK' : 'LIGHT'}
+                                        open={open === 'medium'}
+                                        setOpen={() => handleOpenDropdown('medium')}
+                                        value={selectedActive}
+                                        setValue={setSelectedActive}
+                                        disabled= {readOnly}
+                                        items={items}
+                                        onChangeValue={handleActiveChange}
+                                        placeholder= {crop.medium}
+                                        listMode='SCROLLVIEW'
+					dropDownDirection='BOTTOM'
+                                        scrollViewProps={{
+					        nestedScrollEnabled: true
+					}}
+                                        props={{
+						activeOpacity: 1,
+					}}
+                                        containerStyle={{
+						width: '94%',
+						zIndex: 50,
+						marginBottom: 40,
+					}}
+                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
                                 <Input
@@ -389,7 +423,7 @@ const CropsPage = () => {
                                         disabled= {readOnly}
                                         items={items}
                                         onChangeValue={handleVisibleChange}
-                                        placeholder="Crop Visible?"
+                                        placeholder= {crop.visible}
                                         listMode='SCROLLVIEW'
 					dropDownDirection='TOP'
                                         scrollViewProps={{
@@ -450,22 +484,23 @@ const styles = StyleSheet.create({
                       alignContent: 'center'
               },
               save:{
-                      position: 'absolute',
-                      marginTop: 10,
-                      marginLeft: 370,
-                      width: 40,
-                      height: 40,
-                      borderRadius: 40/2,
-                      backgroundColor: Colors.MALACHITE,
-                      justifyContent: "center",
-                      alignItems: "center",
+                position: 'absolute',
+                marginTop: 10,
+                marginLeft: '85%',
+                width: 40,
+                height: 40,
+                borderRadius: 40/2,
+                backgroundColor: Colors.MALACHITE,
+                justifyContent: "center",
+                alignItems: "center",
+                marginRight: '5%'
               },
               back:{
-                      marginLeft: 10,
-                      width: 40,
-                      height: 40,
-                      justifyContent: "center",
-                      alignItems: "center",
+                marginLeft: '2%',
+                width: 40,
+                height: 40,
+                justifyContent: "center",
+                alignItems: "center",
               },
               textBox:{
                       marginTop: -5,
@@ -516,6 +551,7 @@ const styles = StyleSheet.create({
               },
               inputText:{
                       fontSize: 16,
+                      marginLeft: "2%"
               },
               inputTextDark:{
                         color: Colors.WHITE_SMOKE
@@ -557,12 +593,50 @@ const styles = StyleSheet.create({
                 borderRadius: 20,
                 borderColor: '#20232a',
                 borderWidth: 1,
-                marginRight: '5%'
+                marginRight: '1%'
         },
         locationContainerDark:{
                 backgroundColor: Colors.LICHEN
         },
         locationText:{
+                fontFamily: 'Domine-Medium',
+                fontSize: 20
+        },
+        typeContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: 11,
+                paddingHorizontal: 10,
+                backgroundColor: Colors.SCOTCH_MIST_TAN, // Light background color around the toggle
+                borderRadius: 20,
+                borderColor: '#20232a',
+                borderWidth: 1,
+                marginRight: '1%'
+        },
+        typeText:{
+                fontFamily: 'Domine-Medium',
+                fontSize: 20
+        },
+        typeContainerDark:{
+                backgroundColor: Colors.LICHEN
+        },
+        medContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: 11,
+                paddingHorizontal: 10,
+                backgroundColor: Colors.SCOTCH_MIST_TAN, // Light background color around the toggle
+                borderRadius: 20,
+                borderColor: '#20232a',
+                borderWidth: 1,
+                marginRight: '1%'
+        },
+        medContainerDark:{
+                backgroundColor: Colors.LICHEN
+        },
+        medText:{
                 fontFamily: 'Domine-Medium',
                 fontSize: 20
         },
@@ -597,25 +671,7 @@ const styles = StyleSheet.create({
                 borderColor: Colors.WHITE_SMOKE, 
                 backgroundColor: Colors.IRIDIUM
         },
-        typeContainer: {
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingVertical: 11,
-                paddingHorizontal: 10,
-                backgroundColor: Colors.SCOTCH_MIST_TAN, // Light background color around the toggle
-                borderRadius: 20,
-                borderColor: '#20232a',
-                borderWidth: 1,
-                marginRight: '40%',
-        },
-        typeContainerDark:{
-                backgroundColor: Colors.LICHEN
-        },
-        typeText:{
-                fontFamily: 'Domine-Medium',
-                fontSize: 20
-        },
+        
 
 
 

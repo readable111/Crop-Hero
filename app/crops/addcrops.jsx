@@ -785,9 +785,10 @@ const styles = StyleSheet.create({
                 backgroundColor: Colors.MALACHITE,
                 justifyContent: "center",
                 alignItems: "center",
+                marginRight: '5%'
         },
         back:{
-                marginLeft: '5%',
+                marginLeft: '2%',
                 width: 40,
                 height: 40,
                 justifyContent: "center",
@@ -803,7 +804,7 @@ const styles = StyleSheet.create({
                 borderRadius: 20,
                 borderColor: '#20232a',
                 borderWidth: 1,
-                marginRight: '5%'
+                marginRight: '1%'
         },
         locationContainerDark:{
                 backgroundColor: Colors.LICHEN
@@ -822,12 +823,31 @@ const styles = StyleSheet.create({
                 borderRadius: 20,
                 borderColor: '#20232a',
                 borderWidth: 1,
-                marginRight: '40%',
+                marginRight: '1%'
+        },
+        typeText:{
+                fontFamily: 'Domine-Medium',
+                fontSize: 20
         },
         typeContainerDark:{
                 backgroundColor: Colors.LICHEN
         },
-        typeText:{
+        medContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: 11,
+                paddingHorizontal: 10,
+                backgroundColor: Colors.SCOTCH_MIST_TAN, // Light background color around the toggle
+                borderRadius: 20,
+                borderColor: '#20232a',
+                borderWidth: 1,
+                marginRight: '1%'
+        },
+        medContainerDark:{
+                backgroundColor: Colors.LICHEN
+        },
+        medText:{
                 fontFamily: 'Domine-Medium',
                 fontSize: 20
         },
@@ -899,8 +919,10 @@ const styles = StyleSheet.create({
         topContainer: {
                 flexDirection: "row",
                 alignItems: "center",
+                justifyContent: 'flex-end',
                 marginTop: '1%',
-                marginBottom: '1%'
+                marginBottom: '1%',
+                marginLeft: '1%'
         },
         spaceBetween:
         {

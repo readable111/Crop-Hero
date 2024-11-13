@@ -2,7 +2,10 @@
 # Author: Tyler Bowen, Daniel Moreno
 
 # dependencies
-node_modules/
+node_modules/*
+!node_modules/react-native
+node_modules/react-native/*
+!node_modules/react-native/index.js
 
 # Expo
 .expo/
