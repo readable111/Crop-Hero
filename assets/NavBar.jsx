@@ -45,7 +45,7 @@ const NavBar = ({ homeSelected=false, cropsSelected=false, notebookSelected=fals
                 <View style={styles.btnGridContainerBottom}>
                     <Row height={35}>
                             <Col relativeColsCovered={4} alignItems='center'>
-                                <AppButton testID={"crops-icon"} title="" mci="grass" mciSize={35} mciColor={cropsSelected ? Colors.MALACHITE : Colors.SPANISH_GREEN} onPress={() => router.replace('/crops')}/>
+                                <AppButton testID={"crops-icon"} title="" mci="grass" mciSize={35} mciColor={cropsSelected ? Colors.MALACHITE : Colors.SPANISH_GREEN} onPress={() => router.replace('/crops/crops')}/>
                             </Col>
                             <Col relativeColsCovered={4} alignItems='center'>
                                 <AppButton testID={"notebook-icon"} title="" mci={notebookSelected ? "notebook-edit" : "notebook-edit-outline"} mciSize={30} mciColor={notebookSelected ? Colors.MALACHITE : Colors.SPANISH_GREEN} onPress={() => router.replace('/todo')}/>
@@ -62,7 +62,7 @@ const NavBar = ({ homeSelected=false, cropsSelected=false, notebookSelected=fals
                     </Row>
                     <Row height={25}>
                         <Col relativeColsCovered={4} alignItems='center'>
-                            <AppButton testID={"crops-txt"} title="Crops" specifiedStyle={cropsSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/crops')}/>
+                            <AppButton testID={"crops-txt"} title="Crops" specifiedStyle={cropsSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/crops/crops')}/>
                         </Col>
                         <Col relativeColsCovered={4} alignItems='center'>
                             <AppButton testID={"notebook-txt"} title="Notebook" specifiedStyle={notebookSelected ? styles.selectedText : styles.unselectedText} onPress={() => router.replace('/todo')}/>
@@ -97,7 +97,7 @@ const NavBar = ({ homeSelected=false, cropsSelected=false, notebookSelected=fals
                 <View style={styles.btnGridContainerBottomDark}>
                     <Row height={35}>
                             <Col relativeColsCovered={4} alignItems='center'>
-                                <AppButton testID={"crops-icon-dark"} title="" mci="grass" mciSize={35} mciColor={cropsSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/crops')}/>
+                                <AppButton testID={"crops-icon-dark"} title="" mci="grass" mciSize={35} mciColor={cropsSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/crops/crops')}/>
                             </Col>
                             <Col relativeColsCovered={4} alignItems='center'>
                                 <AppButton testID={"notebook-icon-dark"} title="" mci={notebookSelected ? "notebook-edit" : "notebook-edit-outline"} mciSize={30} mciColor={notebookSelected ? Colors.MALACHITE : Colors.SOFT_GREEN} onPress={() => router.replace('/todo')}/>
@@ -114,7 +114,7 @@ const NavBar = ({ homeSelected=false, cropsSelected=false, notebookSelected=fals
                     </Row>
                     <Row height={25}>
                         <Col relativeColsCovered={4} alignItems='center'>
-                            <AppButton testID={"crops-txt-dark"} title="Crops" specifiedStyle={cropsSelected ? styles.selectedTextDark : styles.unselectedTextDark} onPress={() => router.replace('/crops')}/>
+                            <AppButton testID={"crops-txt-dark"} title="Crops" specifiedStyle={cropsSelected ? styles.selectedTextDark : styles.unselectedTextDark} onPress={() => router.replace('/crops/crops')}/>
                         </Col>
                         <Col relativeColsCovered={4} alignItems='center'>
                             <AppButton testID={"notebook-txt-dark"} title="Notebook" specifiedStyle={notebookSelected ? styles.selectedTextDark : styles.unselectedTextDark} onPress={() => router.replace('/todo')}/>

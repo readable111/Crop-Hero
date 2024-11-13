@@ -12,9 +12,8 @@ import { useRouter } from 'expo-router'
 import Colors from '../../assets/Color.js'
 const { width } = Dimensions.get('window')
 
-const Carousel = ({data, isDarkMode=false}) => {
+const Carousel = ({data,  isDarkMode=false}) => {
   const router  = useRouter();
-
 
   return(
           <FlatList
@@ -27,10 +26,10 @@ const Carousel = ({data, isDarkMode=false}) => {
         <Pressable onPress = {() => router.push({pathname:'/cropspage', params: item})}>
           <View style={[styles.item, isDarkMode && styles.itemDark]}>
             <Image source = {require("../../assets/icons/cropDefaultImage.png")}/>
-            <Text>Name: {item.name}</Text> 
-            <Text>Medium: {item.medium}</Text>
-            <Text>Location: {item.location}</Text>
-            <Text>Start Date: {item.datePlanted}</Text>
+            <Text>Name: {item[10]}</Text> 
+            <Text>Medium: {item[18]}</Text>
+            <Text>Location: {item[19]}</Text>
+            <Text>Start Date: {item[13]}</Text>
           </View>
         </Pressable>
         )}
