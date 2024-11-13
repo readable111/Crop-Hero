@@ -48,9 +48,9 @@ const ViewCrops = () => {
 		  	.catch(console.error);
 	}, [])
 
-        const { newCrop } = useLocalSearchParams();
+        //const { newCrop } = useLocalSearchParams();
 
-        useEffect(() => {
+        /*useEffect(() => {
                 //Alert.alert("Test");
                 if(newCrop)
                         {
@@ -60,7 +60,7 @@ const ViewCrops = () => {
                                 console.log(JSON.stringify(cropData))
                                 setCropData((prevCrops)=>[...prevCrops, cropData]);
                         }
-        }, [newCrop]);
+        }, [newCrop]);*/
 
         useEffect(() => {
                 const fetchData = async () => {
