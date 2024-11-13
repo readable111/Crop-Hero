@@ -74,12 +74,11 @@ const addCrops = () => {
         const [selectedImage, setSelectedImage] = useState(null);
         const [newOption, setNewOption] = useState('');
         const [selectedType, setSelectedType] = useState()
-        const [addLocationAdded, setLocationAdded] = useState(false)
+        const [addLocationAdded, setAddLocationAdded] = useState(false)
         const [selectedMedium, setSelectedMedium] = useState(false)
         const [addTypeAdded, setAddTypeAdded] = useState(false)
         const [locationNameOption, setLocationNameOption] = useState()
         const [typeNameOption, setTypeNameOption] = useState()
-        const [addLocationAdded, setAddLocationAdded] = useState(false)
         const handleOpenDropdown = (id) => {
                 setOpen(open === id ? null : id)
         }
