@@ -16,15 +16,12 @@ import { useFonts } from 'expo-font';
 import Icons from '../assets/icons/Icons.js';
 import { cleanText } from '../assets/sanitizer.jsx';
 
-import DropDownPicker from 'react-native-dropdown-picker';
 
 
 const CropsPage = () => {
 
         {/* Grabs variable form viewcrops page for use */}
-        
         let [crop, setCropData] = useState(useLocalSearchParams());
-        
         const [open, setOpen] = useState(null);
         const [selectedIndoors, setSelectedIndoors] = useState(crop.indoors)
         const [selectedLocation, setSelectedLocation] = useState(crop.location)
@@ -54,91 +51,23 @@ const CropsPage = () => {
         }
         const [isVisible, setIsVisible] = useState(false);
         //If crop.name couldn't be retrieved, assume that ?param= was used
-        /*
         if(!crop.name) {
                 console.log("?param passed")
                 console.log(crop.param)
                 crop = JSON.parse(crop.param)
         }
-        */
-        //console.log("CROP: " + crop); //test
-        //console.log("Crop name: " + crop.name); //test
-        
+        console.log("CROP: " + crop); //test
+        console.log("Crop name: " + crop.name); //test
 
         //Use state for switching if something is editable
         const [readOnly, setReadOnly] = useState(true)
 
         const handleChange = (fieldName, input) => {
-                //console.log("Changing field:", fieldName, "to value:", input);
-                
-                setCropData((prevCrop) => ({
-                         ...prevCrop,
-                        [fieldName]: input
-                }))
-                               
-                
-        }
-        const handleNewLocation = () => {
-                if(newOption.trim() !== '')
-                {
-                        setLocation([...locations, {label: newOption, value: newOption.toLowerCase().replace(/\s+/g, '') }]);
-                        setModalVisible(false);
-                        setNewOption('');
-                }
-        }
-        
-        const handleNewType = () => {
-                if(newOption.trim() !== '')
-                {
-                        setType([...types, {label: newOption, value: newOption.toLowerCase().replace(/\+/g, '')}])
-                        setTypeModalVisible(false);
-                        setNewOption('');
-                }
-        }
-
-        const handleLocationChange = (value) =>
-        {
                 setCropData({
                         ...crop,
-                        location: value
+                        [fieldName]: cleanText(input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
                 })
         }
-        const handleIndoorsChange = (value) =>
-        {
-                setCropData({
-                        ...crop, 
-                        indoors: value,
-                })
-        }
-        const handleActiveChange = (value) =>
-        {
-                setCropData({
-                        ...crop, 
-                        active: value,
-                })
-        }
-
-        const handleVisibleChange = (value) =>
-        {
-                setCropData({
-                        ...crop,
-                        visible: value,
-                })
-        }
-
-        const handleSave = () =>{
-                const emptyFields = Object.values(crop).some(value=> value ==='');
-                if(emptyFields)
-                {
-                        console.log(crop)
-                        Alert.alert("Unable to save, some fields are still empty");
-                }
-                else
-                {
-                        Alert.alert(crop.name + " saved");
-                }
-        };
-
         const [isDark, setIsDarkMode] = useState(false)
         useEffect(() => {
                 const fetchDarkModeSetting = async () => {
@@ -167,19 +96,14 @@ const CropsPage = () => {
                 fetchDarkModeSetting()
                 .catch(console.error);
         }, [])
-        
-
+        const printStatement = () =>
+        {
+                Alert.alert('Save pressed');
+                console.log(cropData);
+        };
         const toggleRead = () =>
         {
                 setReadOnly(!readOnly);
-                setIsVisible(!isVisible);
-                console.log(readOnly);
-                if(!readOnly)
-                {
-                        console.log("Editing Done");
-                        
-                }
-                
         };
 
         return (
@@ -187,9 +111,9 @@ const CropsPage = () => {
                         <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={ isDark ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
                         {/* Header */}
                         <View style={[styles.titleCard, isDark && styles.titleCarddark]}>
-                                <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>{crop.name}</Text>
+                                <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>Add Crop</Text>
                         </View>
-                        <View style={[styles.topContainer, styles.spaceBetween]}>
+                        <View>
                                 <View style={styles.back}>
                                         <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                 </View>
@@ -212,7 +136,6 @@ const CropsPage = () => {
                                 <View style={[isVisible && styles.save]}>
                                         {isVisible && <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>}
                                 </View>
-                                
                         </View>
                         <Modal
                                 visible = {modalVisible}
@@ -276,12 +199,11 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Crop Name</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        placeholder = "[Empty]"
                                         value={crop.name}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength = {128}
                                         readOnly = {readOnly}
-                                        onChangeText={(text) => handleChange('name', text)}
+                                        // onChangeText={(text) => handleChange('name', text)}
                                         
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Variety</Text>
@@ -291,7 +213,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         readOnly = {readOnly}
-                                        onChangeText={(text) => handleChange('variety', text)}
+                                        //onChangeText={(text) => handleChange('variety', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Source</Text>
                                 <Input
@@ -300,7 +222,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         readOnly = {readOnly}
-                                        onChangeText={(text) => handleChange('source', text)}
+                                        //onChangeText={(text) => handleChange('source', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted</Text>
                                 <Input
@@ -309,34 +231,14 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={10}
                                         readOnly = {readOnly}
-                                        onChangeText={(text) => handleChange('datePlanted', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Location</Text>
-                                <DropDownPicker
-                                        theme={isDark ? 'DARK' : 'LIGHT'}
-                                        open={open === 'location'}
-                                        setOpen={() => handleOpenDropdown('location')}
-                                        value={selectedLocation}
-                                        setValue={setSelectedLocation}
-                                        items= {locations}
-                                        disabled= {readOnly}
-                                        onChangeValue = {(selectedLocation) => handleChange('location', selectedLocation)}
-                                        placeholder="Location?"
-                                        listMode='SCROLLVIEW'
-					dropDownDirection='BOTTOM'
-                                        scrollViewProps={{
-					        nestedScrollEnabled: true
-					}}
-                                        props={{
-						activeOpacity: 1,
-					}}
-                                        containerStyle={{
-						width: '94%',
-						zIndex: 70,
-						marginBottom: 40,
-					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
-                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
+                                <Input
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
+                                        value={crop.location}
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
+                                        maxLength={128}
+                                        readOnly = {readOnly}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Comments</Text>
                                 <Input
@@ -345,61 +247,23 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={1024}
                                         readOnly = {readOnly}
-                                        onChangeText={(text) => handleChange('comments', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Started Indoors?</Text>
-                                <DropDownPicker
-                                        theme={isDark ? 'DARK' : 'LIGHT'}
-                                        open={open === 'indoors'}
-                                        setOpen={() => handleOpenDropdown('indoors')}
-                                        value={selectedIndoors}
-                                        setValue={setSelectedIndoors}
-                                        disabled= {readOnly}
-                                        items={items}
-                                        onChangeValue={handleIndoorsChange}
-                                        placeholder= {crop.indoors}
-                                        listMode='SCROLLVIEW'
-					dropDownDirection='BOTTOM'
-                                        scrollViewProps={{
-					        nestedScrollEnabled: true
-					}}
-                                        props={{
-						activeOpacity: 1,
-					}}
-                                        containerStyle={{
-						width: '94%',
-						zIndex: 60,
-						marginBottom: 40,
-					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
-                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
+                                <Input
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
+                                        value={crop.indoors}
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
+                                        maxLength={3}
+                                        readOnly = {readOnly}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Active</Text>
-                                <DropDownPicker
-                                        theme={isDark ? 'DARK' : 'LIGHT'}
-                                        open={open === 'active'}
-                                        setOpen={() => handleOpenDropdown('active')}
-                                        value={selectedActive}
-                                        setValue={setSelectedActive}
-                                        disabled= {readOnly}
-                                        items={items}
-                                        onChangeValue={handleActiveChange}
-                                        placeholder={crop.active}
-                                        listMode='SCROLLVIEW'
-					dropDownDirection='BOTTOM'
-                                        scrollViewProps={{
-					        nestedScrollEnabled: true
-					}}
-                                        props={{
-						activeOpacity: 1,
-					}}
-                                        containerStyle={{
-						width: '94%',
-						zIndex: 50,
-						marginBottom: 40,
-					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
-                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
+                                <Input
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
+                                        value={crop.active}
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
+                                        maxLength={3}
+                                        readOnly = {readOnly}
+
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Type</Text>
                                 <Input
@@ -408,34 +272,7 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {readOnly}
-                                        onChangeText={(text) => handleChange('type' , text)}
-                                />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Medium</Text>
-                                <DropDownPicker
-                                        theme={isDark ? 'DARK' : 'LIGHT'}
-                                        open={open === 'medium'}
-                                        setOpen={() => handleOpenDropdown('medium')}
-                                        value={selectedActive}
-                                        setValue={setSelectedActive}
-                                        disabled= {readOnly}
-                                        items={items}
-                                        onChangeValue={handleActiveChange}
-                                        placeholder= {crop.medium}
-                                        listMode='SCROLLVIEW'
-					dropDownDirection='BOTTOM'
-                                        scrollViewProps={{
-					        nestedScrollEnabled: true
-					}}
-                                        props={{
-						activeOpacity: 1,
-					}}
-                                        containerStyle={{
-						width: '94%',
-						zIndex: 50,
-						marginBottom: 40,
-					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
-                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
+
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
                                 <Input
@@ -444,6 +281,16 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {true}
+
+                                />
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Visible</Text>
+                                <Input
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
+                                        value={crop.visible}
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
+                                        maxLength={64}
+                                        readOnly = {readOnly}
+
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Yield</Text>
                                 <Input
@@ -452,37 +299,8 @@ const CropsPage = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {readOnly}
-                                        onChangeText={(text) => handleChange('yield' , text)}
 
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Visible</Text>
-                                <DropDownPicker
-                                        theme={isDark ? 'DARK' : 'LIGHT'}
-                                        open={open === 'visible'}
-                                        setOpen={() => handleOpenDropdown('visible')}
-                                        value={selectedVisible}
-                                        setValue={setSelectedVisible}
-                                        disabled= {readOnly}
-                                        items={items}
-                                        onChangeValue={handleVisibleChange}
-                                        placeholder= {crop.visible}
-                                        listMode='SCROLLVIEW'
-					dropDownDirection='TOP'
-                                        scrollViewProps={{
-					        nestedScrollEnabled: true
-					}}
-                                        props={{
-						activeOpacity: 1,
-					}}
-                                        containerStyle={{
-						width: '94%',
-						zIndex: 60,
-						marginBottom: 40,
-					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
-                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
-                                />
-                                
                         </ScrollView>
                         <View style={styles.spacer}/>
                         <View style={styles.spacer}/>
@@ -526,23 +344,22 @@ const styles = StyleSheet.create({
                       alignContent: 'center'
               },
               save:{
-                position: 'absolute',
-                marginTop: 10,
-                marginLeft: '85%',
-                width: 40,
-                height: 40,
-                borderRadius: 40/2,
-                backgroundColor: Colors.MALACHITE,
-                justifyContent: "center",
-                alignItems: "center",
-                marginRight: '5%'
+                      position: 'absolute',
+                      marginTop: 10,
+                      marginLeft: 370,
+                      width: 40,
+                      height: 40,
+                      borderRadius: 40/2,
+                      backgroundColor: Colors.MALACHITE,
+                      justifyContent: "center",
+                      alignItems: "center",
               },
               back:{
-                marginLeft: '2%',
-                width: 40,
-                height: 40,
-                justifyContent: "center",
-                alignItems: "center",
+                      marginLeft: 10,
+                      width: 40,
+                      height: 40,
+                      justifyContent: "center",
+                      alignItems: "center",
               },
               textBox:{
                       marginTop: -5,
@@ -593,7 +410,6 @@ const styles = StyleSheet.create({
               },
               inputText:{
                       fontSize: 16,
-                      marginLeft: "2%"
               },
               inputTextDark:{
                         color: Colors.WHITE_SMOKE
@@ -743,7 +559,6 @@ const styles = StyleSheet.create({
                 marginBottom: 20,
                 paddingLeft: 10,
         },
-
 
 
 
