@@ -44,41 +44,55 @@ export const CollapsibleSection = ({ title, chartData, chartConfig, isDark }) =>
   const [isOpen, setIsOpen] = useState(false);
   const viewShotRef = useRef(null); // Reference for the ViewShot
 
-const exportGraph = async () => {
-  console.log('Export button pressed');
-  try {
-    if (Platform.OS === 'android') {
-      const permission = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        {
-          title: 'Storage Permission Required',
-          message: 'This app needs access to your storage to save images',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        }
-      );
+  const exportGraph = async () => {
+    console.log('Export button pressed');
+    try {
+      if (Platform.OS === 'android') {
+        const permission = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'Storage Permission Required',
+            message: 'This app needs access to your storage to save images',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          }
+        );
 
-      if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
-        alert('Permission to access storage was denied');
+        console.log('Permission result: ', permission);
+        if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('Permission denied: ', permission);
+          alert('Permission to access storage was denied');
+          return;
+        }
+      }
+
+      console.log('ViewShot ref: ', viewShotRef.current);
+      if (!viewShotRef.current) {
+        console.error('ViewShot reference is null');
         return;
       }
-    }
 
-    const uri = await viewShotRef.current.capture();
-    if (!uri) {
-      console.error("Failed to capture URI");
-      return;
-    }
-    console.log('Captured URI:', uri);
-    await CameraRoll.save(uri, { type: 'photo', album: 'YourAppCharts' });
-    alert('Chart saved to library!');
+      setTimeout(async () => {
+        try {
+          const uri = await viewShotRef.current.capture();
+          if (!uri) {
+            console.error("Failed to capture URI");
+            return;
+          }
+          console.log('Captured URI:', uri);
+          await CameraRoll.save(uri, { type: 'photo', album: 'YourAppCharts' });
+          alert('Chart saved to library!');
+        } catch (cameraRollError) {
+          console.error("CameraRoll save error:", cameraRollError);
+          alert('Failed to save chart');
+        }
+    }, 500);
   } catch (error) {
     console.error("Error saving image:", error);
     alert('Failed to save chart');
   }
 };
-
 
   return (
     <View style={[styles.collapsibleContainer, isDark && styles.collapsibleContainerDark]}>
