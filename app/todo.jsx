@@ -19,7 +19,8 @@ import {
     FlatList,
     Modal,
     TouchableOpacity,
-    Text
+    Text,
+    Appearance
 } from 'react-native';
 import { useFonts } from 'expo-font';
 import { router } from 'expo-router';
@@ -100,6 +101,7 @@ const todo = () => {
 
     const handleSaveTask = (taskData) => {
         let newTasks;
+        console.log("old tasks: ", tasks)
 
         if (currentTaskID) {
             setEditTask(true)
@@ -109,7 +111,7 @@ const todo = () => {
             const newTask = { ...taskData, TaskID: newTaskID };
             setSaveTask(true)            
             newTasks = [...tasks, newTask];
-            //console.log("newTasks", newtasks)
+            console.log("newTasks", newTasks)
         }
 
         setTasks(newTasks);
@@ -193,9 +195,8 @@ const todo = () => {
         setFilteredTasks(updatedTasks);
     };
     // Function to add a new task type
-    const addNewTaskType = (newTaskType) => {
-        const uniqueID = `${newTaskType}-${Math.random().toString(36).substr(2, 9)}`;
-        setTaskTypes([...taskTypes, { id: uniqueID, name: newTaskType }]);
+    const addNewTaskType = (uniqueID, newTaskType) => {
+        setTaskTypes([...taskTypes, [uniqueID, 1, newTaskType, newTaskType]]);
     };
     const [fontsLoaded, fontError] = useFonts({
         'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),

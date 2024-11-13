@@ -7,7 +7,17 @@
  * This  page is meant to keep track of what was done that day for future reference if needed
  ***/
 import { React, useState, useEffect } from 'react';
-import { View, Text, FlatList, Button, StyleSheet, Alert, StatusBar, TouchableOpacity } from 'react-native';
+import { 
+    View, 
+    Text, 
+    FlatList, 
+    Button, 
+    StyleSheet, 
+    Alert, 
+    StatusBar, 
+    TouchableOpacity, 
+    Appearance 
+} from 'react-native';
 import { useFonts } from 'expo-font';
 import { router } from 'expo-router';
 import { Col, Row } from '../assets/Grid.jsx';
@@ -28,36 +38,35 @@ const Notebook = () => {
     const [selectedYear, setSelectedYear] = useState("All");
     const [open, setOpen] = useState(false);
     const [selectedEntry, setSelectedEntry] = useState(null);
-    //const [isDarkMode, setIsDarkMode] = useState(false);
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(false)
     const clearSelectedEntry = () => {
         setSelectedEntry(null); // Reset the selected entry
     };
     useEffect(() => {
-        // declare the async data fetching function
-        const fetchDarkModeSetting = async () => {
-            const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
-            let result = null
-            if (JSON_VALUE && JSON_VALUE !== "") {
-                result = JSON.parse(JSON_VALUE)
+		// declare the async data fetching function
+		const fetchDarkModeSetting = async () => {
+			const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
+			let result = null
+    		if (JSON_VALUE && JSON_VALUE !== "") {
+				result = JSON.parse(JSON_VALUE)
                 console.log("Async: " + result)
-            } else {
-                colorScheme = Appearance.getColorScheme()
-                if (colorScheme == 'dark') {
-                    result = true
-                } else {
-                    result = false
-                }
+			} else {
+				colorScheme = Appearance.getColorScheme()
+				if (colorScheme == 'dark') {
+					result = true
+				} else {
+					result = false
+				}
                 console.log("colorScheme: " + result)
-            }
-            setIsDarkMode(result)
-        }
-
-        // call the function
-        fetchDarkModeSetting()
-            // make sure to catch any error
-            .catch(console.error);
-    }, [])
+			}
+			setIsDarkMode(result)
+		}
+	  
+		// call the function
+		fetchDarkModeSetting()
+		  	// make sure to catch any error
+		  	.catch(console.error);
+	}, [])
     const handleSaveEntry = (entryID, jsonData) => {
         const entry = JSON.parse(jsonData);
         const dateString = entry.EntryDate; // "01301995"
