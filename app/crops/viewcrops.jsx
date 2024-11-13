@@ -23,32 +23,30 @@ const ViewCrops = () => {
         const [isDark, setIsDarkMode] = useState(false)
         const subID = "sub123"
         useEffect(() => {
-                const fetchDarkModeSetting = async () => {
-                        const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
-                        let result = null
-                        if(JSON_VALUE && JSON_VALUE !== "")
-                        {
+		// declare the async data fetching function
+		const fetchDarkModeSetting = async () => {
+			const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
+			let result = null
+                        if (JSON_VALUE) {
                                 result = JSON.parse(JSON_VALUE)
-                                //console.log("Async: " + result)
-                        }
-                        else
-                        {
+                                console.log("Async: " + result)
+                        } else {
                                 colorScheme = Appearance.getColorScheme()
-                                if(colorScheme == 'dark')
-                                {
-                                        result = true;
-                                }
-                                else
-                                {
-                                        result = false;
+                                if (colorScheme == 'dark') {
+                                        result = true
+                                } else {
+                                        result = false
                                 }
                                 console.log("colorScheme: " + result)
-                        }
-                        setIsDarkMode(result)
-                }
-                fetchDarkModeSetting()
-                .catch(console.error);
-        }, [])
+			}
+			setIsDarkMode(result)
+		}
+	  
+		// call the function
+		fetchDarkModeSetting()
+		  	// make sure to catch any error
+		  	.catch(console.error);
+	}, [])
 
         const { newCrop } = useLocalSearchParams();
 
@@ -95,8 +93,16 @@ const ViewCrops = () => {
         //Delete toggle
         const [isDelete, setIsDelete] = useState(false);
 
-        const deleteItem = (hrfNum) => {
-                setCropData((prevItems) => prevItems.filter(item => item.hrfNum !== hrfNum))
+        const deleteItem = async(itemToBeDeleted) => {
+                console.log(itemToBeDeleted)
+                try{
+                        const response = await fetch('https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/deleteCrop',{method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({cropID: itemToBeDeleted[0], subID: "sub123"})})
+                        if (!response.ok) {
+                             throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                }catch(error){
+                        console.error("Error: ", error)
+                }
         }
         {/* Deals with rendering the items (In this case, selectables) in the flatlist */}
 
@@ -113,9 +119,9 @@ const ViewCrops = () => {
         {
                 if(isDelete)
                 {
-                        Alert.alert(`Delete Item`, `Are you sure you want to delete "${item.name}"?`,
+                        Alert.alert(`Delete Item`, `Are you sure you want to delete "${item[10]}"?`,
                                 [
-                                        { text: "Delete", onPress: () => deleteItem(item.hrfNum) },
+                                        { text: "Delete", onPress: () => deleteItem(item) },
                                         { text: "Cancel", style: "cancel"}
                                 ]
                         )
