@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
     entryContainer: { //should be the box surrounding each entry individually
         width: '90%',
        // height: '80%',
-        backgroundColor: 'white',
+        backgroundColor: Colors.ALMOND_TAN,
         padding: 5,
         marginBottom: 27,
         marginTop: 20,
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
     entryInsideContainer: {
         width: '90%',
         // height: '80%',
-        backgroundColor: Colors.ALMOND_TAN,
+        backgroundColor:'white',
         padding: 5,
         marginBottom: 27,
         marginTop: 20,
