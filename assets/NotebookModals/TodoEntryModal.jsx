@@ -98,21 +98,9 @@ const TodoEntryModal = ({
         };
 
         // Split the current date parts or default to current year
-        const dateParts = taskData["fld_t_DateDue"].split('-');
-        let year = dateParts[0] || `${new Date().getFullYear()}`;
-        let month = dateParts[1] || '01';
-        let day = dateParts[2] || '01';
-
-        if (type === 'month') {
-            month = monthMap[value];
-        } else if (type === 'day') {
-            day = value.padStart(2, '0'); // Ensure day is two digits
-        } else if (type === 'year') {
-            year = value;
-        }
+        const newDate = new Date(taskData["fld_t_DateDue"]).slice(0,10);
 
         // Construct ISO format date (YYYY-MM-DD)
-        const newDate = `${year}-${month}-${day}`;
         setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": newDate }));
     };
     
