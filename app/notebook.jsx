@@ -31,6 +31,7 @@ import JournalEntryModal from '../assets/NotebookModals/JournalEntryModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Notebook = () => {
+    const subID ="sub123"
     const [entries, setEntries] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [editingEntry, setEditingEntry] = useState(null);
@@ -39,6 +40,8 @@ const Notebook = () => {
     const [open, setOpen] = useState(false);
     const [selectedEntry, setSelectedEntry] = useState(null);
     const [isDarkMode, setIsDarkMode] = useState(false)
+    const [newEntry, setNewEntry] = useState()
+    const [savePressed, setSavePressed] = useState(false)
     const clearSelectedEntry = () => {
         setSelectedEntry(null); // Reset the selected entry
     };
@@ -67,31 +70,10 @@ const Notebook = () => {
 		  	// make sure to catch any error
 		  	.catch(console.error);
 	}, [])
-    const handleSaveEntry = (entryID, jsonData) => {
-        const entry = JSON.parse(jsonData);
-        const dateString = entry.EntryDate; // "01301995"
-
-        // Extract month, day, year from the date string coming in from the modal as 2024-12-31
-        const month = parseInt(dateString.substring(5, 7), 10); // JavaScript months are 0-based
-        const day = parseInt(dateString.substring(8, 10), 10);
-        const year = parseInt(dateString.substring(0, 5), 10);
-
-        //entry.EntryDate = new Date(month, day, year); // Create a Date object
-        entry.EntryDate = new Date(year, month, day);
-       
-        const formattedDate = `${month}/${day}/${year}`;
-
-        // You can save or display the formatted date as required
-        console.log(`Entry Date: ${formattedDate}`);
-
-        if (entryID) {
-            setEntries(prevEntries =>
-                prevEntries.map(item => item.EntryID === entryID ? entry : item)
-            );
-        } else {
-            entry.EntryID = entries.length > 0 ? Math.max(...entries.map(e => e.EntryID)) + 1 : 1;
-            setEntries(prevEntries => [...prevEntries, entry]);
-        }
+    const handleSaveEntry = (entry) => {
+        console.log(entry)
+        setNewEntry(entry)
+        setSavePressed(true)
         setOpen(false)
     };
 
@@ -103,9 +85,10 @@ const Notebook = () => {
 
     const filteredEntries = () => {
         return entries.filter(entry => {
-            const entryDate = new Date(entry.EntryDate);
-            const entryMonth = String(entryDate.getMonth()).padStart(2, '0');
-            const entryYear = String(entryDate.getFullYear());
+            const entryDate = new Date(entry[1]);
+            const entryMonth = entryDate.getMonth() + 1; // Months are 0-indexed in JavaScript, so add 1
+            const entryYear = entryDate.getFullYear();
+    
 
             const monthMatch = selectedMonth === "All" || entryMonth === selectedMonth;
             const yearMatch = selectedYear === "All" || entryYear === selectedYear;
@@ -114,14 +97,9 @@ const Notebook = () => {
         });
     };
 
-    const sortedEntries = () => {
-        return filteredEntries().sort((a, b) => b.EntryID - a.EntryID);
-    };
 
     const renderItem = ({ item }) => {
         // Extract month, day, year for display
-        const entryDate = new Date(item.EntryDate);
-        const formattedDate = `${entryDate.getMonth()}/${entryDate.getDate()}/${entryDate.getFullYear()}`;
         //let formattedDate = "Invalid Date";
         //if (item.EntryDate instanceof Date && !isNaN(item.EntryDate)) {
           //    formattedDate = `${item.EntryDate.getMonth() + 1}/${item.EntryDate.getDate()}/${item.EntryDate.getFullYear()}`;
@@ -130,7 +108,7 @@ const Notebook = () => {
     //const formattedDate = entryDate && !isNaN(entryDate.getTime())
       //  ? `${entryDate.getMonth() + 1}/${entryDate.getDate()}/${entryDate.getFullYear()}`
         //: "Invalid Date";
-
+        const formattedDate = new Date(item[1]).toISOString().slice(0,10)
         return (
             <View style={[styles.entryContainer, isDarkMode && styles.darkEntryContainer]}>
                 <TouchableOpacity
@@ -140,9 +118,9 @@ const Notebook = () => {
                     }}
                     style={[styles.entryInsideContainer, isDarkMode && styles.darkEntryInsideContainer]}
                 >
-                    <Text style={[styles.entryText, isDarkMode && styles.darkText]}>Entry ID: {item.EntryID}</Text>
+                    <Text style={[styles.entryText, isDarkMode && styles.darkText]}>Entry ID: {item[0]}</Text>
                     <Text style={[styles.entryText, isDarkMode && styles.darkText]}>Date: {formattedDate}</Text>
-                    <Text style={[styles.entryText, isDarkMode && styles.darkText]}>Contents: {item.Contents}</Text>
+                    <Text style={[styles.entryText, isDarkMode && styles.darkText]}>Contents: {item[3]}</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -170,6 +148,45 @@ const Notebook = () => {
         'Domine-Medium': require('../assets/fonts/WorkSans-Medium.ttf'),
         'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
     });
+
+    useEffect(()=>{
+        const fetchEntries = async () =>{
+            try{
+                response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listJournalEntries/${subID}`,{method: 'GET'})
+                if(!response.ok){
+                    console.error("HTTP ERROR:")
+                    throw new Error;
+                }
+                const data = await response.json()
+                setEntries(data)
+            }catch(error){
+                console.error("Error:", error)
+            }
+        }
+        fetchEntries()
+    }, [subID, savePressed])
+
+    useEffect(()=>{
+        const addEntry = async () =>{
+            if(savePressed){
+            try{
+                console.log(newEntry)
+                const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addJournalEntry`,{method: 'POST', headers:{'Content-Type':'application/json'}, body:  JSON.stringify({subID: subID, entry:newEntry})})
+                if(!response.ok){
+                    console.error("HTTP ERROR:")
+                    throw new Error;
+                }
+                setSavePressed(false)
+                setNewEntry(null)
+            }catch(error){
+                console.error("Error:", error)
+            }
+        }
+        }
+        addEntry()
+    }, [savePressed])
+
+
 
     if (!fontsLoaded && !fontError) {
         return null;
@@ -217,9 +234,9 @@ const Notebook = () => {
 
             <FlatList
                 style={styles.scrollContainer}
-                data={sortedEntries()}
+                data={filteredEntries()}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.EntryID.toString()}
+                keyExtractor={(item) => item[0].toString()}
             />
 
             <SpeedDial

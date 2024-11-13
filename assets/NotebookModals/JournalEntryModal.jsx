@@ -95,17 +95,10 @@ const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
     }, [journalEntry]);
     const handleSave = () => {
         // Create a new Date object // check this for date error
-        const entryDate = new Date(year, month -1, day); // month is 0-indexed
 
-        const entryData = {
-            EntryID: entryID,
-            Contents: contents,
-            EntryDate: entryDate.toISOString(), // Convert to ISO string for consistent formatting; 
-        };
 
-        const jsonData = JSON.stringify(entryData);
-        onSave(entryID, jsonData);
-        console.log(entryDate);
+        //const jsonData = JSON.stringify(entryData);
+        onSave(contents);
         onClose();
     };
     //const screenWidth = Dimensions.get('window').width;
@@ -115,7 +108,7 @@ const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
                 <View style={[styles.modalContainer, isDarkMode && styles.darkModalContainer]}>
                     <Text style={[styles.title, isDarkMode && styles.darkText]}>Journal Entry</Text>
 
-                    <View style={[styles.dateContainer, isDarkMode && styles.dateContainerDark]}>
+                    {/*<View style={[styles.dateContainer, isDarkMode && styles.dateContainerDark]}>
                         <Text style={styles.dateLabel}>Entry Date:</Text>
                         <View style={[styles.datePicker, isDarkMode && styles.darkDatePicker]}>
                             <Picker
@@ -152,7 +145,7 @@ const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
                             </Picker>
                             
                         </View>
-                    </View>
+                    </View>*/}
 
                     <View style={styles.entryContainer}>
                         <Text style={[styles.entryLabel, isDarkMode && styles.darkText]}>Entry:</Text>
