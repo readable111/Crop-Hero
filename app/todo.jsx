@@ -406,7 +406,7 @@ const todo = () => {
                             <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Task Type: {item[10]}</Text>
                             <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Location ID: {item[12]}</Text>
                             <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Comments: {item[8]}</Text>
-                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Due Date: {item[6]?.slice(0, 2)}/{item[6]?.slice(2, 4)}/{item[6]?.slice(4)}</Text>
+                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Due Date: {new Date(item[6]).toISOString().slice(0,10)}</Text>
 
                             {/* Display the icon at the top right corner */}
                             <View style={styles.iconContainer}>
