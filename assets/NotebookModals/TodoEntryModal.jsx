@@ -98,12 +98,14 @@ const TodoEntryModal = ({
         };
 
         // Split the current date parts or default to current year
+        console.log(taskData["fld_t_DateDue"])
         const currentDate = new Date(taskData["fld_t_DateDue"]);
         let year = currentDate.getFullYear() 
         let month = currentDate.getMonth() 
         let day = currentDate.getDay() 
 
         if (type === 'month') {
+            console.log(value)
             month = monthMap[value];
         } else if (type === 'day') {
             day = value.padStart(2, '0'); // Ensure day is two digits
@@ -113,6 +115,7 @@ const TodoEntryModal = ({
 
         // Construct ISO format date (YYYY-MM-DD)
         const newDate = `${year}-${month}-${day}`
+        console.log(newDate)
         const newD = new Date(newDate).toISOString().slice(0,10)
         console.log(newD)
         setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": newD}));
