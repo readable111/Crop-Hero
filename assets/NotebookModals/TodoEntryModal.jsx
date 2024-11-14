@@ -40,7 +40,7 @@ const TodoEntryModal = ({
         "fld_tt_TaskTypeID_fk": '',
         NewTask: '',
         "fld_t_TaskIconPath": '',
-        "fld_t_IsCompleted": false,
+        "fld_t_IsCompleted": 0b0,
         "fld_t_DateCompleted": '',
     });
 
@@ -72,7 +72,7 @@ const TodoEntryModal = ({
     }, [])
 
     useEffect(() => {
-        if (!initialTaskData) return; // Guard clause for initialTaskData
+        if (taskID == null) return; // Guard clause for initialTaskData
         // Set task data once when the modal opens
         setTaskData({
            "fld_t_TaskID_pk": initialTaskData[0] || taskID,
