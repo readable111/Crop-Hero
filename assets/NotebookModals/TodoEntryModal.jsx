@@ -33,7 +33,7 @@ const TodoEntryModal = ({
     const [taskData, setTaskData] = useState({
         "fld_t_TaskID_pk": taskID || null,
         "fld_t_Comments": '',
-        "fld_t_DateDue": '',
+        "fld_t_DateDue": '1990-01-01',
         "fld_fs_FarmerID_fk": '',
         "fld_l_LocationID_fk": '',
         CropID: '',
@@ -99,7 +99,7 @@ const TodoEntryModal = ({
 
         // Split the current date parts or default to current year
         console.log(taskData["fld_t_DateDue"])
-        const currentDate = new Date(taskData["fld_t_DateDue"] ||"1990-01-01");
+        const currentDate = new Date(taskData["fld_t_DateDue"]);
         let year = currentDate.getFullYear() 
         let month = currentDate.getMonth() 
         let day = currentDate.getDay() 
@@ -107,6 +107,7 @@ const TodoEntryModal = ({
         if (type === 'month') {
             console.log(value)
             month = monthMap[value];
+
         } else if (type === 'day') {
             day = value.padStart(2, '0'); // Ensure day is two digits
         } else if (type === 'year') {
