@@ -97,7 +97,7 @@ const todo = () => {
          //   const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}${date.getFullYear()}`;
            // taskData["fld_t_DateDue"] = formattedDate;
        // }
-
+        console.log("TaskData to set New Task Data to: \n\n", taskData,"\n\n")
         if (currentTaskID!==null){
             if(!taskData["fld_t_IsCompleted"]){
                 setNewTask({
