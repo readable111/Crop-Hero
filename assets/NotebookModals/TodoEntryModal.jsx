@@ -99,7 +99,7 @@ const TodoEntryModal = ({
 
         // Split the current date parts or default to current year
         console.log(taskData["fld_t_DateDue"])
-        const currentDate = new Date(taskData["fld_t_DateDue"]);
+        const currentDate = new Date(taskData["fld_t_DateDue"] ||"1990-01-01");
         let year = currentDate.getFullYear() 
         let month = currentDate.getMonth() 
         let day = currentDate.getDay() 
