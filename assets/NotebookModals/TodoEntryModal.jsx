@@ -88,13 +88,32 @@ const TodoEntryModal = ({
             "fld_t_DateCompleted": initialTaskData[7] || '',
         });
     }, [visible]); // Only run when `visible` changes
+    console.log("Current Task Data: \n\n",taskData)
     const handleDateChange = (type, value) => {
         // Mapping months to their numeric equivalents
-        // Split the current date parts or default to current year
-        const date = new Date(value).toISOString().slice(0,10)
+        const monthMap = {
+            "January": "01", "February": "02", "March": "03", "April": "04",
+            "May": "05", "June": "06", "July": "07", "August": "08",
+            "September": "09", "October": "10", "November": "11", "December": "12"
+        };
 
+        // Split the current date parts or default to current year
+        const dateParts = taskData["fld_t_DateDue"].split('-');
+        let year = dateParts[0] || `${new Date().getFullYear()}`;
+        let month = dateParts[1] || '01';
+        let day = dateParts[2] || '01';
+
+        if (type === 'month') {
+            month = monthMap[value];
+        } else if (type === 'day') {
+            day = value.padStart(2, '0'); // Ensure day is two digits
+        } else if (type === 'year') {
+            year = value;
+        }
 
         // Construct ISO format date (YYYY-MM-DD)
+        const newDate = `${year}-${month}-${day}`;
+        const date = new Date(newDate).toISOString().slice() 
         setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": date }));
     };
     
