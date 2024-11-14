@@ -92,16 +92,16 @@ const TodoEntryModal = ({
     const handleDateChange = (type, value) => {
         // Mapping months to their numeric equivalents
         const monthMap = {
-            "January": "01", "February": "02", "March": "03", "April": "04",
-            "May": "05", "June": "06", "July": "07", "August": "08",
-            "September": "09", "October": "10", "November": "11", "December": "12"
+            "January": "0", "February": "01", "March": "02", "April": "03",
+            "May": "04", "June": "05", "July": "06", "August": "07",
+            "September": "08", "October": "09", "November": "10", "December": "11"
         };
 
         // Split the current date parts or default to current year
-        const dateParts = taskData["fld_t_DateDue"].split('-');
-        let year = dateParts[0] || `${new Date().getFullYear()}`;
-        let month = dateParts[1] || '01';
-        let day = dateParts[2] || '01';
+        const currentDate = new Date(taskData["fld_t_DateDue"]);
+        let year = currentDate.getFullYear() 
+        let month = currentDate.getMonth() 
+        let day = currentDate.getDay() 
 
         if (type === 'month') {
             month = monthMap[value];
@@ -112,9 +112,10 @@ const TodoEntryModal = ({
         }
 
         // Construct ISO format date (YYYY-MM-DD)
-        const newDate = `${year}-${month}-${day}`;
-        const date = new Date(newDate).toISOString().slice() 
-        setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": date }));
+        const newDate = `${year}-${month}-${day}`
+        const newD = new Date(newDate).toISOString().slice(0,10)
+        console.log(newD)
+        setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": newD}));
     };
     
     
