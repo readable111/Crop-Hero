@@ -101,7 +101,7 @@ const TodoEntryModal = ({
         console.log(taskData["fld_t_DateDue"])
         const currentDate = new Date(taskData["fld_t_DateDue"]);
         let year = currentDate.getFullYear() 
-        let month = currentDate.getMonth() 
+        let month = currentDate.getMonth() +1
         let day = currentDate.getDay() 
 
         if (type === 'month') {
@@ -115,7 +115,7 @@ const TodoEntryModal = ({
         }
 
         // Construct ISO format date (YYYY-MM-DD)
-        const newDate = `${year}-${month}-${day}`
+        const newDate = `${year}-${month+1}-${day}`
         console.log(newDate)
         const newD = new Date(newDate).toISOString().slice(0,10)
         console.log(newD)
