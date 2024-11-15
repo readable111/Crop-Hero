@@ -105,7 +105,7 @@ const TodoEntryModal = ({
         let day = currentDate.getDay() 
 
         if (type === 'month') {
-            console.log()
+            console.log(month)
             month = monthMap[value];
 
         } else if (type === 'day') {
@@ -115,7 +115,7 @@ const TodoEntryModal = ({
         }
 
         // Construct ISO format date (YYYY-MM-DD)
-        const newDate = `${year}-${month+1}-${day}`
+        const newDate = `${year}-${month}-${day}`
         console.log(newDate)
         const newD = new Date(newDate).toISOString().slice(0,10)
         console.log(newD)
