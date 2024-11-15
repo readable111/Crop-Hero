@@ -92,9 +92,9 @@ const TodoEntryModal = ({
     const handleDateChange = (type, value) => {
         // Mapping months to their numeric equivalents
         const monthMap = {
-            "January": "0", "February": "01", "March": "02", "April": "03",
-            "May": "04", "June": "05", "July": "06", "August": "07",
-            "September": "08", "October": "09", "November": "10", "December": "11"
+            "Jan": "0", "Feb": "01", "Mar": "02", "Apr": "03",
+            "May": "04", "Jun": "05", "Jul": "06", "Aug": "07",
+            "Sep": "08", "Oct": "09", "Nov": "10", "Dec": "11"
         };
 
         // Split the current date parts or default to current year
@@ -105,7 +105,7 @@ const TodoEntryModal = ({
         let day = currentDate.getDay() 
 
         if (type === 'month') {
-            console.log(value)
+            console.log()
             month = monthMap[value];
 
         } else if (type === 'day') {
