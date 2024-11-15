@@ -275,7 +275,7 @@ useEffect(() => {
 
       const data = await response.json();
       // Create an empty object to store updated data
-      // Once all fetches are complete, aaaset the cropData state with the updated dictionary
+      // Once all fetches are complete, set the cropData state with the updated dictionary
       setCropData(data);
     } catch (error) {
       console.error("Error fetching crop data:", error);

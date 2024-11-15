@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
     width: width * 0.8,
     backgroundColor: Colors.SCOTCH_MIST_TAN,
     borderRadius: 12,
+    maxHeight: 100,
   },
   flexDark: {
     backgroundColor: Colors.IRIDIUM,
