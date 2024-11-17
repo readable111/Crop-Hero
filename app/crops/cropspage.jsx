@@ -31,12 +31,16 @@ const CropsPage = () => {
         const [selectedLocation, setSelectedLocation] = useState(crop[19])
         const [selectedActive, setSelectedActive] = useState(crop[17])
         const [selectedVisible, setSelectedVisible] = useState(true)
+        
         const [items, setItems] = useState([
                 {label: 'Yes', value: 'Yes' },
                 {label: 'No', value: 'No'}
         ]);
-        const [types, setType] = useState([
-        ])
+        const [types, setType] = useState([])
+        const [mediums, setMediums] = useState([])
+        const [modalVisible, setModalVisible] = useState(false);
+        const [typeModalVisible, setTypeModalVisible] = useState(false);
+        const [mediumModalVisible, setMediumModalVisible] = useState(false);
         const [locations, setLocations] = useState([])
         const [newOption, setNewOption] = useState('');
         const [isDark, setIsDarkMode] = useState(false)
@@ -228,6 +232,93 @@ const CropsPage = () => {
                                 </View>
                                 
                         </View>
+                        <Modal
+                                visible = {modalVisible}
+                                animationType = 'slide'
+                                transparent = {true}
+                                onRequestClose={() => setModalVisible(false)}
+                        >  
+                                <View style={styles.modalContainer}>
+                                        <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
+                                                <Text style={styles.modalTitle}>Enter a New Location</Text>
+                                                <Input
+                                                        style={styles.input}
+                                                        placeholder="Type new option"
+                                                        value={locationNameOption}
+                                                        onChangeText={setLocationNameOption}
+                                                />
+                                                <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
+                                                        <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
+                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewLocation} />
+                                                        </View>
+                                                        <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
+                                                                <Button title="Cancel" onPress={() => setModalVisible(false)} />
+                                                        
+                                                        </View>
+                                                </View>
+                                        </View>
+                                </View>
+
+                        </Modal>
+                        
+                        {/*Type Modal*/}
+                        <Modal
+                                visible = {typeModalVisible}
+                                animationType = 'slide'
+                                transparent = {true}
+                                onRequestClose={() => setTypeModalVisible(false)}
+                        >  
+                                <View style={styles.modalContainer}>
+                                        <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
+                                                <Text style={styles.modalTitle}>Enter a New Type</Text>
+                                                <Input
+                                                        style={styles.input}
+                                                        placeholder="Type new option"
+                                                        value={typeNameOption}
+                                                        onChangeText={setTypeNameOption}
+                                                />
+                                                <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
+                                                        <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
+                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewType} />
+                                                        </View>
+                                                        <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
+                                                                <Button title="Cancel" onPress={() => setTypeModalVisible(false)} />
+                                                        
+                                                        </View>
+                                                </View>
+                                        </View>
+                                </View>
+
+                        </Modal>
+                        {/*Medium Modal*/}
+                        <Modal
+                                visible = {mediumModalVisible}
+                                animationType = 'slide'
+                                transparent = {true}
+                                onRequestClose={() => setMediumModalVisible(false)}
+                        >  
+                                <View style={styles.modalContainer}>
+                                        <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
+                                                <Text style={styles.modalTitle}>Enter a New Medium</Text>
+                                                <Input
+                                                        style={styles.input}
+                                                        placeholder="Type new option"
+                                                        value={mediumNameOption}
+                                                        onChangeText={setMediumNameOption}
+                                                />
+                                                <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
+                                                        <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
+                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewMedium} />
+                                                        </View>
+                                                        <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
+                                                                <Button title="Cancel" onPress={() => setMediumModalVisible(false)} />
+                                                        
+                                                        </View>
+                                                </View>
+                                        </View>
+                                </View>
+
+                        </Modal>
                         <ScrollView> 
                                 <View style={styles.spacer}/>
                                 <StatusBar style={{backgroundColor: 'white'}}/>
@@ -670,6 +761,35 @@ const styles = StyleSheet.create({
         dropDownStyleDark: {
                 borderColor: Colors.WHITE_SMOKE, 
                 backgroundColor: Colors.IRIDIUM
+        },modalContainer: {
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        },
+        modalContent: {
+                width: 300,
+                backgroundColor: Colors.SCOTCH_MIST_TAN,
+                padding: 20,
+                borderRadius: 10,
+                alignItems: 'center',
+        },
+        modalContentDark:{
+                backgroundColor: Colors.LICHEN
+        },
+        modalTitle: {
+                fontSize: 18,
+                fontFamily: 'Domine-Medium',
+                marginBottom: 10,
+        },
+        input: {
+                width: '100%',
+                height: 40,
+                borderColor: 'black',
+                borderWidth: 1,
+                borderRadius: 12,
+                marginBottom: 20,
+                paddingLeft: 10,
         },
         
 

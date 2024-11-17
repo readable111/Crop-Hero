@@ -317,6 +317,24 @@ const addCrops = () => {
                 }
                 addType()
         }, [addTypeAdded])
+        
+        useEffect(()=> {
+                const addMedium = async() => {
+                        if(addMediumAdded){
+                                try{
+                                        const response = await fetch('https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addMediumType',{method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({cropData: mediumNameOption, farmID: 1, subID: "sub123"})})
+                                
+                                        if(!response.ok)
+                                        {
+                                                throw new Error(`HTTP error! Status: ${response.status}`);
+                                        }
+                                }
+                                catch(error){
+                                        console.error("Error:", error)
+                                }
+                        }
+                }
+        })
 
         useEffect(()=>{
                 const fetchCropTypes = async () =>{
@@ -360,7 +378,7 @@ const addCrops = () => {
         const handleAddMedia = async () => {
                 try{
                         const result = await ImagePicker.launchImageLibraryAsync({
-                                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                                mediaTypes: ImagePicker.mediaTypes,
                                 allowsEditing: true,
                                 quality: 1,
                         })
