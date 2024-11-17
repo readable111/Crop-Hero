@@ -71,6 +71,7 @@ const addCrops = () => {
         const [locations, setLocations] = useState([])
         const [modalVisible, setModalVisible] = useState(false);
         const [typeModalVisible, setTypeModalVisible] = useState(false);
+        const [mediumModalVisible, setMediumModalVisible] = useState(false);
         const [selectedImage, setSelectedImage] = useState(null);
         const [newOption, setNewOption] = useState('');
         const [selectedType, setSelectedType] = useState()
@@ -79,6 +80,7 @@ const addCrops = () => {
         const [addTypeAdded, setAddTypeAdded] = useState(false)
         const [locationNameOption, setLocationNameOption] = useState()
         const [typeNameOption, setTypeNameOption] = useState()
+        const [mediumNameOption, setMediumNameOption] = useState()
         const handleOpenDropdown = (id) => {
                 setOpen(open === id ? null : id)
         }
@@ -405,19 +407,23 @@ const addCrops = () => {
                                 <View style={styles.back}>
                                         <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                 </View>
+                                <View>
+                                        <TouchableOpacity style={[styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
+                                                <Text style={styles.locationText}>Add Location</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setTypeModalVisible(true)}>
+                                                <Text style={styles.typeText}>Add Type</Text>
+                                        </TouchableOpacity>        
+                                </View>
                                 
-                                <TouchableOpacity style={[styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
-                                        <Text style={styles.locationText}>Add Location</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setTypeModalVisible(true)}>
-                                        <Text style={styles.typeText}>Add Type</Text>
-                                </TouchableOpacity>
                                 
                                 <View style={styles.save}>
                                         <AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={handleSave}/>
                                 </View>
                                 
                         </View>
+                        
+                        {/*Location Modal*/}
                         <Modal
                                 visible = {modalVisible}
                                 animationType = 'slide'
@@ -446,6 +452,8 @@ const addCrops = () => {
                                 </View>
 
                         </Modal>
+                        
+                        {/*Type Modal*/}
                         <Modal
                                 visible = {typeModalVisible}
                                 animationType = 'slide'
@@ -454,7 +462,7 @@ const addCrops = () => {
                         >  
                                 <View style={styles.modalContainer}>
                                         <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
-                                                <Text style={styles.modalTitle}>Enter a New Medium</Text>
+                                                <Text style={styles.modalTitle}>Enter a New Type</Text>
                                                 <Input
                                                         style={styles.input}
                                                         placeholder="Type new option"
@@ -467,6 +475,35 @@ const addCrops = () => {
                                                         </View>
                                                         <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
                                                                 <Button title="Cancel" onPress={() => setTypeModalVisible(false)} />
+                                                        
+                                                        </View>
+                                                </View>
+                                        </View>
+                                </View>
+
+                        </Modal>
+                        {/*Medium Modal*/}
+                        <Modal
+                                visible = {mediumModalVisible}
+                                animationType = 'slide'
+                                transparent = {true}
+                                onRequestClose={() => setMediumModalVisible(false)}
+                        >  
+                                <View style={styles.modalContainer}>
+                                        <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
+                                                <Text style={styles.modalTitle}>Enter a New Medium</Text>
+                                                <Input
+                                                        style={styles.input}
+                                                        placeholder="Type new option"
+                                                        value={mediumNameOption}
+                                                        onChangeText={setMediumNameOption}
+                                                />
+                                                <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
+                                                        <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
+                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewType} />
+                                                        </View>
+                                                        <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
+                                                                <Button title="Cancel" onPress={() => setMediumModalVisible(false)} />
                                                         
                                                         </View>
                                                 </View>
@@ -757,6 +794,11 @@ const styles = StyleSheet.create({
         },
         spacer:{
                 marginTop: 20,
+        },
+        titleContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                position: 'relative', 
         },
         titleCard:{
                 backgroundColor: Colors.ALMOND_TAN,
