@@ -78,6 +78,7 @@ const addCrops = () => {
         const [addLocationAdded, setAddLocationAdded] = useState(false)
         const [selectedMedium, setSelectedMedium] = useState(false)
         const [addTypeAdded, setAddTypeAdded] = useState(false)
+        const [addMediumAdded, setAddMediumAdded] = useState(false)
         const [locationNameOption, setLocationNameOption] = useState()
         const [typeNameOption, setTypeNameOption] = useState()
         const [mediumNameOption, setMediumNameOption] = useState()
@@ -98,6 +99,14 @@ const addCrops = () => {
                 {
                         setAddTypeAdded(true)
                         setTypeModalVisible(false);
+                }
+        }
+
+        const handleNewMedium = () => {
+                if(mediumNameOption.trim() !== '')
+                {
+                        setAddMediumAdded(true)
+                        setMediumModalVisible(false)
                 }
         }
 
@@ -400,20 +409,23 @@ const addCrops = () => {
                                 </View>
                         </View>
                         {/* Body (Scrollable inputs)*/}
-                        <View>
+                        <View style={[styles.topContainer, styles.spaceBetween]}>
                                 <View style={styles.save}>
                                         <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
                                 </View>
                                 <View style={styles.back}>
                                         <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                 </View>
-                                <View>
+                                <View style={{flexDirection: 'row', marginRight: '20%', marginLeft: '2%'}}>
                                         <TouchableOpacity style={[styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
-                                                <Text style={styles.locationText}>Add Location</Text>
+                                                <Text style={styles.locationText}>Location</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setTypeModalVisible(true)}>
-                                                <Text style={styles.typeText}>Add Type</Text>
-                                        </TouchableOpacity>        
+                                                <Text style={styles.typeText}>Type</Text>
+                                        </TouchableOpacity>   
+                                        <TouchableOpacity style={[styles.medContainer, isDark && styles.medContainerDark]} onPress = {() => setMediumModalVisible(true)}>
+                                                <Text style={styles.medText}>Medium</Text>
+                                        </TouchableOpacity>     
                                 </View>
                                 
                                 
@@ -500,7 +512,7 @@ const addCrops = () => {
                                                 />
                                                 <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
                                                         <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
-                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewType} />
+                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewMedium} />
                                                         </View>
                                                         <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
                                                                 <Button title="Cancel" onPress={() => setMediumModalVisible(false)} />
@@ -792,6 +804,17 @@ const styles = StyleSheet.create({
         containment:{
                 flex:1
         },
+        semicircle:{
+                position: 'absolute',
+                top: -19,
+                left: 0,
+                width: 140,
+                height: 70,
+                backgroundColor: Colors.MALACHITE,
+                borderBottomLeftRadius: 140,
+                borderBottomRightRadius: 140,
+                overflow: 'hidden',
+        },
         spacer:{
                 marginTop: 20,
         },
@@ -813,7 +836,8 @@ const styles = StyleSheet.create({
                 textAlign: 'right',
                 fontSize: 42,
                 fontFamily: 'Domine-Medium',
-                alignContent: 'center'
+                alignContent: 'center',
+                flex:1 
         },
         save:{
                 position: 'absolute',
