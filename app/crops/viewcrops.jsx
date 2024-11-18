@@ -21,6 +21,8 @@ const ViewCrops = () => {
         const [selectedItem, setItem] = useState(null);
         const [cropData, setCropData] = useState([])
         const [isDark, setIsDarkMode] = useState(false)
+        const [isDelete, setIsDelete] = useState(false);
+        const [itemDeleted, setItemDeleted] = useState(false);
         const subID = "sub123"
         useEffect(() => {
 		// declare the async data fetching function
@@ -79,7 +81,7 @@ const ViewCrops = () => {
                 };
               
                 fetchData();
-              }, []);
+              }, [itemDeleted]);
                      
         {/* Was testing something, leaving for now
         const handleChange = (itemValue, itemIndex) =>
@@ -91,7 +93,6 @@ const ViewCrops = () => {
         //Testing functions now
 
         //Delete toggle
-        const [isDelete, setIsDelete] = useState(false);
 
         const deleteItem = async(itemToBeDeleted) => {
                 console.log(itemToBeDeleted)
@@ -100,6 +101,9 @@ const ViewCrops = () => {
                         if (!response.ok) {
                              throw new Error(`HTTP error! Status: ${response.status}`);
                         }
+                        setItemDeleted(true);
+                        setItemDeleted(false);
+
                 }catch(error){
                         console.error("Error: ", error)
                 }

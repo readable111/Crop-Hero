@@ -82,6 +82,7 @@ const addCrops = () => {
         const [locationNameOption, setLocationNameOption] = useState()
         const [typeNameOption, setTypeNameOption] = useState()
         const [mediumNameOption, setMediumNameOption] = useState()
+        const [isDark, setIsDarkMode] = useState(false)
         const handleOpenDropdown = (id) => {
                 setOpen(open === id ? null : id)
         }
@@ -159,17 +160,48 @@ const addCrops = () => {
 
         //Change data as given, didn't want to worry about specifics, so search dummy object and change accordingly
         const handleChange = (fieldName, input) => {
-                setCropData({
-                        ...cropData,
-                        //[fieldName]:  (input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
-                        [fieldName]: input
-                })
+                if(fieldName === 'fld_c_DatePlanted')
+                {
+                        
+                        if(input.length === 10)
+                        {
+                                console.log("Date Planted Change")
+                                const regex = /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/
+                                const test = regex.test(input);
+                                if(!test)
+                                {
+                                        Alert.alert("Inproper Date format, please use YYYY-MM-DD")
+                                }
+                                else
+                                {
+                                        setCropData({
+                                                ...cropData,
+                                                //[fieldName]:  (input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
+                                                [fieldName]: input
+                                        })       
+                                }   
+                        }
+                        
+                }
+                else{
+                        setCropData({
+                                ...cropData,
+                                //[fieldName]:  (input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
+                                [fieldName]: input
+                        })  
+                }               
         }
 
         //on save, alert for save push to view crops and add to list
         const handleSave = () =>{
                 const emptyFields = Object.values(cropData).some(value=> value ==='');
-                if(emptyFields)
+                
+                if(crop.fld_c_DatePlanted.lenth != 10)
+                {
+                        
+                        Alert.alert("Incorrect or incomplete value in Date Planted, please use the format YYYY-MM-DD");
+                }
+                else if(emptyFields)
                 {
                         console.log(cropData)
                         Alert.alert("Unable to save, some fields are still empty");
@@ -186,7 +218,6 @@ const addCrops = () => {
                 Alert.alert('Save pressed');
                 console.log(cropData);
         }
-        const [isDark, setIsDarkMode] = useState(false)
         useEffect(() => {
                 (async () => {
                         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -334,7 +365,8 @@ const addCrops = () => {
                                 }
                         }
                 }
-        })
+                addMedium()
+        }, [addMediumAdded])
 
         useEffect(()=>{
                 const fetchCropTypes = async () =>{
@@ -428,9 +460,7 @@ const addCrops = () => {
                         </View>
                         {/* Body (Scrollable inputs)*/}
                         <View style={[styles.topContainer, styles.spaceBetween]}>
-                                <View style={styles.save}>
-                                        <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
-                                </View>
+                              
                                 <View style={styles.back}>
                                         <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                 </View>
@@ -572,7 +602,7 @@ const addCrops = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        placeholder = 'Date Planted'
+                                        placeholder = 'YYYY-MM-DD'
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={10}
                                         onChangeText={(text) => handleChange('fld_c_DatePlanted', text)}
@@ -585,6 +615,7 @@ const addCrops = () => {
                                         value={selectedLocation}
                                         setValue={setSelectedLocation}
                                         items={mutableLocations}
+                                        maxHeight={200}
                                         onChangeValue = {(selectedLocation) => handleLocationChange(selectedLocation)}
                                         placeholder="Location?"
                                         listMode='SCROLLVIEW'
@@ -640,7 +671,7 @@ const addCrops = () => {
 					}}
                                         containerStyle={{
 						width: '94%',
-						zIndex: 60,
+						zIndex: 65,
 						marginBottom: 40,
 					}}
                                         dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
@@ -673,7 +704,7 @@ const addCrops = () => {
 					}}
                                         containerStyle={{
 						width: '94%',
-						zIndex: 50,
+						zIndex: 60,
 						marginBottom: 40,
 					}}
                                         dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
@@ -696,10 +727,11 @@ const addCrops = () => {
                                         value={selectedType}
                                         setValue={setSelectedType}
                                         items={mutableCropTypes}
+                                        maxHeight={200}
                                         onChangeValue={(selectedType)=> handleTypeChange(selectedType)}
                                         placeholder="Type"
                                         listMode='SCROLLVIEW'
-					dropDownDirection='TOP'
+					dropDownDirection='BOTTOM'
                                         scrollViewProps={{
 					        nestedScrollEnabled: true
 					}}
@@ -708,7 +740,7 @@ const addCrops = () => {
 					}}
                                         containerStyle={{
 						width: '94%',
-						zIndex: 60,
+						zIndex: 57,
 						marginBottom: 40,
 					}}
                                         dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
@@ -731,9 +763,10 @@ const addCrops = () => {
                                         setValue={setSelectedMedium}
                                         items={mutableMediums}
                                         onChangeValue={selectedMedium=>handleMediumChange(selectedMedium)}
+                                        maxHeight={200}
                                         placeholder="Medium"
                                         listMode='SCROLLVIEW'
-					dropDownDirection='TOP'
+					dropDownDirection='BOTOTM'
                                         scrollViewProps={{
 					        nestedScrollEnabled: true
 					}}
@@ -742,7 +775,7 @@ const addCrops = () => {
 					}}
                                         containerStyle={{
 						width: '94%',
-						zIndex: 60,
+						zIndex: 55,
 						marginBottom: 40,
 					}}
                                         dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
@@ -788,7 +821,7 @@ const addCrops = () => {
 						zIndex: 60,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownBottomContainer, isDark && styles.dropDownBottomContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 {/*}
@@ -971,7 +1004,7 @@ const styles = StyleSheet.create({
                 paddingRight: 5,
         },
         dropdownLabel:{
-		zIndex: 9999,
+		zIndex: 50,
                 elevation: (Platform.OS === 'android') ? 9999 : 0,
         },
         labelDark:{
@@ -1045,7 +1078,7 @@ const styles = StyleSheet.create({
 		borderColor: Colors.CHARCOAL,
 		backgroundColor: Colors.WHITE_SMOKE,
 		borderRadius: 12,
-		zIndex: 50,
+		zIndex: 70,
                 marginTop: -10,
                 width: '90%',
                 marginLeft: '8%',
@@ -1070,7 +1103,22 @@ const styles = StyleSheet.create({
         dropDownStyleDark: {
                 borderColor: Colors.WHITE_SMOKE, 
                 backgroundColor: Colors.IRIDIUM
-        }
+        }, 
+        dropDownBottomContainer: {
+                borderWidth: 2,
+		borderColor: Colors.CHARCOAL,
+		backgroundColor: Colors.WHITE_SMOKE,
+		borderRadius: 12,
+		zIndex: 50,
+                marginBottom: -10,
+                width: '90%',
+                marginLeft: '8%',
+                marginRight: '5%',
+        },
+        dropDownBottomContainerDark: {
+                borderColor: Colors.WHITE_SMOKE, 
+                backgroundColor: Colors.IRIDIUM
+        },
 
 
 
