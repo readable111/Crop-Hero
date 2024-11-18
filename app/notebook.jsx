@@ -42,6 +42,8 @@ const Notebook = () => {
     const [isDarkMode, setIsDarkMode] = useState(false)
     const [newEntry, setNewEntry] = useState()
     const [savePressed, setSavePressed] = useState(false)
+    const [editPressed, setEditPressed] = useState(false)
+    const [deletePressed, setDeletePressed] = useState(false)
     const clearSelectedEntry = () => {
         setSelectedEntry(null); // Reset the selected entry
     };
@@ -136,7 +138,9 @@ const Notebook = () => {
             "Are you sure you want to delete this entry?",
             [
                 { text: "Cancel", style: "cancel" },
-                { text: "OK", onPress: () => setEntries(prevEntries => prevEntries.filter(item => item.EntryID !== entryID)) }
+                { text: "OK", onPress: () => {
+                    
+                    setDeletePressed(true)}}
             ],
             { cancelable: false }
         );
@@ -185,6 +189,47 @@ const Notebook = () => {
         }
         addEntry()
     }, [savePressed])
+
+    useEffect(()=>{
+        const editEntry = async () =>{
+            if(savePressed && editPressed){
+                try{
+                const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/updateJournalEntry`,{method: 'POST', headers:{'Content-Type':'application/json'}, body:  JSON.stringify({subID: subID, entryID:selectedEntry[0], entry:newEntry})})
+               if(!response.ok){
+                       console.error("HTTP ERROR:")
+                       throw new Error;
+                   }
+                   setSavePressed(false)
+                   setNewEntry(null)
+                   setEditPressed(false)
+               }catch(error){
+                   console.error("Error:", error)
+               }
+            }
+        }
+        editEntry()
+    }, [savePressed, deletePressed])
+
+    useEffect(()=>{
+        const deleteEntry = async () =>{
+            if(deletePressed){
+                try{
+                const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/deleteJournalEntry`,{method: 'POST', headers:{'Content-Type':'application/json'}, body:  JSON.stringify({subID: subID, entryID:selectedEntry[0]})})
+               if(!response.ok){
+                       console.error("HTTP ERROR:")
+                       throw new Error;
+                   }
+                   setNewEntry(null)
+                   setDeletePressed(false)
+               }catch(error){
+                   console.error("Error:", error)
+               }
+            }
+        }
+        deleteEntry()
+    }, [deletePressed])
+
+
 
 
 
@@ -277,6 +322,7 @@ const Notebook = () => {
                     buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                     onPress={() => {
                         if (selectedEntry) {
+                            setEditPressed(true)
                             openModalForEdit(selectedEntry);
                         } else {
                             Alert.alert("Select an entry to edit.");
@@ -289,7 +335,7 @@ const Notebook = () => {
                     buttonStyle={{ backgroundColor: Colors.IRISH_GREEN }}
                     onPress={() => {
                         if (selectedEntry) {
-                            handleDelete(selectedEntry.EntryID); // Delete the selected entry
+                            handleDelete(); // Delete the selected entry
                         } else {
                             Alert.alert("Select an entry to delete."); // Alert if no entry selected
                         }

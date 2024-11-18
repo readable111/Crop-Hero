@@ -33,14 +33,14 @@ const TodoEntryModal = ({
     const [taskData, setTaskData] = useState({
         "fld_t_TaskID_pk": taskID || null,
         "fld_t_Comments": '',
-        "fld_t_DateDue": '',
+        "fld_t_DateDue": '1990-01-01',
         "fld_fs_FarmerID_fk": '',
         "fld_l_LocationID_fk": '',
         CropID: '',
         "fld_tt_TaskTypeID_fk": '',
         NewTask: '',
         "fld_t_TaskIconPath": '',
-        "fld_t_IsCompleted": false,
+        "fld_t_IsCompleted": 0b0,
         "fld_t_DateCompleted": '',
     });
 
@@ -72,7 +72,7 @@ const TodoEntryModal = ({
     }, [])
 
     useEffect(() => {
-        if (!initialTaskData) return; // Guard clause for initialTaskData
+        if (taskID == null) return; // Guard clause for initialTaskData
         // Set task data once when the modal opens
         setTaskData({
            "fld_t_TaskID_pk": initialTaskData[0] || taskID,
@@ -92,19 +92,22 @@ const TodoEntryModal = ({
     const handleDateChange = (type, value) => {
         // Mapping months to their numeric equivalents
         const monthMap = {
-            "January": "01", "February": "02", "March": "03", "April": "04",
-            "May": "05", "June": "06", "July": "07", "August": "08",
-            "September": "09", "October": "10", "November": "11", "December": "12"
+            "Jan": "01", "Feb": "02", "Mar": "03", "Apr": "04",
+            "May": "05", "Jun": "06", "Jul": "07", "Aug": "08",
+            "Sep": "09", "Oct": "10", "Nov": "11", "Dec": "12"
         };
 
         // Split the current date parts or default to current year
-        const dateParts = taskData["fld_t_DateDue"].split('-');
-        let year = dateParts[0] || `${new Date().getFullYear()}`;
-        let month = dateParts[1] || '01';
-        let day = dateParts[2] || '01';
+        console.log(taskData["fld_t_DateDue"])
+        const currentDate = new Date(taskData["fld_t_DateDue"]);
+        let year = currentDate.getFullYear() 
+        let month = currentDate.getMonth() +1
+        let day = currentDate.getDay() 
 
         if (type === 'month') {
+            console.log(month)
             month = monthMap[value];
+
         } else if (type === 'day') {
             day = value.padStart(2, '0'); // Ensure day is two digits
         } else if (type === 'year') {
@@ -112,8 +115,11 @@ const TodoEntryModal = ({
         }
 
         // Construct ISO format date (YYYY-MM-DD)
-        const newDate = `${year}-${month}-${day}`;
-        setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": newDate }));
+        const newDate = `${year}-${month}-${day}`
+        console.log(newDate)
+        const newD = new Date(newDate).toISOString().slice(0,10)
+        console.log(newD)
+        setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": newD}));
     };
     
     
