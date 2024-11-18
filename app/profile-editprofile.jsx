@@ -15,7 +15,7 @@ import {
 	Appearance
 } from 'react-native'
 import { useFonts } from 'expo-font'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { Input } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -30,9 +30,12 @@ import {cleanText, cleanNumbers} from '../assets/sanitizer'
 const EditProfile = () =>{ 
 	const [first, setFirst] = useState("")
 	const [last, setLast] = useState("")
+	const userData = useLocalSearchParams()
 	const [awAPIKey, setAWAPIKey] = useState("")
 	const [awAppKey, setAWAppKey] = useState("")
 	const [awMACAddrKey, setAWMACAddrKey] = useState("")
+	const [savePressed, setSavePressed] = useState(false)
+
 
 	const handleSave = async() =>{
 		console.log("Saved. First: " + cleanText(first, noStopwords=false, noSQL=true, textOnly=true) + "\t Last: " + cleanText(last, noStopwords=false, noSQL=true, textOnly=true));

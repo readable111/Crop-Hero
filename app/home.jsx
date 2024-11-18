@@ -288,10 +288,8 @@ const Home = () =>{
 				console.error("Error fetching crop data:", error);
 			}
 		};
-
 		fetchData();
 	}, []);
-
 
 	if (!fontsLoaded && !fontError) {
 		return null;
