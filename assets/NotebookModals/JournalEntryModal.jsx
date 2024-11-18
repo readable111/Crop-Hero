@@ -65,13 +65,13 @@ const JournalEntryModal = ({ visible, onClose, onSave, journalEntry }) => {
     useEffect(() => {
         if (journalEntry) {
             if (!entryID) {
-                setEntryID(journalEntry.EntryID);
+                setEntryID(journalEntry[0]);
             }
             setIsNewEntry(false);
-            setContents(journalEntry.Contents);
+            setContents(journalEntry[3]);
 
             // Assuming EntryDate is in "MM/DD/YYYY" format
-            const dateString = journalEntry.EntryDate; // Example: "01/01/2024"
+            const dateString = journalEntry[2].slice(0,10); // Example: "01/01/2024"
 
             if (dateString && dateString.length === 10) { // Ensure it's in "MM/DD/YYYY" format
                 const [month, day, year] = dateString.split('/'); // Split by "/"
