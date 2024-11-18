@@ -30,7 +30,7 @@ import Icons from '../../assets/icons/Icons.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as ImagePicker from 'expo-image-picker'
-
+import UploadModal from '../../assets/ProfilePageImages/UploadModal.jsx'
 
 
 const addCrops = () => {
@@ -83,6 +83,7 @@ const addCrops = () => {
         const [typeNameOption, setTypeNameOption] = useState()
         const [mediumNameOption, setMediumNameOption] = useState()
         const [isDark, setIsDarkMode] = useState(false)
+        const [mediaModal, setMediaModalVisible] = useState(false);
         const handleOpenDropdown = (id) => {
                 setOpen(open === id ? null : id)
         }
@@ -407,24 +408,52 @@ const addCrops = () => {
             }, [types]);
 
 
-        const handleAddMedia = async () => {
-                try{
-                        const result = await ImagePicker.launchImageLibraryAsync({
-                                mediaTypes: ImagePicker.mediaTypes,
-                                allowsEditing: true,
-                                quality: 1,
-                        })
-                        
-                        if(!result.canceled)
-                        {
-                                setSelectedImage(result.assets[0].uri);
-                        }
+        const handleAddMedia = async (mode) => {
+                try{     
+                        let result = {};
 
-                }
-                catch(error)
-                {
-                        console.error("Error picking image: ", error);
-                }
+                                //check if the mode is media gallery
+                                if (mode === "gallery") {
+                                        await ImagePicker.requestMediaLibraryPermissionsAsync();
+                                        result = await ImagePicker.launchImageLibraryAsync({
+                                                mediaTypes: ImagePicker.Images, //only let user select images, not videos
+                                                allowsEditing: true, //allows crop, rotate, flip depending on OS
+                                                aspect: [1, 1], //set default aspect ratio, only affect s Android OS
+                                                quality: 1, //sets basic compression level by expo-image-picker
+                                        });
+                                } 
+                                //check if the mode is selfie for front-facing camera
+                                else if (mode === "back") {
+                                        console.log("Back pressed")
+                                        await ImagePicker.requestCameraPermissionsAsync(); //wait for permission to access camera
+                                        result = await ImagePicker.launchCameraAsync({ //launch the camera
+                                                cameraType: ImagePicker.CameraType.back, //default the camera to the front one since it is a selfie
+                                                allowsEditing: true, //allows crop, rotate, flip depending on OS
+                                                aspect: [1, 1], //set default aspect ratio, only affects Android OS as iOs defaults to 1x1
+                                                quality: 1, //sets basic compression level by expo-image-picker
+                                        });
+                                }
+                                //otherwise, assume that the mode was for the back camera
+                                else {
+                                        await ImagePicker.requestCameraPermissionsAsync(); //wait for permission to access camera
+                                        result = await ImagePicker.launchCameraAsync({ //launch the camera
+                                                cameraType: ImagePicker.CameraType.back, //default the camera to the back one
+                                                allowsEditing: true, //allows crop, rotate, flip depending on OS
+                                                aspect: [1, 1], //set default aspect ratio, only affects Android OS as iOs defaults to 1x1
+                                                quality: 1, //sets basic compression level by expo-image-picker
+                                        });
+                                }
+                                
+
+                                //canceled is true if the system UI is closed without selecting an image
+                                //so save image if new image is selected
+                                if (!result.canceled) {
+                                        await saveImage(result.assets[0].uri)
+                                }
+		} catch (error) {
+			Alert.alert("Error uploading image: " + error.message)
+			setMediaModalVisible(false)
+		}
         }
 
         //load fonts
@@ -454,7 +483,7 @@ const addCrops = () => {
                                 <View style={styles.titleContainer}>
                                         <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>Add Crop</Text>
                                         <View style={styles.semicircle}>
-                                                <Text style={styles.AddMedia} onPress = {handleAddMedia}>Add media</Text>
+                                                <Text style={styles.AddMedia} onPress = {()=> setMediaModalVisible(true)}>Add media</Text>
                                         </View>
                                 </View>
                         </View>
@@ -571,6 +600,12 @@ const addCrops = () => {
                                 </View>
 
                         </Modal>
+                        <UploadModal modalVisible={mediaModal} 
+					onBackPress={() => setModalVisible(false)} //disappear if it is clicked outside of the modal
+					onCameraPress={() => handleAddMedia("back")} //trigger camera when that icon is pressed
+					onGalleryPress={() => handleAddMedia("gallery")} //trigger gallery when that icon is pressed
+					onRemovePress={() => setMediaModalVisible(false)} //remove the image when that icon is passed
+                        />
                         <ScrollView> 
                                 <View style={styles.spacer}/>
                                 <StatusBar style={{backgroundColor: 'white'}}/>
