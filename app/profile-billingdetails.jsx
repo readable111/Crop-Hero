@@ -80,7 +80,6 @@ const BillingDetailsProfile = () =>{
 				setUserData({
 					"fld_s_FirstName": data[0],
 					"fld_s_LastName": data[1],
-					"fld_s_ProfilePicture": "file:///",
 					"fld_s_EmailAddr": data[6],
 					"fld_s_StreetAddr": data[7],
 					"fld_s_City": data[8],

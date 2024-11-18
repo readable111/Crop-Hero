@@ -80,8 +80,9 @@ const Profile = () =>{
 				}
 				const data = await response.json()
 				setUserData(data)
-				capitalizedUsername = toTitleCase(userData[1] + " " + userData[2])
+				capitalizedUsername = toTitleCase(data[1] + " " + data[2])
 				console.log("Username: ", capitalizedUsername)
+				setUsername(capitalizedUsername)
 			}catch(err){
       			console.error("Error fetching user data:", err);
 			}
