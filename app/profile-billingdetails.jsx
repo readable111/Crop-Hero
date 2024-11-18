@@ -78,8 +78,8 @@ const BillingDetailsProfile = () =>{
 				}
 				const data = await response.json()
 				setUserData({
-					"fld_s_FirstName": data[0],
-					"fld_s_LastName": data[1],
+					"fld_s_FirstName": data[1],
+					"fld_s_LastName": data[2],
 					"fld_s_EmailAddr": data[6],
 					"fld_s_StreetAddr": data[7],
 					"fld_s_City": data[8],
@@ -119,7 +119,7 @@ const BillingDetailsProfile = () =>{
 			//setSavePressed(true)
 			//console.log("Save Pressed: ", savePressed)
 			console.log(JSON.stringify(userData))
-			const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/updateSubscriberInfo`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(userData)})
+			const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/updateSubscriberInfo`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({subID:"sub123", subData: userData})})
 			console.log("Response ", response)
 			if(!response.ok){
                 throw new Error(`HTTP error! Status: ${response.status}`);
