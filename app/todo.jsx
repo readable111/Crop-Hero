@@ -97,7 +97,7 @@ const todo = () => {
          //   const formattedDate = `${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}${date.getFullYear()}`;
            // taskData["fld_t_DateDue"] = formattedDate;
        // }
-
+        console.log("TaskData to set New Task Data to: \n\n", taskData,"\n\n")
         if (currentTaskID!==null){
             if(!taskData["fld_t_IsCompleted"]){
                 setNewTask({
@@ -190,9 +190,9 @@ const todo = () => {
 
     const handleCheckboxChange = (taskData) => {
         const monthMap = {
-            "January": "01", "February": "02", "March": "03", "April": "04",
-            "May": "05", "June": "06", "July": "07", "August": "08",
-            "September": "09", "October": "10", "November": "11", "December": "12"
+            "Jan": "01", "Feb": "02", "Mar": "03", "Apr": "04",
+            "May": "05", "Jun": "06", "Jul": "07", "Aug": "08",
+            "Sep": "09", "Oct": "10", "Nov": "11", "Dec": "12"
         };
 
         // Split the current date parts or default to current year
@@ -406,7 +406,7 @@ const todo = () => {
                             <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Task Type: {item[10]}</Text>
                             <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Location ID: {item[12]}</Text>
                             <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Comments: {item[8]}</Text>
-                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Due Date: {item[6]?.slice(0, 2)}/{item[6]?.slice(2, 4)}/{item[6]?.slice(4)}</Text>
+                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Due Date: {new Date(item[6]).toISOString().slice(0,10)}</Text>
 
                             {/* Display the icon at the top right corner */}
                             <View style={styles.iconContainer}>

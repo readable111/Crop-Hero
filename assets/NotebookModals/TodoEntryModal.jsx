@@ -33,14 +33,14 @@ const TodoEntryModal = ({
     const [taskData, setTaskData] = useState({
         "fld_t_TaskID_pk": taskID || null,
         "fld_t_Comments": '',
-        "fld_t_DateDue": '',
+        "fld_t_DateDue": '1990-01-01',
         "fld_fs_FarmerID_fk": '',
         "fld_l_LocationID_fk": '',
         CropID: '',
         "fld_tt_TaskTypeID_fk": '',
         NewTask: '',
         "fld_t_TaskIconPath": '',
-        "fld_t_IsCompleted": false,
+        "fld_t_IsCompleted": 0b0,
         "fld_t_DateCompleted": '',
     });
 
@@ -72,7 +72,7 @@ const TodoEntryModal = ({
     }, [])
 
     useEffect(() => {
-        if (!initialTaskData) return; // Guard clause for initialTaskData
+        if (taskID == null) return; 
         // Set task data once when the modal opens
         setTaskData({
            "fld_t_TaskID_pk": initialTaskData[0] || taskID,
@@ -92,19 +92,22 @@ const TodoEntryModal = ({
     const handleDateChange = (type, value) => {
         // Mapping months to their numeric equivalents
         const monthMap = {
-            "January": "01", "February": "02", "March": "03", "April": "04",
-            "May": "05", "June": "06", "July": "07", "August": "08",
-            "September": "09", "October": "10", "November": "11", "December": "12"
+            "Jan": "01", "Feb": "02", "Mar": "03", "Apr": "04",
+            "May": "05", "Jun": "06", "Jul": "07", "Aug": "08",
+            "Sep": "09", "Oct": "10", "Nov": "11", "Dec": "12"
         };
 
         // Split the current date parts or default to current year
-        const dateParts = taskData["fld_t_DateDue"].split('-');
-        let year = dateParts[0] || `${new Date().getFullYear()}`;
-        let month = dateParts[1] || '01';
-        let day = dateParts[2] || '01';
+        console.log(taskData["fld_t_DateDue"])
+        const currentDate = new Date(taskData["fld_t_DateDue"]);
+        let year = currentDate.getFullYear() 
+        let month = currentDate.getMonth() +1
+        let day = currentDate.getDay() 
 
         if (type === 'month') {
+            console.log(month)
             month = monthMap[value];
+
         } else if (type === 'day') {
             day = value.padStart(2, '0'); // Ensure day is two digits
         } else if (type === 'year') {
@@ -112,8 +115,11 @@ const TodoEntryModal = ({
         }
 
         // Construct ISO format date (YYYY-MM-DD)
-        const newDate = `${year}-${month}-${day}`;
-        setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": newDate }));
+        const newDate = `${year}-${month}-${day}`
+        console.log(newDate)
+        const newD = new Date(newDate).toISOString().slice(0,10)
+        console.log(newD)
+        setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": newD}));
     };
     
     
@@ -122,7 +128,7 @@ const TodoEntryModal = ({
     };
     
     
-    // Initialize the icon picker visibility state
+    
     const [iconPickerVisible, setIconPickerVisible] = useState(false);                                                   
     const handleIconSelect = (iconName) => {
         setTaskData((prevData) => ({
@@ -292,27 +298,44 @@ const TodoEntryModal = ({
                         </Picker>
                     </View>
                 </View>
-                    {/* Icon Picker Section */}
+                   {/* Icon Picker Section */}
                    <View style={[styles.listContainer, isDark && styles.darkListContainer]}>
                        <Text style={styles.label}>Select Task Icon</Text>
                        <TouchableOpacity onPress={() => setIconPickerVisible(true)} style={styles.iconPickerContainer}>
                            {taskData.fld_t_TaskIconPath ? (
-                               <MaterialCommunityIcons name={taskData.fld_t_TaskIconPath} size={32} />
+                               <MaterialCommunityIcons name={taskData.fld_t_TaskIconPath} size={32} color={isDark ? Colors.WHITE_SMOKE : 'black'} />
                            ) : (
-                               <Text style={styles.placeholderText}>Choose an Icon</Text>
+                               <Text style={[styles.placeholderText, isDark && { color: Colors.WHITE_SMOKE }]}>Choose an Icon</Text>
                            )}
                        </TouchableOpacity>
                    </View>
-                   {/* Custom Icon Picker Modal */}
+
                    <Modal visible={iconPickerVisible} transparent animationType="slide">
-                       <View style={styles.iconPickerModal}>
+                       <View style={[styles.iconPickerModal, isDark && styles.darkModal]}>
                            <FlatList
-                               data={icons} // icon data
-                               keyExtractor={(item) => item}
+                               data={[
+                                   { label: 'Watering', value: 'watering-can-outline', icon: () => <MaterialCommunityIcons name="watering-can-outline" size={40} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Planning', value: 'calendar', icon: () => <MaterialCommunityIcons name="calendar" size={40} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Rake', value: 'rake', icon: () => <MaterialCommunityIcons name="rake" size={40} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Shovel', value: 'shovel', icon: () => <MaterialCommunityIcons name="shovel" size={40} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Tools', value: 'tools', icon: () => <MaterialCommunityIcons name="tools" size={40} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Beehive', value: 'beehive-outline', icon: () => <MaterialCommunityIcons name="beehive-outline" size={24} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Egg', value: 'egg-fried', icon: () => <MaterialCommunityIcons name="egg-fried" size={24} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Cow', value: 'cow', icon: () => <MaterialCommunityIcons name="cow" size={24} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Pig', value: 'pig-variant-outline', icon: () => <MaterialCommunityIcons name="pig-variant-outline" size={24} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Turkey', value: 'turkey', icon: () => <MaterialCommunityIcons name="turkey" size={24} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Fence', value: 'fence', icon: () => <MaterialCommunityIcons name="fence" size={24} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Wrench', value: 'wrench-outline', icon: () => <MaterialCommunityIcons name="wrench-outline" size={24} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Tractor', value: 'tractor-variant', icon: () => <MaterialCommunityIcons name="tractor-variant" size={24} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Cowboy', value: 'account-cowboy-hat-outline', icon: () => <MaterialCommunityIcons name="account-cowboy-hat-outline" size={24} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Scissors', value: 'scissors-cutting', icon: () => <MaterialCommunityIcons name="scissors-cutting" size={24} color={isDark ? 'white' : 'black'} /> },
+                                   { label: 'Wheelbarrow', value: 'wheel-barrow', icon: () => <MaterialCommunityIcons name="wheel-barrow" size={24} color={isDark ? 'white' : 'black'} /> },
+                               ]}
+                               keyExtractor={(item) => item.value}
                                numColumns={4}
                                renderItem={({ item }) => (
-                                   <TouchableOpacity onPress={() => handleIconSelect(item)} style={styles.iconItem}>
-                                       <MaterialCommunityIcons name={item} size={32} />
+                                   <TouchableOpacity onPress={() => handleIconSelect(item.value)} style={[styles.iconItem, isDark && styles.darkIconItem]}>
+                                       {item.icon()}
                                    </TouchableOpacity>
                                )}
                            />
@@ -351,10 +374,27 @@ const styles = StyleSheet.create({
         fontFamily: 'Domine-Regular',
         height: '100%',
         paddingBottom: 500,
-
     },
     darkModalContainer: {
         backgroundColor: Colors.BALTIC_SEA,
+    },
+    darkModal: {
+        backgroundColor: Colors.BALTIC_SEA, // Dark mode modal background
+        color: 'white'
+    },
+    iconItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 10,
+    },
+    darkIconItem: {
+        backgroundColor: Colors.BALTIC_SEA, 
+        color: 'white'
+    },
+    placeholderText: {
+        fontSize: 16,
+        color: Colors.ALMOST_BLACK,
     },
     listContainer: {
         marginBottom: 20,
@@ -365,7 +405,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     darkListContainer: {
-        backgroundColor: Colors.LICHEN
+        backgroundColor: Colors.LICHEN,
     },
     label: {
         fontSize: 16,
@@ -399,11 +439,25 @@ const styles = StyleSheet.create({
     },
     iconPickerContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
+        flexWrap: 'wrap',  // Allow the icons to wrap to the next line
+        justifyContent: 'space-evenly',  // Even spacing between icons
+        marginBottom: 20,
         padding: '1%',
         borderWidth: 1,
         borderColor: 'black',
         borderRadius: 5,
+       // backgroundColor: Colors.IRIDIUM,
+       // color: 'white'
+    },
+    iconPickerModal: {
+        alignSelf: 'center',
+        alignContent: 'center',
+        backgroundColor: Colors.ALMOND_TAN
+    },
+    iconItem: {
+        width: '30%', 
+        alignItems: 'center',
+        marginVertical: 10,
     },
     input: {
         padding: 10,
@@ -413,18 +467,13 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         fontFamily: 'Domine-Regular',
     },
-    iconPickerContainer: {
-        marginBottom: 20,
-    },
-    iconItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
     buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexDirection: 'column',
+        //justifyContent: 'space-between',
         fontFamily: 'Domine-Regular',
         paddingBottom: 100,
+       // paddingVertical: 10
+        justifyContent: 'space-evenly'
     },
 });
 
