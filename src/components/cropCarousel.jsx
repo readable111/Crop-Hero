@@ -29,7 +29,7 @@ const Carousel = ({data,  isDarkMode=false}) => {
             <Text>Name: {item[10]}</Text> 
             <Text>Medium: {item[18]}</Text>
             <Text>Location: {item[19]}</Text>
-            <Text>Start Date: {item[13]}</Text>
+            <Text>Start Date: {new Date(item[13]).toISOString().slice(0,10)}</Text>
           </View>
         </Pressable>
         )}
