@@ -28,8 +28,8 @@ import {cleanText, cleanNumbers} from '../assets/sanitizer'
 
 
 const EditProfile = () =>{ 
-//	const [first, setFirst] = useState("")
-//	const [last, setLast] = useState("")
+	const [first, setFirst] = useState("")
+	const [last, setLast] = useState("")
 	const userData = useLocalSearchParams()
 	const [awAPIKey, setAWAPIKey] = useState("")
 	const [awAppKey, setAWAppKey] = useState("")

@@ -80,15 +80,19 @@ const BillingDetailsProfile = () =>{
 				setUserData({
 					"fld_s_FirstName": data[0],
 					"fld_s_LastName": data[1],
-					"fld_s_ProfilePicture": null,
+					"fld_s_ProfilePicture": "file:///",
 					"fld_s_EmailAddr": data[6],
 					"fld_s_StreetAddr": data[7],
 					"fld_s_City": data[8],
 					"fld_s_PostalCode": data[9],
 					"fld_s_PhoneNum": data[10],
 					"fld_s_HasAmbientWeather": data[11],
-					"fld_s_AmbientWeatherKey": data[12]
+					"fld_s_AmbientWeatherKey": data[12],
 				})
+				setEmail(data[6])
+				setPhoneNum(data[10])
+				setZipCode(data[9])
+				setState("Texas")
 			}catch(err){
       			console.error("Error fetching user data:", err);
 			}
@@ -101,8 +105,6 @@ const BillingDetailsProfile = () =>{
 	}, [])
 
 
-	console.log(userData)
-	console.log()
 
 	const handleSave = async () =>{
 		//onChangeText={value => {setEmail(cleanText(email, noStopwords=false, noSQL=true));}}
@@ -115,7 +117,14 @@ const BillingDetailsProfile = () =>{
 				"fld_s_PostalCode": cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false),
 				"fld_s_PhoneNum": cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true)
 			})
-			setSavePressed(true)
+			//setSavePressed(true)
+			//console.log("Save Pressed: ", savePressed)
+			console.log(JSON.stringify(userData))
+			const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/updateSubscriberInfo`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(userData)})
+			console.log("Response ", response)
+			if(!response.ok){
+                throw new Error(`HTTP error! Status: ${response.status}`);
+			}
 //		} else {
 		//	console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Default Zip: " + defaultZip + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
 			//setZipCode(defaultZip)
@@ -144,10 +153,12 @@ const BillingDetailsProfile = () =>{
 	}, [])
 
 
-	useEffect(() =>{
+	/*useEffect(() =>{
 		const updateSub = async () =>{
+			console.log("updateSub called")
 			if(savePressed){
 				try{
+					console.log("POST called with ", userData)
 					const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/updateSubscriberInfo`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(userData)})
 					if(!response.ok){
                              throw new Error(`HTTP error! Status: ${response.status}`);
@@ -159,7 +170,7 @@ const BillingDetailsProfile = () =>{
 			}
 		}
 		updateSub()
-	}, [savePressed])
+	}, [savePressed])*/
 
     useEffect(() => {
 		// declare the async data fetching function
@@ -329,7 +340,7 @@ const BillingDetailsProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					placeholder='Texas'
-					defaultValue={userData[8]}
+					defaultValue={state}
 					autoComplete='address-line1'
 					keyboardType='default'
 					maxLength={64}

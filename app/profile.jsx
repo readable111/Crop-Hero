@@ -25,6 +25,7 @@ import { toTitleCase } from '../assets/sanitizer.jsx'
 
 const Profile = () =>{ 
 	const [userData, setUserData] = useState({})
+	const [username, setUsername] = useState("")
 	const [isDarkMode, setIsDarkMode] = useState(false)
 	const subID = "sub123"
 
@@ -79,6 +80,8 @@ const Profile = () =>{
 				}
 				const data = await response.json()
 				setUserData(data)
+				capitalizedUsername = toTitleCase(userData[1] + " " + userData[2])
+				console.log("Username: ", capitalizedUsername)
 			}catch(err){
       			console.error("Error fetching user data:", err);
 			}
@@ -109,7 +112,7 @@ const Profile = () =>{
 		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
 		{/*green oval at the top to denote profile picture and name*/}
 		<Text style = {styles.oval}></Text>
-		<Text style = {styles.profileName}>{userData[1]} {userData[2]}</Text>
+		<Text style = {styles.profileName}>{username}</Text>
 		{/*TODO: set image to display profile picture after retrieving it*/}
 		<UploadImage style={styles.avatarImg} isEditable={false} />
 		{/*add edit profile button*/}
