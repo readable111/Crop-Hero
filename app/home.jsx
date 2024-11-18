@@ -281,7 +281,7 @@ const Home = () =>{
 					const dateA = new Date(a[13]);
 					const dateB = new Date(b[13]);
 					return dateB - dateA;
-				});
+				}).slice(0,20);
 				console.log(data)
 				setCropData(data);
 			} catch (error) {
