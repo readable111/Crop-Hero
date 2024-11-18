@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
     entryContainer: { //should be the box surrounding each entry individually
         width: '90%',
        // height: '80%',
-        backgroundColor: 'white',
+        backgroundColor: Colors.ALMOND_TAN,
         padding: 5,
         marginBottom: 27,
         marginTop: 20,
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
     entryInsideContainer: {
         width: '90%',
         // height: '80%',
-        backgroundColor: Colors.ALMOND_TAN,
+        backgroundColor:'white',
         padding: 5,
         marginBottom: 27,
         marginTop: 20,
@@ -408,7 +408,7 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         alignContent: 'flex-start',
         width: '100%',
-        height: '7%', 
+        height: '9%', 
         marginTop: 5,
         marginBotton: 3,
         alignSelf: 'center'
@@ -422,13 +422,15 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         alignContent: 'flex-start',
         width: '100%',
-        height: '7%',
-        marginTop: 5,
+        height: '9%',
+        marginTop: 2,
         marginBotton: 3,
-        alignSelf: 'center'
+        alignSelf: 'center',
+       // backgroundColor: 'white',
+       // height: '10%'
     },
     picker: { // two drop down elements overall contained in filterContainer
-        height: '20%',
+        height: '80%',
         width: 200,
         borderColor: 'black',
         borderWidth: 1,
@@ -440,7 +442,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     darkPicker: {
-        height: '20%',
+         height: '80%',
         width: 200,
         borderColor: 'black',
         borderWidth: 1,

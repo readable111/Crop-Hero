@@ -46,7 +46,11 @@ const ScalingDot = ({
     activeDotScale: activeDotScale || 1.4,
   };
   const { width } = useWindowDimensions();
-  const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
+  const inputRange = [
+    (index - 1) * width, 
+    index * width, 
+    (index + 1) * width
+  ];
   const opacityOutputRange = [dp.inActiveDotOpacity, 1, dp.inActiveDotOpacity];
   const scaleOutputRange = [1, dp.activeDotScale, 1];
   const colorOutputRange = [

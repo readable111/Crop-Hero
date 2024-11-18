@@ -9,9 +9,9 @@ import { Pressable, Switch, StyleSheet, StatusBar, Text, View, Appearance, Scrol
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input, colors } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AppButton from '../assets/AppButton.jsx';
-import Icons from '../assets/icons/Icons.js';
-import Colors from '../assets/Color';
+import AppButton from '../../assets/AppButton.jsx';
+import Icons from '../../assets/icons/Icons.js';
+import Colors from '../../assets/Color.js';
 import { useFonts } from 'expo-font'
 
 
@@ -19,66 +19,68 @@ import { useFonts } from 'expo-font'
 const ViewCrops = () => {
         {/* Array of objects, used to differentiate picked items */}
         const [selectedItem, setItem] = useState(null);
-
+        const [cropData, setCropData] = useState([])
         const [isDark, setIsDarkMode] = useState(false)
+        const subID = "sub123"
         useEffect(() => {
-                const fetchDarkModeSetting = async () => {
-                        const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
-                        let result = null
-                        if(JSON_VALUE && JSON_VALUE !== "")
-                        {
+		// declare the async data fetching function
+		const fetchDarkModeSetting = async () => {
+			const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
+			let result = null
+                        if (JSON_VALUE) {
                                 result = JSON.parse(JSON_VALUE)
-                                //console.log("Async: " + result)
-                        }
-                        else
-                        {
+                                console.log("Async: " + result)
+                        } else {
                                 colorScheme = Appearance.getColorScheme()
-                                if(colorScheme == 'dark')
-                                {
-                                        result = true;
-                                }
-                                else
-                                {
-                                        result = false;
+                                if (colorScheme == 'dark') {
+                                        result = true
+                                } else {
+                                        result = false
                                 }
                                 console.log("colorScheme: " + result)
-                        }
-                        setIsDarkMode(result)
-                }
-                fetchDarkModeSetting()
-                .catch(console.error);
-        }, [])
+			}
+			setIsDarkMode(result)
+		}
+	  
+		// call the function
+		fetchDarkModeSetting()
+		  	// make sure to catch any error
+		  	.catch(console.error);
+	}, [])
 
-        {/* Dummy Data, for picker use */}
-        const [crops, setCrops] = useState([
-                {label: 'Carrot', name: 'Carrot', active: 'Y', location: 'Greenhouse', variety: 'Standard', source: 'Home Depot', datePlanted: '05/06/2024', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '193242', visible:'visible', yield:'none'},
-                {label: 'Cabbage', name: 'Cabbage', active: 'N', location: 'Outside', variety: 'Standard', source: 'Friend Recommendation', datePlanted: '01/24/2022', comments: 'None', indoors: 'Yes', type:'Standard' , medium: 'Hugel Mound', hrfNum: '945304', visible:'not visible', yield:'large'},
-                {label: 'Potato', name: 'Potato', active: 'Y', location: 'Dump', variety: 'Standard', source: "Farmer's market", datePlanted: '11/13/2019', comments: 'None', indoors: 'Yes', type:'Standard', medium: 'Hugel Mound', hrfNum: '835242', visible:'visible', yield:'medium' },
-                {label: 'Tomato', name: "Tomato", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999999', visible:'not visible', yield:'small' },
-                {label: 'Tomato2', name: "Tomato2", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999991', visible:'not visible', yield:'small' },
-                {label: 'Tomato3', name: "Tomato3", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999998', visible:'not visible', yield:'small' },
-                {label: 'Tomato4', name: "Tomato4", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999997', visible:'not visible', yield:'small' },
-                {label: 'Tomato5', name: "Tomato5", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999996', visible:'not visible', yield:'small' },
-                {label: 'Tomato6', name: "Tomato6", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999995', visible:'not visible', yield:'small' },
-                {label: 'Tomato7', name: "Tomato7", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999994', visible:'not visible', yield:'small' },
-                {label: 'Tomato8', name: "Tomato8", active: "Y", location: "Greenhouse #2", variety: "Green", source: "Gathered", datePlanted: '08/30/2023', comments: 'None', indoors: 'No', type:'Standard', medium: 'Hugel Mound', hrfNum: '999993', visible:'not visible', yield:'small' },
-        
-        
-        ]);
-        const { newCrop } = useLocalSearchParams();
+        //const { newCrop } = useLocalSearchParams();
 
-        useEffect(() => {
+        /*useEffect(() => {
                 //Alert.alert("Test");
                 if(newCrop)
                         {
                                // Alert.alert("Test2");
                                 const crop = JSON.parse(newCrop);
                                 //Alert.alert("Crop Recieved: " + crop.name);
-                                console.log(JSON.stringify(crops))
-                                setCrops((prevCrops)=>[...prevCrops, crop]);
+                                console.log(JSON.stringify(cropData))
+                                setCropData((prevCrops)=>[...prevCrops, cropData]);
                         }
-        }, [newCrop]);
-        console.log(crops);
+        }, [newCrop]);*/
+
+        useEffect(() => {
+                const fetchData = async () => {
+                  const url = `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCropsVerbose/${subID}`;
+                  try {
+                    const response = await fetch(url, { method: 'GET' });
+                    if (!response.ok) {
+                      throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+              
+                    const data = await response.json();
+                    setCropData(data);
+                  } catch (error) {
+                    console.error("Error fetching crop data:", error);
+                  }
+                };
+              
+                fetchData();
+              }, []);
+                     
         {/* Was testing something, leaving for now
         const handleChange = (itemValue, itemIndex) =>
         {
@@ -91,8 +93,16 @@ const ViewCrops = () => {
         //Delete toggle
         const [isDelete, setIsDelete] = useState(false);
 
-        const deleteItem = (hrfNum) => {
-                setCrops((prevItems) => prevItems.filter(item => item.hrfNum !== hrfNum))
+        const deleteItem = async(itemToBeDeleted) => {
+                console.log(itemToBeDeleted)
+                try{
+                        const response = await fetch('https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/deleteCrop',{method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({cropID: itemToBeDeleted[0], subID: "sub123"})})
+                        if (!response.ok) {
+                             throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                }catch(error){
+                        console.error("Error: ", error)
+                }
         }
         {/* Deals with rendering the items (In this case, selectables) in the flatlist */}
 
@@ -100,7 +110,7 @@ const ViewCrops = () => {
         (
                 <TouchableOpacity onPress={() => handlePress(item)}>
                         <View style={[ styles.button, isDark && styles.buttonDark ]}>
-                                <Text style={styles.buttonText}>{item.name}</Text>
+                                <Text style={styles.buttonText}>{item[10]}</Text>
                         </View>
                 </TouchableOpacity>
         );
@@ -109,9 +119,9 @@ const ViewCrops = () => {
         {
                 if(isDelete)
                 {
-                        Alert.alert(`Delete Item`, `Are you sure you want to delete "${item.name}"?`,
+                        Alert.alert(`Delete Item`, `Are you sure you want to delete "${item[10]}"?`,
                                 [
-                                        { text: "Delete", onPress: () => deleteItem(item.hrfNum) },
+                                        { text: "Delete", onPress: () => deleteItem(item) },
                                         { text: "Cancel", style: "cancel"}
                                 ]
                         )
@@ -120,15 +130,16 @@ const ViewCrops = () => {
                 else{
 
                         console.log('Item pressed:');
-                        router.push({pathname: '/cropspage', params: item})
+                        router.push({pathname: './cropspage', params: item, relativeToDirectory:true})
                 }
         }
 
         {/*load in all fonts used for this page*/}
 	const [fontsLoaded, fontError] = useFonts({
-		'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
-		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+		'Domine-Medium': require('../../assets/fonts/Domine-Medium.ttf'),
+		'Domine-Regular': require('../../assets/fonts/Domine-Regular.ttf'),
 	});
+
 	{/*return an error if the fonts fail to load*/}
 	if (!fontsLoaded && !fontError) {
 		return null;
@@ -145,7 +156,7 @@ const ViewCrops = () => {
                         <View style={[styles.container, isDark && styles.containerDark]}>
                                 <View style={[styles.topContainer, styles.spaceBetween]}>
                                         <View style={styles.back}>
-                                                <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.push('/crops')}/>
+                                                <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.push('/crops/crops')}/>
                                         </View>
                                         <View style={[styles.toggleContainer, isDark && styles.toggleContainerDark]}>
                                                 <Text style={styles.toggleLabel}>Toggle Delete</Text>
@@ -156,9 +167,9 @@ const ViewCrops = () => {
                                         </View>
                                 </View>
                                 <FlatList
-                                        data={crops}
+                                        data={Object.values(cropData)}
                                         renderItem={renderItem}
-                                        keyExtractor={ item => item.hrfNum }
+                                        keyExtractor={(item, index) => index.toString()}
                                 />
                         </View>
                 </View>

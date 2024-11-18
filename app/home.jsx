@@ -18,7 +18,7 @@ import icons from '../assets/icons/Icons.js';
 import { WeatherSlider } from '../src/components/WeatherSlider';
 import {getGridpoints, WeatherIcon} from '../assets/HomeWeatherFunctions'
 import { fetchWeatherData } from '../src/components/AmbientWeatherService';
-import CROPS from '../test_data/testCropData.json'
+
 
 const todayDayLookup = {
 	"Monday": "Sunday",
@@ -102,6 +102,13 @@ const Home = () =>{
 	const [forecastDataDay7, setforecastDataDay7] = useState(null);
 	const [dayName7, setDayName7] = useState(null);
 	const [ambientWeatherData, setAmbientWeatherData] = useState(test_data);
+	const [cropData, setCropData] = useState({});
+	const [isDarkMode, setIsDarkMode] = useState(false)
+
+	const [fontsLoaded, fontError] = useFonts({
+		'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+		'Domine-Bold': require('../assets/fonts/Domine-Bold.ttf')
+		});
 
 	useEffect(() => {
 		// declare the async data fetching function
@@ -228,7 +235,7 @@ const Home = () =>{
 		getWeatherData();
 	  }, []);
 
-	const [isDarkMode, setIsDarkMode] = useState(false)
+
     useEffect(() => {
 		// declare the async data fetching function
 		const fetchDarkModeSetting = async () => {
@@ -255,10 +262,30 @@ const Home = () =>{
 		  	.catch(console.error);
 	}, [])
 
-	const [fontsLoaded, fontError] = useFonts({
-	'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
-	'Domine-Bold': require('../assets/fonts/Domine-Bold.ttf')
-	});
+	const subID = "sub123";
+
+useEffect(() => {
+  const fetchData = async () => {
+    const url = `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCropsVerbose/${subID}`;
+    try {
+      const response = await fetch(url, { method: 'GET' });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      // Create an empty object to store updated data
+      // Once all fetches are complete, set the cropData state with the updated dictionary
+      setCropData(data);
+    } catch (error) {
+      console.error("Error fetching crop data:", error);
+    }
+  };
+
+  fetchData();
+}, []);
+console.log(cropData)
+
 
 	if (!fontsLoaded && !fontError) {
 		return null;
@@ -269,14 +296,14 @@ const Home = () =>{
 		return new Date(year, month - 1, day); //month is zero-based
 	}
 	
-	let twentyNewestCrops = CROPS
+	/*let twentyNewestCrops = cropData
 		.slice() // Create a shallow copy to avoid modifying the original array
 		.sort((a, b) => {
 			const dateA = parseDate(a.datePlanted);
 			const dateB = parseDate(b.datePlanted);
 			return dateB - dateA;
 		})
-		.slice(0, 20); // Take only the top 20 items
+		.slice(0, 20); // Take only the top 20 items*/
 
 	return(
 	<View style = {[styles.container, isDarkMode && styles.containerDark]}>	
@@ -296,7 +323,7 @@ const Home = () =>{
 		<View style = {styles.Search}>
 			<SearchInput isDarkMode={isDarkMode} />
 		</View>
-			<CropCarousel crops = {twentyNewestCrops} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
+			<CropCarousel crops = {cropData} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
 		<NavBar homeSelected darkMode={isDarkMode}/>
 	</View>)
 };

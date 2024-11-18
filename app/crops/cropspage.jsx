@@ -5,16 +5,16 @@
  ***/
 
 import { StatusBar } from 'expo-status-bar';
-import Colors from '../assets/Color'
-import React, { useState, useEffect } from 'react';
+import Colors from '../../assets/Color.js'
+import React, { useState, useEffect, useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View, ScrollView, Alert, Appearance, TouchableOpacity, Button } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Input } from 'react-native-elements';
-import AppButton from '../assets/AppButton.jsx';
+import AppButton from '../../assets/AppButton.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
-import Icons from '../assets/icons/Icons.js';
-import { cleanText } from '../assets/sanitizer.jsx';
+import Icons from '../../assets/icons/Icons.js';
+import { cleanText } from '../../assets/sanitizer.jsx';
 
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -22,30 +22,24 @@ import DropDownPicker from 'react-native-dropdown-picker';
 const CropsPage = () => {
 
         {/* Grabs variable form viewcrops page for use */}
-        
+        const subID = "sub123"        
         let [crop, setCropData] = useState(useLocalSearchParams());
         
-        const [open, setOpen] = useState(null);
-        const [selectedIndoors, setSelectedIndoors] = useState(crop.indoors)
-        const [selectedLocation, setSelectedLocation] = useState(crop.location)
-        const [selectedActive, setSelectedActive] = useState(crop.active)
-        const [selectedVisible, setSelectedVisible] = useState(crop.visible)
+        const [open, setOpen] = useState(null)
+       // const [modalVisible, setModalVisible] = useState(false)
+        const [selectedIndoors, setSelectedIndoors] = useState(crop[16])
+        const [selectedLocation, setSelectedLocation] = useState(crop[19])
+        const [selectedActive, setSelectedActive] = useState(crop[17])
+        const [selectedVisible, setSelectedVisible] = useState(true)
         const [items, setItems] = useState([
                 {label: 'Yes', value: 'Yes' },
                 {label: 'No', value: 'No'}
         ]);
         const [types, setType] = useState([
-                {label: 'Standard', value: 'Standard'},
-                {label: 'Nocturnal', value: 'Nocturnal'},
-                {label: crop.type, value: crop.type}
         ])
-        const [locations, setLocation] = useState([
-                {label: 'Mound 1', value: 'Mound1' },
-                {label: 'Greenhouse 2', value: 'Greenhouse 2'},
-                {label: crop.location, value: crop.location }
-        ])
+        const [locations, setLocations] = useState([])
         const [newOption, setNewOption] = useState('');
-        
+        const [isDark, setIsDarkMode] = useState(false)
 
         const handleOpenDropdown = (id) => {
                 setOpen(open === id ? null : id)
@@ -137,7 +131,23 @@ const CropsPage = () => {
                 }
         };
 
-        const [isDark, setIsDarkMode] = useState(false)
+        useEffect(()=>{
+                const fetchLocations = async () =>{
+                        try{
+                                const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listLocation/${subID}`,{method:'GET'})
+                                if(!response.ok){
+                                        throw new Error(`HTTP error! Status: ${response.status}`);
+                                }
+                                const data = await response.json()
+                                setLocations(data)
+                        }catch(error){
+                                console.error("Error fetching locations", error)
+                        }
+                }
+                fetchLocations()
+        },[])
+
+
         useEffect(() => {
                 const fetchDarkModeSetting = async () => {
                         const JSON_VALUE = await AsyncStorage.getItem('dark_mode_setting');
@@ -179,6 +189,12 @@ const CropsPage = () => {
                 }
                 
         };
+        const mutableLocations = useMemo(() => {
+                return locations.map((location) => ({
+                    label: location[4],      // Adjust property access based on API data structure
+                    value: location[0]
+                }));
+            }, [locations]);
 
         return (
                 <View style={[styles.container, isDark && styles.containerDark]}>
@@ -219,7 +235,7 @@ const CropsPage = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = "[Empty]"
-                                        value={crop.name}
+                                        value={crop[10]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength = {128}
                                         readOnly = {readOnly}
@@ -229,7 +245,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Variety</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.variety}
+                                        value={crop[11]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         readOnly = {readOnly}
@@ -238,7 +254,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Source</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.source}
+                                        value={crop[12]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
                                         readOnly = {readOnly}
@@ -247,7 +263,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.datePlanted}
+                                        value={crop[13]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={10}
                                         readOnly = {readOnly}
@@ -260,7 +276,7 @@ const CropsPage = () => {
                                         setOpen={() => handleOpenDropdown('location')}
                                         value={selectedLocation}
                                         setValue={setSelectedLocation}
-                                        items= {locations}
+                                        items= {mutableLocations}
                                         disabled= {readOnly}
                                         onChangeValue = {(selectedLocation) => handleChange('location', selectedLocation)}
                                         placeholder="Location?"
@@ -283,7 +299,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Comments</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.comments}
+                                        value={crop[14]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={1024}
                                         readOnly = {readOnly}
@@ -346,7 +362,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Type</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.type}
+                                        value={crop[21]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {readOnly}
@@ -382,7 +398,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.hrfNum}
+                                        value={crop[2]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {true}
@@ -390,7 +406,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Yield</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={crop.yield}
+                                        value={crop[15]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {readOnly}

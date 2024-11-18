@@ -1,10 +1,10 @@
 /****
- * @author Isaac Boodt
+ * @author Isaac Boodt, Tyler Bowen
  * @reviewer Daniel Moreno
- * @tester Isaac Boodt
+ * @tester 
  ***/
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { StyleSheet, 
         Text, 
         View, 
@@ -21,80 +21,81 @@ import { StyleSheet,
         TouchableOpacity
 } from 'react-native';
         
-import Colors from '../assets/Color';
-import { useFonts } from 'expo-font';
+import Colors from '../../assets/Color.js';
+import { useFonts, useLocalSeachParams } from 'expo-font';
 import { router } from 'expo-router';
 import { Input } from 'react-native-elements';
-import AppButton from '../assets/AppButton.jsx';
-import Icons from '../assets/icons/Icons.js';
+import AppButton from '../../assets/AppButton.jsx';
+import Icons from '../../assets/icons/Icons.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {cleanNumbers} from '../assets/sanitizer'
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as ImagePicker from 'expo-image-picker'
 
 
 
-const AddCrops = () => {
+const addCrops = () => {
         {/* */}
+        const subID = "sub123"
         //Dummy object that will be filled in later
         const [cropData, setCropData] = useState({
-                name:'',
-                medium:'',
-                location:'',
-                type:'',
-                hrfNum:'',
-                variety:'',
-                source:'',
-                datePlanted:'',
-                comments:'',
-                yield:'',
-                indoors:'',
-                active:'',
-                visible:'',
+            "fld_c_ZipCode": "12345",
+            "fld_c_State": "TX",
+            "fld_f_FarmID_fk": 1,
+            "fld_c_HRFNumber": 0,
+            "fld_l_LocationID_fk": 1,
+            "fld_ct_CropTypeID_fk": 1,
+            "fld_m_MediumID_fk": 1,
+            "fld_c_CropName": "",
+            "fld_c_Variety": "",
+            "fld_c_Source": "",
+            "fld_c_DatePlanted": "",
+            "fld_c_Comments": "",
+            "fld_c_Yield": "", 
+            "fld_c_WasStartedIndoors": 0b0,
+            "fld_c_isActive": 0b0,
 
-        });
+        })
+        const  [savePressed, setSavePressed ] = useState(false)
+
         const [open, setOpen] = useState(null);
-        const [selectedIndoors, setSelectedIndoors] = useState(cropData.indoors)
-        const [selectedLocation, setSelectedLocation] = useState(cropData.location)
-        const [selectedActive, setSelectedActive] = useState(cropData.active)
-        const [selectedVisible, setSelectedVisible] = useState(cropData.visible)
-        const [selectedMedium, setSelectedMedium] = useState(cropData.medium)
+        const [selectedIndoors, setSelectedIndoors] = useState()
+        const [selectedLocation, setSelectedLocation] = useState()
+        const [selectedActive, setSelectedActive] = useState()
+        const [selectedVisible, setSelectedVisible] = useState()
         const [items, setItems] = useState([
-                {label: 'Yes', value: 'Yes' },
-                {label: 'No', value: 'No'}
+                {label: 'Yes', value: 0b1 },
+                {label: 'No', value: 0b0}
         ]);
-        const [types, setType] = useState([
-                {label: 'Standard', value: 'Standard'},
-                {label: 'Nocturnal', value: 'Nocturnal'},
-        ])
-        const [locations, setLocation] = useState([
-                {label: 'Mound 1', value: 'Mound 1' },
-                {label: 'Greenhouse 2', value: 'Greenhouse 2'}
-        ])
+        const [mediums, setMediums] = useState([])
+        const [types, setTypes] = useState([])
+        const [locations, setLocations] = useState([])
         const [modalVisible, setModalVisible] = useState(false);
         const [typeModalVisible, setTypeModalVisible] = useState(false);
         const [selectedImage, setSelectedImage] = useState(null);
         const [newOption, setNewOption] = useState('');
-
+        const [selectedType, setSelectedType] = useState()
+        const [addLocationAdded, setAddLocationAdded] = useState(false)
+        const [selectedMedium, setSelectedMedium] = useState(false)
+        const [addTypeAdded, setAddTypeAdded] = useState(false)
+        const [locationNameOption, setLocationNameOption] = useState()
+        const [typeNameOption, setTypeNameOption] = useState()
         const handleOpenDropdown = (id) => {
                 setOpen(open === id ? null : id)
         }
 
         const handleNewLocation = () => {
-                if(newOption.trim() !== '')
+                if(locationNameOption.trim() !== '')
                 {
-                        setLocation([...locations, {label: newOption, value: newOption.toLowerCase().replace(/\s+/g, '') }]);
+                        setLocationAdded(true)
                         setModalVisible(false);
-                        setNewOption('');
                 }
         }
         
         const handleNewType = () => {
-                if(newOption.trim() !== '')
+                if(typeNameOption.trim() !== '')
                 {
-                        setType([...types, {label: newOption, value: newOption.toLowerCase().replace(/\+/g, '')}])
+                        setAddTypeAdded(true)
                         setTypeModalVisible(false);
-                        setNewOption('');
                 }
         }
 
@@ -102,21 +103,38 @@ const AddCrops = () => {
         {
                 setCropData({
                         ...cropData,
-                        location: value
+                        "fld_l_LocationID_fk": value
                 })
         }
+
+
+        const handleMediumChange = (value) =>
+        {
+                setCropData({
+                        ...cropData,
+                        "fld_m_MediumID_fk": value
+                })
+        }
+
+        const handleTypeChange = (value) =>{
+                setCropData({
+                        ...cropData,
+                        "fld_ct_CropTypes": value
+                })
+        }
+
         const handleIndoorsChange = (value) =>
         {
                 setCropData({
                         ...cropData, 
-                        indoors: value,
+                        "fld_c_WasStartedIndoors": value,
                 })
         }
         const handleActiveChange = (value) =>
         {
                 setCropData({
                         ...cropData, 
-                        active: value,
+                        "fld_c_isActive": value,
                 })
         }
 
@@ -130,7 +148,6 @@ const AddCrops = () => {
 
         //Change data as given, didn't want to worry about specifics, so search dummy object and change accordingly
         const handleChange = (fieldName, input) => {
-                
                 setCropData({
                         ...cropData,
                         //[fieldName]:  (input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
@@ -148,9 +165,9 @@ const AddCrops = () => {
                 }
                 else
                 {
-                        Alert.alert(cropData.name + " saved");
-                        router.push({pathname: '/viewcrops', params: {newCrop: JSON.stringify(cropData)}});
+                        setSavePressed(true)
                 }
+               // router.push({pathname: '/viewcrops', params: {newCrop: JSON.stringify(cropData)}});
         };
         //Handle old unused print checker
         const printStatement = () =>
@@ -176,7 +193,7 @@ const AddCrops = () => {
                         }
                         else
                         {
-                                colorScheme = Appearance.getColorScheme()
+                                useColorScheme.Appearence.getColorScheme()
                                 if(colorScheme == 'dark')
                                 {
                                         result = true;
@@ -199,6 +216,135 @@ const AddCrops = () => {
                 console.log(cropData.hrfNum)
                 
         }, [])
+         useEffect(()=>{
+                        const fetchData = async () =>{
+                                console.log(cropData)
+                                if(savePressed){
+                                try{
+                                        const response = await fetch('https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addcrop',{method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({cropData: cropData, subID: "sub123"})})
+                                        if (!response.ok) {
+                                             throw new Error(`HTTP error! Status: ${response.status}`);
+                                        }
+
+                                router.push({pathname: './viewcrops', params: {newCrop: JSON.stringify(cropData)}, relativeToDirectory: true});
+                                setSavePressed(false)
+                                }catch(error){
+                                        console.error("Error: ", error)
+                                }
+                        }
+
+                        }
+
+                        fetchData()
+                }, [savePressed])
+
+        useEffect(()=>{
+                const fetchLocations = async () =>{
+                        try{
+                                const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listLocation/${subID}`,{method:'GET'})
+                                if(!response.ok){
+                                        throw new Error(`HTTP error! Status: ${response.status}`);
+                                }
+                                const data = await response.json()
+                                setLocations(data)
+                        }catch(error){
+                                console.error("Error fetching locations", error)
+                        }
+                }
+                fetchLocations()
+        },[addLocationAdded])
+
+
+        useEffect(()=>{
+                const fetchMediums = async () =>{
+                        try{
+                                const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getMediums/${subID}`,{method:'GET'})
+                                if(!response.ok){
+                                        throw new Error(`HTTP error! Status: ${response.status}`);
+                                }
+                                const data = await response.json()
+                                setMediums(data)
+                        }catch(error){
+                                console.error("Error fetching Mediums", error)
+                        }
+                }
+                fetchMediums()
+        },[])
+
+        useEffect(()=>{
+                const addLocation = async () =>{
+                        if(addLocationAdded){
+                                try{
+                                        const response = await fetch('https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addLocation',{method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({locationName: locationNameOption, farmID: 1, subID: "sub123"})})
+                                        if (!response.ok) {
+                                             throw new Error(`HTTP error! Status: ${response.status}`);
+                                        }
+                                        setLocationNameOption('')
+                                        setAddLocationAdded(false)
+                                }catch(error){
+                                        console.error("Error:", error)
+                                }
+                        }
+                }
+                addLocation()
+        }, [addLocationAdded])
+
+        useEffect(()=>{
+                const addType = async () =>{
+                        if(addTypeAdded){
+                                try{
+                                        const response = await fetch('https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addCropType',{method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({cropData: typeNameOption, farmID: 1, subID: "sub123"})})
+                                        if (!response.ok) {
+                                             throw new Error(`HTTP error! Status: ${response.status}`);
+                                        }
+                                        setTypeNameOption('')
+                                        setAddTypeAdded(false)
+                                }catch(error){
+                                        console.error("Error:", error)
+                                }
+                        }
+                }
+                addType()
+        }, [addTypeAdded])
+
+        useEffect(()=>{
+                const fetchCropTypes = async () =>{
+                        try{
+                                const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listCropTypes/${subID}`,{method:'GET'})
+                                if(!response.ok){
+                                        throw new Error(`HTTP error! Status: ${response.status}`);
+                                }
+                                const data = await response.json()
+                                setTypes(data)
+                        }catch(error){
+                                console.error("Error fetching Types", error)
+                        }
+                }
+                fetchCropTypes()
+        },[addTypeAdded])
+
+        const mutableLocations = useMemo(() => {
+                return locations.map((location) => ({
+                    label: location[4],      
+                    value: location[0]
+                }));
+            }, [locations]);
+
+
+        const mutableMediums = useMemo(() => {
+                return mediums.map((medium) => ({
+                    label: medium[1],      
+                    value: medium[0]
+                }));
+            }, [mediums]);
+
+        const mutableCropTypes = useMemo(() => {
+                return types.map((type) => ({
+                    label: type[2],      
+                    value: type[0]
+                }));
+            }, [types]);
+
 
         const handleAddMedia = async () => {
                 try{
@@ -222,9 +368,9 @@ const AddCrops = () => {
 
         //load fonts
         const [fontsLoaded, fontError] = useFonts({
-                'WorkSans-Semibold': require('../assets/fonts/WorkSans-SemiBold.ttf'),
-                'Domine-Medium': require('../assets/fonts/Domine-Medium.ttf'),
-                'Domine-Regular': require('../assets/fonts/Domine-Regular.ttf'),
+                'WorkSans-Semibold': require('../../assets/fonts/WorkSans-SemiBold.ttf'),
+                'Domine-Medium': require('../../assets/fonts/Domine-Medium.ttf'),
+                'Domine-Regular': require('../../assets/fonts/Domine-Regular.ttf'),
         });
 
         if(!fontsLoaded && !fontError)
@@ -252,26 +398,23 @@ const AddCrops = () => {
                                 </View>
                         </View>
                         {/* Body (Scrollable inputs)*/}
-                        <View style={[styles.topContainer, styles.spaceBetween]}>
+                        <View>
+                                <View style={styles.save}>
+                                        <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
+                                </View>
                                 <View style={styles.back}>
                                         <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                 </View>
-                                <View style={{flexDirection: 'row', marginRight: '20%', marginLeft: '2%'}}>
-                                        <TouchableOpacity style={[styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
-                                                <Text style={styles.locationText}>Location</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setModalVisible(true)}>
-                                                <Text style={styles.typeText}>Type</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={[styles.medContainer, isDark && styles.medContainerDark]} onPress = {() => setModalVisible(true)}>
-                                                <Text style={styles.medText}>Medium</Text>
-                                        </TouchableOpacity>
-                                </View>
                                 
-                                
+                                <TouchableOpacity style={[styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
+                                        <Text style={styles.locationText}>Add Location</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setTypeModalVisible(true)}>
+                                        <Text style={styles.typeText}>Add Type</Text>
+                                </TouchableOpacity>
                                 
                                 <View style={styles.save}>
-                                        <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
+                                        <AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={handleSave}/>
                                 </View>
                                 
                         </View>
@@ -287,8 +430,8 @@ const AddCrops = () => {
                                                 <Input
                                                         style={styles.input}
                                                         placeholder="Type new option"
-                                                        value={newOption}
-                                                        onChangeText={setNewOption}
+                                                        value={locationNameOption}
+                                                        onChangeText={setLocationNameOption}
                                                 />
                                                 <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
                                                         <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
@@ -311,12 +454,12 @@ const AddCrops = () => {
                         >  
                                 <View style={styles.modalContainer}>
                                         <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
-                                                <Text style={styles.modalTitle}>Enter a New Location</Text>
+                                                <Text style={styles.modalTitle}>Enter a New Medium</Text>
                                                 <Input
                                                         style={styles.input}
                                                         placeholder="Type new option"
-                                                        value={newOption}
-                                                        onChangeText={setNewOption}
+                                                        value={typeNameOption}
+                                                        onChangeText={setTypeNameOption}
                                                 />
                                                 <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
                                                         <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
@@ -340,7 +483,7 @@ const AddCrops = () => {
                                         placeholder = "Name"
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength = {128}
-                                        onChangeText={(text) => handleChange('name', text)}
+                                        onChangeText={(text) => handleChange('fld_c_CropName', text)}
                                         testID="name-input"
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Variety</Text>
@@ -349,7 +492,7 @@ const AddCrops = () => {
                                         placeholder = 'Variety'
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
-                                        onChangeText={(text) => handleChange('variety', text)}
+                                        onChangeText={(text) => handleChange('fld_c_Variety', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Source</Text>
                                 <Input
@@ -357,7 +500,7 @@ const AddCrops = () => {
                                         placeholder = 'Source'
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
-                                        onChangeText={(text) => handleChange('source', text)}
+                                        onChangeText={(text) => handleChange('fld_c_Source', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted</Text>
                                 <Input
@@ -365,7 +508,7 @@ const AddCrops = () => {
                                         placeholder = 'Date Planted'
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={10}
-                                        onChangeText={(text) => handleChange('datePlanted', text)}
+                                        onChangeText={(text) => handleChange('fld_c_DatePlanted', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Location</Text>
                                 <DropDownPicker
@@ -374,8 +517,8 @@ const AddCrops = () => {
                                         setOpen={() => handleOpenDropdown('location')}
                                         value={selectedLocation}
                                         setValue={setSelectedLocation}
-                                        items={locations}
-                                        onChangeValue = {(selectedLocation) => handleChange('location', selectedLocation)}
+                                        items={mutableLocations}
+                                        onChangeValue = {(selectedLocation) => handleLocationChange(selectedLocation)}
                                         placeholder="Location?"
                                         listMode='SCROLLVIEW'
 					dropDownDirection='BOTTOM'
@@ -397,9 +540,8 @@ const AddCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Location'
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={128}
-                                        onChangeText={(text) => handleChange('location', text)}
+                                        onChangeText={(text) => handleChange('fld_l_LocationID_pk', text)}
                                 />
                                 */}
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Comments</Text>
@@ -408,7 +550,7 @@ const AddCrops = () => {
                                         placeholder = 'Comments'
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={1024}
-                                        onChangeText={(text) => handleChange('comments', text)}
+                                        onChangeText={(text) => handleChange('fld_c_Comments', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark, styles.dropdownLabel]}>Started Indoors?</Text>
                                 
@@ -438,16 +580,12 @@ const AddCrops = () => {
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 
-                                {/*}
-                               <Input
+                             {/*  <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        placeholder = ' Indoors'
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
+                                        placeholder = ' Indoors? (Y/N)'
                                         maxLength={3}
-                                        onChangeText={(text) => handleChange('indoors', text)}
-
-                                />
-                                */}
+                                        onChangeText={(text) => handleChange('fld_c_WasStartedIndoors', text)}
+                             />*/}
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Active</Text>
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}
@@ -478,33 +616,23 @@ const AddCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Active'
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={3}
-                                        onChangeText={(text) => handleChange('active', text)}
+                                        onChangeText={(text) => handleChange('fld_c_isActive', text)}
 
                                 />
                                 */}
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Type</Text>
-                                <Input
-                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        placeholder = 'Type'
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
-                                        maxLength={64}
-                                        onChangeText={(text) => handleChange('type', text)}
-
-                                />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Medium</Text>
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}
-                                        open={open === 'medium'}
-                                        setOpen={() => handleOpenDropdown('medium')}
-                                        value={selectedMedium}
-                                        setValue={setSelectedMedium}
-                                        items={items}
-                                        onChangeValue={(selectedMedium) => handleChange('medium', selectedMedium)}
-                                        placeholder="Insert Medium"
+                                        open={open === 'type'}
+                                        setOpen={() => handleOpenDropdown('type')}
+                                        value={selectedType}
+                                        setValue={setSelectedType}
+                                        items={mutableCropTypes}
+                                        onChangeValue={(selectedType)=> handleTypeChange(selectedType)}
+                                        placeholder="Type"
                                         listMode='SCROLLVIEW'
-					dropDownDirection='BOTTOM'
+					dropDownDirection='TOP'
                                         scrollViewProps={{
 					        nestedScrollEnabled: true
 					}}
@@ -513,18 +641,53 @@ const AddCrops = () => {
 					}}
                                         containerStyle={{
 						width: '94%',
-						zIndex: 40,
+						zIndex: 60,
 						marginBottom: 40,
 					}}
                                         dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
-                                />
+                                /> 
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Medium</Text>
+                             {/*   <Input
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
+                                        placeholder = 'Medium'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
+                                        maxLength={64}
+                                        onChangeText={(text) => handleChange('fld_c_MediumID_fk', text)}
+
+                                />*/}
+                                <DropDownPicker
+                                        theme={isDark ? 'DARK' : 'LIGHT'}
+                                        open={open === 'mediums'}
+                                        setOpen={() => handleOpenDropdown('mediums')}
+                                        value={selectedMedium}
+                                        setValue={setSelectedMedium}
+                                        items={mutableMediums}
+                                        onChangeValue={selectedMedium=>handleMediumChange(selectedMedium)}
+                                        placeholder="Medium"
+                                        listMode='SCROLLVIEW'
+					dropDownDirection='TOP'
+                                        scrollViewProps={{
+					        nestedScrollEnabled: true
+					}}
+                                        props={{
+						activeOpacity: 1,
+					}}
+                                        containerStyle={{
+						width: '94%',
+						zIndex: 60,
+						marginBottom: 40,
+					}}
+                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
+                                /> 
                                 <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        value={cropData.hrfNum.toString()}
-                                        editable={false}
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
+                                        placeholder = ' HRF Number'
+                                        maxLength={64}
+                                        onChangeText={(text) => handleChange('fld_c_HRFNumber', parseInt(text))}
+
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Yield</Text>
                                 <Input
@@ -532,7 +695,7 @@ const AddCrops = () => {
                                         placeholder = 'Yield'
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
-                                        onChangeText={(text) => handleChange('yield', text)}
+                                        onChangeText={(text) => handleChange('fld_c_Yield', text)}
 
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Visible</Text>
@@ -565,9 +728,8 @@ const AddCrops = () => {
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = ' Visibility'
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
-                                        onChangeText={(text) => handleChange('visible', text)}
+                                        onChangeText={(text) => handleChange('fld_c_IsVisible', text)}
 
                                 />
                                 */}
@@ -596,22 +758,6 @@ const styles = StyleSheet.create({
         spacer:{
                 marginTop: 20,
         },
-        semicircle:{
-                position: 'absolute',
-                top: -19,
-                left: 0,
-                width: 140,
-                height: 70,
-                backgroundColor: Colors.MALACHITE,
-                borderBottomLeftRadius: 140,
-                borderBottomRightRadius: 140,
-                overflow: 'hidden',
-        },
-        titleContainer: {
-                flexDirection: 'row',
-                alignItems: 'center',
-                position: 'relative', 
-        },
         titleCard:{
                 backgroundColor: Colors.ALMOND_TAN,
                 borderColor: Colors.CHARCOAL,
@@ -625,8 +771,7 @@ const styles = StyleSheet.create({
                 textAlign: 'right',
                 fontSize: 42,
                 fontFamily: 'Domine-Medium',
-                alignContent: 'center',
-                flex: 1
+                alignContent: 'center'
         },
         save:{
                 position: 'absolute',
@@ -836,7 +981,7 @@ const styles = StyleSheet.create({
                 marginLeft: '8%',
                 marginRight: '5%',
                 height: 40,
-                zIndex: 1,
+                zIndex: 99,
         },
         dropDownStyleDark: {
                 borderColor: Colors.WHITE_SMOKE, 
@@ -846,4 +991,4 @@ const styles = StyleSheet.create({
 
 
       });
-      export default AddCrops;
+      export default addCrops;
