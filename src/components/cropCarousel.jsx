@@ -23,7 +23,7 @@ const Carousel = ({data,  isDarkMode=false}) => {
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
-        <Pressable onPress = {() => router.push({pathname:'crops/cropspage', params: item})}>
+        <Pressable onPress = {() => router.push({pathname:'/crops/cropspage', params: item})}>
           <View style={[styles.item, isDarkMode && styles.itemDark]}>
             <Image source = {require("../../assets/icons/cropDefaultImage.png")}/>
             <Text>Name: {item[10]}</Text> 

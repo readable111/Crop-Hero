@@ -264,27 +264,33 @@ const Home = () =>{
 
 	const subID = "sub123";
 
-useEffect(() => {
-  const fetchData = async () => {
-    const url = `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCropsVerbose/${subID}`;
-    try {
-      const response = await fetch(url, { method: 'GET' });
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+	useEffect(() => {
+		const fetchData = async () => {
+			const url = `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCropsVerbose/${subID}`;
+			try {
+				const response = await fetch(url, { method: 'GET' });
+				if (!response.ok) {
+					throw new Error(`HTTP error! Status: ${response.status}`);
+				}
 
-      const data = await response.json();
-      // Create an empty object to store updated data
-      // Once all fetches are complete, set the cropData state with the updated dictionary
-      setCropData(data);
-    } catch (error) {
-      console.error("Error fetching crop data:", error);
-    }
-  };
+				const data = await response.json();
+				// Create an empty object to store updated data
+				// Once all fetches are complete, set the cropData state with the updated dictionary
+				console.log(data)
+				data.sort((a, b) => {
+					const dateA = new Date(a[13]);
+					const dateB = new Date(b[13]);
+					return dateB - dateA;
+				});
+				console.log(data)
+				setCropData(data);
+			} catch (error) {
+				console.error("Error fetching crop data:", error);
+			}
+		};
 
-  fetchData();
-}, []);
-console.log(cropData)
+		fetchData();
+	}, []);
 
 
 	if (!fontsLoaded && !fontError) {
