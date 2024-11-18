@@ -7,8 +7,8 @@
 import { StatusBar } from 'expo-status-bar';
 import Colors from '../../assets/Color.js'
 import React, { useState, useEffect, useMemo } from 'react';
-import { Pressable, StyleSheet, Text, View, ScrollView, Alert, Appearance, TouchableOpacity, Button } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { Pressable, StyleSheet, Text, View, ScrollView, Alert, Appearance, TouchableOpacity, Button, Modal } from 'react-native';
+import { router, useLocalSearchParams, useGlobalSearchParams } from 'expo-router';
 import { Input } from 'react-native-elements';
 import AppButton from '../../assets/AppButton.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,8 +22,12 @@ import DropDownPicker from 'react-native-dropdown-picker';
 const CropsPage = () => {
 
         {/* Grabs variable form viewcrops page for use */}
-        const subID = "sub123"        
+        const subID = "sub123"
+        
         let [crop, setCropData] = useState(useLocalSearchParams());
+        console.log(crop);
+        
+        
         
         const [open, setOpen] = useState(null)
        // const [modalVisible, setModalVisible] = useState(false)
@@ -31,16 +35,22 @@ const CropsPage = () => {
         const [selectedLocation, setSelectedLocation] = useState(crop[19])
         const [selectedActive, setSelectedActive] = useState(crop[17])
         const [selectedVisible, setSelectedVisible] = useState(true)
+        
         const [items, setItems] = useState([
                 {label: 'Yes', value: 'Yes' },
                 {label: 'No', value: 'No'}
         ]);
-        const [types, setType] = useState([
-        ])
+        const [types, setType] = useState([])
+        const [mediums, setMediums] = useState([])
+        const [modalVisible, setModalVisible] = useState(false);
+        const [typeModalVisible, setTypeModalVisible] = useState(false);
+        const [mediumModalVisible, setMediumModalVisible] = useState(false);
         const [locations, setLocations] = useState([])
         const [newOption, setNewOption] = useState('');
         const [isDark, setIsDarkMode] = useState(false)
-
+        const [locationNameOption, setLocationNameOption] = useState()
+        const [typeNameOption, setTypeNameOption] = useState()
+        const [mediumNameOption, setMediumNameOption] = useState()
         const handleOpenDropdown = (id) => {
                 setOpen(open === id ? null : id)
         }
@@ -79,6 +89,14 @@ const CropsPage = () => {
                 }
         }
         
+        const handleNewMedium = () => {
+                if(mediumNameOption.trim() !== '')
+                {
+                        setAddMediumAdded(true)
+                        setMediumModalVisible(false)
+                }
+        }
+
         const handleNewType = () => {
                 if(newOption.trim() !== '')
                 {
@@ -207,20 +225,7 @@ const CropsPage = () => {
                                 <View style={styles.back}>
                                         <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                 </View>
-                                
-                                
-                                <View style={{flexDirection: 'row', marginRight: '20%', marginLeft: '2%'}}>
-                                        <TouchableOpacity style={[isVisible && styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
-                                                {isVisible && <Text style={styles.locationText}>Location</Text>}
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={[isVisible && styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setModalVisible(true)}>
-                                                {isVisible && <Text style={styles.typeText}>Type</Text>}
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={[isVisible&&styles.medContainer, isDark && styles.medContainerDark]} onPress = {() => setModalVisible(true)}>
-                                                        {isVisible&&<Text style={styles.medText}>Medium</Text>}
-                                        </TouchableOpacity>        
-                                </View>
-                                
+                               
                                 
                                 
                                 <View style={[isVisible && styles.save]}>
@@ -228,6 +233,7 @@ const CropsPage = () => {
                                 </View>
                                 
                         </View>
+                        
                         <ScrollView> 
                                 <View style={styles.spacer}/>
                                 <StatusBar style={{backgroundColor: 'white'}}/>
@@ -670,6 +676,35 @@ const styles = StyleSheet.create({
         dropDownStyleDark: {
                 borderColor: Colors.WHITE_SMOKE, 
                 backgroundColor: Colors.IRIDIUM
+        },modalContainer: {
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        },
+        modalContent: {
+                width: 300,
+                backgroundColor: Colors.SCOTCH_MIST_TAN,
+                padding: 20,
+                borderRadius: 10,
+                alignItems: 'center',
+        },
+        modalContentDark:{
+                backgroundColor: Colors.LICHEN
+        },
+        modalTitle: {
+                fontSize: 18,
+                fontFamily: 'Domine-Medium',
+                marginBottom: 10,
+        },
+        input: {
+                width: '100%',
+                height: 40,
+                borderColor: 'black',
+                borderWidth: 1,
+                borderRadius: 12,
+                marginBottom: 20,
+                paddingLeft: 10,
         },
         
 

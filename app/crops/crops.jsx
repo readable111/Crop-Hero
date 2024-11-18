@@ -6,7 +6,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import { React, useEffect, useState} from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View, } from 'react-native';
 import { useRouter } from 'expo-router'
 import NavBar from '../../assets/NavBar.jsx'
 import Colors from '../../assets/Color.js';
@@ -50,23 +50,28 @@ const [isDark, setIsDarkMode] = useState(false)
                 .catch(console.error);
         }, [])
   return (
-    <View style={[ styles.container, isDark && styles.containerDark]}>
-      <View style={[styles.titleCard, isDark && styles.titleCarddark]}>
-        <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>My Crops</Text>
+    <View style={{flex:1}}>
+      
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={ isDark ? Colors.WHITE_SMOKE: Colors.ALMOST_BLACK}/>
+      <View style={[ styles.container, isDark && styles.containerDark]}>
+        <View style={[styles.titleCard, isDark && styles.titleCarddark]}>
+          <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>My Crops</Text>
+        </View>
+        {/*<View style={styles.circle}></View>*/} 
+          <View style={ [ styles.button, isDark && styles.buttonDark ] }>
+            <Pressable testID = "addCrops" onPress={() => router.push("crops/addcrops")}>
+              <Text style={styles.buttonText}>Add Crop</Text>
+            </Pressable>
+          </View>
+          <View style={[ styles.button, isDark && styles.buttonDark ]}>
+            <Pressable onPress = {() => router.push("crops/viewcrops")}>
+              <Text style={styles.buttonText}>View Crop</Text>
+            </Pressable>
+          </View>
+        <NavBar cropsSelected darkMode={isDark}/>
       </View>
-      {/*<View style={styles.circle}></View>*/} 
-        <View style={ [ styles.button, isDark && styles.buttonDark ] }>
-          <Pressable testID = "addCrops" onPress={() => router.push("crops/addcrops")}>
-            <Text style={styles.buttonText}>Add Crop</Text>
-          </Pressable>
-        </View>
-        <View style={[ styles.button, isDark && styles.buttonDark ]}>
-          <Pressable onPress = {() => router.push("crops/viewcrops")}>
-            <Text style={styles.buttonText}>View Crop</Text>
-          </Pressable>
-        </View>
-      <NavBar cropsSelected darkMode={isDark}/>
     </View>
+   
 
   );
 }

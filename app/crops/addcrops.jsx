@@ -30,7 +30,7 @@ import Icons from '../../assets/icons/Icons.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as ImagePicker from 'expo-image-picker'
-
+import UploadModal from '../../assets/ProfilePageImages/UploadModal.jsx'
 
 
 const addCrops = () => {
@@ -71,14 +71,19 @@ const addCrops = () => {
         const [locations, setLocations] = useState([])
         const [modalVisible, setModalVisible] = useState(false);
         const [typeModalVisible, setTypeModalVisible] = useState(false);
+        const [mediumModalVisible, setMediumModalVisible] = useState(false);
         const [selectedImage, setSelectedImage] = useState(null);
         const [newOption, setNewOption] = useState('');
         const [selectedType, setSelectedType] = useState()
         const [addLocationAdded, setAddLocationAdded] = useState(false)
         const [selectedMedium, setSelectedMedium] = useState(false)
         const [addTypeAdded, setAddTypeAdded] = useState(false)
+        const [addMediumAdded, setAddMediumAdded] = useState(false)
         const [locationNameOption, setLocationNameOption] = useState()
         const [typeNameOption, setTypeNameOption] = useState()
+        const [mediumNameOption, setMediumNameOption] = useState()
+        const [isDark, setIsDarkMode] = useState(false)
+        const [mediaModal, setMediaModalVisible] = useState(false);
         const handleOpenDropdown = (id) => {
                 setOpen(open === id ? null : id)
         }
@@ -96,6 +101,14 @@ const addCrops = () => {
                 {
                         setAddTypeAdded(true)
                         setTypeModalVisible(false);
+                }
+        }
+
+        const handleNewMedium = () => {
+                if(mediumNameOption.trim() !== '')
+                {
+                        setAddMediumAdded(true)
+                        setMediumModalVisible(false)
                 }
         }
 
@@ -148,17 +161,48 @@ const addCrops = () => {
 
         //Change data as given, didn't want to worry about specifics, so search dummy object and change accordingly
         const handleChange = (fieldName, input) => {
-                setCropData({
-                        ...cropData,
-                        //[fieldName]:  (input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
-                        [fieldName]: input
-                })
+                if(fieldName === 'fld_c_DatePlanted')
+                {
+                        
+                        if(input.length === 10)
+                        {
+                                console.log("Date Planted Change")
+                                const regex = /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/
+                                const test = regex.test(input);
+                                if(!test)
+                                {
+                                        Alert.alert("Inproper Date format, please use YYYY-MM-DD")
+                                }
+                                else
+                                {
+                                        setCropData({
+                                                ...cropData,
+                                                //[fieldName]:  (input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
+                                                [fieldName]: input
+                                        })       
+                                }   
+                        }
+                        
+                }
+                else{
+                        setCropData({
+                                ...cropData,
+                                //[fieldName]:  (input, noStopwords = false, noSQL = true, textOnly = true, hexCode = true)
+                                [fieldName]: input
+                        })  
+                }               
         }
 
         //on save, alert for save push to view crops and add to list
         const handleSave = () =>{
                 const emptyFields = Object.values(cropData).some(value=> value ==='');
-                if(emptyFields)
+                
+                if(crop.fld_c_DatePlanted.lenth != 10)
+                {
+                        
+                        Alert.alert("Incorrect or incomplete value in Date Planted, please use the format YYYY-MM-DD");
+                }
+                else if(emptyFields)
                 {
                         console.log(cropData)
                         Alert.alert("Unable to save, some fields are still empty");
@@ -175,7 +219,6 @@ const addCrops = () => {
                 Alert.alert('Save pressed');
                 console.log(cropData);
         }
-        const [isDark, setIsDarkMode] = useState(false)
         useEffect(() => {
                 (async () => {
                         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -306,6 +349,25 @@ const addCrops = () => {
                 }
                 addType()
         }, [addTypeAdded])
+        
+        useEffect(()=> {
+                const addMedium = async() => {
+                        if(addMediumAdded){
+                                try{
+                                        const response = await fetch('https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addMediumType',{method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({cropData: mediumNameOption, farmID: 1, subID: "sub123"})})
+                                
+                                        if(!response.ok)
+                                        {
+                                                throw new Error(`HTTP error! Status: ${response.status}`);
+                                        }
+                                }
+                                catch(error){
+                                        console.error("Error:", error)
+                                }
+                        }
+                }
+                addMedium()
+        }, [addMediumAdded])
 
         useEffect(()=>{
                 const fetchCropTypes = async () =>{
@@ -346,24 +408,52 @@ const addCrops = () => {
             }, [types]);
 
 
-        const handleAddMedia = async () => {
-                try{
-                        const result = await ImagePicker.launchImageLibraryAsync({
-                                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                                allowsEditing: true,
-                                quality: 1,
-                        })
-                        
-                        if(!result.canceled)
-                        {
-                                setSelectedImage(result.assets[0].uri);
-                        }
+        const handleAddMedia = async (mode) => {
+                try{     
+                        let result = {};
 
-                }
-                catch(error)
-                {
-                        console.error("Error picking image: ", error);
-                }
+                                //check if the mode is media gallery
+                                if (mode === "gallery") {
+                                        await ImagePicker.requestMediaLibraryPermissionsAsync();
+                                        result = await ImagePicker.launchImageLibraryAsync({
+                                                mediaTypes: ImagePicker.Images, //only let user select images, not videos
+                                                allowsEditing: true, //allows crop, rotate, flip depending on OS
+                                                aspect: [1, 1], //set default aspect ratio, only affect s Android OS
+                                                quality: 1, //sets basic compression level by expo-image-picker
+                                        });
+                                } 
+                                //check if the mode is selfie for front-facing camera
+                                else if (mode === "back") {
+                                        console.log("Back pressed")
+                                        await ImagePicker.requestCameraPermissionsAsync(); //wait for permission to access camera
+                                        result = await ImagePicker.launchCameraAsync({ //launch the camera
+                                                cameraType: ImagePicker.CameraType.back, //default the camera to the front one since it is a selfie
+                                                allowsEditing: true, //allows crop, rotate, flip depending on OS
+                                                aspect: [1, 1], //set default aspect ratio, only affects Android OS as iOs defaults to 1x1
+                                                quality: 1, //sets basic compression level by expo-image-picker
+                                        });
+                                }
+                                //otherwise, assume that the mode was for the back camera
+                                else {
+                                        await ImagePicker.requestCameraPermissionsAsync(); //wait for permission to access camera
+                                        result = await ImagePicker.launchCameraAsync({ //launch the camera
+                                                cameraType: ImagePicker.CameraType.back, //default the camera to the back one
+                                                allowsEditing: true, //allows crop, rotate, flip depending on OS
+                                                aspect: [1, 1], //set default aspect ratio, only affects Android OS as iOs defaults to 1x1
+                                                quality: 1, //sets basic compression level by expo-image-picker
+                                        });
+                                }
+                                
+
+                                //canceled is true if the system UI is closed without selecting an image
+                                //so save image if new image is selected
+                                if (!result.canceled) {
+                                        await saveImage(result.assets[0].uri)
+                                }
+		} catch (error) {
+			Alert.alert("Error uploading image: " + error.message)
+			setMediaModalVisible(false)
+		}
         }
 
         //load fonts
@@ -393,31 +483,36 @@ const addCrops = () => {
                                 <View style={styles.titleContainer}>
                                         <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>Add Crop</Text>
                                         <View style={styles.semicircle}>
-                                                <Text style={styles.AddMedia} onPress = {handleAddMedia}>Add media</Text>
+                                                <Text style={styles.AddMedia} onPress = {()=> setMediaModalVisible(true)}>Add media</Text>
                                         </View>
                                 </View>
                         </View>
                         {/* Body (Scrollable inputs)*/}
-                        <View>
-                                <View style={styles.save}>
-                                        <AppButton title="" mci="content-save" mciSize={30} mciColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL} onPress={handleSave}/>
-                                </View>
+                        <View style={[styles.topContainer, styles.spaceBetween]}>
+                              
                                 <View style={styles.back}>
                                         <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                 </View>
+                                <View style={{flexDirection: 'row', marginRight: '20%', marginLeft: '2%'}}>
+                                        <TouchableOpacity style={[styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
+                                                <Text style={styles.locationText}>Location</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setTypeModalVisible(true)}>
+                                                <Text style={styles.typeText}>Type</Text>
+                                        </TouchableOpacity>   
+                                        <TouchableOpacity style={[styles.medContainer, isDark && styles.medContainerDark]} onPress = {() => setMediumModalVisible(true)}>
+                                                <Text style={styles.medText}>Medium</Text>
+                                        </TouchableOpacity>     
+                                </View>
                                 
-                                <TouchableOpacity style={[styles.locationContainer, isDark && styles.locationContainerDark]} onPress = {() => setModalVisible(true)}>
-                                        <Text style={styles.locationText}>Add Location</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={[styles.typeContainer, isDark && styles.typeContainerDark]} onPress = {() => setTypeModalVisible(true)}>
-                                        <Text style={styles.typeText}>Add Type</Text>
-                                </TouchableOpacity>
                                 
                                 <View style={styles.save}>
                                         <AppButton title="" mci="content-save" mciSize={30} mciColor={'white'} onPress={handleSave}/>
                                 </View>
                                 
                         </View>
+                        
+                        {/*Location Modal*/}
                         <Modal
                                 visible = {modalVisible}
                                 animationType = 'slide'
@@ -446,6 +541,8 @@ const addCrops = () => {
                                 </View>
 
                         </Modal>
+                        
+                        {/*Type Modal*/}
                         <Modal
                                 visible = {typeModalVisible}
                                 animationType = 'slide'
@@ -454,7 +551,7 @@ const addCrops = () => {
                         >  
                                 <View style={styles.modalContainer}>
                                         <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
-                                                <Text style={styles.modalTitle}>Enter a New Medium</Text>
+                                                <Text style={styles.modalTitle}>Enter a New Type</Text>
                                                 <Input
                                                         style={styles.input}
                                                         placeholder="Type new option"
@@ -474,6 +571,41 @@ const addCrops = () => {
                                 </View>
 
                         </Modal>
+                        {/*Medium Modal*/}
+                        <Modal
+                                visible = {mediumModalVisible}
+                                animationType = 'slide'
+                                transparent = {true}
+                                onRequestClose={() => setMediumModalVisible(false)}
+                        >  
+                                <View style={styles.modalContainer}>
+                                        <View style={[styles.modalContent, isDark && styles.modalContentDark]}>
+                                                <Text style={styles.modalTitle}>Enter a New Medium</Text>
+                                                <Input
+                                                        style={styles.input}
+                                                        placeholder="Type new option"
+                                                        value={mediumNameOption}
+                                                        onChangeText={setMediumNameOption}
+                                                />
+                                                <View style={{borderWidth: 2, borderColor: 'Black', borderRadius: 12}}>
+                                                        <View style={{ paddingHorizontal: 60, paddingVertical: 10 }}>
+                                                                <Button buttonStyle={{borderColor: 'Black', borderWidth: 2}}title="Add Option" onPress={handleNewMedium} />
+                                                        </View>
+                                                        <View style={{borderTopWidth: 2, borderColor: 'Black', paddingVertical:10 }}>
+                                                                <Button title="Cancel" onPress={() => setMediumModalVisible(false)} />
+                                                        
+                                                        </View>
+                                                </View>
+                                        </View>
+                                </View>
+
+                        </Modal>
+                        <UploadModal modalVisible={mediaModal} 
+					onBackPress={() => setModalVisible(false)} //disappear if it is clicked outside of the modal
+					onCameraPress={() => handleAddMedia("back")} //trigger camera when that icon is pressed
+					onGalleryPress={() => handleAddMedia("gallery")} //trigger gallery when that icon is pressed
+					onRemovePress={() => setMediaModalVisible(false)} //remove the image when that icon is passed
+                        />
                         <ScrollView> 
                                 <View style={styles.spacer}/>
                                 <StatusBar style={{backgroundColor: 'white'}}/>
@@ -505,7 +637,7 @@ const addCrops = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        placeholder = 'Date Planted'
+                                        placeholder = 'YYYY-MM-DD'
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={10}
                                         onChangeText={(text) => handleChange('fld_c_DatePlanted', text)}
@@ -518,6 +650,7 @@ const addCrops = () => {
                                         value={selectedLocation}
                                         setValue={setSelectedLocation}
                                         items={mutableLocations}
+                                        maxHeight={200}
                                         onChangeValue = {(selectedLocation) => handleLocationChange(selectedLocation)}
                                         placeholder="Location?"
                                         listMode='SCROLLVIEW'
@@ -573,7 +706,7 @@ const addCrops = () => {
 					}}
                                         containerStyle={{
 						width: '94%',
-						zIndex: 60,
+						zIndex: 65,
 						marginBottom: 40,
 					}}
                                         dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
@@ -606,7 +739,7 @@ const addCrops = () => {
 					}}
                                         containerStyle={{
 						width: '94%',
-						zIndex: 50,
+						zIndex: 60,
 						marginBottom: 40,
 					}}
                                         dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
@@ -629,10 +762,11 @@ const addCrops = () => {
                                         value={selectedType}
                                         setValue={setSelectedType}
                                         items={mutableCropTypes}
+                                        maxHeight={200}
                                         onChangeValue={(selectedType)=> handleTypeChange(selectedType)}
                                         placeholder="Type"
                                         listMode='SCROLLVIEW'
-					dropDownDirection='TOP'
+					dropDownDirection='BOTTOM'
                                         scrollViewProps={{
 					        nestedScrollEnabled: true
 					}}
@@ -641,7 +775,7 @@ const addCrops = () => {
 					}}
                                         containerStyle={{
 						width: '94%',
-						zIndex: 60,
+						zIndex: 57,
 						marginBottom: 40,
 					}}
                                         dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
@@ -664,9 +798,10 @@ const addCrops = () => {
                                         setValue={setSelectedMedium}
                                         items={mutableMediums}
                                         onChangeValue={selectedMedium=>handleMediumChange(selectedMedium)}
+                                        maxHeight={200}
                                         placeholder="Medium"
                                         listMode='SCROLLVIEW'
-					dropDownDirection='TOP'
+					dropDownDirection='BOTOTM'
                                         scrollViewProps={{
 					        nestedScrollEnabled: true
 					}}
@@ -675,7 +810,7 @@ const addCrops = () => {
 					}}
                                         containerStyle={{
 						width: '94%',
-						zIndex: 60,
+						zIndex: 55,
 						marginBottom: 40,
 					}}
                                         dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
@@ -721,7 +856,7 @@ const addCrops = () => {
 						zIndex: 60,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownBottomContainer, isDark && styles.dropDownBottomContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 {/*}
@@ -755,8 +890,24 @@ const styles = StyleSheet.create({
         containment:{
                 flex:1
         },
+        semicircle:{
+                position: 'absolute',
+                top: -19,
+                left: 0,
+                width: 140,
+                height: 70,
+                backgroundColor: Colors.MALACHITE,
+                borderBottomLeftRadius: 140,
+                borderBottomRightRadius: 140,
+                overflow: 'hidden',
+        },
         spacer:{
                 marginTop: 20,
+        },
+        titleContainer: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                position: 'relative', 
         },
         titleCard:{
                 backgroundColor: Colors.ALMOND_TAN,
@@ -771,7 +922,8 @@ const styles = StyleSheet.create({
                 textAlign: 'right',
                 fontSize: 42,
                 fontFamily: 'Domine-Medium',
-                alignContent: 'center'
+                alignContent: 'center',
+                flex:1 
         },
         save:{
                 position: 'absolute',
@@ -887,7 +1039,7 @@ const styles = StyleSheet.create({
                 paddingRight: 5,
         },
         dropdownLabel:{
-		zIndex: 9999,
+		zIndex: 50,
                 elevation: (Platform.OS === 'android') ? 9999 : 0,
         },
         labelDark:{
@@ -961,7 +1113,7 @@ const styles = StyleSheet.create({
 		borderColor: Colors.CHARCOAL,
 		backgroundColor: Colors.WHITE_SMOKE,
 		borderRadius: 12,
-		zIndex: 50,
+		zIndex: 70,
                 marginTop: -10,
                 width: '90%',
                 marginLeft: '8%',
@@ -986,7 +1138,22 @@ const styles = StyleSheet.create({
         dropDownStyleDark: {
                 borderColor: Colors.WHITE_SMOKE, 
                 backgroundColor: Colors.IRIDIUM
-        }
+        }, 
+        dropDownBottomContainer: {
+                borderWidth: 2,
+		borderColor: Colors.CHARCOAL,
+		backgroundColor: Colors.WHITE_SMOKE,
+		borderRadius: 12,
+		zIndex: 50,
+                marginBottom: -10,
+                width: '90%',
+                marginLeft: '8%',
+                marginRight: '5%',
+        },
+        dropDownBottomContainerDark: {
+                borderColor: Colors.WHITE_SMOKE, 
+                backgroundColor: Colors.IRIDIUM
+        },
 
 
 
