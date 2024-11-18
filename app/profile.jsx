@@ -24,9 +24,10 @@ import NavBar from '../assets/NavBar.jsx'
 import { toTitleCase } from '../assets/sanitizer.jsx'
 
 const Profile = () =>{ 
-	const [username, setUsername] = useState("")
-
+	const [userData, setUserData] = useState({})
 	const [isDarkMode, setIsDarkMode] = useState(false)
+	const subID = "sub123"
+
     useEffect(() => {
 		// declare the async data fetching function
 		const fetchDarkModeSetting = async () => {
@@ -55,7 +56,7 @@ const Profile = () =>{
 
 	useEffect(() => {
 		// declare the async data fetching function
-		const fetchUsername = async () => {
+	/*	const fetchUsername = async () => {
 			firstName = await AsyncStorage.getItem('first_name');
 			lastName = await AsyncStorage.getItem('last_name');
 
@@ -69,10 +70,22 @@ const Profile = () =>{
 			capitalizedUsername = toTitleCase(firstName + " " + lastName)
 
 			setUsername(capitalizedUsername)
+		}*/
+		const fetchSubInfo = async () =>{
+			try{
+				const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/subscriberInfo/${subID}`, {method:'GET'})
+				if(!response.ok){
+					throw new Error
+				}
+				const data = await response.json()
+				setUserData(data)
+			}catch(err){
+      			console.error("Error fetching user data:", err);
+			}
 		}
 	  
 		// call the function
-		fetchUsername()
+		fetchSubInfo()
 		  	// make sure to catch any error
 		  	.catch(console.warn);
 	}, [])
@@ -87,6 +100,7 @@ const Profile = () =>{
 	if (!fontsLoaded && !fontError) {
 		return null;
 	}
+	console.log(userData)
 
 	{/*return the page view with all of its contents*/}
 	return(
@@ -95,23 +109,23 @@ const Profile = () =>{
 		<StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}  backgroundColor={isDarkMode ? Colors.ALMOST_BLACK: Colors.WHITE_SMOKE}/>
 		{/*green oval at the top to denote profile picture and name*/}
 		<Text style = {styles.oval}></Text>
-		<Text style = {styles.profileName}>{username}</Text>
+		<Text style = {styles.profileName}>{userData[1]} {userData[2]}</Text>
 		{/*TODO: set image to display profile picture after retrieving it*/}
 		<UploadImage style={styles.avatarImg} isEditable={false} />
 		{/*add edit profile button*/}
-		<AppButton testID={"edit-profile"} title="Edit Profile" specifiedStyle={styles.editProfileBtn} backgroundColor={isDarkMode ? Colors.MALACHITE : Colors.SCOTCH_MIST_TAN} onPress={() => router.push('/profile-editprofile')}/>
+		<AppButton testID={"edit-profile"} title="Edit Profile" specifiedStyle={styles.editProfileBtn} backgroundColor={isDarkMode ? Colors.MALACHITE : Colors.SCOTCH_MIST_TAN} onPress={() => router.push({pathname:'/profile-editprofile', params:{ userData:JSON.stringify(userData)}})}/>
 		{/*add grid of profile options*/}
 		<View style={styles.btnGridContainer}>
 			{/*row for profile settings*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton testID={"settings-icon"} title="" ad="setting" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => router.push('/profile-settings')}/>
+					<AppButton testID={"settings-icon"} title="" ad="setting" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => router.push({pathname:'/profile-settings', params:{ userData:JSON.stringify(userData)}})}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={[styles.optionTxt, isDarkMode && {color: Colors.WHITE_SMOKE}]}>    Settings</Text>
 				</Col>
 				<Col relativeColsCovered={2}>
-					<AppButton testID={"settings-arrow"} title="" ad="right" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => router.push('/profile-settings')}/>
+					<AppButton testID={"settings-arrow"} title="" ad="right" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => router.push({pathname:'/profile-settings', params:{ userData:JSON.stringify(userData)}})}/>
 				</Col>
 			</Row>
 			{/*spacer row*/}
@@ -130,7 +144,7 @@ const Profile = () =>{
 			{/*info needed for billing: merchant stuff (email, business addr., company name, logo), customer name, customer email, invoice date, due date, payment terms like late fees, itemized list of goods/services, subtotal, taxes/fees/discounts, total due*/}
 			<Row height={40}>
 				<Col relativeColsCovered={2} alignItems='flex-end'>
-					<AppButton testID={"billing-icon"} title="" ad="creditcard" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => router.push('/profile-billingdetails')}/>
+					<AppButton testID={"billing-icon"} title="" ad="creditcard" adSize={30} adColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL} specifiedStyle={[styles.circle, isDarkMode && styles.circleDark]} onPress={() => router.push('/profile-billingdetails', {params: userData})}/>
 				</Col>
 				<Col relativeColsCovered={8}>
 					<Text style={[styles.optionTxt, isDarkMode && {color: Colors.WHITE_SMOKE}]}>    Billing Details</Text>

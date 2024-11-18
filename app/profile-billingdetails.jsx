@@ -15,7 +15,7 @@ import {
 	Appearance
 } from 'react-native'
 import { useFonts } from 'expo-font'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { Input } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons'
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -33,6 +33,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const BillingDetailsProfile = () =>{ 
 	{/*TODO: retrieve current model*/}
 	{/*create the subscription model list*/}
+	const subID = "sub123"
 	let defaultZip = "76131"
 	const [items, setItems] = useState([ //potential subscription model stuff
     	{label: 'Free', value: 'free', testID: 'free'},                   // 1 farmer,No Ambient Weather, No  Export,   10 Crops
@@ -47,19 +48,80 @@ const BillingDetailsProfile = () =>{
 	const [phoneNum, setPhoneNum] = useState('+1 (012) 345-6789');
 	const [zipCode, setZipCode] = useState(defaultZip);
 	const [state, setState] = useState('Texas');
+	const [savePressed, setSavePressed] = useState(false)
+	const [userData, setUserData] = useState({})
+	const [isDarkMode, setIsDarkMode] = useState(false)
 
-	const handleSave = async() =>{
-		//onChangeText={value => {setEmail(cleanText(email, noStopwords=false, noSQL=true));}}
-		let cleanedZip = cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false)
-		if (cleanedZip in ZipLookup) {
-			console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Zip: " + cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false) + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
-			await AsyncStorage.setItem('zip_code', cleanedZip)
-		} else {
-			console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Default Zip: " + defaultZip + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
-			setZipCode(defaultZip)
-			Alert.alert("Zip Code doesn't exist. Default applied.")
-			await AsyncStorage.setItem('zip_code', defaultZip)
+
+	useEffect(() => {
+		// declare the async data fetching function
+	/*	const fetchUsername = async () => {
+			firstName = await AsyncStorage.getItem('first_name');
+			lastName = await AsyncStorage.getItem('last_name');
+
+			if (!firstName) {
+				firstName = "zina"
+			}
+			if (!lastName) {
+				lastName = "townley"
+			}
+
+			capitalizedUsername = toTitleCase(firstName + " " + lastName)
+
+			setUsername(capitalizedUsername)
+		}*/
+		const fetchSubInfo = async () =>{
+			try{
+				const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/subscriberInfo/${subID}`, {method:'GET'})
+				if(!response.ok){
+					throw new Error
+				}
+				const data = await response.json()
+				setUserData({
+					"fld_s_FirstName": data[0],
+					"fld_s_LastName": data[1],
+					"fld_s_ProfilePicture": null,
+					"fld_s_EmailAddr": data[6],
+					"fld_s_StreetAddr": data[7],
+					"fld_s_City": data[8],
+					"fld_s_PostalCode": data[9],
+					"fld_s_PhoneNum": data[10],
+					"fld_s_HasAmbientWeather": data[11],
+					"fld_s_AmbientWeatherKey": data[12]
+				})
+			}catch(err){
+      			console.error("Error fetching user data:", err);
+			}
 		}
+	  
+		// call the function
+		fetchSubInfo()
+		  	// make sure to catch any error
+		  	.catch(console.warn);
+	}, [])
+
+
+	console.log(userData)
+	console.log()
+
+	const handleSave = async () =>{
+		//onChangeText={value => {setEmail(cleanText(email, noStopwords=false, noSQL=true));}}
+		//let cleanedZip = cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false)
+		//if (cleanedZip in ZipLookup) {
+			console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Zip: " + cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false) + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
+			setUserData({
+				...userData,
+				"fld_s_EmailAddr": cleanText(email, noStopwords=false, noSQL=true, textOnly=true),
+				"fld_s_PostalCode": cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false),
+				"fld_s_PhoneNum": cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true)
+			})
+			setSavePressed(true)
+//		} else {
+		//	console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Default Zip: " + defaultZip + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
+			//setZipCode(defaultZip)
+			//Alert.alert("Zip Code doesn't exist. Default applied.")
+			//await AsyncStorage.setItem('zip_code', defaultZip)
+	//	}
 	};
 
 	useEffect(() => {
@@ -81,7 +143,24 @@ const BillingDetailsProfile = () =>{
 		  	.catch(console.error);
 	}, [])
 
-	const [isDarkMode, setIsDarkMode] = useState(false)
+
+	useEffect(() =>{
+		const updateSub = async () =>{
+			if(savePressed){
+				try{
+					const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/updateSubscriberInfo`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(userData)})
+					if(!response.ok){
+                             throw new Error(`HTTP error! Status: ${response.status}`);
+					}
+					setSavePressed(false)
+				}catch(err){
+                        console.error("Error: ", error)
+				}
+			}
+		}
+		updateSub()
+	}, [savePressed])
+
     useEffect(() => {
 		// declare the async data fetching function
 		const fetchDarkModeSetting = async () => {
@@ -205,7 +284,7 @@ const BillingDetailsProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					placeholder='test@example.com'
-					defaultValue={email}
+					defaultValue={userData["fld_s_EmailAddr"]}
 					autoComplete='email'
 					keyboardType='email-address'
 					maxLength={384}
@@ -220,7 +299,7 @@ const BillingDetailsProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					placeholder='+1 (012) 345-6789'
-					defaultValue={phoneNum}
+					defaultValue={userData["fld_s_PhoneNum"]}
 					autoComplete='tel'
 					keyboardType='phone-pad'
 					maxLength={32}
@@ -235,7 +314,7 @@ const BillingDetailsProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					placeholder='01234'
-					defaultValue={zipCode}
+					defaultValue={userData["fld_s_PostalCode"]}
 					autoComplete='postal-code'
 					keyboardType='numeric'
 					maxLength={16}
@@ -250,7 +329,7 @@ const BillingDetailsProfile = () =>{
 					inputStyle={[styles.inputBoxStyle, isDarkMode && styles.inputBoxStyleDark]}
 					selectionColor={Colors.SANTA_GRAY}
 					placeholder='Texas'
-					defaultValue={state}
+					defaultValue={userData[8]}
 					autoComplete='address-line1'
 					keyboardType='default'
 					maxLength={64}

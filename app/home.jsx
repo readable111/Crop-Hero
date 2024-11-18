@@ -284,8 +284,6 @@ useEffect(() => {
 
   fetchData();
 }, []);
-console.log(cropData)
-
 
 	if (!fontsLoaded && !fontError) {
 		return null;
