@@ -17,8 +17,13 @@ export function cleanText(textToClean, noStopwords=false, noSQL=false, textOnly=
     if (textToClean !== null && textToClean !== '') {
         //make everything lowercase after converting to ascii
         asciiVal = unidecode(textToClean)
-        whitelistVal = asciiVal.replace(/[^a-zA-Z0-9'.@+()\- ]/g, "");
+        whitelistVal = asciiVal.replace(/[^a-zA-Z0-9'.@+()\-: ]/g, "");
         whitelistVal = whitelistVal.replace(/\-\-/g, "");
+
+        if (hexCode) {
+            whitelistVal = whitelistVal.replace(/[^a-fA-F0-9:]/g, "");
+            console.log(whitelistVal)
+        }
 
         if (noStopwords) {
             whitelistVal = whitelistVal.toLowerCase()
@@ -48,10 +53,6 @@ export function cleanText(textToClean, noStopwords=false, noSQL=false, textOnly=
                 previousVal = whitelistVal;
                 whitelistVal = whitelistVal.replace(sqlRegex, '').trim();
             }
-        }
-
-        if (hexCode) {
-            whitelistVal = whitelistVal.replace(/[^a-fA-F0-9]/g, "");
         }
 
         if (textOnly) {

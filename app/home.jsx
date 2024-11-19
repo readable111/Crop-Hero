@@ -35,55 +35,29 @@ const todayDayLookup = {
 const test_data = [
 	{
 	  key: '1',
-	  image: icons.thermometer_santa_gray,
+	  image: icons.hourglass_green,
 	  line1Label: 'Temperature',
-	  line1: '70°F',
+	  line1: 'Loading',
 	  line2Label: 'Feels Like',
-	  line2: '80°F',
+	  line2: 'Loading',
 	},
 	{
 	  key: '2',
-	  image: icons.rainfall_black,
+	  image: icons.hourglass_green,
 	  line1Label: 'Wind Speed',
-	  line1: '10mph',
-	  line2Label: 'Rainfall',
-	  line2: ' 50%',
+	  line1: 'Loading',
+	  line2Label: 'Gust Speed',
+	  line2: 'Loading',
 	},
 	{
 	  key: '3',
-	  image: icons.humidity_santa_gray,
-	  line1Label: 'Humidity',
-	  line1: '50%',
-	  line2Label: 'Soil Moisture',
-	  line2: ' 0.2wfv',
+	  image: icons.hourglass_green,
+	  line1Label: 'Hourly Rainfall',
+	  line1: 'Loading',
+	  line2Label: 'Humidity',
+	  line2: 'Loading',
 	}
 ];
-/*const test_data = [
-	{
-	  key: '1',
-	  image: icons.hourglass_green,
-	  line1Label: 'Temperature',
-	  line1: 'Loading',
-	  line2Label: 'Feels Like',
-	  line2: 'Loading',
-	},
-	{
-	  key: '2',
-	  image: icons.hourglass_green,
-	  line1Label: 'Wind Speed',
-	  line1: 'Loading',
-	  line2Label: 'Rainfall',
-	  line2: 'Loading',
-	},
-	{
-	  key: '3',
-	  image: icons.hourglass_green,
-	  line1Label: 'Humidity',
-	  line1: 'Loading',
-	  line2Label: 'Soil Moisture',
-	  line2: 'Loading',
-	}
-];*/
 
 const Home = () =>{ 
 	let defaultZip = "76131"
@@ -195,6 +169,7 @@ const Home = () =>{
 			if (!apiKey || !apiKey.length || !appKey || !appKey.length || !deviceMacAddress || !deviceMacAddress.length) {
 				setAmbientWeatherData(test_data); 
 			} else {
+				console.log("Fetching data")
 				const data = await fetchWeatherData(apiKey, appKey, deviceMacAddress);
 				//Assuming the response is an array of weather data entries, sorted with the newest at the start
 				usefulData = data[0]
@@ -205,26 +180,25 @@ const Home = () =>{
 						line1Label: 'Temperature',
 						line1: usefulData.tempf + '°F',
 						line2Label: 'Feels Like',
-						line2: usefulData.feels_like + '°F',
+						line2: usefulData.feelsLike + '°F',
 					},
 					{
 						key: '2',
-						image: icons.rainfall_black,
+						image: icons.humidity_santa_gray,
 						line1Label: 'Wind Speed',
 						line1: usefulData.windspeedmph + 'mph',
-						line2Label: 'Rainfall',
-						line2: usefulData.dailyrainin + 'in',
+						line2Label: 'Gust Speed',
+						line2: usefulData.maxdailygust + 'mph',
 					},
 					{
 						key: '3',
-						image: icons.humidity_santa_gray,
-						line1Label: 'Humidity',
-						line1: usefulData.humidity + '%',
-						line2Label: 'Soil Moisture',
-						line2: usefulData.soilmoisture + 'wfv',
+						image: icons.rainfall_black,
+						line1Label: 'Hourly Rainfall',
+						line1: usefulData.hourlyrainin + 'in',
+						line2Label: 'Humidity',
+						line2: usefulData.humidity + '%',
 					}
 				];
-				console.log(weatherData)
 				setAmbientWeatherData(weatherData); 
 			}
 		  } catch (error) {
