@@ -103,6 +103,7 @@ const ViewCrops = () => {
                         }
                         setItemDeleted(true);
                         setItemDeleted(false);
+                        router.replace("/crops/viewcrops")
 
                 }catch(error){
                         console.error("Error: ", error)
@@ -160,7 +161,7 @@ const ViewCrops = () => {
                         <View style={[styles.container, isDark && styles.containerDark]}>
                                 <View style={[styles.topContainer, styles.spaceBetween]}>
                                         <View style={styles.back}>
-                                                <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.push('/crops/crops')}/>
+                                                <AppButton title="" icon={isDark ? Icons.arrow_tail_left_white : Icons.arrow_tail_left_black} onPress={() => router.back()}/>
                                         </View>
                                         <View style={[styles.toggleContainer, isDark && styles.toggleContainerDark]}>
                                                 <Text style={styles.toggleLabel}>Toggle Delete</Text>
