@@ -50,7 +50,7 @@ const CropsPage = () => {
         const [open, setOpen] = useState(null)
        // const [modalVisible, setModalVisible] = useState(false)
         const [selectedIndoors, setSelectedIndoors] = useState(indoorsState)
-        const [selectedLocation, setSelectedLocation] = useState(crop["19"])
+        const [selectedLocation, setSelectedLocation] = useState(parseInt(crop["6"], 10))
         const [selectedActive, setSelectedActive] = useState(activeState)
         const [selectedVisible, setSelectedVisible] = useState(true)
         const [types, setType] = useState([])
@@ -227,7 +227,7 @@ const CropsPage = () => {
                     label: location[4],      // Adjust property access based on API data structure
                     value: location[0]
                 }));
-            }, [locations]);
+        }, [locations]);
 
         return (
                 <View style={[styles.container, isDark && styles.containerDark]}>
@@ -419,7 +419,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        defaultValue={crop[2]}
+                                        defaultValue={crop["9"]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {true}
