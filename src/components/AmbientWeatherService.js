@@ -60,8 +60,18 @@ const fetchWeatherData = rateLimiter(async (apiKey, appKey, deviceMacAddress) =>
     }
     
   } catch (error) {
-    throw error;
+    if (error.response) { //status code not in 2xx range
+      throw error.response.data;
+    } else if (error.request) { //no response received for request
+      throw error.request;
+    }else { //error when setting up request
+      throw error.message;
+    }
   }
 });
 
-export { fetchWeatherData };
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export { fetchWeatherData, sleep };
