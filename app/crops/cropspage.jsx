@@ -23,8 +23,10 @@ const CropsPage = () => {
 
         {/* Grabs variable form viewcrops page for use */}
         const subID = "sub123"
+        const offset = new Date().getTimezoneOffset()
         
         let [crop, setCropData] = useState(useLocalSearchParams());
+        console.log(crop)
         
         const [items, setItems] = useState([
                 {label: 'Yes', value: 'Yes' },
@@ -38,9 +40,16 @@ const CropsPage = () => {
                 activeState = items[0].value
         }
 
+        let indoorsState = ""
+        if (crop["16"] == "0") {
+                indoorsState = items[1].value
+        } else {
+                indoorsState = items[0].value
+        }
+
         const [open, setOpen] = useState(null)
        // const [modalVisible, setModalVisible] = useState(false)
-        const [selectedIndoors, setSelectedIndoors] = useState(crop[16])
+        const [selectedIndoors, setSelectedIndoors] = useState(indoorsState)
         const [selectedLocation, setSelectedLocation] = useState(crop["19"])
         const [selectedActive, setSelectedActive] = useState(activeState)
         const [selectedVisible, setSelectedVisible] = useState(true)
@@ -73,6 +82,9 @@ const CropsPage = () => {
 
         //Use state for switching if something is editable
         const [readOnly, setReadOnly] = useState(true)
+
+        const appliedOffset = new Date(crop["13"]).getTime() - (offset*60*1000)
+        const displayedDate = new Date(appliedOffset).toISOString().split('T')[0]
 
         const handleChange = (fieldName, input) => {
                 //console.log("Changing field:", fieldName, "to value:", input);
@@ -272,7 +284,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        defaultValue={crop[13]}
+                                        defaultValue={displayedDate}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={10}
                                         readOnly = {readOnly}
@@ -319,7 +331,7 @@ const CropsPage = () => {
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'indoors'}
                                         setOpen={() => handleOpenDropdown('indoors')}
-                                        defaultValue={selectedIndoors}
+                                        value={selectedIndoors}
                                         setValue={setSelectedIndoors}
                                         disabled= {readOnly}
                                         items={items}

@@ -117,6 +117,7 @@ const addCrops = () => {
 
         const handleLocationChange = (value) =>
         {
+                console.log(value)
                 setCropData({
                         ...cropData,
                         "fld_l_LocationID_fk": value
@@ -726,7 +727,7 @@ const addCrops = () => {
                                         maxLength={3}
                                         onChangeText={(text) => handleChange('fld_c_WasStartedIndoors', text)}
                              />*/}
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Active</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Active?</Text>
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'active'}
@@ -841,7 +842,7 @@ const addCrops = () => {
                                         onChangeText={(text) => handleChange('fld_c_Yield', text)}
 
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Visible</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Visible?</Text>
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'visible'}
