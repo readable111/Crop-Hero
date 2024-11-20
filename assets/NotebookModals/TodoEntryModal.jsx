@@ -152,6 +152,7 @@ const TodoEntryModal = ({
 
     const handleSave = () => {
         onSave(taskData);
+        console.log("task icon path",fld_t_TaskIconPath)
         resetForm();  // Reset form after saving
         onClose();
     };

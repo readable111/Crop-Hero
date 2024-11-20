@@ -54,6 +54,7 @@ const todo = () => {
         setCurrentTask(null); // Reset the selected entry
         //taskData.Comments('');
     };
+
     const [isDarkMode, setIsDarkMode] = useState(false);
     useEffect(() => {
         // declare the async data fetching function
@@ -164,7 +165,28 @@ const todo = () => {
      //   setCurrentTask(task);
        // setModalVisible(true);
     //};
-
+    const iconData = [
+        { label: 'Watering', value: 'watering-can-outline', icon: 'watering-can-outline' },
+        { label: 'Planning', value: 'calendar', icon: 'calendar' },
+        { label: 'Rake', value: 'rake', icon: 'rake' },
+        { label: 'Shovel', value: 'shovel', icon: 'shovel' },
+        { label: 'Tools', value: 'tools', icon: 'tools' },
+        { label: 'Beehive', value: 'beehive-outline', icon: 'beehive-outline' },
+        { label: 'Egg', value: 'egg-fried', icon: 'egg-fried' },
+        { label: 'Cow', value: 'cow', icon: 'cow' },
+        { label: 'Pig', value: 'pig-variant-outline', icon: 'pig-variant-outline' },
+        { label: 'Turkey', value: 'turkey', icon: 'turkey' },
+        { label: 'Fence', value: 'fence', icon: 'fence' },
+        { label: 'Wrench', value: 'wrench-outline', icon: 'wrench-outline' },
+        { label: 'Tractor', value: 'tractor-variant', icon: 'tractor-variant' },
+        { label: 'Cowboy', value: 'account-cowboy-hat-outline', icon: 'account-cowboy-hat-outline' },
+        { label: 'Scissors', value: 'scissors-cutting', icon: 'scissors-cutting' },
+        { label: 'Wheelbarrow', value: 'wheel-barrow', icon: 'wheel-barrow' },
+    ];
+    const getIconByPath = (iconPath) => {
+        const icon = iconData.find(item => item.value === iconPath);
+        return icon ? icon.icon : 'alert-circle-outline'; // Default fallback icon
+    };
     const handleDeleteTask = (taskID) => {
         Alert.alert(
             'Confirm Delete',
@@ -360,7 +382,7 @@ const todo = () => {
     if (!fontsLoaded && !fontError) {
         return null;
     }
-
+    //const iconName = getIconByPath(item.iconPath);
 
     return (
         <View style={[styles.topContainer, isDarkMode && styles.darkTopContainer]}>
@@ -393,33 +415,47 @@ const todo = () => {
 
                 <FlatList
                     data={filteredTasks}
-                    // keyExtractor={item => item.TaskID.toString()}
+                    //keyExtractor={item => item.TaskID.toString()} // Uncommented keyExtractor
+                    renderItem={({ item }) => {
+                        //const iconName = getIconByPath(item.iconPath); // Move the variable declaration outside of JSX
+                        const iconName = getIconByPath(item.fld_t_TaskIconPath);
+                        return (
+                            <TouchableOpacity
+                                style={[
+                                    styles.taskContainer,
+                                    isDarkMode && styles.darkTaskContainer,
+                                    { opacity: item[5] === 1 ? 0.6 : 1 },
+                                ]}
+                                onLongPress={() => handleTaskLongPress(item)}
+                            >
+                                <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>
+                                    Assigned Farmer ID: {item[11]}
+                                </Text>
+                                <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>
+                                    Task Type: {item[10]}
+                                </Text>
+                                <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>
+                                    Location ID: {item[12]}
+                                </Text>
+                                <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>
+                                    Comments: {item[8]}
+                                </Text>
+                                <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>
+                                    Due Date: {new Date(item[6]).toISOString().slice(0, 10)}
+                                </Text>
 
-                    renderItem={({ item }) => (
-                        //<View style={styles.entryContainer }>
-                        <TouchableOpacity
-                            style={[styles.taskContainer, isDarkMode && styles.darkTaskContainer, { opacity: item[5] == 1 ? 0.6 : 1 }]}
-                            // onPress={() => handleTaskTap(item)}
-                            onLongPress={() => handleTaskLongPress(item)}
-                        >
-                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Assigned Farmer ID: {item[11]}</Text>
-                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Task Type: {item[10]}</Text>
-                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Location ID: {item[12]}</Text>
-                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Comments: {item[8]}</Text>
-                            <Text style={[styles.taskItemText, isDarkMode && styles.taskItemTextDark]}>Due Date: {new Date(item[6]).toISOString().slice(0,10)}</Text>
-
-                            {/* Display the icon at the top right corner */}
-                            <View style={styles.iconContainer}>
-                                <MaterialCommunityIcons
-                                    name={item.iconName} // Assuming iconName is the key holding the icon name
-                                    size={20}
-                                    color="black" 
-                                />
-                            </View>
-                        </TouchableOpacity>
-                        // </View>
-                    )}
+                                <View style={styles.iconContainer}>
+                                    <MaterialCommunityIcons
+                                        name={iconName}
+                                        size={24}
+                                        color={isDarkMode ? Colors.WHITE_SMOKE : Colors.BLACK}
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                        );
+                    }}
                 />
+
             </View>
             <SpeedDial
                 isOpen={isSpeedDialOpen}
