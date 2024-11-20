@@ -146,7 +146,7 @@ const CropsPage = () => {
                 }
                 else
                 {
-                        Alert.alert(crop.name + " saved");
+                        Alert.alert(crop[10] + " saved");
                 }
         };
 
@@ -380,7 +380,7 @@ const CropsPage = () => {
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'medium'}
                                         setOpen={() => handleOpenDropdown('medium')}
-                                        defaultValue={selectedActive}
+                                        value={selectedActive}
                                         setValue={setSelectedActive}
                                         disabled= {readOnly}
                                         items={items}
@@ -425,7 +425,7 @@ const CropsPage = () => {
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'visible'}
                                         setOpen={() => handleOpenDropdown('visible')}
-                                        defaultValue={selectedVisible}
+                                        value={selectedVisible}
                                         setValue={setSelectedVisible}
                                         disabled= {readOnly}
                                         items={items}
