@@ -91,7 +91,7 @@ const addCrops = () => {
         const handleNewLocation = () => {
                 if(locationNameOption.trim() !== '')
                 {
-                        setLocationAdded(true)
+                        setAddLocationAdded(true)
                         setModalVisible(false);
                 }
         }
@@ -197,7 +197,7 @@ const addCrops = () => {
         const handleSave = () =>{
                 const emptyFields = Object.values(cropData).some(value=> value ==='');
                 
-                if(crop.fld_c_DatePlanted.lenth != 10)
+                if(cropData.fld_c_DatePlanted.length != 10)
                 {
                         
                         Alert.alert("Incorrect or incomplete value in Date Planted, please use the format YYYY-MM-DD");
