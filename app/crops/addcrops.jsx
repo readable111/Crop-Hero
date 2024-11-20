@@ -819,7 +819,8 @@ const addCrops = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        placeholder = ' HRF Number'
+                                        placeholder = 'HRF Number'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         onChangeText={(text) => handleChange('fld_c_HRFNumber', parseInt(text))}
 
