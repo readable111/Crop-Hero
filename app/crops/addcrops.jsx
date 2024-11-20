@@ -8,6 +8,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { StyleSheet, 
         Text, 
         View, 
+        ScrollView, 
         KeyboardAvoidingView, 
         Platform,
         Keyboard,
@@ -19,11 +20,7 @@ import { StyleSheet,
         Modal,
         TouchableOpacity
 } from 'react-native';
-import { 
-        GestureHandlerRootView,
-        FlatList,
-        ScrollView 
-} from 'react-native-gesture-handler'
+        
 import Colors from '../../assets/Color.js';
 import { useFonts, useLocalSeachParams } from 'expo-font';
 import { router } from 'expo-router';
@@ -473,10 +470,9 @@ const addCrops = () => {
 
         return (
                 /* Behavior subject to change, mostly making keyboard disappear after tapping elsewhere*/
-                <GestureHandlerRootView>
                 <KeyboardAvoidingView
                  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                 keyboardVerticalOffset={Platform.OS ==='ios' ? 20 : 20}
+                 keyboardVerticalOffset={Platform.OS ==='ios' ? 0 : 20}
                  style={styles.containment}
                  >
                 <TouchableWithoutFeedback onPress = {Keyboard.dismiss}>
@@ -487,7 +483,7 @@ const addCrops = () => {
                                 <View style={styles.titleContainer}>
                                         <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>Add Crop</Text>
                                         <View style={styles.semicircle}>
-                                                <Text style={styles.AddMedia} onPress = {()=> setMediaModalVisible(true)}>Add Image</Text>
+                                                <Text style={styles.AddMedia} onPress = {()=> setMediaModalVisible(true)}>Add media</Text>
                                         </View>
                                 </View>
                         </View>
@@ -605,7 +601,7 @@ const addCrops = () => {
 
                         </Modal>
                         <UploadModal modalVisible={mediaModal} 
-					onBackPress={() => setModalVisible(false)} //disappear if it is clicked outside of the modal
+					onBackPress={() => setMediaModalVisible(false)} //disappear if it is clicked outside of the modal
 					onCameraPress={() => handleAddMedia("back")} //trigger camera when that icon is pressed
 					onGalleryPress={() => handleAddMedia("gallery")} //trigger gallery when that icon is pressed
 					onRemovePress={() => setMediaModalVisible(false)} //remove the image when that icon is passed
@@ -660,8 +656,7 @@ const addCrops = () => {
                                         listMode='SCROLLVIEW'
 					dropDownDirection='BOTTOM'
                                         scrollViewProps={{
-					        nestedScrollEnabled: true,
-                                                propagateSwipe: false
+					        nestedScrollEnabled: true
 					}}
                                         props={{
 						activeOpacity: 1,
@@ -714,7 +709,7 @@ const addCrops = () => {
 						zIndex: 65,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 
@@ -747,7 +742,7 @@ const addCrops = () => {
 						zIndex: 60,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 {/*}
@@ -881,7 +876,6 @@ const addCrops = () => {
                 
                 </TouchableWithoutFeedback>
                 </KeyboardAvoidingView>
-                </GestureHandlerRootView>
         )
 }
 
@@ -1121,15 +1115,10 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.WHITE_SMOKE,
 		borderRadius: 12,
 		zIndex: 70,
-                top: -10,
+                marginTop: -10,
                 width: '90%',
                 marginLeft: '8%',
                 marginRight: '5%',
-                position: 'relative',
-                height: 200,
-        },
-        binaryDropDownContainer: {
-                height: 90,
         },
         dropDownContainerDark: {
                 borderColor: Colors.WHITE_SMOKE, 
