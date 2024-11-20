@@ -451,7 +451,8 @@ const addCrops = () => {
                                 //canceled is true if the system UI is closed without selecting an image
                                 //so save image if new image is selected
                                 if (!result.canceled) {
-                                        await saveImage(result.assets[0].uri)
+                                        //await saveImage(result.assets[0].uri)
+                                        console.log(result.assets[0].uri)
                                 }
 		} catch (error) {
 			Alert.alert("Error uploading image: " + error.message)
