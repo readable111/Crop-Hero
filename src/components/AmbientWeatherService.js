@@ -15,11 +15,11 @@ const BASE_MOCK_URL = 'https://private-anon-f9255d0157-ambientweather.apiary-moc
 //Timestamp of last request
 //Must be global
 let lastRequestTime = 0;
-//Enforce rate limit of 1 request per second
+//Enforce rate limit of 1 request per second with slight gap to avoid AW's rate limiter
 const rateLimiter = (func) => {
   return (...args) => {
     const now = Date.now();
-    if (now - lastRequestTime < 1000) { // 1000 ms = 1 second
+    if (now - lastRequestTime < 1050) { // 1000 ms = 1 second
       console.warn("Rate limit exceeded, skipping request.");
       return Promise.resolve(null); // Ignore request and resolve with null
     }
@@ -39,6 +39,7 @@ const fetchWeatherData = rateLimiter(async (apiKey, appKey, deviceMacAddress) =>
           apiKey: apiKey,
           applicationKey: appKey,
         },
+        timeout: 1000
       }
     );
 
@@ -46,26 +47,32 @@ const fetchWeatherData = rateLimiter(async (apiKey, appKey, deviceMacAddress) =>
     if (!Array.isArray(response.data) || !response.data.length) {
       console.log("Mock called because device not reporting")
       const mockResponse = await axios.get(
-        `${BASE_MOCK_URL}/devices/${encodeURIComponent(deviceMacAddress)}`,
+        `${BASE_URL}/devices`,
         {
           params: {
             apiKey: apiKey,
             applicationKey: appKey,
           },
+          timeout: 1000
         }
       );
+      console.log("response retrieved")
+      
       return mockResponse.data
     } else{ 
       return response.data;
     }
     
   } catch (error) {
-    if (error.response) { //status code not in 2xx range
-      throw error.response.data;
-    } else if (error.request) { //no response received for request
-      throw error.request;
+    console.warn(error.data)
+    if (!error.data) {
+      throw "request failed";
+    } else if (error._response) { //status code not in 2xx range
+      throw error._response;
+    } else if (error._request) { //no response received for request
+      throw error._request;
     }else { //error when setting up request
-      throw error.message;
+      throw error._message;
     }
   }
 });

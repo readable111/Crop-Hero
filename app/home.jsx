@@ -59,6 +59,17 @@ const test_data = [
 	}
 ];
 
+const err_data = [
+	{
+	  key: '1',
+	  image: icons.hourglass_green,
+	  line1Label: 'Retrieval Failed',
+	  line1: '',
+	  line2Label: 'Try Reloading Page',
+	  line2: '',
+	}
+];
+
 const Home = () =>{ 
 	let defaultZip = "76131"
 	const [forecastDataDay1, setforecastDataDay1] = useState(null);
@@ -168,7 +179,6 @@ const Home = () =>{
 			//ensure that all of those were set
 			if (!apiKey || !apiKey.length || !appKey || !appKey.length || !deviceMacAddress || !deviceMacAddress.length) {
 				console.log("Default triggered")
-				setAmbientWeatherData(test_data); 
 				return
 			} else {
 				console.log("Fetching data")
@@ -179,7 +189,7 @@ const Home = () =>{
 					await sleep(1 * 1000)
 					data = await fetchWeatherData(apiKey, appKey, deviceMacAddress);
 				}
-				console.log(data[0])
+				
 				let usefulData = data[0]
 				const weatherData = [
 					{
@@ -211,6 +221,7 @@ const Home = () =>{
 			}
 		  } catch (error) {
 			console.warn('Failed to fetch weather data:', error);
+			setAmbientWeatherData(err_data)
 		  }
 		};
 	
