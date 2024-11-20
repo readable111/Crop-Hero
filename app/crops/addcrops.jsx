@@ -135,7 +135,7 @@ const addCrops = () => {
         const handleTypeChange = (value) =>{
                 setCropData({
                         ...cropData,
-                        "fld_ct_CropTypes": value
+                        "fld_ct_CropTypeID_fk": value
                 })
         }
 
@@ -212,6 +212,7 @@ const addCrops = () => {
                 }
                 else
                 {
+                        console.log(cropData)
                         setSavePressed(true)
                 }
                // router.push({pathname: '/viewcrops', params: {newCrop: JSON.stringify(cropData)}});
