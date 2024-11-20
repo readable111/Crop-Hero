@@ -52,6 +52,7 @@ const CropsPage = () => {
         const [selectedIndoors, setSelectedIndoors] = useState(indoorsState)
         const [selectedLocation, setSelectedLocation] = useState(parseInt(crop["6"], 10))
         const [selectedActive, setSelectedActive] = useState(activeState)
+        const [selectedMedium, setSelectedMedium] = useState(parseInt(crop["5"], 10))
         const [selectedVisible, setSelectedVisible] = useState(true)
         const [types, setType] = useState([])
         const [mediums, setMediums] = useState([])
@@ -144,6 +145,14 @@ const CropsPage = () => {
                 })
         }
 
+        const handleMediumChange = (value) =>
+        {
+                setCropData({
+                        ...crop, 
+                        medium: value,
+                })
+        }
+
         const handleVisibleChange = (value) =>
         {
                 setCropData({
@@ -180,6 +189,22 @@ const CropsPage = () => {
                 fetchLocations()
         },[])
 
+        useEffect(()=>{
+                const fetchMedia = async () =>{
+                        try{
+                                const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getMediums/${subID}`,{method:'GET'})
+                                if(!response.ok){
+                                        throw new Error(`HTTP error! Status: ${response.status}`);
+                                }
+                                const data = await response.json()
+                                console.log(data)
+                                setMediums(data)
+                        }catch(error){
+                                console.error("Error fetching locations", error)
+                        }
+                }
+                fetchMedia()
+        },[])
 
         useEffect(() => {
                 const fetchDarkModeSetting = async () => {
@@ -222,12 +247,19 @@ const CropsPage = () => {
                 }
                 
         };
+
         const mutableLocations = useMemo(() => {
                 return locations.map((location) => ({
                     label: location[4],      // Adjust property access based on API data structure
                     value: location[0]
                 }));
         }, [locations]);
+        const mutableMediums = useMemo(() => {
+                return mediums.map((medium) => ({
+                    label: medium[1],      // Adjust property access based on API data structure
+                    value: medium[0]
+                }));
+        }, [mediums]);
 
         return (
                 <View style={[styles.container, isDark && styles.containerDark]}>
@@ -394,12 +426,12 @@ const CropsPage = () => {
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'medium'}
                                         setOpen={() => handleOpenDropdown('medium')}
-                                        value={selectedActive}
-                                        setValue={setSelectedActive}
+                                        value={selectedMedium}
+                                        setValue={setSelectedMedium}
                                         disabled= {readOnly}
-                                        items={items}
-                                        onChangeValue={handleActiveChange}
-                                        placeholder= {crop.medium}
+                                        items={mutableMediums}
+                                        onChangeValue={handleMediumChange}
+                                        placeholder= {"Medium?"}
                                         listMode='SCROLLVIEW'
 					dropDownDirection='BOTTOM'
                                         scrollViewProps={{
