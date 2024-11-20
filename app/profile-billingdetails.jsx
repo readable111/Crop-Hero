@@ -15,7 +15,7 @@ import {
 	Appearance
 } from 'react-native'
 import { useFonts } from 'expo-font'
-import { router, useLocalSearchParams } from 'expo-router'
+import { router } from 'expo-router'
 import { Input } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons'
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -27,8 +27,6 @@ import AppButton from '../assets/AppButton'
 import UploadImage from '../assets/ProfilePageImages/UploadImage'
 import {cleanText, cleanNumbers} from '../assets/sanitizer'
 import ZipLookup from '../assets/zip_codes.js'; 
-
-const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const BillingDetailsProfile = () =>{ 
 	{/*TODO: retrieve current model*/}
@@ -48,28 +46,12 @@ const BillingDetailsProfile = () =>{
 	const [phoneNum, setPhoneNum] = useState('+1 (012) 345-6789');
 	const [zipCode, setZipCode] = useState(defaultZip);
 	const [state, setState] = useState('Texas');
-	const [savePressed, setSavePressed] = useState(false)
 	const [userData, setUserData] = useState({})
 	const [isDarkMode, setIsDarkMode] = useState(false)
 
 
 	useEffect(() => {
 		// declare the async data fetching function
-	/*	const fetchUsername = async () => {
-			firstName = await AsyncStorage.getItem('first_name');
-			lastName = await AsyncStorage.getItem('last_name');
-
-			if (!firstName) {
-				firstName = "zina"
-			}
-			if (!lastName) {
-				lastName = "townley"
-			}
-
-			capitalizedUsername = toTitleCase(firstName + " " + lastName)
-
-			setUsername(capitalizedUsername)
-		}*/
 		const fetchSubInfo = async () =>{
 			try{
 				const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/subscriberInfo/${subID}`, {method:'GET'})
@@ -166,26 +148,6 @@ const BillingDetailsProfile = () =>{
 		  	.catch(console.error);
 	}, [])
 
-
-	/*useEffect(() =>{
-		const updateSub = async () =>{
-			console.log("updateSub called")
-			if(savePressed){
-				try{
-					console.log("POST called with ", userData)
-					const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/updateSubscriberInfo`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(userData)})
-					if(!response.ok){
-                             throw new Error(`HTTP error! Status: ${response.status}`);
-					}
-					setSavePressed(false)
-				}catch(err){
-                        console.error("Error: ", error)
-				}
-			}
-		}
-		updateSub()
-	}, [savePressed])*/
-
     useEffect(() => {
 		// declare the async data fetching function
 		const fetchDarkModeSetting = async () => {
@@ -211,9 +173,6 @@ const BillingDetailsProfile = () =>{
 		  	// make sure to catch any error
 		  	.catch(console.error);
 	}, [])
-
-	{/*TODO: retrieve data from local storage or database*/}
-	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
 
 	const [fontsLoaded, fontError] = useFonts({
 		'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
