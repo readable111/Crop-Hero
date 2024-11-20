@@ -1,9 +1,9 @@
 /****
- * @author McKenna Beard
- * @reviewer Daniel Moreno
+ * @author McKenna Beard, Tyler Bowen
+ *
  * @tester 
  * 
- * UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 11_10_2024
+ * UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 11_20_2024
  * This  page is meant to keep track of what was done that day for future reference if needed
  ***/
 import { React, useState, useEffect } from 'react';
