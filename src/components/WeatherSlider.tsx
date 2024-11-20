@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   dotsContainer: {
     flex: 1,
     justifyContent: 'space-evenly',
-    marginTop: -75,
+    marginTop: -90,
   },
   dotContainer: {
     justifyContent: 'center',
