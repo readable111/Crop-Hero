@@ -64,7 +64,7 @@ const err_data = [
 	  key: '1',
 	  image: icons.hourglass_green,
 	  line1Label: 'Retrieval Failed',
-	  line1: '',
+	  line1: 'Live & Historical Data Not Found',
 	  line2Label: 'Try Reloading Page',
 	  line2: '',
 	}
@@ -191,6 +191,9 @@ const Home = () =>{
 				}
 				
 				let usefulData = data[0]
+				if (usefulData.hasOwnProperty("lastData")) {
+					usefulData = usefulData.lastData
+				}
 				const weatherData = [
 					{
 						key: '1',

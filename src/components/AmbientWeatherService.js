@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 //Use the following URL to get a list of all devices:
-//https://private-anon-f9255d0157-ambientweather.apiary-proxy.com/v1/devices?apiKey=1&applicationKey=2
+//https://api.ambientweather.net/v1/devices?apiKey=1&applicationKey=2
 
 //List of fields that MAY be returned depending on the device
 //https://github.com/ambient-weather/api-docs/wiki/Device-Data-Specs
@@ -47,7 +47,7 @@ const fetchWeatherData = rateLimiter(async (apiKey, appKey, deviceMacAddress) =>
     if (!Array.isArray(response.data) || !response.data.length) {
       console.log("Mock called because device not reporting")
       const mockResponse = await axios.get(
-        `${BASE_URL}/devices`,
+        `${BASE_MOCK_URL}/devices`,
         {
           params: {
             apiKey: apiKey,
