@@ -107,14 +107,17 @@ const BillingDetailsProfile = () =>{
 
 	const handleSave = async () =>{
 		//onChangeText={value => {setEmail(cleanText(email, noStopwords=false, noSQL=true));}}
-		//let cleanedZip = cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false)
-		//if (cleanedZip in ZipLookup) {
-			console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Zip: " + cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false) + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
+		console.log("save called: ", zipCode)
+		let cleanedZip = zipCode
+		console.log(cleanedZip)
+		if (cleanedZip in ZipLookup) {
+			console.log("exists")
+			//console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Zip: " + zipCode + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
 			setUserData({
 				...userData,
-				"fld_s_EmailAddr": cleanText(email, noStopwords=false, noSQL=true, textOnly=true),
-				"fld_s_PostalCode": cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false),
-				"fld_s_PhoneNum": cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true)
+				"fld_s_EmailAddr": email,
+				"fld_s_PostalCode": cleanedZip,
+				"fld_s_PhoneNum": phoneNum
 			})
 			//setSavePressed(true)
 			//console.log("Save Pressed: ", savePressed)
@@ -124,12 +127,24 @@ const BillingDetailsProfile = () =>{
 			if(!response.ok){
                 throw new Error(`HTTP error! Status: ${response.status}`);
 			}
-//		} else {
-		//	console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Default Zip: " + defaultZip + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
-			//setZipCode(defaultZip)
-			//Alert.alert("Zip Code doesn't exist. Default applied.")
-			//await AsyncStorage.setItem('zip_code', defaultZip)
-	//	}
+			//Necessary until Home page is hooked up
+			await AsyncStorage.setItem('zip_code', cleanedZip)
+		} else {
+			Alert.alert("Zip Code doesn't exist. Default applied.")
+			console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Default Zip: " + defaultZip + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
+			setUserData({
+				...userData,
+				"fld_s_EmailAddr": cleanText(email, noStopwords=false, noSQL=true, textOnly=true),
+				"fld_s_PostalCode": defaultZip,
+				"fld_s_PhoneNum": cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true)
+			})
+			const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/updateSubscriberInfo`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({subID:"sub123", subData: userData})})
+			console.log("Response ", response)
+			if(!response.ok){
+                throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+			await AsyncStorage.setItem('zip_code', defaultZip)
+		}
 	};
 
 	useEffect(() => {
