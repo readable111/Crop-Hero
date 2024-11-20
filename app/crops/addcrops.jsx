@@ -8,7 +8,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { StyleSheet, 
         Text, 
         View, 
-        ScrollView, 
         KeyboardAvoidingView, 
         Platform,
         Keyboard,
@@ -20,7 +19,11 @@ import { StyleSheet,
         Modal,
         TouchableOpacity
 } from 'react-native';
-        
+import { 
+        GestureHandlerRootView,
+        FlatList,
+        ScrollView 
+} from 'react-native-gesture-handler'
 import Colors from '../../assets/Color.js';
 import { useFonts, useLocalSeachParams } from 'expo-font';
 import { router } from 'expo-router';
@@ -91,7 +94,7 @@ const addCrops = () => {
         const handleNewLocation = () => {
                 if(locationNameOption.trim() !== '')
                 {
-                        setLocationAdded(true)
+                        setAddLocationAdded(true)
                         setModalVisible(false);
                 }
         }
@@ -197,7 +200,7 @@ const addCrops = () => {
         const handleSave = () =>{
                 const emptyFields = Object.values(cropData).some(value=> value ==='');
                 
-                if(crop.fld_c_DatePlanted.lenth != 10)
+                if(cropData.fld_c_DatePlanted.length != 10)
                 {
                         
                         Alert.alert("Incorrect or incomplete value in Date Planted, please use the format YYYY-MM-DD");
@@ -448,7 +451,8 @@ const addCrops = () => {
                                 //canceled is true if the system UI is closed without selecting an image
                                 //so save image if new image is selected
                                 if (!result.canceled) {
-                                        await saveImage(result.assets[0].uri)
+                                        //await saveImage(result.assets[0].uri)
+                                        console.log(result.assets[0].uri)
                                 }
 		} catch (error) {
 			Alert.alert("Error uploading image: " + error.message)
@@ -470,6 +474,7 @@ const addCrops = () => {
 
         return (
                 /* Behavior subject to change, mostly making keyboard disappear after tapping elsewhere*/
+                <GestureHandlerRootView>
                 <KeyboardAvoidingView
                  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                  keyboardVerticalOffset={Platform.OS ==='ios' ? 0 : 20}
@@ -483,7 +488,7 @@ const addCrops = () => {
                                 <View style={styles.titleContainer}>
                                         <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>Add Crop</Text>
                                         <View style={styles.semicircle}>
-                                                <Text style={styles.AddMedia} onPress = {()=> setMediaModalVisible(true)}>Add media</Text>
+                                                <Text style={styles.AddMedia} onPress = {()=> setMediaModalVisible(true)}>Add Img</Text>
                                         </View>
                                 </View>
                         </View>
@@ -601,7 +606,7 @@ const addCrops = () => {
 
                         </Modal>
                         <UploadModal modalVisible={mediaModal} 
-					onBackPress={() => setModalVisible(false)} //disappear if it is clicked outside of the modal
+					onBackPress={() => setMediaModalVisible(false)} //disappear if it is clicked outside of the modal
 					onCameraPress={() => handleAddMedia("back")} //trigger camera when that icon is pressed
 					onGalleryPress={() => handleAddMedia("gallery")} //trigger gallery when that icon is pressed
 					onRemovePress={() => setMediaModalVisible(false)} //remove the image when that icon is passed
@@ -656,7 +661,8 @@ const addCrops = () => {
                                         listMode='SCROLLVIEW'
 					dropDownDirection='BOTTOM'
                                         scrollViewProps={{
-					        nestedScrollEnabled: true
+					        nestedScrollEnabled: true,
+                                                propagateSwipe: false
 					}}
                                         props={{
 						activeOpacity: 1,
@@ -709,7 +715,7 @@ const addCrops = () => {
 						zIndex: 65,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 
@@ -742,7 +748,7 @@ const addCrops = () => {
 						zIndex: 60,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 {/*}
@@ -819,7 +825,8 @@ const addCrops = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        placeholder = ' HRF Number'
+                                        placeholder = 'HRF Number'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         onChangeText={(text) => handleChange('fld_c_HRFNumber', parseInt(text))}
 
@@ -856,7 +863,7 @@ const addCrops = () => {
 						zIndex: 60,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownBottomContainer, isDark && styles.dropDownBottomContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownBottomContainer, styles.binaryDropDownContainer, isDark && styles.dropDownBottomContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 {/*}
@@ -875,6 +882,7 @@ const addCrops = () => {
                 
                 </TouchableWithoutFeedback>
                 </KeyboardAvoidingView>
+                </GestureHandlerRootView>
         )
 }
 
@@ -1114,10 +1122,15 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.WHITE_SMOKE,
 		borderRadius: 12,
 		zIndex: 70,
-                marginTop: -10,
+                top: -10,
                 width: '90%',
                 marginLeft: '8%',
                 marginRight: '5%',
+                position: 'relative',
+                height: 200,
+        },
+        binaryDropDownContainer: {
+                height: 90,
         },
         dropDownContainerDark: {
                 borderColor: Colors.WHITE_SMOKE, 

@@ -17,7 +17,7 @@ import NavBar from '../assets/NavBar.jsx'
 import icons from '../assets/icons/Icons.js';
 import { WeatherSlider } from '../src/components/WeatherSlider';
 import {getGridpoints, WeatherIcon} from '../assets/HomeWeatherFunctions'
-import { fetchWeatherData } from '../src/components/AmbientWeatherService';
+import { fetchWeatherData, sleep } from '../src/components/AmbientWeatherService';
 
 
 const todayDayLookup = {
@@ -56,6 +56,17 @@ const test_data = [
 	  line1: 'Loading',
 	  line2Label: 'Humidity',
 	  line2: 'Loading',
+	}
+];
+
+const err_data = [
+	{
+	  key: '1',
+	  image: icons.hourglass_green,
+	  line1Label: 'Retrieval Failed',
+	  line1: 'Live & Historical Data Not Found',
+	  line2Label: 'Try Reloading Page',
+	  line2: '',
 	}
 ];
 
@@ -167,12 +178,22 @@ const Home = () =>{
 			console.log(apiKey, appKey, deviceMacAddress)
 			//ensure that all of those were set
 			if (!apiKey || !apiKey.length || !appKey || !appKey.length || !deviceMacAddress || !deviceMacAddress.length) {
-				setAmbientWeatherData(test_data); 
+				console.log("Default triggered")
+				return
 			} else {
 				console.log("Fetching data")
-				const data = await fetchWeatherData(apiKey, appKey, deviceMacAddress);
+				let data = await fetchWeatherData(apiKey, appKey, deviceMacAddress);
 				//Assuming the response is an array of weather data entries, sorted with the newest at the start
-				usefulData = data[0]
+				while (!data) {
+					console.log("Rate limiter triggered so waiting")
+					await sleep(1 * 1000)
+					data = await fetchWeatherData(apiKey, appKey, deviceMacAddress);
+				}
+				
+				let usefulData = data[0]
+				if (usefulData.hasOwnProperty("lastData")) {
+					usefulData = usefulData.lastData
+				}
 				const weatherData = [
 					{
 						key: '1',
@@ -203,6 +224,7 @@ const Home = () =>{
 			}
 		  } catch (error) {
 			console.warn('Failed to fetch weather data:', error);
+			setAmbientWeatherData(err_data)
 		  }
 		};
 	
