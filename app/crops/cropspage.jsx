@@ -336,7 +336,7 @@ const CropsPage = () => {
 						zIndex: 60,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Active</Text>
@@ -363,7 +363,7 @@ const CropsPage = () => {
 						zIndex: 50,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Type</Text>
@@ -444,7 +444,7 @@ const CropsPage = () => {
 						zIndex: 60,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownBottomContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 
@@ -653,10 +653,12 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.WHITE_SMOKE,
 		borderRadius: 12,
 		zIndex: 50,
-                marginTop: -10,
+                top: -10,
                 width: '90%',
                 marginLeft: '8%',
                 marginRight: '5%',
+                position: 'relative',
+                height: 200,
         },
         dropDownContainerDark: {
                 borderColor: Colors.WHITE_SMOKE, 
@@ -673,6 +675,20 @@ const styles = StyleSheet.create({
                 marginRight: '5%',
                 height: 40,
                 zIndex: 1,
+        },
+        dropDownBottomContainer: {
+                borderWidth: 2,
+		borderColor: Colors.CHARCOAL,
+		backgroundColor: Colors.WHITE_SMOKE,
+		borderRadius: 12,
+		zIndex: 50,
+                marginBottom: -10,
+                width: '90%',
+                marginLeft: '8%',
+                marginRight: '5%',
+        },
+        binaryDropDownContainer: {
+                height: 90,
         },
         dropDownStyleDark: {
                 borderColor: Colors.WHITE_SMOKE, 
