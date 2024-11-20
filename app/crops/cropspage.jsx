@@ -53,8 +53,10 @@ const CropsPage = () => {
         const [selectedLocation, setSelectedLocation] = useState(parseInt(crop["6"], 10))
         const [selectedActive, setSelectedActive] = useState(activeState)
         const [selectedMedium, setSelectedMedium] = useState(parseInt(crop["5"], 10))
+        const [selectedType, setSelectedType] = useState(parseInt(crop["21"], 10))
         const [selectedVisible, setSelectedVisible] = useState(true)
-        const [types, setType] = useState([])
+        const [types, setTypes] = useState([])
+        const [addTypeAdded, setAddTypeAdded] = useState(false)
         const [mediums, setMediums] = useState([])
         const [modalVisible, setModalVisible] = useState(false);
         const [typeModalVisible, setTypeModalVisible] = useState(false);
@@ -153,6 +155,14 @@ const CropsPage = () => {
                 })
         }
 
+        const handleTypeChange = (value) =>
+                {
+                        setCropData({
+                                ...crop, 
+                                type: value,
+                        })
+                }
+
         const handleVisibleChange = (value) =>
         {
                 setCropData({
@@ -233,6 +243,21 @@ const CropsPage = () => {
                 fetchDarkModeSetting()
                 .catch(console.error);
         }, [])
+        useEffect(()=>{
+                const fetchCropTypes = async () =>{
+                        try{
+                                const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listCropTypes/${subID}`,{method:'GET'})
+                                if(!response.ok){
+                                        throw new Error(`HTTP error! Status: ${response.status}`);
+                                }
+                                const data = await response.json()
+                                setTypes(data)
+                        }catch(error){
+                                console.error("Error fetching Types", error)
+                        }
+                }
+                fetchCropTypes()
+        },[addTypeAdded])
         
 
         const toggleRead = () =>
@@ -260,6 +285,12 @@ const CropsPage = () => {
                     value: medium[0]
                 }));
         }, [mediums]);
+        const mutableCropTypes = useMemo(() => {
+                return types.map((type) => ({
+                    label: type[2],      
+                    value: type[0]
+                }));
+            }, [types]);
 
         return (
                 <View style={[styles.container, isDark && styles.containerDark]}>
@@ -413,13 +444,32 @@ const CropsPage = () => {
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Type</Text>
-                                <Input
-                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        defaultValue={crop["21"]}
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
-                                        maxLength={64}
-                                        readOnly = {readOnly}
-                                        onChangeText={(text) => handleChange('type' , text)}
+                                
+                                <DropDownPicker
+                                        theme={isDark ? 'DARK' : 'LIGHT'}
+                                        open={open === 'type'}
+                                        setOpen={() => handleOpenDropdown('type')}
+                                        value={selectedType}
+                                        setValue={setSelectedType}
+                                        disabled= {readOnly}
+                                        items={mutableCropTypes}
+                                        onChangeValue={handleTypeChange}
+                                        placeholder={crop.type}
+                                        listMode='SCROLLVIEW'
+					dropDownDirection='BOTTOM'
+                                        scrollViewProps={{
+					        nestedScrollEnabled: true
+					}}
+                                        props={{
+						activeOpacity: 1,
+					}}
+                                        containerStyle={{
+						width: '94%',
+						zIndex: 50,
+						marginBottom: 40,
+					}}
+                                        dropDownContainerStyle={[styles.dropDownContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Medium</Text>
                                 <DropDownPicker
