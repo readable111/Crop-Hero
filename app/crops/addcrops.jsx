@@ -8,7 +8,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { StyleSheet, 
         Text, 
         View, 
-        ScrollView, 
         KeyboardAvoidingView, 
         Platform,
         Keyboard,
@@ -20,7 +19,11 @@ import { StyleSheet,
         Modal,
         TouchableOpacity
 } from 'react-native';
-        
+import { 
+        GestureHandlerRootView,
+        FlatList,
+        ScrollView 
+} from 'react-native-gesture-handler'
 import Colors from '../../assets/Color.js';
 import { useFonts, useLocalSeachParams } from 'expo-font';
 import { router } from 'expo-router';
@@ -470,9 +473,10 @@ const addCrops = () => {
 
         return (
                 /* Behavior subject to change, mostly making keyboard disappear after tapping elsewhere*/
+                <GestureHandlerRootView>
                 <KeyboardAvoidingView
                  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                 keyboardVerticalOffset={Platform.OS ==='ios' ? 0 : 20}
+                 keyboardVerticalOffset={Platform.OS ==='ios' ? 20 : 20}
                  style={styles.containment}
                  >
                 <TouchableWithoutFeedback onPress = {Keyboard.dismiss}>
@@ -483,7 +487,7 @@ const addCrops = () => {
                                 <View style={styles.titleContainer}>
                                         <Text style={[styles.title, isDark && {color: Colors.WHITE_SMOKE}]}>Add Crop</Text>
                                         <View style={styles.semicircle}>
-                                                <Text style={styles.AddMedia} onPress = {()=> setMediaModalVisible(true)}>Add media</Text>
+                                                <Text style={styles.AddMedia} onPress = {()=> setMediaModalVisible(true)}>Add Image</Text>
                                         </View>
                                 </View>
                         </View>
@@ -656,7 +660,8 @@ const addCrops = () => {
                                         listMode='SCROLLVIEW'
 					dropDownDirection='BOTTOM'
                                         scrollViewProps={{
-					        nestedScrollEnabled: true
+					        nestedScrollEnabled: true,
+                                                propagateSwipe: false
 					}}
                                         props={{
 						activeOpacity: 1,
@@ -709,7 +714,7 @@ const addCrops = () => {
 						zIndex: 65,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 
@@ -742,7 +747,7 @@ const addCrops = () => {
 						zIndex: 60,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 {/*}
@@ -875,6 +880,7 @@ const addCrops = () => {
                 
                 </TouchableWithoutFeedback>
                 </KeyboardAvoidingView>
+                </GestureHandlerRootView>
         )
 }
 
@@ -1114,10 +1120,15 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.WHITE_SMOKE,
 		borderRadius: 12,
 		zIndex: 70,
-                marginTop: -10,
+                top: -10,
                 width: '90%',
                 marginLeft: '8%',
                 marginRight: '5%',
+                position: 'relative',
+                height: 200,
+        },
+        binaryDropDownContainer: {
+                height: 90,
         },
         dropDownContainerDark: {
                 borderColor: Colors.WHITE_SMOKE, 
