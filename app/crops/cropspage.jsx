@@ -25,21 +25,25 @@ const CropsPage = () => {
         const subID = "sub123"
         
         let [crop, setCropData] = useState(useLocalSearchParams());
-        //console.log(crop);
-        
-        
-        
-        const [open, setOpen] = useState(null)
-       // const [modalVisible, setModalVisible] = useState(false)
-        const [selectedIndoors, setSelectedIndoors] = useState(crop[16])
-        const [selectedLocation, setSelectedLocation] = useState(crop[19])
-        const [selectedActive, setSelectedActive] = useState(crop[17])
-        const [selectedVisible, setSelectedVisible] = useState(true)
         
         const [items, setItems] = useState([
                 {label: 'Yes', value: 'Yes' },
                 {label: 'No', value: 'No'}
         ]);
+        
+        let activeState = ""
+        if (crop["17"] == "0") {
+                activeState = items[1].value
+        } else {
+                activeState = items[0].value
+        }
+
+        const [open, setOpen] = useState(null)
+       // const [modalVisible, setModalVisible] = useState(false)
+        const [selectedIndoors, setSelectedIndoors] = useState(crop[16])
+        const [selectedLocation, setSelectedLocation] = useState(crop["19"])
+        const [selectedActive, setSelectedActive] = useState(activeState)
+        const [selectedVisible, setSelectedVisible] = useState(true)
         const [types, setType] = useState([])
         const [mediums, setMediums] = useState([])
         const [modalVisible, setModalVisible] = useState(false);
@@ -69,7 +73,6 @@ const CropsPage = () => {
 
         //Use state for switching if something is editable
         const [readOnly, setReadOnly] = useState(true)
-        console.log(crop)
 
         const handleChange = (fieldName, input) => {
                 //console.log("Changing field:", fieldName, "to value:", input);
@@ -141,7 +144,6 @@ const CropsPage = () => {
                 const emptyFields = Object.values(crop).some(value=> value ==='');
                 if(emptyFields)
                 {
-                        console.log(crop)
                         Alert.alert("Unable to save, some fields are still empty");
                 }
                 else
@@ -339,12 +341,12 @@ const CropsPage = () => {
                                         dropDownContainerStyle={[styles.dropDownContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Active</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Active?</Text>
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'active'}
                                         setOpen={() => handleOpenDropdown('active')}
-                                        defaultValue={selectedActive}
+                                        value={selectedActive}
                                         setValue={setSelectedActive}
                                         disabled= {readOnly}
                                         items={items}
@@ -420,7 +422,7 @@ const CropsPage = () => {
                                         onChangeText={(text) => handleChange('yield' , text)}
 
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Visible</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Visible?</Text>
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'visible'}
