@@ -85,15 +85,16 @@ const Notebook = () => {
         setModalVisible(true);
     };
 
-    const filteredEntries = () => {
+        const filteredEntries = () => {
         return entries.filter(entry => {
-            const entryDate = new Date(entry[1]);
-            const entryMonth = entryDate.getMonth() + 1; // Months are 0-indexed in JavaScript, so add 1
-            const entryYear = entryDate.getFullYear();
-    
+            const entryDate = new Date(entry[1]); // iso 
+            if (isNaN(entryDate)) return false; // Skip invalid dates
 
-            const monthMatch = selectedMonth === "All" || entryMonth === selectedMonth;
-            const yearMatch = selectedYear === "All" || entryYear === selectedYear;
+            const entryMonth = (entryDate.getMonth() + 1).toString().padStart(2, '0'); // changes month to number
+            const entryYear = entryDate.getFullYear().toString(); // Convert year 
+
+            const monthMatch = selectedMonth === "All" || selectedMonth === entryMonth;
+            const yearMatch = selectedYear === "All" || selectedYear === entryYear;
 
             return monthMatch && yearMatch;
         });
