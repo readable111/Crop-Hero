@@ -90,15 +90,13 @@ const BillingDetailsProfile = () =>{
 	const handleSave = async () =>{
 		//onChangeText={value => {setEmail(cleanText(email, noStopwords=false, noSQL=true));}}
 		console.log("save called: ", zipCode)
-		let cleanedZip = zipCode
-		console.log(cleanedZip)
-		if (cleanedZip in ZipLookup) {
+		if (zipCode in ZipLookup) {
 			console.log("exists")
 			//console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Zip: " + zipCode + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
 			setUserData({
 				...userData,
 				"fld_s_EmailAddr": email,
-				"fld_s_PostalCode": cleanedZip,
+				"fld_s_PostalCode": zipCode,
 				"fld_s_PhoneNum": phoneNum
 			})
 			//setSavePressed(true)
@@ -110,7 +108,7 @@ const BillingDetailsProfile = () =>{
                 throw new Error(`HTTP error! Status: ${response.status}`);
 			}
 			//Necessary until Home page is hooked up
-			await AsyncStorage.setItem('zip_code', cleanedZip)
+			await AsyncStorage.setItem('zip_code', zipCode)
 		} else {
 			Alert.alert("Zip Code doesn't exist. Default applied.")
 			console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Default Zip: " + defaultZip + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
