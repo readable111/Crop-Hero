@@ -135,6 +135,7 @@ const ViewCrops = () => {
                 else{
 
                         console.log('Item pressed:');
+                        console.log(item)
                         router.push({pathname: './cropspage', params: item, relativeToDirectory:true})
                 }
         }

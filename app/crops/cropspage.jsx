@@ -23,23 +23,37 @@ const CropsPage = () => {
 
         {/* Grabs variable form viewcrops page for use */}
         const subID = "sub123"
+        const offset = new Date().getTimezoneOffset()
         
         let [crop, setCropData] = useState(useLocalSearchParams());
-        //console.log(crop);
-        
-        
-        
-        const [open, setOpen] = useState(null)
-       // const [modalVisible, setModalVisible] = useState(false)
-        const [selectedIndoors, setSelectedIndoors] = useState(crop[16])
-        const [selectedLocation, setSelectedLocation] = useState(crop[19])
-        const [selectedActive, setSelectedActive] = useState(crop[17])
-        const [selectedVisible, setSelectedVisible] = useState(true)
+        console.log(crop)
         
         const [items, setItems] = useState([
                 {label: 'Yes', value: 'Yes' },
                 {label: 'No', value: 'No'}
         ]);
+        
+        let activeState = ""
+        if (crop["17"] == "0") {
+                activeState = items[1].value
+        } else {
+                activeState = items[0].value
+        }
+
+        let indoorsState = ""
+        if (crop["16"] == "0") {
+                indoorsState = items[1].value
+        } else {
+                indoorsState = items[0].value
+        }
+
+        const [open, setOpen] = useState(null)
+       // const [modalVisible, setModalVisible] = useState(false)
+        const [selectedIndoors, setSelectedIndoors] = useState(indoorsState)
+        const [selectedLocation, setSelectedLocation] = useState(parseInt(crop["6"], 10))
+        const [selectedActive, setSelectedActive] = useState(activeState)
+        const [selectedMedium, setSelectedMedium] = useState(parseInt(crop["5"], 10))
+        const [selectedVisible, setSelectedVisible] = useState(true)
         const [types, setType] = useState([])
         const [mediums, setMediums] = useState([])
         const [modalVisible, setModalVisible] = useState(false);
@@ -69,7 +83,9 @@ const CropsPage = () => {
 
         //Use state for switching if something is editable
         const [readOnly, setReadOnly] = useState(true)
-        console.log(crop)
+
+        const appliedOffset = new Date(crop["13"]).getTime() - (offset*60*1000)
+        const displayedDate = new Date(appliedOffset).toISOString().split('T')[0]
 
         const handleChange = (fieldName, input) => {
                 //console.log("Changing field:", fieldName, "to value:", input);
@@ -129,6 +145,14 @@ const CropsPage = () => {
                 })
         }
 
+        const handleMediumChange = (value) =>
+        {
+                setCropData({
+                        ...crop, 
+                        medium: value,
+                })
+        }
+
         const handleVisibleChange = (value) =>
         {
                 setCropData({
@@ -141,7 +165,6 @@ const CropsPage = () => {
                 const emptyFields = Object.values(crop).some(value=> value ==='');
                 if(emptyFields)
                 {
-                        console.log(crop)
                         Alert.alert("Unable to save, some fields are still empty");
                 }
                 else
@@ -166,6 +189,22 @@ const CropsPage = () => {
                 fetchLocations()
         },[])
 
+        useEffect(()=>{
+                const fetchMedia = async () =>{
+                        try{
+                                const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getMediums/${subID}`,{method:'GET'})
+                                if(!response.ok){
+                                        throw new Error(`HTTP error! Status: ${response.status}`);
+                                }
+                                const data = await response.json()
+                                console.log(data)
+                                setMediums(data)
+                        }catch(error){
+                                console.error("Error fetching locations", error)
+                        }
+                }
+                fetchMedia()
+        },[])
 
         useEffect(() => {
                 const fetchDarkModeSetting = async () => {
@@ -208,12 +247,19 @@ const CropsPage = () => {
                 }
                 
         };
+
         const mutableLocations = useMemo(() => {
                 return locations.map((location) => ({
                     label: location[4],      // Adjust property access based on API data structure
                     value: location[0]
                 }));
-            }, [locations]);
+        }, [locations]);
+        const mutableMediums = useMemo(() => {
+                return mediums.map((medium) => ({
+                    label: medium[1],      // Adjust property access based on API data structure
+                    value: medium[0]
+                }));
+        }, [mediums]);
 
         return (
                 <View style={[styles.container, isDark && styles.containerDark]}>
@@ -270,7 +316,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        defaultValue={crop[13]}
+                                        defaultValue={displayedDate}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={10}
                                         readOnly = {readOnly}
@@ -317,7 +363,7 @@ const CropsPage = () => {
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'indoors'}
                                         setOpen={() => handleOpenDropdown('indoors')}
-                                        defaultValue={selectedIndoors}
+                                        value={selectedIndoors}
                                         setValue={setSelectedIndoors}
                                         disabled= {readOnly}
                                         items={items}
@@ -336,15 +382,15 @@ const CropsPage = () => {
 						zIndex: 60,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Active</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Active?</Text>
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'active'}
                                         setOpen={() => handleOpenDropdown('active')}
-                                        defaultValue={selectedActive}
+                                        value={selectedActive}
                                         setValue={setSelectedActive}
                                         disabled= {readOnly}
                                         items={items}
@@ -363,13 +409,13 @@ const CropsPage = () => {
 						zIndex: 50,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Type</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        defaultValue={crop[21]}
+                                        defaultValue={crop["21"]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {readOnly}
@@ -380,12 +426,12 @@ const CropsPage = () => {
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'medium'}
                                         setOpen={() => handleOpenDropdown('medium')}
-                                        value={selectedActive}
-                                        setValue={setSelectedActive}
+                                        value={selectedMedium}
+                                        setValue={setSelectedMedium}
                                         disabled= {readOnly}
-                                        items={items}
-                                        onChangeValue={handleActiveChange}
-                                        placeholder= {crop.medium}
+                                        items={mutableMediums}
+                                        onChangeValue={handleMediumChange}
+                                        placeholder= {"Medium?"}
                                         listMode='SCROLLVIEW'
 					dropDownDirection='BOTTOM'
                                         scrollViewProps={{
@@ -405,7 +451,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        defaultValue={crop[2]}
+                                        defaultValue={crop["9"]}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {true}
@@ -420,7 +466,7 @@ const CropsPage = () => {
                                         onChangeText={(text) => handleChange('yield' , text)}
 
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Visible</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Visible?</Text>
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'visible'}
@@ -444,7 +490,7 @@ const CropsPage = () => {
 						zIndex: 60,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownBottomContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 
@@ -653,10 +699,12 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.WHITE_SMOKE,
 		borderRadius: 12,
 		zIndex: 50,
-                marginTop: -10,
+                top: -10,
                 width: '90%',
                 marginLeft: '8%',
                 marginRight: '5%',
+                position: 'relative',
+                height: 200,
         },
         dropDownContainerDark: {
                 borderColor: Colors.WHITE_SMOKE, 
@@ -673,6 +721,20 @@ const styles = StyleSheet.create({
                 marginRight: '5%',
                 height: 40,
                 zIndex: 1,
+        },
+        dropDownBottomContainer: {
+                borderWidth: 2,
+		borderColor: Colors.CHARCOAL,
+		backgroundColor: Colors.WHITE_SMOKE,
+		borderRadius: 12,
+		zIndex: 50,
+                marginBottom: -10,
+                width: '90%',
+                marginLeft: '8%',
+                marginRight: '5%',
+        },
+        binaryDropDownContainer: {
+                height: 90,
         },
         dropDownStyleDark: {
                 borderColor: Colors.WHITE_SMOKE, 

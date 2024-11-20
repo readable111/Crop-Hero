@@ -15,7 +15,7 @@ import {
 	Appearance
 } from 'react-native'
 import { useFonts } from 'expo-font'
-import { router, useLocalSearchParams } from 'expo-router'
+import { router } from 'expo-router'
 import { Input } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons'
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -27,8 +27,6 @@ import AppButton from '../assets/AppButton'
 import UploadImage from '../assets/ProfilePageImages/UploadImage'
 import {cleanText, cleanNumbers} from '../assets/sanitizer'
 import ZipLookup from '../assets/zip_codes.js'; 
-
-const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const BillingDetailsProfile = () =>{ 
 	{/*TODO: retrieve current model*/}
@@ -48,28 +46,12 @@ const BillingDetailsProfile = () =>{
 	const [phoneNum, setPhoneNum] = useState('+1 (012) 345-6789');
 	const [zipCode, setZipCode] = useState(defaultZip);
 	const [state, setState] = useState('Texas');
-	const [savePressed, setSavePressed] = useState(false)
 	const [userData, setUserData] = useState({})
 	const [isDarkMode, setIsDarkMode] = useState(false)
 
 
 	useEffect(() => {
 		// declare the async data fetching function
-	/*	const fetchUsername = async () => {
-			firstName = await AsyncStorage.getItem('first_name');
-			lastName = await AsyncStorage.getItem('last_name');
-
-			if (!firstName) {
-				firstName = "zina"
-			}
-			if (!lastName) {
-				lastName = "townley"
-			}
-
-			capitalizedUsername = toTitleCase(firstName + " " + lastName)
-
-			setUsername(capitalizedUsername)
-		}*/
 		const fetchSubInfo = async () =>{
 			try{
 				const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/subscriberInfo/${subID}`, {method:'GET'})
@@ -107,14 +89,15 @@ const BillingDetailsProfile = () =>{
 
 	const handleSave = async () =>{
 		//onChangeText={value => {setEmail(cleanText(email, noStopwords=false, noSQL=true));}}
-		//let cleanedZip = cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false)
-		//if (cleanedZip in ZipLookup) {
-			console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Zip: " + cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false) + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
+		console.log("save called: ", zipCode)
+		if (zipCode in ZipLookup) {
+			console.log("exists")
+			//console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Zip: " + zipCode + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
 			setUserData({
 				...userData,
-				"fld_s_EmailAddr": cleanText(email, noStopwords=false, noSQL=true, textOnly=true),
-				"fld_s_PostalCode": cleanNumbers(zipCode, decimalsAllowed=false, negativesAllowed=false),
-				"fld_s_PhoneNum": cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true)
+				"fld_s_EmailAddr": email,
+				"fld_s_PostalCode": zipCode,
+				"fld_s_PhoneNum": phoneNum
 			})
 			//setSavePressed(true)
 			//console.log("Save Pressed: ", savePressed)
@@ -124,12 +107,24 @@ const BillingDetailsProfile = () =>{
 			if(!response.ok){
                 throw new Error(`HTTP error! Status: ${response.status}`);
 			}
-//		} else {
-		//	console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Default Zip: " + defaultZip + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
-			//setZipCode(defaultZip)
-			//Alert.alert("Zip Code doesn't exist. Default applied.")
-			//await AsyncStorage.setItem('zip_code', defaultZip)
-	//	}
+			//Necessary until Home page is hooked up
+			await AsyncStorage.setItem('zip_code', zipCode)
+		} else {
+			Alert.alert("Zip Code doesn't exist. Default applied.")
+			console.log("Saved. Subscription Model: " + value + "\t Email: " + cleanText(email, noStopwords=false, noSQL=true, textOnly=true) + "\t Phone: " + cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true) + "\t Default Zip: " + defaultZip + "\t State: " + cleanText(state, noStopwords=false, noSQL=true, textOnly=true));
+			setUserData({
+				...userData,
+				"fld_s_EmailAddr": cleanText(email, noStopwords=false, noSQL=true, textOnly=true),
+				"fld_s_PostalCode": defaultZip,
+				"fld_s_PhoneNum": cleanNumbers(phoneNum, decimalsAllowed=false, negativesAllowed=false, phone=true)
+			})
+			const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/updateSubscriberInfo`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({subID:"sub123", subData: userData})})
+			console.log("Response ", response)
+			if(!response.ok){
+                throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+			await AsyncStorage.setItem('zip_code', defaultZip)
+		}
 	};
 
 	useEffect(() => {
@@ -150,26 +145,6 @@ const BillingDetailsProfile = () =>{
 		  	// make sure to catch any error
 		  	.catch(console.error);
 	}, [])
-
-
-	/*useEffect(() =>{
-		const updateSub = async () =>{
-			console.log("updateSub called")
-			if(savePressed){
-				try{
-					console.log("POST called with ", userData)
-					const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/updateSubscriberInfo`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(userData)})
-					if(!response.ok){
-                             throw new Error(`HTTP error! Status: ${response.status}`);
-					}
-					setSavePressed(false)
-				}catch(err){
-                        console.error("Error: ", error)
-				}
-			}
-		}
-		updateSub()
-	}, [savePressed])*/
 
     useEffect(() => {
 		// declare the async data fetching function
@@ -196,9 +171,6 @@ const BillingDetailsProfile = () =>{
 		  	// make sure to catch any error
 		  	.catch(console.error);
 	}, [])
-
-	{/*TODO: retrieve data from local storage or database*/}
-	{/*retrieve data and store it in these variables to be displayed as default values in input boxes*/}
 
 	const [fontsLoaded, fontError] = useFonts({
 		'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
