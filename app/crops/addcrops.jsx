@@ -34,6 +34,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as ImagePicker from 'expo-image-picker'
 import UploadModal from '../../assets/ProfilePageImages/UploadModal.jsx'
+import CalendarModal from '../../assets/CalendarModal.jsx'
 
 
 const addCrops = () => {
@@ -59,7 +60,7 @@ const addCrops = () => {
 
         })
         const  [savePressed, setSavePressed ] = useState(false)
-
+        const [selectedDate, setSelectedDate] = useState('No date selected yet');
         const [open, setOpen] = useState(null);
         const [selectedIndoors, setSelectedIndoors] = useState()
         const [selectedLocation, setSelectedLocation] = useState()
@@ -199,6 +200,10 @@ const addCrops = () => {
 
         //on save, alert for save push to view crops and add to list
         const handleSave = () =>{
+                //selectedDate
+                handleChange('fld_c_DatePlanted', selectedDate)
+                console.log("Date Planted: ", cropData.fld_c_DatePlanted)
+
                 //check if mandatory fields are not set
                 //Optional Fields: Comments, Yield, Visible, Started Indoors, Active
                 let emptyFields = false
@@ -657,13 +662,7 @@ const addCrops = () => {
                                         onChangeText={(text) => handleChange('fld_c_Source', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted*</Text>
-                                <Input
-                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        placeholder = 'YYYY-MM-DD'
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
-                                        maxLength={10}
-                                        onChangeText={(text) => handleChange('fld_c_DatePlanted', text)}
-                                />
+                                <CalendarModal isDarkMode={isDark} selectedDate={selectedDate} setSelectedDate={(val) => {setSelectedDate(val); handleChange('fld_c_DatePlanted', val)}}/>
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Location*</Text>
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}
