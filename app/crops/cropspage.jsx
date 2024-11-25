@@ -498,7 +498,7 @@ const CropsPage = () => {
                                         dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Crop Number</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         defaultValue={crop["9"]}

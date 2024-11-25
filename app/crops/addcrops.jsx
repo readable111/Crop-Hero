@@ -199,7 +199,12 @@ const addCrops = () => {
 
         //on save, alert for save push to view crops and add to list
         const handleSave = () =>{
-                const emptyFields = Object.values(cropData).some(value=> value ==='');
+                //check if mandatory fields are not set
+                //Optional Fields: Comments, Yield, Visible, Started Indoors, Active
+                let emptyFields = false
+                if (cropData.fld_c_CropName === '' || cropData.fld_c_Variety === '' || cropData.fld_c_Source === '' || cropData.fld_c_DatePlanted === '' || cropData.fld_l_LocationID_fk === '' || cropData.fld_ct_CropTypeID_fk === '' || cropData.fld_m_MediumID_fk === '' || cropData.fld_c_HRFNumber === '') {
+                        emptyFields = true
+                }
                 
                 if(cropData.fld_c_DatePlanted.length != 10)
                 {
@@ -616,7 +621,7 @@ const addCrops = () => {
                         <ScrollView> 
                                 <View style={styles.spacer}/>
                                 <StatusBar style={{backgroundColor: 'white'}}/>
-                                <Text style = {[styles.label, isDark && styles.labelDark]}>Crop Name</Text>
+                                <Text style = {[styles.label, isDark && styles.labelDark]}>Crop Name*</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = "Name"
@@ -625,7 +630,17 @@ const addCrops = () => {
                                         onChangeText={(text) => handleChange('fld_c_CropName', text)}
                                         testID="name-input"
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Variety</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Crop Number*</Text>
+                                <Input
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
+                                        placeholder = 'Crop Number'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
+                                        maxLength={64}
+                                        onChangeText={(text) => handleChange('fld_c_HRFNumber', parseInt(text))}
+                                        keyboardType='number-pad'
+
+                                />
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Variety*</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = 'Variety'
@@ -633,7 +648,7 @@ const addCrops = () => {
                                         maxLength={128}
                                         onChangeText={(text) => handleChange('fld_c_Variety', text)}
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Source</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Source*</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = 'Source'
@@ -641,7 +656,7 @@ const addCrops = () => {
                                         maxLength={128}
                                         onChangeText={(text) => handleChange('fld_c_Source', text)}
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted*</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = 'YYYY-MM-DD'
@@ -649,7 +664,7 @@ const addCrops = () => {
                                         maxLength={10}
                                         onChangeText={(text) => handleChange('fld_c_DatePlanted', text)}
                                 />
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Location</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Location*</Text>
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'location'}
@@ -685,16 +700,7 @@ const addCrops = () => {
                                         onChangeText={(text) => handleChange('fld_l_LocationID_pk', text)}
                                 />
                                 */}
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Comments</Text>
-                                <Input
-                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        placeholder = 'Comments'
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
-                                        maxLength={1024}
-                                        onChangeText={(text) => handleChange('fld_c_Comments', text)}
-                                />
                                 <Text style={[styles.label, isDark && styles.labelDark, styles.dropdownLabel]}>Started Indoors?</Text>
-                                
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'indoors'}
@@ -762,7 +768,7 @@ const addCrops = () => {
 
                                 />
                                 */}
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Type</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Type*</Text>
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}
                                         open={open === 'type'}
@@ -789,7 +795,7 @@ const addCrops = () => {
                                         dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 /> 
-                                <Text style={[styles.label, isDark && styles.labelDark]}>Medium</Text>
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Medium*</Text>
                              {/*   <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
                                         placeholder = 'Medium'
@@ -824,15 +830,6 @@ const addCrops = () => {
                                         dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 /> 
-                                <Text style={[styles.label, isDark && styles.labelDark]}>HRF Number</Text>
-                                <Input
-                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        placeholder = 'HRF Number'
-                                        style={[styles.inputText, isDark && styles.inputTextDark]}
-                                        maxLength={64}
-                                        onChangeText={(text) => handleChange('fld_c_HRFNumber', parseInt(text))}
-
-                                />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Yield</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
@@ -840,7 +837,16 @@ const addCrops = () => {
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         onChangeText={(text) => handleChange('fld_c_Yield', text)}
+                                        keyboardType='number-pad'
 
+                                />
+                                <Text style={[styles.label, isDark && styles.labelDark]}>Comments</Text>
+                                <Input
+                                        inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
+                                        placeholder = 'Comments'
+                                        style={[styles.inputText, isDark && styles.inputTextDark]}
+                                        maxLength={1024}
+                                        onChangeText={(text) => handleChange('fld_c_Comments', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Visible?</Text>
                                 <DropDownPicker
