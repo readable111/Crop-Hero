@@ -14,7 +14,6 @@ import NavBar from './NavBar.jsx';
 import {SearchInput} from './SearchFeature.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ViewShot from 'react-native-view-shot';
-import CameraRoll from '@react-native-community/cameraroll';
 import * as MediaLibrary from "expo-media-library";
 
 const defaultDataset = {
