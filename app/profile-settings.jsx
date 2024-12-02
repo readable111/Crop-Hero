@@ -27,13 +27,50 @@ import AppButton from '../assets/AppButton.jsx'
 import {cleanText} from '../assets/sanitizer'
 
 
+async function setDefaultVisibility(isPublic) {
+	if (isPublic) {
+		await AsyncStorage.setItem('default_visibility', 'Yes')
+		console.log('Yes')
+	} else {
+		await AsyncStorage.setItem('default_visibility', 'No')
+		console.log('No')
+	}
+}
+
 const SettingsProfile = () =>{ 
 	{/*retrieve software version from package.json*/}
 	var pkg = require('../package.json')
 	const softwareVersion = pkg.version
 
+	{/*create the notification flags for later use*/}
+	const [hasNotificationsEnabled, setHasNotificationsEnabled] = useState(false)
+	const [hasTaskNotificationsEnabled, setHasTaskNotificationsEnabled] = useState(false)
+	const [hasPaymentNotificationsEnabled, setHasPaymentNotificationsEnabled] = useState(false)
+
+	{/*create the farmer list*/}
+	{/*TODO: retrieve farmers from database*/}
+	const [open, setOpen] = useState(false);
+  	const [value, setValue] = useState(null);
+  	const [items, setItems] = useState([
+    	{label: 'Zina Townley', value: 'zina townley'},
+    	{label: 'Farmer Benjamin Folger-Franklin', value: 'farmer benjamin folger-franklin'}
+  	]);
+
 	{/*create the isDarkMode flag for later use*/}
 	const [isDarkMode, setIsDarkMode] = useState(false)
+	{/*create the private/public flag for later use*/}
+	const [hasPublicDefaultVisibility, setHasPublicDefaultVisibility] = useState(false)
+
+	useEffect(() => {
+		const fetchDefaultVis = async () => {
+			const default_vis = await AsyncStorage.getItem('default_visibility');
+			if (default_vis == 'Yes') {
+				setHasPublicDefaultVisibility(true)
+			}
+		}
+		fetchDefaultVis()
+			.catch(console.error);
+	}, [])
 
 	useEffect(() => {
 		// declare the async data fetching function
@@ -61,23 +98,6 @@ const SettingsProfile = () =>{
 		  	// make sure to catch any error
 		  	.catch(console.error);
 	}, [])
-
-	{/*create the private/public flag for later use*/}
-	const [hasPublicDefaultVisibility, setHasPublicDefaultVisibility] = useState(false)
-
-	{/*create the notification flags for later use*/}
-	const [hasNotificationsEnabled, setHasNotificationsEnabled] = useState(false)
-	const [hasTaskNotificationsEnabled, setHasTaskNotificationsEnabled] = useState(false)
-	const [hasPaymentNotificationsEnabled, setHasPaymentNotificationsEnabled] = useState(false)
-
-	{/*create the farmer list*/}
-	{/*TODO: retrieve farmers from database*/}
-	const [open, setOpen] = useState(false);
-  	const [value, setValue] = useState(null);
-  	const [items, setItems] = useState([
-    	{label: 'Zina Townley', value: 'zina townley'},
-    	{label: 'Farmer Benjamin Folger-Franklin', value: 'farmer benjamin folger-franklin'}
-  	]);
 
 	
 	const [fontsLoaded, fontError] = useFonts({
@@ -146,7 +166,7 @@ const SettingsProfile = () =>{
 						<Switch 
 							testID={"visibility-switch"}
 							value={hasPublicDefaultVisibility} 
-							onValueChange={() => setHasPublicDefaultVisibility((previousState) => !previousState)}
+							onValueChange={() => {setHasPublicDefaultVisibility((previousState) => !previousState); setDefaultVisibility(!hasPublicDefaultVisibility)}}
 							thumbColor={Colors.IRISH_GREEN}
 							trackColor={{false: Colors.SOFT_GREEN, true: Colors.MALACHITE}}
 						></Switch>
@@ -298,19 +318,6 @@ const SettingsProfile = () =>{
 				</Row>
 				{/*divider line*/}
 				<View style={styles.dividerLine} />
-				{/*allow account sync across multiple devices*/}
-				<Row height={90} >
-					<Col relativeColsCovered={9} alignItems='flex-start' >
-						<Text style={styles.settingsTitle}>Account Sync</Text>
-						<Text style={styles.settingsDesc}>Generate a code that can be entered into another device to sync account</Text>
-					</Col>
-					<Col relativeColsCovered={3} alignItems='center'>
-						{/*TODO: generate code to sync account via QR code, 60s code, etc.*/}
-						<AppButton testID={"sync"} title="" icon={Icons.arrow_right_black} specifiedStyle={styles.circle} onPress={() => {Alert.alert('Disabled until Phase 2'); console.log("sync")}}/>
-					</Col>
-				</Row>
-				{/*divider line*/}
-				<View style={styles.dividerLine} />
 				{/*display policies that user has agreed to*/}
 				<Row height={60} >
 					<Col relativeColsCovered={9} alignItems='flex-start' >
@@ -406,7 +413,7 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.SCOTCH_MIST_TAN,
 		color: Colors.ALMOST_BLACK,
 		width: '90%',
-		height: 440,
+		height: 330,
 		borderRadius: 12,
 		flex: 12, // # of columns
 		paddingLeft: 15,

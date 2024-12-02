@@ -36,7 +36,6 @@ import * as ImagePicker from 'expo-image-picker'
 import UploadModal from '../../assets/ProfilePageImages/UploadModal.jsx'
 import CalendarModal from '../../assets/CalendarModal.jsx'
 
-
 const addCrops = () => {
         {/* */}
         const subID = "sub123"
@@ -65,7 +64,8 @@ const addCrops = () => {
         const [selectedIndoors, setSelectedIndoors] = useState()
         const [selectedLocation, setSelectedLocation] = useState()
         const [selectedActive, setSelectedActive] = useState()
-        const [selectedVisible, setSelectedVisible] = useState()
+        //console.log("Vis: ", default_vis)
+        const [selectedVisible, setSelectedVisible] = useState(0b0)
         const [items, setItems] = useState([
                 {label: 'Yes', value: 0b1 },
                 {label: 'No', value: 0b0}
@@ -235,6 +235,20 @@ const addCrops = () => {
                 Alert.alert('Save pressed');
                 console.log(cropData);
         }
+
+        useEffect(() => {
+                const fetchDefaultVis = async () => {
+                        const default_vis = await AsyncStorage.getItem('default_visibility');
+                        console.log(default_vis)
+                        if (default_vis == 'Yes') {
+                                setSelectedVisible(0b1)
+                                //handleChange('fld_c_IsVisible', 0b1)
+                        }
+                }
+                fetchDefaultVis()
+                .catch(console.error);
+        }, [])
+
         useEffect(() => {
                 (async () => {
                         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -266,16 +280,10 @@ const addCrops = () => {
                         setIsDarkMode(result)
                 }
                 fetchDarkModeSetting()
-                .catch(console.error);
-                const min = 100000;
-                const max = 999999;
-                const setHRFnum = Math.floor(Math.random() * (max - min - 1)) + min;
-                cropData.hrfNum = setHRFnum;
-                console.log(setHRFnum);
-                console.log(cropData.hrfNum)
-                
+                .catch(console.error);             
         }, [])
-         useEffect(()=>{
+
+        useEffect(()=>{
                         const fetchData = async () =>{
                                 console.log(cropData)
                                 if(savePressed){
