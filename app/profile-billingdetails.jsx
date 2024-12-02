@@ -12,7 +12,8 @@ import {
 	StatusBar, 
 	Image, 
 	Alert,
-	Appearance
+	Appearance,
+  	Dimensions,
 } from 'react-native'
 import { useFonts } from 'expo-font'
 import { router } from 'expo-router'
@@ -27,6 +28,8 @@ import AppButton from '../assets/AppButton'
 import UploadImage from '../assets/ProfilePageImages/UploadImage'
 import {cleanText, cleanNumbers} from '../assets/sanitizer'
 import ZipLookup from '../assets/zip_codes.js'; 
+
+const { width } = Dimensions.get('window')
 
 const BillingDetailsProfile = () =>{ 
 	{/*TODO: retrieve current model*/}
@@ -334,9 +337,9 @@ const styles = StyleSheet.create({
     },
 	oval: {
 		backgroundColor: Colors.SANTA_GRAY,
-		width: 300,
+		width: width,
 		height: 420,
-		borderRadius: 300 / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
+		borderRadius: width / 2, //borderRadius cannot exceed 50% of width or React-Native makes it into a diamond
 		transform: [{ scaleX: 2 }],
 		marginTop: 60,
 		alignItems: 'center',
