@@ -200,15 +200,16 @@ const addCrops = () => {
 
         //on save, alert for save push to view crops and add to list
         const handleSave = () =>{
-                //selectedDate
-                handleChange('fld_c_DatePlanted', selectedDate)
-                console.log("Date Planted: ", cropData.fld_c_DatePlanted)
-
                 //check if mandatory fields are not set
                 //Optional Fields: Comments, Yield, Visible, Started Indoors, Active
                 let emptyFields = false
                 if (cropData.fld_c_CropName === '' || cropData.fld_c_Variety === '' || cropData.fld_c_Source === '' || cropData.fld_c_DatePlanted === '' || cropData.fld_l_LocationID_fk === '' || cropData.fld_ct_CropTypeID_fk === '' || cropData.fld_m_MediumID_fk === '' || cropData.fld_c_HRFNumber === '') {
                         emptyFields = true
+                } else {
+                        cropData.fld_c_Comments = "Unset"
+                        cropData.fld_c_WasStartedIndoors = 0
+                        cropData.fld_c_Yield = "0"
+                        cropData.fld_c_isActive = 0
                 }
                 
                 if(cropData.fld_c_DatePlanted.length != 10)
@@ -369,12 +370,14 @@ const addCrops = () => {
                 const addMedium = async() => {
                         if(addMediumAdded){
                                 try{
-                                        const response = await fetch('https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addMediumType',{method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({cropData: mediumNameOption, farmID: 1, subID: "sub123"})})
+                                        const response = await fetch('https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addMedium',{method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({mediumType: mediumNameOption, farmID: 1, subID: "sub123"})})
                                 
                                         if(!response.ok)
                                         {
                                                 throw new Error(`HTTP error! Status: ${response.status}`);
                                         }
+                                        setMediumNameOption('')
+                                        setAddMediumAdded(false)
                                 }
                                 catch(error){
                                         console.error("Error:", error)
