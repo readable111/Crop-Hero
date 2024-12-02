@@ -129,8 +129,8 @@ const Notebook = () => {
         );
     };
 
-    const handleExport = () => {
-        console.log("Exporting entries:", entries);
+    const handleExport = (entry) => {
+        console.log("Exporting entry:", entry);
     };
 
     const handleDelete = (entryID) => {
@@ -140,8 +140,9 @@ const Notebook = () => {
             [
                 { text: "Cancel", style: "cancel" },
                 { text: "OK", onPress: () => {
-                    
-                    setDeletePressed(true)}}
+                        setDeletePressed(true)                        
+                  }
+                }
             ],
             { cancelable: false }
         );
@@ -162,7 +163,8 @@ const Notebook = () => {
                     console.error("HTTP ERROR:")
                     throw new Error;
                 }
-                const data = await response.json()
+                let data = await response.json()
+                data.sort((a, b) => new Date(b[1]) - new Date(a[1]));
                 setEntries(data)
             }catch(error){
                 console.error("Error:", error)
@@ -173,7 +175,8 @@ const Notebook = () => {
 
     useEffect(()=>{
         const addEntry = async () =>{
-            if(savePressed){
+            if(savePressed && !editPressed){
+                console.log("save pressed, not edit")
             try{
                 console.log(newEntry)
                 const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addJournalEntry`,{method: 'POST', headers:{'Content-Type':'application/json'}, body:  JSON.stringify({subID: subID, entry:newEntry})})
@@ -183,17 +186,19 @@ const Notebook = () => {
                 }
                 setSavePressed(false)
                 setNewEntry(null)
+                setEditPressed(false)
             }catch(error){
                 console.error("Error:", error)
             }
         }
         }
         addEntry()
-    }, [savePressed])
+    }, [savePressed, editPressed])
 
     useEffect(()=>{
         const editEntry = async () =>{
             if(savePressed && editPressed){
+                console.log("edit save triggered")
                 try{
                 const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/updateJournalEntry`,{method: 'POST', headers:{'Content-Type':'application/json'}, body:  JSON.stringify({subID: subID, entryID:selectedEntry[0], entry:newEntry})})
                if(!response.ok){
@@ -209,7 +214,7 @@ const Notebook = () => {
             }
         }
         editEntry()
-    }, [savePressed, deletePressed])
+    }, [savePressed, editPressed])
 
     useEffect(()=>{
         const deleteEntry = async () =>{
@@ -222,6 +227,7 @@ const Notebook = () => {
                    }
                    setNewEntry(null)
                    setDeletePressed(false)
+                   router.replace("/notebook")
                }catch(error){
                    console.error("Error:", error)
                }
@@ -259,7 +265,7 @@ const Notebook = () => {
                     dropdownIconColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
                     onValueChange={(itemValue) => setSelectedMonth(itemValue)}
                 >
-                    <Picker.Item label="Month" value="All" style={isDarkMode ? {backgroundColor: Colors.CHARCOAL, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.ALMOND_TAN, color: Colors.ALMOST_BLACK}} />
+                    <Picker.Item label="All Months" value="All" style={isDarkMode ? {backgroundColor: Colors.CHARCOAL, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.ALMOND_TAN, color: Colors.ALMOST_BLACK}} />
                     {[...Array(12)].map((_, i) => (
                         <Picker.Item style={isDarkMode ? {backgroundColor: Colors.CHARCOAL, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.ALMOND_TAN, color: Colors.ALMOST_BLACK}} key={i} label={`${i + 1}`.padStart(2, '0')} value={`${i + 1}`.padStart(2, '0')} />
                     ))}
@@ -271,7 +277,7 @@ const Notebook = () => {
                     dropdownIconColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
                     onValueChange={(itemValue) => setSelectedYear(itemValue)}
                 >
-                    <Picker.Item style={isDarkMode ? {backgroundColor: Colors.CHARCOAL, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.ALMOND_TAN, color: Colors.ALMOST_BLACK}} label="Year" value="All" />
+                    <Picker.Item style={isDarkMode ? {backgroundColor: Colors.CHARCOAL, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.ALMOND_TAN, color: Colors.ALMOST_BLACK}} label="All Years" value="All" />
                     {[2023, 2024, 2025, 2026].map(year => (
                         <Picker.Item style={isDarkMode ? {backgroundColor: Colors.CHARCOAL, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.ALMOND_TAN, color: Colors.ALMOST_BLACK}} key={year} label={year.toString()} value={year.toString()} />
                     ))}
