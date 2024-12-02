@@ -144,7 +144,7 @@
 1. [Tools & Resources](#tools)
     1. [General Docs](#general_docs)
     1. [Testing Utilities](#testing_utilities)
-    1. [Ambient Weather](#ambient_weather)
+    1. [Ambient Weather](#ambient_weather_tools)
 1. [Appendices](#appendices)
     1. [Appendix A: Understanding React Native](#react_native)
         1. [File Types](#file_types)
@@ -1666,7 +1666,7 @@ This is a common issue where you are unable to find any component with the desir
 * Color Blindness Simulator: [https://daltonlens.org/colorblindness-simulator](https://daltonlens.org/colorblindness-simulator)
 * Luminance Contrast Ratio Calculator: [https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php](https://www.leserlich.info/werkzeuge/kontrastrechner/index-en.php)
 
-### Ambient Weather <a name="ambient_weather"></a>
+### Ambient Weather <a name="ambient_weather_tools"></a>
 *Author: Daniel*
 
 * Ambient Weather RESTful API Docs: [https://ambientweather.docs.apiary.io](https://ambientweather.docs.apiary.io)
@@ -1675,8 +1675,6 @@ This is a common issue where you are unable to find any component with the desir
 * Example Code using Ambient Weather for a Tidbyt Applet: [https://github.com/tidbyt/community/blob/main/apps/ambientweather/ambient_weather.star](https://github.com/tidbyt/community/blob/main/apps/ambientweather/ambient_weather.star)
 * Node.JS Wrapper Library for Ambient Weather: [https://github.com/owise1/ambient-weather-api](https://github.com/owise1/ambient-weather-api)
     - This project uses React Native, not Node.JS. As such, the library itself cannot be used, but it can be used as examples of how to access the API and to handle the responses. The src/ and examples/ folders are particularly useful.
-
-## Logs & Records <a name="logs"></a>
 
 ## Appendices <a name="appendices"></a>
 ### Appendix A: Understanding React Native <a name="react_native"></a>
@@ -1779,11 +1777,13 @@ The Expo Router library will automatically generate statically typed routes for 
 * Add a subscription model, likely based on a freemium model
     * Charge via PayPal or Square to offload security considerations and PCI DSS requirements
     * Includes writing a proper Terms of Service and Privacy Policy, for legal reasons
-* Expand social media integration
+* Add social media integration
+    * Specifically for Facebook
 * Allow crop sharing between app users as part of data aggregation for the Data Hub graphs
     * This would be connected to crop visibility where only crops set to visible will be included in the data aggregation
     * Includes implementation of the default visibility toggle switch
 * Improve the speed and efficiency of calls to APIs or the backend
+    * Cache retrieved crops in AsyncStorage, which is much faster than calling the backend
 * Add GPS functionality and/or geotagging to identify specific crops or locations
     * Perhaps add a map of the area with zones and markers
 * Add a desktop computer-focused website interface for the mobile app
@@ -1792,3 +1792,22 @@ The Expo Router library will automatically generate statically typed routes for 
 * Add push notifications for upcoming tasks and payments
     * May include crops, livestock, tasks, task types, locations, etc.
 * Further improve Floyd-Rivest sorting algorithm per [https://core.ac.uk/download/pdf/82672439.pdf](https://core.ac.uk/download/pdf/82672439.pdf) and [https://github.com/koskinev/turboselect](https://github.com/koskinev/turboselect)
+* Optimize FlatList on View Crops, Notebook, and To-Do for large amounts of entries
+    * [https://stackoverflow.com/questions/47678959/react-native-flatlist-performance-problems-with-large-list](https://stackoverflow.com/questions/47678959/react-native-flatlist-performance-problems-with-large-list)
+    * [https://reactnative.dev/docs/optimizing-flatlist-configuration](https://reactnative.dev/docs/optimizing-flatlist-configuration)
+* Swap out Notebook's and To-Do's date selectors with the CalendarModal
+* Actually save and use the crop images
+* Have a way to edit/remove mediums, locations, and types after creation
+* Use Expo's calendar library to save tasks to the phone's calendar as events
+* Increase the number of stations being used by Ambient Weather's information fetching
+* Allow the user to share screenshots via texts and other services
+    * [https://blog.openreplay.com/capturing-screenshots-in-react-native/](https://blog.openreplay.com/capturing-screenshots-in-react-native/)
+* Fix the styling issues
+    * Speeddial icons are off-center on Notebook
+    * Buttons in To-Do Modal look terrible
+    * Make it so that date dropdowns display actual contents in To-Do Modal
+    * Dropdown labels are behind their own boxes on Add Crop
+    * Stylize Data Hub to better display currently selected crop
+    * Stylize Data Hub to better display the export button
+    * Fix light mode on To-Do and Notebook with how the almond oval covers the black border
+    * Redesign entire Crops pages
