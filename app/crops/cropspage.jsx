@@ -354,7 +354,7 @@ const CropsPage = () => {
                                         onChangeText={(text) => handleChange('source', text)}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Date Planted*</Text>
-                                <CalendarModal isDarkMode={isDark} selectedDate={selectedDate} setSelectedDate={(val) => {setSelectedDate(val); handleChange('datePlanted', val)}}/>
+                                <CalendarModal disabled={true} isDarkMode={isDark} selectedDate={selectedDate} setSelectedDate={(val) => {setSelectedDate(val); handleChange('datePlanted', val)}}/>
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Location*</Text>
                                 <DropDownPicker
                                         theme={isDark ? 'DARK' : 'LIGHT'}

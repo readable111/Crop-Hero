@@ -18,7 +18,7 @@ import { Calendar, CalendarUtils } from 'react-native-calendars';
 
 //Please only pass date strings to initDate in the format of YYYY-MM-DD
 //Please pass an integer to dateRange to indicate the furthest into the future and back into the past that you can select
-const CalendarModal = ({selectedDate, setSelectedDate,  dateRange=90, isDarkMode=false}) => {
+const CalendarModal = ({selectedDate, setSelectedDate,  dateRange=90, isDarkMode=false, disabled=false}) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const TODAY = new Date().toISOString().split('T')[0] + "";
@@ -29,9 +29,58 @@ const CalendarModal = ({selectedDate, setSelectedDate,  dateRange=90, isDarkMode
         return CalendarUtils.getCalendarDateString(newDate);
     };
 
-    return (
-        <View>
-            <TouchableOpacity activeOpacity={0.5} onPress={() => setIsOpen(!isOpen)}>
+    if (!disabled) {
+        return (
+            <View>
+                <TouchableOpacity activeOpacity={0.5} onPress={() => setIsOpen(!isOpen)}>
+                    <Input
+                        inputContainerStyle = {[styles.textBox, isDarkMode && styles.textBoxDark]}
+                        maxLength={128}
+                        disabled={true}
+                        value={selectedDate}
+                        disabledInputStyle={[styles.inputText, isDarkMode && styles.inputTextDark]}
+                    />
+                </TouchableOpacity>
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={isOpen}
+                >
+                    <Pressable 
+                        onPress={() => setIsOpen(false)}
+                        style={styles.backContainer}
+                    >
+                        <View style={styles.container}>
+                            <Calendar
+                                onDayPress={day => {
+                                    setSelectedDate(day.dateString);
+                                    setIsOpen(false)
+                                }}
+                                markedDates={{
+                                    [selectedDate]: {selected: true, disableTouchEvent: true, selectedColor: Colors.IRISH_GREEN, marked: true},
+                                }}
+                                maxDate={getDate(dateRange)}
+                                minDate={getDate(-1 * dateRange)}
+                                theme={isDarkMode ? {
+                                    calendarBackground: Colors.IRIDIUM,
+                                    dayTextColor: Colors.SANTA_GRAY,
+                                    monthTextColor: Colors.WHITE_SMOKE,
+                                    todayTextColor: Colors.IRISH_GREEN,
+                                    arrowColor: Colors.IRISH_GREEN,
+                                } : {
+                                    calendarBackground: Colors.WHITE_SMOKE,
+                                    todayTextColor: Colors.IRISH_GREEN,
+                                    arrowColor: Colors.IRISH_GREEN,
+                                }}
+                            />
+                        </View>
+                    </Pressable>
+                </Modal>
+            </View>
+        );
+    } else {
+        return (
+            <View>
                 <Input
                     inputContainerStyle = {[styles.textBox, isDarkMode && styles.textBoxDark]}
                     maxLength={128}
@@ -39,44 +88,9 @@ const CalendarModal = ({selectedDate, setSelectedDate,  dateRange=90, isDarkMode
                     value={selectedDate}
                     disabledInputStyle={[styles.inputText, isDarkMode && styles.inputTextDark]}
                 />
-            </TouchableOpacity>
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={isOpen}
-            >
-                <Pressable 
-                    onPress={() => setIsOpen(false)}
-                    style={styles.backContainer}
-                >
-                    <View style={styles.container}>
-                        <Calendar
-                            onDayPress={day => {
-                                setSelectedDate(day.dateString);
-                                setIsOpen(false)
-                            }}
-                            markedDates={{
-                                [selectedDate]: {selected: true, disableTouchEvent: true, selectedColor: Colors.IRISH_GREEN, marked: true},
-                            }}
-                            maxDate={getDate(dateRange)}
-                            minDate={getDate(-1 * dateRange)}
-                            theme={isDarkMode ? {
-                                calendarBackground: Colors.IRIDIUM,
-                                dayTextColor: Colors.SANTA_GRAY,
-                                monthTextColor: Colors.WHITE_SMOKE,
-                                todayTextColor: Colors.IRISH_GREEN,
-                                arrowColor: Colors.IRISH_GREEN,
-                            } : {
-                                calendarBackground: Colors.WHITE_SMOKE,
-                                todayTextColor: Colors.IRISH_GREEN,
-                                arrowColor: Colors.IRISH_GREEN,
-                            }}
-                        />
-                    </View>
-                </Pressable>
-            </Modal>
-        </View>
-   );
+            </View>
+        );
+    }
 };
 
 const styles = StyleSheet.create({
