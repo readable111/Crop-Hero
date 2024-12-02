@@ -49,6 +49,7 @@ const CropsPage = () => {
 
         const appliedOffset = new Date(crop["13"]).getTime() - (offset*60*1000)
         const displayedDate = new Date(appliedOffset).toISOString().split('T')[0]
+        console.log(crop["21"])
 
         const [open, setOpen] = useState(null)
        // const [modalVisible, setModalVisible] = useState(false)
@@ -57,7 +58,7 @@ const CropsPage = () => {
         const [selectedLocation, setSelectedLocation] = useState(parseInt(crop["6"], 10))
         const [selectedActive, setSelectedActive] = useState(activeState)
         const [selectedMedium, setSelectedMedium] = useState(parseInt(crop["5"], 10))
-        const [selectedType, setSelectedType] = useState(parseInt(crop["21"], 10))
+        const [selectedType, setSelectedType] = useState(crop["21"])
         const [selectedVisible, setSelectedVisible] = useState(true)
         const [types, setTypes] = useState([])
         const [addTypeAdded, setAddTypeAdded] = useState(false)
@@ -74,18 +75,7 @@ const CropsPage = () => {
         const handleOpenDropdown = (id) => {
                 setOpen(open === id ? null : id)
         }
-        const [isVisible, setIsVisible] = useState(false);
-        //If crop.name couldn't be retrieved, assume that ?param= was used
-        /*
-        if(!crop.name) {
-                console.log("?param passed")
-                console.log(crop.param)
-                crop = JSON.parse(crop.param)
-        }
-        */
-        //console.log("CROP: " + crop); //test
-        //console.log("Crop name: " + crop.name); //test
-        
+        const [isVisible, setIsVisible] = useState(false);        
 
         //Use state for switching if something is editable
         const [readOnly, setReadOnly] = useState(true)
@@ -100,32 +90,6 @@ const CropsPage = () => {
                                
                 
         }
-        const handleNewLocation = () => {
-                if(newOption.trim() !== '')
-                {
-                        setLocation([...locations, {label: newOption, value: newOption.toLowerCase().replace(/\s+/g, '') }]);
-                        setModalVisible(false);
-                        setNewOption('');
-                }
-        }
-        
-        const handleNewMedium = () => {
-                if(mediumNameOption.trim() !== '')
-                {
-                        setAddMediumAdded(true)
-                        setMediumModalVisible(false)
-                }
-        }
-
-        const handleNewType = () => {
-                if(newOption.trim() !== '')
-                {
-                        setType([...types, {label: newOption, value: newOption.toLowerCase().replace(/\+/g, '')}])
-                        setTypeModalVisible(false);
-                        setNewOption('');
-                }
-        }
-
         const handleLocationChange = (value) =>
         {
                 setCropData({
@@ -291,7 +255,7 @@ const CropsPage = () => {
                     label: type[2],      
                     value: type[0]
                 }));
-            }, [types]);
+        }, [types]);
 
         return (
                 <View style={[styles.container, isDark && styles.containerDark]}>
@@ -460,7 +424,7 @@ const CropsPage = () => {
 						zIndex: 50,
 						marginBottom: 40,
 					}}
-                                        dropDownContainerStyle={[styles.dropDownContainer, styles.binaryDropDownContainer, isDark && styles.dropDownContainerDark]}
+                                        dropDownContainerStyle={[styles.dropDownContainer, isDark && styles.dropDownContainerDark]}
                                         style={[ styles.dropDownStyle, isDark && styles.dropDownStyleDark ]}
                                 />
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Medium*</Text>
