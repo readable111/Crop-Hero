@@ -1,3 +1,9 @@
+/****
+ * @author McKenna Beard, Tyler Bowen
+ * @reviewer Daniel Moreno
+ * @tester McKenna Beard
+ ***/
+
 import { React, useState, useEffect, useCallback } from 'react';
 import {
     StyleSheet,
@@ -41,7 +47,6 @@ const todo = () => {
     const [newTask, setNewTask] = useState({})
     const [addNewTask, setAddNewTask] = useState(false)
     const [crops, setCrops] = useState([]);
-
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState('all');
     const [items, setItems] = useState([
@@ -141,13 +146,13 @@ const todo = () => {
 
             setModalVisible(true);
         }
-        //setIsSpeedDialOpen(false);
+        setIsSpeedDialOpen(false);
     };
 
     useEffect(() => {
         switch (value) {
             case 'last3Entries':
-                setFilteredTasks(tasks.slice(-3));
+                setFilteredTasks(tasks.slice(0,3));
                 break;
             case 'completed':
                  setFilteredTasks(tasks.filter(task => task[5] == 1));
@@ -207,6 +212,7 @@ const todo = () => {
     const handleOpenModal = (task) => {
         setCurrentTask(task);  // Set the task to edit (pass all the task data)
         setModalVisible(true);  // Open the modal
+        setIsSpeedDialOpen(false);
     };
 
 
@@ -246,6 +252,7 @@ const todo = () => {
     // Function to add a new task type
     const addNewTaskType = (uniqueID, newTaskType) => {
         setTaskTypes([...taskTypes, [uniqueID, 1, newTaskType, newTaskType]]);
+        setIsAddingNewTaskType(true)
     };
     const [fontsLoaded, fontError] = useFonts({
         'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
@@ -261,10 +268,10 @@ const todo = () => {
             try{
                 response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listTasksVerbose/${subID}`,{method: 'GET'})
                 if(!response.ok){
-                    console.error("HTTP ERROR:")
-                    throw new Error;
+                    throw new Error(`HTTP error for listTasksVerbose! Status: ${response.status}`);
                 }
-                const data = await response.json()
+                let data = await response.json()
+                data.sort((a, b) => new Date(b[6]) - new Date(a[6]));
                 setTasks(data)
             }catch(error){
                 console.error("Error:", error)
@@ -281,8 +288,7 @@ const todo = () => {
                     console.log("Task to edit: \n\n", newTask)
                   response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/editTask`,{method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({subID:subID, taskUpdate: newTask, taskID: newTask["fld_t_TaskID_pk"]})})
                   if(!response.ok){
-                      console.error("HTTP ERROR:")
-                      throw new Error;
+                    throw new Error(`HTTP error for editTask! Status: ${response.status}`);
                   }
 
                 setEditTask(false)
@@ -300,26 +306,53 @@ const todo = () => {
     useEffect(() =>{
         const saveTasks = async () =>{
             if(saveTask & addNewTask){
-                console.log("Task to Add: \n\n\n:". newTask) 
-              try{
-                  response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addTask`,{method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({
-                    subID:subID, 
-                    newTask: newTask, 
-                    taskTypeID:newTask["fld_tt_TaskTypeID_fk"], 
-                    farmerID: newTask["fld_fs_FarmerID_fk"], 
-                    locationID: newTask["fld_l_LocationID_fk"]
-                })})
-                  if(!response.ok){
-                      console.error("HTTP ERROR:")
-                      throw new Error;
-                  }
+              let emptyFields = false
+              if (newTask.fld_fs_FarmerID_fk == "" || !newTask.fld_fs_FarmerID_fk || newTask.fld_tt_TaskTypeID_fk == "" || !newTask.fld_tt_TaskTypeID_fk || newTask.fld_t_DateDue == "1990-01-01" || !newTask.fld_t_DateDue || newTask.fld_t_Comments == "" || !newTask.fld_t_Comments) {
+                Alert.alert("Unable to save, some fields are still empty");
+                emptyFields = true
+              }
+
+              if (!emptyFields) {
+                if (newTask.fld_l_LocationID_fk == "" || !newTask.fld_l_LocationID_fk) {
+                    newTask.fld_l_LocationID_fk = 1
+                }
+                if (newTask.CropID == "" || !newTask.CropID) {
+                    newTask.CropID = 0
+                }
+                if (newTask.fld_t_TaskIconPath == "" || !newTask.fld_t_TaskIconPath) {
+                    newTask.fld_t_TaskIconPath = "calendar"
+                }
+
+                try{
+                    response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addTask`,{method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({
+                        subID:subID, 
+                        newTask: newTask, 
+                        taskTypeID:newTask["fld_tt_TaskTypeID_fk"], 
+                        farmerID: newTask["fld_fs_FarmerID_fk"], 
+                        locationID: newTask["fld_l_LocationID_fk"]
+                    })})
+                    if(!response.ok){
+                        throw new Error(`HTTP error for addTask! Status: ${response.status}`);
+                    }
+                    setAddNewTask(false)
+                    setSaveTask(false)
+                    setNewTask({})
+                    setCurrentTask({})
+                    setCurrentTaskID(null)
+                }catch(error){
+                    console.error("Error:", error)
+                    setAddNewTask(false)
+                    setSaveTask(false)
+                    setNewTask({})
+                    setCurrentTask({})
+                    setCurrentTaskID(null)
+                }
+              } else {
                 setAddNewTask(false)
                 setSaveTask(false)
                 setNewTask({})
                 setCurrentTask({})
                 setCurrentTaskID(null)
-              }catch(error){
-                  console.error("Error:", error)
               }
         }
     }
@@ -328,13 +361,13 @@ const todo = () => {
 
 
 
+
     useEffect(()=>{
         const fetchLocations = async () =>{
             try{
                 response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listLocation/${subID}`,{method: 'GET'})
                 if(!response.ok){
-                    console.error("HTTP ERROR:")
-                    throw new Error;
+                    throw new Error(`HTTP error for listLocation! Status: ${response.status}`);
                 }
                 const data = await response.json()
                 setLocations(data)
@@ -350,8 +383,7 @@ const todo = () => {
             try{
                 response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listFarmers/${subID}`,{method: 'GET'})
                 if(!response.ok){
-                    console.error("HTTP ERROR:")
-                    throw new Error;
+                    throw new Error(`HTTP error for listFarmers! Status: ${response.status}`);
                 }
                 const data = await response.json()
                 setFarmers(data)
@@ -367,8 +399,7 @@ const todo = () => {
             try{
                 response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listTaskTypes/${subID}`,{method: 'GET'})
                 if(!response.ok){
-                    console.error("HTTP ERROR:")
-                    throw new Error;
+                    throw new Error(`HTTP error for listTaskTypes! Status: ${response.status}`);
                 }
                 const data = await response.json()
                 setTaskTypes(data)

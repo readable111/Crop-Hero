@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import {
     Modal,
     View,
@@ -15,6 +15,26 @@ import { Picker } from '@react-native-picker/picker';
 import Colors from '../Color';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CalendarModal from '../CalendarModal';
+
+const DEFAULT_TASK_DATA = {
+    "fld_t_TaskID_pk": null,
+    "fld_t_Comments": '',
+    "fld_t_DateDue": '1990-01-01',
+    "fld_fs_FarmerID_fk": 2,
+    "fld_l_LocationID_fk": 1,
+    "CropID": '',
+    "fld_tt_TaskTypeID_fk": 1,
+    "NewTaskType": '',
+    "fld_t_TaskIconPath": '',
+    "fld_t_IsCompleted": 0b0,
+    "fld_t_DateCompleted": '',
+}
+const subID = "sub123"
+
+const areArraysEqual = (arr1, arr2) => {
+    return JSON.stringify(arr1) === JSON.stringify(arr2);
+};
 
 const TodoEntryModal = ({
     visible,
@@ -30,19 +50,17 @@ const TodoEntryModal = ({
     onAddNewTaskType,
     
 }) => {
-    const [taskData, setTaskData] = useState({
-        "fld_t_TaskID_pk": taskID || null,
-        "fld_t_Comments": '',
-        "fld_t_DateDue": '1990-01-01',
-        "fld_fs_FarmerID_fk": '',
-        "fld_l_LocationID_fk": '',
-        CropID: '',
-        "fld_tt_TaskTypeID_fk": '',
-        NewTask: '',
-        "fld_t_TaskIconPath": '',
-        "fld_t_IsCompleted": 0b0,
-        "fld_t_DateCompleted": '',
-    });
+    const [, updateState] = React.useState();
+    const forceUpdate = React.useCallback(() => updateState({}), []);
+    const [selectedDate, setSelectedDate] = useState('No date selected yet');
+    const [taskData, setTaskData] = useState(DEFAULT_TASK_DATA);
+    const [listOfTaskTypes, setListOfTaskTypes] = useState(taskTypes);
+
+    useEffect(() => {
+        if (!areArraysEqual(listOfTaskTypes, taskTypes)) {
+            setListOfTaskTypes(taskTypes);
+        }
+    }, [taskTypes]);
 
     const [isDark, setIsDark] = useState(false);
     useEffect(() => {
@@ -72,56 +90,56 @@ const TodoEntryModal = ({
     }, [])
 
     useEffect(() => {
+        setTaskData((prevData) => ({
+            ...prevData,
+            fld_t_TaskID_pk: taskID,
+        }));
+
         if (taskID == null) return; 
         // Set task data once when the modal opens
         setTaskData({
            "fld_t_TaskID_pk": initialTaskData[0] || taskID,
-            "fld_t_Comments": initialTaskData[8] || '',
-           "fld_t_DateDue": initialTaskData[6] || '',
-            "fld_fs_FarmerID_fk": initialTaskData[2] || '',
-            "fld_l_LocationID_fk": initialTaskData[3]|| '',
-            CropID: '' || '',
-           "fld_tt_TaskTypeID_fk": initialTaskData[4] || '',
-            NewTaskType: '',
-            "fld_t_TaskIconPath": initialTaskData[9] || '',
-            "fld_t_IsCompleted": initialTaskData[5] || 0b0,
-            "fld_t_DateCompleted": initialTaskData[7] || '',
+            "fld_t_Comments": initialTaskData[8] || DEFAULT_TASK_DATA.fld_t_Comments,
+           "fld_t_DateDue": initialTaskData[6] || DEFAULT_TASK_DATA.fld_t_DateDue,
+            "fld_fs_FarmerID_fk": initialTaskData[2] || DEFAULT_TASK_DATA.fld_fs_FarmerID_fk,
+            "fld_l_LocationID_fk": initialTaskData[3]|| DEFAULT_TASK_DATA.fld_l_LocationID_fk,
+            'CropID': '' || DEFAULT_TASK_DATA.CropID,
+           "fld_tt_TaskTypeID_fk": initialTaskData[4] || DEFAULT_TASK_DATA.fld_tt_TaskTypeID_fk,
+            'NewTaskType': DEFAULT_TASK_DATA.NewTaskType,
+            "fld_t_TaskIconPath": initialTaskData[9] || DEFAULT_TASK_DATA.fld_t_TaskIconPath,
+            "fld_t_IsCompleted": initialTaskData[5] || DEFAULT_TASK_DATA.fld_t_IsCompleted,
+            "fld_t_DateCompleted": initialTaskData[7] || DEFAULT_TASK_DATA.fld_t_DateCompleted,
         });
     }, [visible]); // Only run when `visible` changes
-    console.log("Current Task Data: \n\n",taskData)
-    const handleDateChange = (type, value) => {
-        // Mapping months to their numeric equivalents
-        const monthMap = {
-            "Jan": "01", "Feb": "02", "Mar": "03", "Apr": "04",
-            "May": "05", "Jun": "06", "Jul": "07", "Aug": "08",
-            "Sep": "09", "Oct": "10", "Nov": "11", "Dec": "12"
-        };
 
-        // Split the current date parts or default to current year
-        console.log(taskData["fld_t_DateDue"])
-        const currentDate = new Date(taskData["fld_t_DateDue"]);
-        let year = currentDate.getFullYear() 
-        let month = currentDate.getMonth() +1
-        let day = currentDate.getDay() 
+    const saveTaskTypes = async () =>{
+        console.warn("isAddingNewTaskType set to true")
+        try{
+            response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addTaskType`,{method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({
+                subID: subID, 
+                farmID: 1, 
+                taskType: taskData["NewTaskType"]
+            })})
+            console.warn(response)
+            if(!response.ok){
+                throw new Error(`HTTP error for addTaskType! Status: ${response.status}`);
+            }
+            handleChange('NewTaskType', '');
 
-        if (type === 'month') {
-            console.log(month)
-            month = monthMap[value];
-
-        } else if (type === 'day') {
-            day = value.padStart(2, '0'); // Ensure day is two digits
-        } else if (type === 'year') {
-            year = value;
+            console.warn("Refetching list")
+            response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listTaskTypes/${subID}`,{method: 'GET'})
+            if(!response.ok){
+                throw new Error(`HTTP error for listTaskTypes! Status: ${response.status}`);
+            }
+            const data = await response.json()
+            setListOfTaskTypes(data)
+            console.warn(listOfTaskTypes)
+            forceUpdate()
+        }catch(error){
+            console.error("Error:", error)
+            handleChange('NewTaskType', '');
         }
-
-        // Construct ISO format date (YYYY-MM-DD)
-        const newDate = `${year}-${month}-${day}`
-        console.log(newDate)
-        const newD = new Date(newDate).toISOString().slice(0,10)
-        console.log(newD)
-        setTaskData(prevData => ({ ...prevData, "fld_t_DateDue": newD}));
-    };
-    
+    }
     
     const handleChange = (name, value) => {
         setTaskData(prevData => ({ ...prevData, [name]: value }));
@@ -141,18 +159,14 @@ const TodoEntryModal = ({
         const newTaskType = taskData.NewTaskType.trim();
         console.log("New Task Type Trimmed: " + newTaskType)
         if (newTaskType !== '') {
-            const uniqueID = `${Math.floor(Math.random()*1000000000).toString()}`;
-            const updatedTaskTypes = [...taskTypes, [uniqueID, 1, newTaskType, newTaskType]];
-            taskTypes = updatedTaskTypes
-            onAddNewTaskType(uniqueID, newTaskType);
-            handleChange('TaskType', uniqueID);
-            handleChange('NewTaskType', '');
+            console.warn("set")
+            saveTaskTypes()
         }
     };
 
     const handleSave = () => {
         onSave(taskData);
-        console.log("task icon path",fld_t_TaskIconPath)
+        console.log("task icon path", taskData.fld_t_TaskIconPath)
         resetForm();  // Reset form after saving
         onClose();
     };
@@ -163,27 +177,16 @@ const TodoEntryModal = ({
     };
 
     const resetForm = () => {
-        setTaskData({
-        "fld_t_TaskID_pk": null,
-        "fld_t_Comments": '',
-        "fld_t_DateDue": '',
-        "fld_fs_FarmerID_fk": '',
-        "fld_l_LocationID_fk": '',
-        CropID: '',
-        "fld_tt_TaskTypeID_fk": '',
-        NewTask: '',
-        "fld_t_TaskIconPath": '',
-        "fld_t_IsCompleted": false,
-        "fld_t_DateCompleted": 0b0,
-        });
+        setTaskData(DEFAULT_TASK_DATA);
     };
+
        return (
         <Modal visible={visible} animationType="slide">
             <ScrollView style={[styles.modalContainer, isDark && styles.darkModalContainer]} contentContainerStyle={styles.scrollContent}>
 
                 {/* Assigned Farmer Picker */}
                 <View style={[styles.listContainer, isDark && styles.darkListContainer]}>
-                    <Text style={styles.label}>Assigned Farmer</Text>
+                    <Text style={styles.label}>Assigned Farmer*</Text>
                     <Picker
                         selectedValue={taskData["fld_fs_FarmerID_fk"]}
                         onValueChange={(itemValue) => handleChange("fld_fs_FarmerID_fk", itemValue)}
@@ -241,15 +244,15 @@ const TodoEntryModal = ({
 
                 {/* Task Type Picker */}
                 <View style={[styles.listContainer, isDark && styles.darkListContainer]}>
-                    <Text style={styles.label}>Task Type</Text>
+                    <Text style={styles.label}>Task Type*</Text>
                     <Picker
                         selectedValue={taskData["fld_tt_TaskTypeID_fk"]}
                         onValueChange={(itemValue) => handleChange("fld_tt_TaskTypeID_fk", itemValue)}
                         style={isDark ? styles.darkPicker : styles.picker}
                         dropdownIconColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
                     >
-                        {taskTypes.length > 0 ? (
-                            taskTypes.map((taskType) => (
+                        {listOfTaskTypes.length > 0 ? (
+                            listOfTaskTypes.map((taskType) => (
                                 <Picker.Item style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}} key={taskType[0]} label={taskType[3]} value={taskType[0]} />
                             ))
                         ) : (
@@ -267,36 +270,9 @@ const TodoEntryModal = ({
 
                 {/* Due Date Section */}
                 <View style={[styles.listContainer, isDark && styles.darkListContainer]}>
-                    <Text style={styles.label}>Due Date</Text>
+                    <Text style={styles.label}>Due Date*</Text>
                     <View style={styles.dateRow}>
-                        <Picker
-                            selectedValue={taskData["fld_t_DateDue"].split(' ')[0] || 'January'}
-                            onValueChange={(itemValue) => handleDateChange('month', itemValue)}
-                            style={[styles.datePicker, isDark && styles.datePickerDark]}
-                            itemStyle={{backgroundColor: Colors.IRISH_GREEN}}
-                        >
-                            {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((month) => (
-                                <Picker.Item key={month} label={month} value={month} style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}}/>
-                            ))}
-                        </Picker>
-                        <Picker
-                            selectedValue={taskData["fld_t_DateDue"].split(' ')[1] || '1'}
-                            onValueChange={(itemValue) => handleDateChange('day', itemValue)}
-                            style={[styles.datePicker, isDark && styles.datePickerDark]}
-                        >
-                            {[...Array(31)].map((_, i) => (
-                                <Picker.Item key={i} label={`${i + 1}`} value={`${i + 1}`} style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}}/>
-                            ))}
-                        </Picker>
-                        <Picker
-                            selectedValue={taskData["fld_t_DateDue"].split(' ')[2] || `${new Date().getFullYear()}`}
-                            onValueChange={(itemValue) => handleDateChange('year', itemValue)}
-                            style={[styles.datePicker, isDark && styles.datePickerDark]}
-                        >
-                            {[...Array(21)].map((_, i) => (
-                                <Picker.Item key={i} label={`${new Date().getFullYear() + i}`} value={`${new Date().getFullYear() + i}`} style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}}/>
-                            ))}
-                        </Picker>
+                        <CalendarModal isDarkMode={isDark} selectedDate={selectedDate} setSelectedDate={(val) => {setSelectedDate(val); console.log("Calendar Date: ", val); handleChange('fld_t_DateDue', val)}}/>
                     </View>
                 </View>
                    {/* Icon Picker Section */}
@@ -345,10 +321,10 @@ const TodoEntryModal = ({
                    </Modal>
                 {/* Comments */}
                 <View style={[styles.listContainer, isDark && styles.darkListContainer]}>
-                    <Text style={styles.label}>Comments</Text>
+                    <Text style={styles.label}>Description*</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder="Enter comments"
+                        placeholder="Enter description"
                         value={taskData.Comments}
                         onChangeText={(text) => handleChange("fld_t_Comments", text)}
                         multiline
@@ -414,7 +390,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     picker: {
-        height: 50,
+        height: 60,
         borderRadius: 5,
         backgroundColor: Colors.WHITE_SMOKE,
         color: Colors.ALMOST_BLACK,
@@ -426,17 +402,7 @@ const styles = StyleSheet.create({
     dateRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-    },
-    datePicker: {
-        flex: 1,
-        marginRight: 10,
-        backgroundColor: Colors.WHITE_SMOKE,
-        color: Colors.ALMOST_BLACK,
-        height: 50,
-    },
-    datePickerDark: {
-        backgroundColor: Colors.IRIDIUM,
-        color: Colors.WHITE_SMOKE,
+        marginTop: 10,
     },
     iconPickerContainer: {
         flexDirection: 'row',
