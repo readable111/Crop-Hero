@@ -1,7 +1,7 @@
 /****
  * @author McKenna Beard, Tyler Bowen
- *
- * @tester 
+ * @reviewer Daniel Moreno
+ * @tester McKenna Beard
  * 
  * UNT Notebook Page as apart of the notebook tab on the nav bar--last updated 11_20_2024
  * This  page is meant to keep track of what was done that day for future reference if needed

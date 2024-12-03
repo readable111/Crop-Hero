@@ -1,9 +1,9 @@
 /****
- * @author Tyler Bowen, Daniel Moreno
+ * @author Daniel Moreno, Tyler Bowen
  * @reviewer Daniel Moreno
  * @tester Daniel Moreno
  * 
- * Secondary Author (Daniel) added general weather forecast info, dark mode, and new carousel for ambient weather display
+ * Secondary Author (Tyler) wrote the code for the crop carousel and most of the code communicating with the backend
  ***/
 
 import { useEffect, useState } from 'react';

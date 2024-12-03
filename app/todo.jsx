@@ -1,3 +1,9 @@
+/****
+ * @author McKenna Beard, Tyler Bowen
+ * @reviewer Daniel Moreno
+ * @tester McKenna Beard
+ ***/
+
 import { React, useState, useEffect, useCallback } from 'react';
 import {
     StyleSheet,
@@ -41,7 +47,6 @@ const todo = () => {
     const [newTask, setNewTask] = useState({})
     const [addNewTask, setAddNewTask] = useState(false)
     const [crops, setCrops] = useState([]);
-
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState('all');
     const [items, setItems] = useState([
@@ -247,6 +252,7 @@ const todo = () => {
     // Function to add a new task type
     const addNewTaskType = (uniqueID, newTaskType) => {
         setTaskTypes([...taskTypes, [uniqueID, 1, newTaskType, newTaskType]]);
+        setIsAddingNewTaskType(true)
     };
     const [fontsLoaded, fontError] = useFonts({
         'WorkSans-Regular': require('../assets/fonts/WorkSans-Regular.ttf'),
@@ -265,9 +271,7 @@ const todo = () => {
                     throw new Error(`HTTP error for listTasksVerbose! Status: ${response.status}`);
                 }
                 let data = await response.json()
-                console.warn(data)
                 data.sort((a, b) => new Date(b[6]) - new Date(a[6]));
-                console.warn(data)
                 setTasks(data)
             }catch(error){
                 console.error("Error:", error)
@@ -357,6 +361,7 @@ const todo = () => {
 
 
 
+
     useEffect(()=>{
         const fetchLocations = async () =>{
             try{
@@ -397,7 +402,6 @@ const todo = () => {
                     throw new Error(`HTTP error for listTaskTypes! Status: ${response.status}`);
                 }
                 const data = await response.json()
-                console.warn(data)
                 setTaskTypes(data)
             }catch(error){
                 console.error("Error:", error)

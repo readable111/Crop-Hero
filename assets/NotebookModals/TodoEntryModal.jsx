@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import {
     Modal,
     View,
@@ -25,13 +25,16 @@ const DEFAULT_TASK_DATA = {
     "fld_l_LocationID_fk": 1,
     "CropID": '',
     "fld_tt_TaskTypeID_fk": 1,
-    "NewTask": '',
+    "NewTaskType": '',
     "fld_t_TaskIconPath": '',
     "fld_t_IsCompleted": 0b0,
     "fld_t_DateCompleted": '',
 }
+const subID = "sub123"
 
-
+const areArraysEqual = (arr1, arr2) => {
+    return JSON.stringify(arr1) === JSON.stringify(arr2);
+};
 
 const TodoEntryModal = ({
     visible,
@@ -47,8 +50,17 @@ const TodoEntryModal = ({
     onAddNewTaskType,
     
 }) => {
+    const [, updateState] = React.useState();
+    const forceUpdate = React.useCallback(() => updateState({}), []);
     const [selectedDate, setSelectedDate] = useState('No date selected yet');
     const [taskData, setTaskData] = useState(DEFAULT_TASK_DATA);
+    const [listOfTaskTypes, setListOfTaskTypes] = useState(taskTypes);
+
+    useEffect(() => {
+        if (!areArraysEqual(listOfTaskTypes, taskTypes)) {
+            setListOfTaskTypes(taskTypes);
+        }
+    }, [taskTypes]);
 
     const [isDark, setIsDark] = useState(false);
     useEffect(() => {
@@ -93,13 +105,41 @@ const TodoEntryModal = ({
             "fld_l_LocationID_fk": initialTaskData[3]|| DEFAULT_TASK_DATA.fld_l_LocationID_fk,
             'CropID': '' || DEFAULT_TASK_DATA.CropID,
            "fld_tt_TaskTypeID_fk": initialTaskData[4] || DEFAULT_TASK_DATA.fld_tt_TaskTypeID_fk,
-            'NewTaskType': '' || DEFAULT_TASK_DATA.NewTask,
+            'NewTaskType': DEFAULT_TASK_DATA.NewTaskType,
             "fld_t_TaskIconPath": initialTaskData[9] || DEFAULT_TASK_DATA.fld_t_TaskIconPath,
             "fld_t_IsCompleted": initialTaskData[5] || DEFAULT_TASK_DATA.fld_t_IsCompleted,
             "fld_t_DateCompleted": initialTaskData[7] || DEFAULT_TASK_DATA.fld_t_DateCompleted,
         });
     }, [visible]); // Only run when `visible` changes
-    console.log("Current Task Data: \n\n",taskData)  
+
+    const saveTaskTypes = async () =>{
+        console.warn("isAddingNewTaskType set to true")
+        try{
+            response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addTaskType`,{method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({
+                subID: subID, 
+                farmID: 1, 
+                taskType: taskData["NewTaskType"]
+            })})
+            console.warn(response)
+            if(!response.ok){
+                throw new Error(`HTTP error for addTaskType! Status: ${response.status}`);
+            }
+            handleChange('NewTaskType', '');
+
+            console.warn("Refetching list")
+            response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listTaskTypes/${subID}`,{method: 'GET'})
+            if(!response.ok){
+                throw new Error(`HTTP error for listTaskTypes! Status: ${response.status}`);
+            }
+            const data = await response.json()
+            setListOfTaskTypes(data)
+            console.warn(listOfTaskTypes)
+            forceUpdate()
+        }catch(error){
+            console.error("Error:", error)
+            handleChange('NewTaskType', '');
+        }
+    }
     
     const handleChange = (name, value) => {
         setTaskData(prevData => ({ ...prevData, [name]: value }));
@@ -119,13 +159,8 @@ const TodoEntryModal = ({
         const newTaskType = taskData.NewTaskType.trim();
         console.log("New Task Type Trimmed: " + newTaskType)
         if (newTaskType !== '') {
-            const uniqueID = `${Math.floor(Math.random()*1000000000).toString()}`;
-            const updatedTaskTypes = [...taskTypes, [uniqueID, 1, newTaskType, newTaskType]];
-            taskTypes = updatedTaskTypes
-            onAddNewTaskType(uniqueID, newTaskType);
-            handleChange('TaskType', uniqueID);
-            handleChange('NewTaskType', '');
-            handleChange('fld_tt_TaskTypeID_fk', uniqueID);
+            console.warn("set")
+            saveTaskTypes()
         }
     };
 
@@ -144,6 +179,7 @@ const TodoEntryModal = ({
     const resetForm = () => {
         setTaskData(DEFAULT_TASK_DATA);
     };
+
        return (
         <Modal visible={visible} animationType="slide">
             <ScrollView style={[styles.modalContainer, isDark && styles.darkModalContainer]} contentContainerStyle={styles.scrollContent}>
@@ -215,8 +251,8 @@ const TodoEntryModal = ({
                         style={isDark ? styles.darkPicker : styles.picker}
                         dropdownIconColor={isDark ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
                     >
-                        {taskTypes.length > 0 ? (
-                            taskTypes.map((taskType) => (
+                        {listOfTaskTypes.length > 0 ? (
+                            listOfTaskTypes.map((taskType) => (
                                 <Picker.Item style={isDark ? {backgroundColor: Colors.IRIDIUM, color: Colors.WHITE_SMOKE} : {backgroundColor: Colors.WHITE_SMOKE, color: Colors.ALMOST_BLACK}} key={taskType[0]} label={taskType[3]} value={taskType[0]} />
                             ))
                         ) : (
@@ -366,17 +402,7 @@ const styles = StyleSheet.create({
     dateRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-    },
-    datePicker: {
-        flex: 1,
-        marginRight: 10,
-        backgroundColor: Colors.WHITE_SMOKE,
-        color: Colors.ALMOST_BLACK,
-        height: 50,
-    },
-    datePickerDark: {
-        backgroundColor: Colors.IRIDIUM,
-        color: Colors.WHITE_SMOKE,
+        marginTop: 10,
     },
     iconPickerContainer: {
         flexDirection: 'row',
