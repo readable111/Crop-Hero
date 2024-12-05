@@ -93,6 +93,7 @@
         1. [Set Up an Android Emulator](#setup_emulator)
         1. [Installing NPM](#install_npm)
         1. [Installing Expo](#install_expo)
+        1. [Creating a Binary Installation](#create_binary_installation)
     1. [Package Management](#pkg_mgmt)
         1. [Importing Libraries](#import_libs)
         1. [Updating Libraries](#update_libs)
@@ -118,8 +119,9 @@
         1. [Emulator Says "The system UI isn't responding"](#ui_not_responding)
         1. [Emulator Says "Something went wrong. Can't connect to Internet."](#no_internet)
         1. [Emulator Reloads When I Try to Type 'R' Into an Input Field](#reloads_on_r)
+        1. [Emulator Says "Something went wrong. Sorry about that"](#sorry_about_that)
         1. [VT-X/AMD-V is Disabled](#vt-x_disabled)
-        1. [Emulator Says "Something went wrong. Sorry about that"](#something_went_wrong)
+        1. [Ambient Weather Carousel Is Stuck At Loading](#aw_stuck_loading)
     1. [Expo Errors](#expo_errors)
         1. [Expo-CLI is Deprecated / Legacy Expo-CLI](#cli_deprecated)
         1. [Expo Keeps Stopping](#expo_stops)
@@ -131,6 +133,7 @@
         1. [VirtualizedLists Nested In a ScrollView](#nested_virtualizedlists)
         1. [Invariant Violation Error](#invariant_violation)
         1. [Destructuring Issue](#destructuring_issues)
+        1. [Unable to Resolve a Module From a File](#cant_resolve_module)
     1. [Jest Errors](#jest_errors)
         1. [General Troubleshooting Advice For Jest](#general_ts_advice)
         1. [No Tests Found](#no_tests)
@@ -216,9 +219,9 @@ The `PagingDots` component uses the map function again to create one dot for eve
 #### Ambient Weather <a name="ambient_weather"></a>
 *Author: Daniel*
 
-While the previous section discusses how the WeatherSlider component functions, this section focuses on how the information is obtained. First, the API key, app key, and device MAC address are fetched from AsyncStorage. If any of those values have not been set (meaning that they are equivalent to null or are zero-length), then the default JSON is used. Since this if block will trigger before the async functions fetch the values, the default JSON provides loading icons. Once the information has been fetched, it is passed to the `fetchWeatherData` function which returns an array. From the array, I retrieve the first entry and then construct the slider's JSON from specific fields. Specifically, I use the temperature in Fahrenheit (tempf), the feels-like temperature (feels_like), the wind speed in mph (windspeedmph), the amount of rain today in inches (dailyrainin), the humidity percent (humidity), and the soil moisture (soilmoisture).
+While the previous section discusses how the WeatherSlider component functions, this section focuses on how the information is obtained. First, the API key, app key, and device MAC address are fetched from AsyncStorage. If any of those values have not been set (meaning that they are equivalent to null or are zero-length), then the default JSON is used. Since this if block will trigger before the async functions fetch the values, the default JSON provides loading icons. Once the information has been fetched, it is passed to the `fetchWeatherData` function which returns JSON. If the JSON has a field called lastData, then an endpoint issue occurred so it returned general information for the user's account rather than a specific device, hence why a single device's data has to be fetched. From the JSON, I construct the slider's JSON from specific fields. Specifically, I use the temperature in Fahrenheit (tempf), the feels-like temperature (feels_like), the wind speed in mph (windspeedmph), the amount of rain today in inches (dailyrainin), the humidity percent (humidity), and the gust speed (maxdailygust).
 
-The `fetchWeatherData` function is wrapped by the `rateLimiter` function. The `rateLimiter` function checks whether the last request occurred within the past 1000ms or past 1 second (the maximum rate permitted by Ambient Weather). If the request is too soon, it is ignored and the Promise is resolved to null. Otherwise, the timestamp for the last request is updated, and the original function is called with the original arguments. The `fetchWeatherData` function receives the API key, app key, and MAC address. The function basically wraps an axios call which makes a GET request to Ambient Weather's RESTful API. The API and app keys are passed as params and are required to gain access to the API. The MAC address is passed as part of the URL which targets the data provided by a specific sensor. Without the MAC address, I would need to fetch a list of all sensors associated with that account, determine which ones provide useful information, and extract it.
+The `fetchWeatherData` function is wrapped by the `rateLimiter` function. The `rateLimiter` function checks whether the last request occurred within the past 1000ms or past 1 second (the maximum rate permitted by Ambient Weather). If the request is too soon, it is ignored and the Promise is resolved to null. In this case, the program waits for 1.5 seconds before retrying. Otherwise, the timestamp for the last request is updated, and the original function is called with the original arguments. The `fetchWeatherData` function receives the API key, app key, and MAC address. The function basically wraps an axios call which makes a GET request to Ambient Weather's RESTful API. The API and app keys are passed as params and are required to gain access to the API. The MAC address is passed as part of the URL which targets the data provided by a specific sensor. Without the MAC address, I would need to fetch a list of all sensors associated with that account, determine which ones provide useful information, and extract it. If the axios call fails, then the type of error will change, along with which fields have values. If `error.data` contains something, then the request simply failed. If `error._response` contains something, then the status code is outside the 2xx range. If `error._request` contains something, then a response was not received for the request. If `error._message` contains something, then the request itself failed. If the GET request succeeded which means all keys and the MAC address are valid but data was not returned by the device, it will attempt to fetch some mock data provided with the user's subscription to Ambient Weather.
 
 #### Crop Carousel <a name="crop_carousel"></a>
 *Author: Daniel*
@@ -1103,6 +1106,74 @@ This guide will assume that you are using a Windows environment.
 1. If that didn't work, start the manual installation with `npm install expo`
 1. Since you are maintaining a pre-existing project, there are no further steps for the manual installation
 
+#### Creating a Binary Installation  <a name="create_binary_installation"></a>
+*Author: Daniel*
+
+1. Execute `eas whoami` to check if you already have EAS installed and are already logged in. If so, skip past the login steps and down to the configuration steps of this section (the step will include a command with the word 'configure' in it)
+1. Create an Expo account at [https://expo.dev/signup](https://expo.dev/signup)
+    * Make sure to choose the Free plan as the paid version just speeds things up
+1. Execute `npm install -g eas-cli` to get the EAS CLI
+1. Execute `eas login`
+1. Provide the login credentials for your Expo account to sign in
+1. Execute `eas build:configure` in your project to prepare it for the build
+    * This may require additional configuration if you are using environment variables, monorepos, etc. Read more about at [https://docs.expo.dev/build/setup/](https://docs.expo.dev/build/setup/), [https://docs.expo.dev/eas/environment-variables/](https://docs.expo.dev/eas/environment-variables/), and [https://docs.expo.dev/build/eas-json/](https://docs.expo.dev/build/eas-json/)
+1. Decide whether you want to create a binary for Android, create a binary for iOS, or upload your app to an app store
+    * Binaries can be installed on your personal device or emulator without needing a store account
+
+##### Android Binary
+
+1. Open the eas.json file
+1. Set `developmentClient` to `true`
+1. Set `distribution` to `internal`
+1. Set `android.buildType` to `apk`
+1. Set `android.gradleCommand` to `:app:assembleRelease`
+1. Open the command line in your project's root directory
+1. Execute `eas build -p android --profile <your name for the build>`
+    * If you want to install it on a local emulator, hit Y when prompted after the build completes. At a later date, you can use `eas build:run -p android --latest` to install the latest build on your emulator
+1. Copy the provided URL to the generated APK
+    * It will be the link provided once eas build finishes
+1. Send the URL to your device. Email's good
+1. Open the URL
+1. Download & install the APK
+1. Run it
+
+##### iOS Binary
+
+1. Open the eas.json file
+1. Set `ios.simulator` to `true`
+1. Open the command line in your project's root directory
+1. Execute `eas build -p ios --profile <your name for the build>`
+1. If you want to install it on a local emulator, hit Y when prompted after the build completes. At a later date, you can use `eas build:run -p ios --latest` to install the latest build on your emulator
+    * Unfortunately, physical iOS devices have a lot of restrictions and do not permit the installation of custom binaries
+
+##### Upload to App Store
+
+1. Create a store developer account
+    * Google Play Store: one-time $25 USD
+    * Apple App Store: one-time $99 USD Apple Developer Program membership
+1. Decide whether to let EAS CLI sign the app or to do it manually
+    * If Android
+        * If you want to do it manually, refer to [https://docs.expo.dev/app-signing/local-credentials#android-credentials](https://docs.expo.dev/app-signing/local-credentials#android-credentials)
+        * If you have not yet generated a keystore for your app, you can let EAS CLI take care of that for you by selecting Generate new keystore, and then you are done. The keystore is stored securely on EAS servers.
+        * If you have previously built your app with expo build:android, you can use the same credentials here.
+    * If iOS
+        * If you want to do it manually, refer to [https://docs.expo.dev/app-signing/local-credentials/#ios-credentials](https://docs.expo.dev/app-signing/local-credentials/#ios-credentials)
+        * If you have not generated a provisioning profile and/or distribution certificate yet, you can let EAS CLI take care of that for you by signing into your Apple Developer Program account and following the prompts.
+        * If you have already built your app with expo build:ios, you can use the same credentials here.
+1. Execute `eas build --platform android` or `eas build --platform ios`
+    * Add `--message` which will appear on the EAS website to mark the build's purpose, a bit like commit messages
+    * Alternatively, do `eas build --platform all`
+1. Wait for the build to complete
+    * Execute `eas build:list` to monitor progress
+    * Visit your [Build Dashboard](https://expo.dev/builds)
+1. Deploy or install the build
+    * If installing the build on any Android device or an iOS simulator
+        1. Vist your [Build Dashboard](https://expo.dev/accounts/%5Baccount%5D/builds)
+        1. Go to the Build Details page
+        1. Click the Install button
+    * If deploying the build on an app store
+        1. Refer to the documentation of EAS Submit [here](https://docs.expo.dev/submit/introduction/)
+
 ### Package Management <a name="pkg_mgmt"></a>
 #### Importing Libraries <a name="import_libs"></a>
 *Author: Daniel*
@@ -1339,6 +1410,32 @@ Assumes that you are using a Windows OS
 1. Type in the values more slowly or use the emulator's keyboard.
     - If you type with the keyboard too quickly, the emulator can't register it as an input so the value gets sent to the command line which interprets it as a reload command
 
+#### Emulator Says "Something Went Wrong. Sorry about that." <a name="sorry_about_that"></a>
+*Author: Daniel*
+
+1. Close all tabs on the phone or phone emulator
+1. Open Expo Go from the app list or app library on the phone/phone emulator
+1. Press 'a' in the command line to open the app in Expo Go
+1. **If the problem persists**, close all tabs on the phone or phone emulator
+1. Open Settings for the phone
+1. Open Apps in Settings
+1. Open the entry for Expo Go
+1. Find the setting labeled "Display over other apps"
+1. Make sure that the setting is set to Allowed or enabled
+1. Open Expo Go from the app list or app library on the phone/phone emulator
+1. Press 'a' in the command line to open the app in Expo Go
+1. **If the problem persists**, close the emulator
+1. Go into Network & Internet settings for your computer
+1. Find the list of adapters
+1. Disable all adapters labeled "VirtualBox Host-Only Ethernet Adapter"
+1. Restart Expo with `npx expo start -c` instead of your normal `npx expo start`
+1. **If the problem persists**, close the emulator & wipe your emulator/create a new one. The following steps are meant for Android Studio.
+1. Open Android Studio
+1. Open Device Manager, which is generally a tab in the right pane
+1. Click the kebab menu button
+1. Select the Wipe Data option
+1. Restart Expo with `npx expo start -c` instead of your normal `npx expo start`
+
 #### VT-X/AMD-V is Disabled <a name="vt-x_disabled"></a>
 *Author: Daniel*
 
@@ -1355,21 +1452,20 @@ Assumes that you are using a Windows OS
 1. Enable the option
 1. Save the new config and boot into your OS
 
-#### Emulator Says "Something went wrong. Sorry about that" <a name="something_went_wrong"></a>
+#### Ambient Weather Carousel Is Stuck At Loading <a name="aw_stuck_loading"></a>
 *Author: Daniel*
 
-1. Close every instance of Expo on the emulator
-    * Make sure that there aren't any tabs remaining in the background
-1. Go to Settings
-1. Select the Apps button
-1. Select the All Apps button
-1. Select the Expo Go app
-1. Select the Display over other apps button
-1. Toggle Allow display over other apps to On
-1. Return to the Home screen
-1. Enter the Expo Go app like a normal mobile app through the app list or a shortcut on the phone's home screen
-1. Hit 'a' on the command line to open the CropAlly app
-1. Repeat these steps (except for enabling Display over other apps) until it works
+1. Check your Internet connection
+1. Close the app
+1. Open Expo Go from the app list or app library on the phone/phone emulator
+1. Press 'a' in the command line to open the app in Expo Go
+1. **If the issue persists**, sign into your Ambient Weather account
+1. Go to the Devices page
+1. Check whether the specified device is set to "Not reporting"
+    1. If so, please change the setting so that it starts reporting data
+1. **If the issue persists**, visit [https://ambientweather.docs.apiary.io/](https://ambientweather.docs.apiary.io/)
+    1. If this website is down, that means the mock data it provides to Ambient Weather subscribers is down. Please wait for it to come back
+1. **If the issue persists**, check the time of day as the mock servers occassionally undergo maintenance after 7pm CST/CDT
 
 ### Expo Errors <a name="expo_errors"></a>
 
@@ -1493,6 +1589,20 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 * Cause 3: You have something like `const [state, setState] = useEffect(defaultValue);` which is a typo since you should be using the useState() hook
 * Cause 4: You have something like `const [ data, isLoading ] = useContext(null);` instead of `const { data, isLoading } = useContext(null);` as context requires curly braces
 
+#### Unable to Resolve a Module From a File <a name="cant_resolve_module"></a>
+*Author: Daniel*
+
+This issue is characterized by several potential error messages, depending on the screen and OS. Just swap `<library>` and `<file>` with the name of your library and file.
+* `Unable to resolve "<library>" from "<file>"`
+* 500 error code from the development server with `InternalError: Metro has encountered an error: While trying to resolve module '<library>' from file '<file>', the package was successfully found...`
+
+Here are some steps to fix the error:
+1. Ctrl+C or otherwise exit Expo from the command line
+1. Close all instances of the emulator, program, etc.
+1. Delete the node_modules folder in the root directory
+1. Run `npm install` or `npm install --legacy-peer-deps` to regenerate node_modules
+1. Open Expo with the -c option like `npx expo start -c` to clear the cache
+
 ### Jest Errors <a name="jest_errors"></a>
 
 #### General Troubleshooting Advice For Jest <a name="general_ts_advice"></a>
@@ -1530,8 +1640,11 @@ In <Your Repo's File Path Here>
 Pattern:  - 0 matches
 ~~~
 
-There are 2 general causes for this issue.
+There are 4 general causes for this issue.
 
+1. You are missing some libraries
+    1. Try following the instructions in [Unable to Resolve a Module From a File](#cant_resolve_module)
+1. You are not executing the command from the project's root directory
 1. Your file type may not be specified in the jest.config.js file.
     1. Go to the root directory of the repo
     1. Open the jest.config.js file
@@ -1544,6 +1657,7 @@ There are 2 general causes for this issue.
     1. Place all test files into that folder
     1. Verify the names of all test files as they must follow a certain pattern
         - The file's name should follow a pattern of `<Your Component's Name>.test.(js|jsx|ts|tsx)`
+        - For example 'Stuff.Test.js' would be **invalid** while 'Stuff.test.js' would be **valid**
 
 #### Cannot Use Import Statement Outside a Module <a name="cant_use_import"></a>
 *Author: Daniel*
