@@ -64,7 +64,6 @@ const fetchWeatherData = rateLimiter(async (apiKey, appKey, deviceMacAddress) =>
     }
     
   } catch (error) {
-    console.warn(error.data)
     if (!error.data) {
       throw "request failed";
     } else if (error._response) { //status code not in 2xx range

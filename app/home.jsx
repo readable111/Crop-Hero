@@ -186,7 +186,7 @@ const Home = () =>{
 				//Assuming the response is an array of weather data entries, sorted with the newest at the start
 				while (!data) {
 					console.log("Rate limiter triggered so waiting")
-					await sleep(1 * 1000)
+					await sleep(1.5 * 1000)
 					data = await fetchWeatherData(apiKey, appKey, deviceMacAddress);
 				}
 				
@@ -214,8 +214,8 @@ const Home = () =>{
 					{
 						key: '3',
 						image: icons.rainfall_black,
-						line1Label: 'Hourly Rainfall',
-						line1: usefulData.hourlyrainin + 'in',
+						line1Label: 'Daily Rainfall',
+						line1: usefulData.dailyrainin + 'in',
 						line2Label: 'Humidity',
 						line2: usefulData.humidity + '%',
 					}
