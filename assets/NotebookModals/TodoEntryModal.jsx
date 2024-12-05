@@ -178,6 +178,7 @@ const TodoEntryModal = ({
 
     const resetForm = () => {
         setTaskData(DEFAULT_TASK_DATA);
+        setSelectedDate("No date selected")
     };
 
        return (
