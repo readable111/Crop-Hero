@@ -18,6 +18,7 @@ import icons from '../assets/icons/Icons.js';
 import { WeatherSlider } from '../src/components/WeatherSlider';
 import {getGridpoints, WeatherIcon} from '../assets/HomeWeatherFunctions'
 import { fetchWeatherData, sleep } from '../src/components/AmbientWeatherService';
+import CROPS from '../test_data/testCropData.json'
 
 
 const todayDayLookup = {
@@ -87,7 +88,8 @@ const Home = () =>{
 	const [forecastDataDay7, setforecastDataDay7] = useState(null);
 	const [dayName7, setDayName7] = useState(null);
 	const [ambientWeatherData, setAmbientWeatherData] = useState(test_data);
-	const [cropData, setCropData] = useState({});
+	const [carouselCropData, setCarouselCropData] = useState({});
+	const [searchCropData, setSearchCropData] = useState([]);
 	const [isDarkMode, setIsDarkMode] = useState(false)
 
 	const [fontsLoaded, fontError] = useFonts({
@@ -270,6 +272,7 @@ const Home = () =>{
 				}
 
 				const data = await response.json();
+				setSearchCropData(data)
 				// Create an empty object to store updated data
 				// Once all fetches are complete, set the cropData state with the updated dictionary
 				console.log(data)
@@ -279,7 +282,7 @@ const Home = () =>{
 					return dateB - dateA;
 				}).slice(0,20);
 				console.log(data)
-				setCropData(data);
+				setCarouselCropData(data);
 			} catch (error) {
 				console.error("Error fetching crop data:", error);
 			}
@@ -321,9 +324,9 @@ const Home = () =>{
 			<WeatherSlider intro_data={ambientWeatherData} isDarkMode={isDarkMode}/>
 		</View>
 		<View style = {styles.Search}>
-			<SearchInput isDarkMode={isDarkMode} />
+			<SearchInput isDarkMode={isDarkMode} listOfCrops={searchCropData}/>
 		</View>
-			<CropCarousel crops = {cropData} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
+			<CropCarousel crops = {carouselCropData} style = {styles.cropCarousel} isDarkMode={isDarkMode}/>
 		<NavBar homeSelected darkMode={isDarkMode}/>
 	</View>)
 };
