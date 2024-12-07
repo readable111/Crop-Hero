@@ -18,10 +18,15 @@ import CROPS from '../test_data/testCropData.json'
 
 
 const screenWidth = Dimensions.get("window").width;
+const subID = "sub123";
 
 const DataHub = () => {
   const [selectedCrop, setSelectedCrop] = useState({"name": ""});
   const [isDark, setIsDarkMode] = useState(false);
+  const [searchCropData, setSearchCropData] = useState([]);
+  const [activeCropData, setActiveCropData] = useState([]);
+  const [currentCropData, setCurrentCropData] = useState([]);
+  const [pastCropData, setPastCropData] = useState([]);
 
   useEffect(() => {
     const fetchDarkModeSetting = async () => {
@@ -42,22 +47,48 @@ const DataHub = () => {
     fetchDarkModeSetting().catch(console.error);
   }, []);
 
+  useEffect(() => {
+		const fetchData = async () => {
+			const url = `https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/getCropsVerbose/${subID}`;
+			try {
+				const response = await fetch(url, { method: 'GET' });
+				if (!response.ok) {
+					throw new Error(`HTTP error! Status: ${response.status}`);
+				}
 
-  const DATE = new Date().getFullYear() + "";
+				const data = await response.json();
+				setSearchCropData(data)
+        setActiveCropData(data)
+        setCurrentCropData(data)
+        setPastCropData(data)
+			} catch (error) {
+				console.error("Error fetching crop data:", error);
+			}
+		};
+		fetchData();
+	}, []);
+
+
+  const DATE = new Date();
+  const OFFSET = new Date().getTimezoneOffset()
   //TEMP CODE to handle mock data for demos, specifically for the active crops chart, and is based on search input
-  const selectedActiveCrops = CROPS
-  .filter(crop => crop.name === selectedCrop.name)
-  .filter(crop => crop.active === 'Yes')
+  const selectedActiveCrops = activeCropData
+  .filter(crop => crop[10] === selectedCrop[10])
+  .filter(crop => crop[17] === 1)
   .filter(crop => {
-    const cropYear = crop.datePlanted.split('/')[2];
-    return parseInt(cropYear) >= parseInt(DATE);
+    const appliedOffset = new Date(crop["13"]).getTime() - (OFFSET*60*1000)
+    const displayedDate = new Date(appliedOffset)
+    return displayedDate.getFullYear() >= DATE.getFullYear();
   });
   //sum yields by year and month
   const selectiveActiveDateCounts = {};
   selectedActiveCrops.forEach(entry => {
-      const [month, day, year] = entry.datePlanted.split('/');
-      const monthYear = `${year}-${month.padStart(2, '0')}`; // Format as 'YYYY-MM'
-      selectiveActiveDateCounts[monthYear] = (selectiveActiveDateCounts[monthYear] || 0) + parseFloat(entry.yield);
+      const appliedOffset = new Date(entry["13"]).getTime() - (OFFSET*60*1000)
+      const displayedDate = new Date(appliedOffset)
+      const year = displayedDate.getFullYear()
+      const month = (displayedDate.getMonth() + 1) //zero-indexed so add 1 for normal people
+      const monthYear = `${year}-${String(month).padStart(2, '0')}`; // Format as 'YYYY-MM'
+      selectiveActiveDateCounts[monthYear] = (selectiveActiveDateCounts[monthYear] || 0) + parseFloat(entry["15"]);
   });
   formattedSelectiveActiveData = {
     labels: [],
@@ -87,18 +118,22 @@ const DataHub = () => {
 
 
   //TEMP CODE to handle mock data for demos, specifically for the current crops chart, and is based on search input
-  const selectedCurrentCrops = CROPS
-  .filter(crop => crop.name === selectedCrop.name)
+  let selectedCurrentCrops = currentCropData
+  .filter(crop => crop[10] === selectedCrop[10])
   .filter(crop => {
-    const cropYear = crop.datePlanted.split('/')[2];
-    return parseInt(cropYear) >= parseInt(DATE);
+    const appliedOffset = new Date(crop["13"]).getTime() - (OFFSET*60*1000)
+    const displayedDate = new Date(appliedOffset)
+    return displayedDate.getFullYear() >= DATE.getFullYear();
   });
   //sum yields by year and month
   const selectiveCurrentDateCounts = {};
   selectedCurrentCrops.forEach(entry => {
-      const [month, day, year] = entry.datePlanted.split('/');
-      const monthYear = `${year}-${month.padStart(2, '0')}`; // Format as 'YYYY-MM'
-      selectiveCurrentDateCounts[monthYear] = (selectiveCurrentDateCounts[monthYear] || 0) + parseFloat(entry.yield);
+      const appliedOffset = new Date(entry["13"]).getTime() - (OFFSET*60*1000)
+      const displayedDate = new Date(appliedOffset)
+      const year = displayedDate.getFullYear()
+      const month = (displayedDate.getMonth() + 1)
+      const monthYear = `${year}-${String(month).padStart(2, '0')}`; // Format as 'YYYY-MM'
+      selectiveCurrentDateCounts[monthYear] = (selectiveCurrentDateCounts[monthYear] || 0) + parseFloat(entry["15"]);
   });
   formattedSelectiveCurrentData = {
     labels: [],
@@ -127,17 +162,22 @@ const DataHub = () => {
   });
 
   //TEMP CODE to handle mock data for demos, specifically for active current crops chart, and is based on search input
-  const selectedPastCrops = CROPS
-  .filter(crop => crop.name === selectedCrop.name)
+  let selectedPastCrops = pastCropData
+  .filter(crop => crop[10] === selectedCrop[10])
   .filter(crop => {
-    const cropYear = crop.datePlanted.split('/')[2];
-    return parseInt(cropYear) < parseInt(DATE);
+    const appliedOffset = new Date(crop["13"]).getTime() - (OFFSET*60*1000)
+    const displayedDate = new Date(appliedOffset)
+    return displayedDate.getFullYear() < DATE.getFullYear();
   });
   // Sum yields by year
   const selectivePastDateCounts = {};
   selectedPastCrops.forEach(entry => {
-    const year = entry.datePlanted.split('/')[2];
-    selectivePastDateCounts[year] = (selectivePastDateCounts[year] || 0) + parseFloat(entry.yield);
+    const appliedOffset = new Date(entry["13"]).getTime() - (OFFSET*60*1000)
+    const displayedDate = new Date(appliedOffset)
+    const year = displayedDate.getFullYear()
+    const month = (displayedDate.getMonth() + 1)
+    const monthYear = `${year}-${String(month).padStart(2, '0')}`; // Format as 'YYYY-MM'
+    selectivePastDateCounts[monthYear] = (selectivePastDateCounts[monthYear] || 0) + parseFloat(entry["15"]);
   });
   formattedSelectivePastData = {
     labels: [],
@@ -158,7 +198,6 @@ const DataHub = () => {
     });
 
 
-
   return (
     <SafeAreaView style={[styles.safeArea, isDark && styles.safeAreaDark]}>
       <StatusBar
@@ -172,8 +211,9 @@ const DataHub = () => {
           <SearchInput
             resultDisplayMode={"dropdown"}
             handlePress={(crop) => setSelectedCrop(crop)}
+            listOfCrops={searchCropData}
           />
-          <Text>Crop Name: {selectedCrop.name || "____"}</Text>
+          <Text>Crop Name: {selectedCrop["10"] || "____"}</Text>
         </View>
 
         <CollapsibleSection
