@@ -25,10 +25,11 @@ import { useRouter, Link, useLocalSearchParams } from 'expo-router'
 import { doubleMetaphone } from 'double-metaphone'
 import { lemmatize } from 'wink-lemmatizer'
 import {cleanText, cleanNumbers} from './sanitizer.jsx'
-import CROPS from '../test_data/testCropData.json'
+
+var mounted = false
 
 //initialize to a bunch of weird, random values that will make it obvious if it is used
-global.dataArray = [ { label: 'temp', name: 'temp', hrfNum: '00', active: 'NaN', location: 'Lorem Ipsum', variety: 'Test', source: 'The store', date: '00/00/1001', comments: 'Who knows', indoors: 'Maybe', type:'Weird'} ]
+global.dataArray = [ [1, "sub123", "12345", "TX", 1, 2, 2, 1, null, 1212121, "stuff", "random text", "default", "Mon, 18 Nov 2024 00:00:00 GMT", "default", 2, 0, 1, "test", "test", "test", "test"] ]
 //create some caches
 var compareStrings_cache = {}
 var sorensenDiceCoefficient_cache = {}
@@ -107,12 +108,12 @@ export const SearchModal = ({
 								}}
 								placeholderTextColor={isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
 							/> 
-							{/*Display a list of the 10 best matches*/}
+							{/*Display a list of the 8 best matches*/}
 							<View style={[styles.modalListStyle, isDarkMode && styles.modalListStyleDark]}>
-								{searchBarTxt && dataArray.slice(0,10).map((item, key) => (
-									<Link key={key} href={{ pathname: "/cropspage", params: { param: JSON.stringify(item) } }} push style={[styles.item, isDarkMode && styles.itemDark]}>
+								{searchBarTxt && dataArray.slice(0,8).map((item, key) => (
+									<Link key={key} href={{ pathname: "/crops/cropspage", params: { param: item } }} push style={[styles.item, isDarkMode && styles.itemDark]}>
 										<View style={{flex: 0.8, flexShrink: 1, flexGrow: 1, flexWrap:'wrap', flexDirection: 'row',}}>
-											<Text style={{flex: 0.8, flexShrink: 1, flexWrap:'wrap', flexDirection: 'row',}}>Name: {item.name} | Crop Number: {item.hrfNum}</Text> 
+											<Text style={{flex: 0.8, flexShrink: 1, flexWrap:'wrap', flexDirection: 'row',}}>Name: {item[10]} | Crop Number: {item["9"]}</Text> 
 										</View>
 									</Link>
 								))}
@@ -171,7 +172,7 @@ export const SearchModal = ({
 								{searchBarTxt && dataArray.slice(0,8).map((crop, key) => (
 									<Pressable key={key} style={[styles.item, isDarkMode && styles.itemDark]} onPress={()=>{handlePress(crop); setSearchBarTxt(""); onBackPress()}}>
 										<View style={{flex: 0.8, flexShrink: 1, flexGrow: 1, flexWrap:'wrap', flexDirection: 'row',}}>
-											<Text style={{flex: 0.8, flexShrink: 1, flexWrap:'wrap', flexDirection: 'row',}}>Name: {crop.name} | Crop Number: {crop.hrfNum}</Text> 
+											<Text style={{flex: 0.8, flexShrink: 1, flexWrap:'wrap', flexDirection: 'row',}}>Name: {crop[10]} | Crop Number: {crop["9"]}</Text> 
 										</View>
 									</Pressable>
 								))}
@@ -236,7 +237,10 @@ export const searchFunction = (text, arr, searchBarTxt) => {
 		updatedData = arr.slice(0,8)
 	}
 	//TODO: make FULLTEXT SELECT search of database using cleaned text and store results in arrayholder
-
+	//quickselect function doesn't sort the 3 best matches so this bit will without performance hits since it's only 3 items
+	updatedData.sort(function(a,b){ 
+		return compareStrings(b["9"],cleanedTxt) - compareStrings(a["9"],cleanedTxt); 
+	});
 	dataArray = updatedData
 }; 
 
@@ -920,18 +924,29 @@ export class SearchInput extends Component {
 		super(props); 
 		this.state = { 
 			loading: false, 
-			data: CROPS, 
+			data: null, 
 			error: null, 
 			searchValue: "", 
 			isModalVisible: false,
+			arrayholder: null,
 		}; 
-		this.arrayholder = CROPS;
+		this.props.listOfCrops; //only mandatory prop
 		this.props.resultDisplayMode = "dropdown";
 		this.props.isDarkMode = false;
 		this.props.handlePress = null;
 	} 
 
+	//Since the state and componentDidMount functions didn't work at all, I came up with this solution
+	//The first time that searchFunction is called, data and arrayholder get initialized to listOfCrops
+	initialMounting = () => {
+		if (!mounted || this.state.data == null) {
+			this.setState({ data: this.props.listOfCrops, arrayholder: this.props.listOfCrops });
+			mounted = true
+		}
+	}
+
 	searchFunction = (text) => { 
+		this.initialMounting()
 		if (text.length != 0) {
 			//clean up the text based on whether or not it is a number
 			var cleanedTxt = ""
@@ -953,8 +968,8 @@ export class SearchInput extends Component {
 					return
 				}
 				//sort array in descending order (find highest value)
-				quickselect(this.arrayholder, 3, this.arrayholder.length, function(a,b){ 
-					difference = compareStrings(b.hrfNum, cleanedTxt) - compareStrings(a.hrfNum,cleanedTxt)
+				quickselect(this.state.arrayholder, 3, this.state.arrayholder.length, function(a,b){ 
+					difference = compareStrings(b["9"], cleanedTxt) - compareStrings(a["9"],cleanedTxt)
 					if (difference > 0) {
 						return 1
 					}
@@ -963,7 +978,11 @@ export class SearchInput extends Component {
 					}
 					return 0
 				})
-				updatedData = this.arrayholder.slice(0,3)
+				updatedData = this.state.arrayholder.slice(0,3)
+				//quickselect function doesn't sort the 3 best matches so this bit will without performance hits since it's only 3 items
+				updatedData.sort(function(a,b){ 
+					return compareStrings(b["9"],cleanedTxt) - compareStrings(a["9"],cleanedTxt); 
+				});
 			} else {
 				cleanStartTime = performance.now()
 				cleanedTxt = cleanText(text, noStopwords=true, noSQL=true, textOnly=true)
@@ -978,8 +997,8 @@ export class SearchInput extends Component {
 					return
 				}
 				//sort array in descending order (find highest value)
-				quickselect(this.arrayholder, 3, this.arrayholder.length, function(a,b){ 
-					difference = compareStrings(b.name, cleanedTxt) - compareStrings(a.name,cleanedTxt)
+				quickselect(this.state.arrayholder, 3, this.state.arrayholder.length, function(a,b){ 
+					difference = compareStrings(b[10], cleanedTxt) - compareStrings(a[10],cleanedTxt)
 					if (difference > 0) {
 						return 1
 					}
@@ -988,7 +1007,11 @@ export class SearchInput extends Component {
 					}
 					return 0
 				})
-				updatedData = this.arrayholder.slice(0,3)
+				updatedData = this.state.arrayholder.slice(0,3)
+				//quickselect function doesn't sort the 3 best matches so this bit will without performance hits since it's only 3 items
+				updatedData.sort(function(a,b){ 
+					return compareStrings(b[10],cleanedTxt) - compareStrings(a[10],cleanedTxt); 
+				});
 			}
 			let searchEndTime = performance.now()
 			//TODO: make FULLTEXT SELECT search of database using cleaned text and store results in arrayholder
@@ -1015,181 +1038,223 @@ export class SearchInput extends Component {
 			this.setState({ data: updatedData, searchValue: text }); 
 		}
 		else {
-			this.setState({ data: this.arrayholder, searchValue: text });
+			this.setState({ data: this.props.listOfCrops, searchValue: text });
 		}
 	}; 
 
 	render() {
-		if  (this.props.resultDisplayMode === "modal") {
-			const { isModalVisible } = this.state;
-			const setIsModalVisible = isModalVisible => this.setState({ isModalVisible });
-			return ( 
-				<View style={styles.container}> 
-					<TouchableOpacity testID={"search-modal"} activeOpacity={0.8} onPress={() => setIsModalVisible(true)}>
-						<SearchBar 
-							placeholder="Search Crops..."
-							round 
-							editable={false}
-							readOnly
-							keyboardType='default'
-							style={this.props.isDarkMode ? {
-								color: Colors.WHITE_SMOKE,
-								fontSize: 14,
-							} : {
-								color: Colors.CHARCOAL,
-								fontSize: 14,
-							}}
-							containerStyle={{
-								backgroundColor: 'none',
-								borderColor: 'rgba(0, 0, 0, 0)',
-								borderRadius: 50,
-								marginBottom: 0,
-							}}
-							inputContainerStyle={this.props.isDarkMode ? {
-								backgroundColor: Colors.IRIDIUM,
-								borderRadius: 50,
-								marginBottom: 0,
-							} : {
-								backgroundColor: Colors.WHITE_SMOKE,
-								borderRadius: 50,
-								marginBottom: 0,
-							}}
-							searchIcon={this.props.isDarkMode ? {
-								color: Colors.WHITE_SMOKE
-							} : {
-								color: Colors.CHARCOAL
-							}}
-							placeholderTextColor={this.props.isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
-						/>
-					</TouchableOpacity>
-					<SearchModal modalVisible={isModalVisible} 
-                    	onBackPress={() => setIsModalVisible(false)} //disappear if it is clicked outside of the modal
-						searchValue={this.state.searchValue}
-						searchFunction={(text) => this.searchFunction(text)}
-						originalData={this.state.data}
-						isDarkMode={this.props.isDarkMode}
-						handlePress={this.props.handlePress}
-                	/>
-				</View> 
-			); 
+		if (Array.isArray(this.props.listOfCrops) && this.props.listOfCrops.length === 0) {
+			console.log("Passed nothing")
+			return (
+				<SearchBar 
+					placeholder="Search Crops Disabled"
+					round 
+					editable={false}
+					readOnly
+					keyboardType='default'
+					style={this.props.isDarkMode ? {
+						color: Colors.WHITE_SMOKE,
+						fontSize: 14,
+					} : {
+						color: Colors.CHARCOAL,
+						fontSize: 14,
+					}}
+					containerStyle={{
+						backgroundColor: 'none',
+						borderColor: 'rgba(0, 0, 0, 0)',
+						borderRadius: 50,
+						marginBottom: 0,
+					}}
+					inputContainerStyle={this.props.isDarkMode ? {
+						backgroundColor: Colors.IRIDIUM,
+						borderRadius: 50,
+						marginBottom: 0,
+					} : {
+						backgroundColor: Colors.WHITE_SMOKE,
+						borderRadius: 50,
+						marginBottom: 0,
+					}}
+					searchIcon={this.props.isDarkMode ? {
+						color: Colors.WHITE_SMOKE
+					} : {
+						color: Colors.CHARCOAL
+					}}
+					placeholderTextColor={this.props.isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
+				/>
+			)
 		}
-		//if it isn't a modal, assume that the user wants the dropdown format
 		else {
-			//if onPress is null (default), then use link feature
-			if (!this.props.handlePress) {
+			if  (this.props.resultDisplayMode === "modal") {
+				const { isModalVisible } = this.state;
+				const setIsModalVisible = isModalVisible => this.setState({ isModalVisible });
 				return ( 
 					<View style={styles.container}> 
-						<SearchBar 
-							placeholder="Search Crops..."
-							showCancel
-							round 
-							value={this.state.searchValue} 
-							onChangeText={(text) => this.searchFunction(text)} 
-							autoCorrect={true} 
-							keyboardType='default'
-							style={this.props.isDarkMode ? {
-								color: Colors.WHITE_SMOKE,
-								fontSize: 14,
-							} : {
-								color: Colors.CHARCOAL,
-								fontSize: 14,
-							}}
-							containerStyle={{
-								backgroundColor: 'none',
-								borderColor: 'rgba(0, 0, 0, 0)',
-								borderRadius: 50,
-								marginBottom: 0,
-							}}
-							inputContainerStyle={this.props.isDarkMode ? {
-								backgroundColor: Colors.IRIDIUM,
-								borderRadius: 50,
-								marginBottom: 0,
-							} : {
-								backgroundColor: Colors.WHITE_SMOKE,
-								borderRadius: 50,
-								marginBottom: 0,
-							}}
-							searchIcon={this.props.isDarkMode ? {
-								color: Colors.WHITE_SMOKE
-							} : {
-								color: Colors.CHARCOAL
-							}}
-							placeholderTextColor={this.props.isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
-						/> 
-						{/*I use a slice and map function instead of a FlatList so that it will work on pages with ScrollView*/}
-						{/*Only possible because I only ever want the top 3 options*/}
-						{this.state.searchValue && <View style={[styles.unfoldedlistStyle, this.props.isDarkMode && styles.unfoldedlistStyleDark]}> 
-							{this.state.data.slice(0,3).map((item, key) => (
-								<Link key={key} href={{ pathname: "/cropspage", params: { param: JSON.stringify(item) } }} push style={[styles.item, this.props.isDarkMode && styles.itemDark]}>
-									<View >
-										<Text>Name: {item.name} | Crop Number: {item.hrfNum}</Text> 
-									</View>
-								</Link>
-							))}
-						</View>}
-						{!this.state.searchValue && <View style={styles.foldedlistStyle}>
-						</View>}
+						<TouchableOpacity testID={"search-modal"} activeOpacity={0.8} onPress={() => setIsModalVisible(true)}>
+							<SearchBar 
+								placeholder="Search Crops..."
+								round 
+								editable={false}
+								readOnly
+								keyboardType='default'
+								style={this.props.isDarkMode ? {
+									color: Colors.WHITE_SMOKE,
+									fontSize: 14,
+								} : {
+									color: Colors.CHARCOAL,
+									fontSize: 14,
+								}}
+								containerStyle={{
+									backgroundColor: 'none',
+									borderColor: 'rgba(0, 0, 0, 0)',
+									borderRadius: 50,
+									marginBottom: 0,
+								}}
+								inputContainerStyle={this.props.isDarkMode ? {
+									backgroundColor: Colors.IRIDIUM,
+									borderRadius: 50,
+									marginBottom: 0,
+								} : {
+									backgroundColor: Colors.WHITE_SMOKE,
+									borderRadius: 50,
+									marginBottom: 0,
+								}}
+								searchIcon={this.props.isDarkMode ? {
+									color: Colors.WHITE_SMOKE
+								} : {
+									color: Colors.CHARCOAL
+								}}
+								placeholderTextColor={this.props.isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
+							/>
+						</TouchableOpacity>
+						<SearchModal modalVisible={isModalVisible} 
+							onBackPress={() => setIsModalVisible(false)} //disappear if user clicks outside of the modal
+							searchValue={this.state.searchValue}
+							searchFunction={(text) => this.searchFunction(text)}
+							originalData={this.state.data}
+							isDarkMode={this.props.isDarkMode}
+							handlePress={this.props.handlePress}
+						/>
 					</View> 
 				); 
 			}
+			//if it isn't a modal, assume that the user wants the dropdown format
 			else {
-				return ( 
-					<View style={styles.container}> 
-						<SearchBar 
-							placeholder="Search Crops..."
-							showCancel
-							round 
-							value={this.state.searchValue} 
-							onChangeText={(text) => this.searchFunction(text)} 
-							autoCorrect={true} 
-							keyboardType='default'
-							style={this.props.isDarkMode ? {
-								color: Colors.WHITE_SMOKE,
-								fontSize: 14,
-							} : {
-								color: Colors.CHARCOAL,
-								fontSize: 14,
-							}}
-							containerStyle={{
-								backgroundColor: 'none',
-								borderColor: 'rgba(0, 0, 0, 0)',
-								borderRadius: 50,
-								marginBottom: 0,
-							}}
-							inputContainerStyle={this.props.isDarkMode ? {
-								backgroundColor: Colors.IRIDIUM,
-								borderRadius: 50,
-								marginBottom: 0,
-							} : {
-								backgroundColor: Colors.WHITE_SMOKE,
-								borderRadius: 50,
-								marginBottom: 0,
-							}}
-							searchIcon={this.props.isDarkMode ? {
-								color: Colors.WHITE_SMOKE
-							} : {
-								color: Colors.CHARCOAL
-							}}
-							placeholderTextColor={this.props.isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
-						/> 
-						{/*I use a slice and map function instead of a FlatList so that it will work on pages with ScrollView*/}
-						{/*Only possible because I only ever want the top 3 options*/}
-						{this.state.searchValue && <View style={[styles.unfoldedlistStyle, this.props.isDarkMode && styles.unfoldedlistStyleDark]}> 
-							{this.state.data.slice(0,3).map((crop, key) => (
-								<Pressable key={key} style={[styles.item, this.props.isDarkMode && styles.itemDark]} onPress={()=>{this.props.handlePress(crop); this.setState({ searchValue: "" })}}>
-									<View >
-										<Text>Name: {crop.name} | Crop Number: {crop.hrfNum}</Text> 
-									</View>
-								</Pressable>
-							))}
-						</View>}
-						{!this.state.searchValue && <View style={styles.foldedlistStyle}>
-						</View>}
-					</View> 
-				); 
+				//if onPress is null (default), then use link feature
+				if (!this.props.handlePress) {
+					return ( 
+						<View style={styles.container}> 
+							<SearchBar 
+								placeholder="Search Crops..."
+								showCancel
+								round 
+								value={this.state.searchValue} 
+								onChangeText={(text) => this.searchFunction(text)} 
+								autoCorrect={true} 
+								keyboardType='default'
+								style={this.props.isDarkMode ? {
+									color: Colors.WHITE_SMOKE,
+									fontSize: 14,
+								} : {
+									color: Colors.CHARCOAL,
+									fontSize: 14,
+								}}
+								containerStyle={{
+									backgroundColor: 'none',
+									borderColor: 'rgba(0, 0, 0, 0)',
+									borderRadius: 50,
+									marginBottom: 0,
+								}}
+								inputContainerStyle={this.props.isDarkMode ? {
+									backgroundColor: Colors.IRIDIUM,
+									borderRadius: 50,
+									marginBottom: 0,
+								} : {
+									backgroundColor: Colors.WHITE_SMOKE,
+									borderRadius: 50,
+									marginBottom: 0,
+								}}
+								searchIcon={this.props.isDarkMode ? {
+									color: Colors.WHITE_SMOKE
+								} : {
+									color: Colors.CHARCOAL
+								}}
+								placeholderTextColor={this.props.isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
+							/> 
+							{/*I use a slice and map function instead of a FlatList so that it will work on pages with ScrollView*/}
+							{/*Only possible because I only ever want the top 3 options*/}
+							{this.state.searchValue && <View style={[styles.unfoldedlistStyle, this.props.isDarkMode && styles.unfoldedlistStyleDark]}> 
+								{this.state.data.slice(0,3).map((item, key) => (
+									<Link key={key} href={{ pathname: "/crops/cropspage", params: { param: JSON.stringify(item) } }} push style={[styles.item, this.props.isDarkMode && styles.itemDark]}>
+										<View >
+											<Text>Name: {item[10]} | Crop Number: {item["9"]}</Text> 
+										</View>
+									</Link>
+								))}
+							</View>}
+							{!this.state.searchValue && <View style={styles.foldedlistStyle}>
+							</View>}
+						</View> 
+					); 
+				}
+				else {
+					return ( 
+						<View style={styles.container}> 
+							<SearchBar 
+								placeholder="Search Crops..."
+								showCancel
+								round 
+								value={this.state.searchValue} 
+								onChangeText={(text) => this.searchFunction(text)} 
+								autoCorrect={true} 
+								keyboardType='default'
+								style={this.props.isDarkMode ? {
+									color: Colors.WHITE_SMOKE,
+									fontSize: 14,
+								} : {
+									color: Colors.CHARCOAL,
+									fontSize: 14,
+								}}
+								containerStyle={{
+									backgroundColor: 'none',
+									borderColor: 'rgba(0, 0, 0, 0)',
+									borderRadius: 50,
+									marginBottom: 0,
+								}}
+								inputContainerStyle={this.props.isDarkMode ? {
+									backgroundColor: Colors.IRIDIUM,
+									borderRadius: 50,
+									marginBottom: 0,
+								} : {
+									backgroundColor: Colors.WHITE_SMOKE,
+									borderRadius: 50,
+									marginBottom: 0,
+								}}
+								searchIcon={this.props.isDarkMode ? {
+									color: Colors.WHITE_SMOKE
+								} : {
+									color: Colors.CHARCOAL
+								}}
+								placeholderTextColor={this.props.isDarkMode ? Colors.WHITE_SMOKE : Colors.CHARCOAL}
+							/> 
+							{/*I use a slice and map function instead of a FlatList so that it will work on pages with ScrollView*/}
+							{/*Only possible because I only ever want the top 3 options*/}
+							{this.state.searchValue && <View style={[styles.unfoldedlistStyle, this.props.isDarkMode && styles.unfoldedlistStyleDark]}> 
+								{this.state.data.slice(0,3).map((crop, key) => (
+									<Pressable key={key} style={[styles.item, this.props.isDarkMode && styles.itemDark]} onPress={()=>{this.props.handlePress(crop); this.setState({ searchValue: "" })}}>
+										<View >
+											<Text>Name: {crop[10]} | Crop Number: {crop["9"]}</Text> 
+										</View>
+									</Pressable>
+								))}
+							</View>}
+							{!this.state.searchValue && <View style={styles.foldedlistStyle}>
+							</View>}
+						</View> 
+					); 
+				}
 			}
-		}
-	} 
+		} 
+	}
 } 
 
 const styles = StyleSheet.create({ 
