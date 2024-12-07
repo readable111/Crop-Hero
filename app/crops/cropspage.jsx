@@ -25,8 +25,16 @@ const CropsPage = () => {
         const subID = "sub123"
         const offset = new Date().getTimezoneOffset()
         
-        let [crop, setCropData] = useState(useLocalSearchParams());
-        console.log(crop)
+        const LOCAL_PARAMS = useLocalSearchParams()
+        let localParams = null
+        if (LOCAL_PARAMS.hasOwnProperty("param")) {
+                localParams = JSON.parse(useLocalSearchParams().param);
+        } else {
+                localParams = useLocalSearchParams();
+        }
+
+        let [crop, setCropData] = useState(localParams);
+        console.log("Crop Params: ", crop)
         
         const [items, setItems] = useState([
                 {label: 'Yes', value: 'Yes' },
@@ -49,13 +57,13 @@ const CropsPage = () => {
 
         const appliedOffset = new Date(crop["13"]).getTime() - (offset*60*1000)
         const displayedDate = new Date(appliedOffset).toISOString().split('T')[0]
-        console.log(crop["21"])
 
         const [open, setOpen] = useState(null)
        // const [modalVisible, setModalVisible] = useState(false)
         const [selectedIndoors, setSelectedIndoors] = useState(indoorsState)
         const [selectedDate, setSelectedDate] = useState(displayedDate);
         const [selectedLocation, setSelectedLocation] = useState(parseInt(crop["6"], 10))
+        const [selectedCropNum, setSelectedCropNum] = useState(crop["9"].toString())
         const [selectedActive, setSelectedActive] = useState(activeState)
         const [selectedMedium, setSelectedMedium] = useState(parseInt(crop["5"], 10))
         const [selectedType, setSelectedType] = useState(crop["21"])
@@ -294,7 +302,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Crop Number*</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        defaultValue={crop["9"]}
+                                        defaultValue={selectedCropNum}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {true}
@@ -457,7 +465,7 @@ const CropsPage = () => {
                                 <Text style={[styles.label, isDark && styles.labelDark]}>Yield</Text>
                                 <Input
                                         inputContainerStyle = {[styles.textBox, isDark && styles.textBoxDark]}
-                                        defaultValue={crop[15]}
+                                        defaultValue={crop[15].toString() || crop["15"].toString()}
                                         style={[styles.inputText, isDark && styles.inputTextDark]}
                                         maxLength={64}
                                         readOnly = {readOnly}
