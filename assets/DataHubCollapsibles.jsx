@@ -15,6 +15,8 @@ import {SearchInput} from './SearchFeature.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ViewShot from 'react-native-view-shot';
 import * as MediaLibrary from "expo-media-library";
+import * as Sharing from 'expo-sharing';
+
 
 const defaultDataset = {
   "labels": ["D", "E", "F", "A", "U", "L", "T"],
@@ -61,8 +63,8 @@ export const CollapsibleSection = ({ title, chartData, chartConfig, isDark }) =>
               return;
             }
             console.log('Captured URI:', uri);
-            await MediaLibrary.saveToLibraryAsync(uri);
-            Alert.alert('Chart saved to library!');
+            //await MediaLibrary.saveToLibraryAsync(uri);  //saves image to the gallery as a temporary image
+            await Sharing.shareAsync(uri)
           } catch (cameraRollError) {
             console.error("CameraRoll save error:", cameraRollError);
             Alert.alert('Failed to save chart');
