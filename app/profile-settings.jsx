@@ -37,6 +37,8 @@ async function setDefaultVisibility(isPublic) {
 	}
 }
 
+const subID = "sub123"
+
 const SettingsProfile = () =>{ 
 	{/*retrieve software version from package.json*/}
 	var pkg = require('../package.json')
@@ -51,15 +53,42 @@ const SettingsProfile = () =>{
 	{/*TODO: retrieve farmers from database*/}
 	const [open, setOpen] = useState(false);
   	const [value, setValue] = useState(null);
-  	const [items, setItems] = useState([
-    	{label: 'Zina Townley', value: 'zina townley'},
-    	{label: 'Farmer Benjamin Folger-Franklin', value: 'farmer benjamin folger-franklin'}
-  	]);
+	const [enteredFarmer, setEnteredFarmer] = useState("");
+	const [listOfFarmers, setListOfFarmers] = useState([]);
 
 	{/*create the isDarkMode flag for later use*/}
 	const [isDarkMode, setIsDarkMode] = useState(false)
 	{/*create the private/public flag for later use*/}
 	const [hasPublicDefaultVisibility, setHasPublicDefaultVisibility] = useState(false)
+
+	const updateFarmers = async (value) =>{
+		if (enteredFarmer != "" && value != "") {
+			try{
+				const response = await fetch('https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/addFarmer',{method:'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({farmerName: enteredFarmer, farmID: 1, subID: "sub123"})})
+		
+				if(!response.ok) {
+						throw new Error(`HTTP error! Status: ${response.status}`);
+				}
+
+				const refetchedFarmers = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listFarmers/${subID}`, {method:'GET'})
+				if(!refetchedFarmers.ok){
+					throw new Error
+				}
+				const data = await refetchedFarmers.json()
+				const transformedList = data.map(([value, , , label]) => ({ label, value: value.toString() }));
+				setListOfFarmers(transformedList)
+
+				const farmerKey = transformedList.find(farmer => farmer.label === enteredFarmer);
+				setValue(farmerKey.value)
+
+				setEnteredFarmer("")
+			}
+			catch(error){
+					console.error("Error:", error)
+			}
+		}
+	}
+	
 
 	useEffect(() => {
 		const fetchDefaultVis = async () => {
@@ -70,6 +99,27 @@ const SettingsProfile = () =>{
 		}
 		fetchDefaultVis()
 			.catch(console.error);
+	}, [])
+
+	useEffect(() => {
+		const fetchFarmers = async () =>{
+			try{
+				const response = await fetch(`https://cabackend-a9hseve4h2audzdm.canadacentral-01.azurewebsites.net/listFarmers/${subID}`, {method:'GET'})
+				if(!response.ok){
+					throw new Error
+				}
+				const data = await response.json()
+				const transformedList = data.map(([value, , , label]) => ({ label, value: value.toString() }));
+				setListOfFarmers(transformedList)
+			}catch(err){
+      			console.error("Error fetching farmers:", err);
+			}
+		}
+	  
+		// call the function
+		fetchFarmers()
+		  	// make sure to catch any error
+		  	.catch(console.warn);
 	}, [])
 
 	useEffect(() => {
@@ -109,7 +159,6 @@ const SettingsProfile = () =>{
 		return null;
 	}
 
-	console.log(cleanText(value, noStopwords=false, noSQL=true, textOnly=false))
 	return(
 	<ScrollView style = {[styles.container, isDarkMode && styles.containerDark]}>
 		{/*create the default phone status bar at the top of the screen*/}
@@ -279,13 +328,19 @@ const SettingsProfile = () =>{
 							theme={isDarkMode ? 'DARK' : 'LIGHT'}
 							open={open}
 							value={value}
-							items={items}
+							items={listOfFarmers}
 							setOpen={setOpen}
 							setValue={setValue}
-							setItems={setItems}
+							setItems={setListOfFarmers}
 							listMode='MODAL'
 							modalAnimationType='fade'
 							searchable={true}
+							onChangeSearchText={(value) => {
+								setEnteredFarmer(value)
+							}}
+							onChangeValue={(value) => {
+								updateFarmers(value)
+							}}
 							searchTextInputProps={{
 								backgroundColor: Colors.WHITE_SMOKE,
 								maxLength: 512
